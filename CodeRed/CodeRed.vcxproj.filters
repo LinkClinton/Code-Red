@@ -16,6 +16,9 @@
     <Filter Include="Shared\Exception">
       <UniqueIdentifier>{3d4330dd-cbe5-418a-bf45-0f23f8878aba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\GpuPipelineStage">
+      <UniqueIdentifier>{cb246ab6-e842-4d88-ad78-a8035862f3f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Noncopyable.hpp">
@@ -46,9 +49,6 @@
       <Filter>Interface\GpuResource</Filter>
     </ClInclude>
     <ClInclude Include="Interface\GpuResourceLayout.hpp">
-      <Filter>Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Interface\GpuGraphicsPipeline.hpp">
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="Interface\GpuSystemInfo.hpp">
@@ -101,6 +101,30 @@
     </ClInclude>
     <ClInclude Include="Interface\GpuFence.hpp">
       <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuGraphicsPipeline.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineStage\GpuInputAssemblyStage.hpp">
+      <Filter>Interface\GpuPipelineStage</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineStage\GpuPipelineStage.hpp">
+      <Filter>Interface\GpuPipelineStage</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\PrimitiveTopology.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineStage\GpuBlendStage.hpp">
+      <Filter>Interface\GpuPipelineStage</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\BlendProperty.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\BlendOperator.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\BlendFactor.hpp">
+      <Filter>Shared\Enum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

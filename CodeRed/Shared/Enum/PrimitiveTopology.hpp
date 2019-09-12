@@ -4,10 +4,10 @@
 
 namespace CodeRed {
 
-	enum class MemoryHeap : UInt32
+	enum class PrimitiveTopology : UInt32
 	{
-		Default,
-		Upload
+		Undefined,
+		TriangleList
 	};
 	
 }

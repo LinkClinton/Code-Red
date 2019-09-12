@@ -6,8 +6,8 @@ namespace CodeRed {
 
 	enum class ResourceType : UInt32
 	{
-		Buffer = 0,
-		Texture = 1
+		Buffer,
+		Texture
 	};
 	
 }
