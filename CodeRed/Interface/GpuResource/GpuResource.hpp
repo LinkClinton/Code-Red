@@ -19,6 +19,14 @@ namespace CodeRed {
 		
 		~GpuResource() = default;
 
+		auto info() const -> ResourceInfo { return mResourceInfo; }
+
+		auto usage() const -> ResourceUsage { return mResourceInfo.Usage; }
+
+		auto heap() const -> MemoryHeap { return mResourceInfo.Heap; }
+		
+		virtual auto size() const -> size_t = 0;
+		
 		virtual auto mapMemory() const -> void* = 0;
 
 		virtual void unmapMemory() const = 0;

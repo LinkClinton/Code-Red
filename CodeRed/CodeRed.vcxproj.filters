@@ -13,6 +13,9 @@
     <Filter Include="Shared\Enum">
       <UniqueIdentifier>{3bf3d8bf-7093-4b0f-8dbf-35b682520d02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shared\Exception">
+      <UniqueIdentifier>{3d4330dd-cbe5-418a-bf45-0f23f8878aba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Noncopyable.hpp">
@@ -80,6 +83,24 @@
     </ClInclude>
     <ClInclude Include="Shared\PixelFormatSizeOf.hpp">
       <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\Exception.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\NotSupportException.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\ZeroException.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\InvalidException.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\AssertException.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuFence.hpp">
+      <Filter>Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

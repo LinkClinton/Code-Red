@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Interface\GpuFence.hpp" />
     <ClInclude Include="Interface\GpuGraphicsCommandList.hpp" />
     <ClInclude Include="Interface\GpuFrameBuffer.hpp" />
     <ClInclude Include="Interface\GpuGraphicsPipeline.hpp" />
@@ -159,6 +160,11 @@
     <ClInclude Include="Shared\Enum\ResourceType.hpp" />
     <ClInclude Include="Shared\Enum\ResourceUsage.hpp" />
     <ClInclude Include="Shared\Enum\ShaderVisable.hpp" />
+    <ClInclude Include="Shared\Exception\AssertException.hpp" />
+    <ClInclude Include="Shared\Exception\Exception.hpp" />
+    <ClInclude Include="Shared\Exception\InvalidException.hpp" />
+    <ClInclude Include="Shared\Exception\NotSupportException.hpp" />
+    <ClInclude Include="Shared\Exception\ZeroException.hpp" />
     <ClInclude Include="Shared\PixelFormatSizeOf.hpp" />
     <ClInclude Include="Shared\ResourceInfo.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />
