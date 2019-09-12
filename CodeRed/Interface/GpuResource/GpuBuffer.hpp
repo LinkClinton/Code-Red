@@ -7,6 +7,7 @@ namespace CodeRed {
 	class GpuBuffer : public GpuResource {
 	public:
 		~GpuBuffer() = default;
+	protected:
 	};
 	
 }

@@ -91,6 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +103,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -115,6 +117,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +133,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,15 +150,23 @@
     <ClInclude Include="Interface\GpuResourceLayout.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuBuffer.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuResource.hpp" />
-    <ClInclude Include="Interface\GpuResource\GpuSampler.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuTexture.hpp" />
     <ClInclude Include="Interface\GpuSwapChain.hpp" />
     <ClInclude Include="Interface\GpuSystemInfo.hpp" />
+    <ClInclude Include="Shared\Enum\Dimension.hpp" />
+    <ClInclude Include="Shared\Enum\MemoryHeap.hpp" />
+    <ClInclude Include="Shared\Enum\PixelFormat.hpp" />
     <ClInclude Include="Shared\Enum\ResourceType.hpp" />
+    <ClInclude Include="Shared\Enum\ResourceUsage.hpp" />
     <ClInclude Include="Shared\Enum\ShaderVisable.hpp" />
+    <ClInclude Include="Shared\PixelFormatSizeOf.hpp" />
+    <ClInclude Include="Shared\ResourceInfo.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />
     <ClInclude Include="Shared\Noncopyable.hpp" />
     <ClInclude Include="Shared\Utility.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Shared\PixelFormatSizeOf.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

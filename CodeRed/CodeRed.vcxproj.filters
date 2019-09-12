@@ -42,9 +42,6 @@
     <ClInclude Include="Interface\GpuResource\GpuTexture.hpp">
       <Filter>Interface\GpuResource</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\GpuResource\GpuSampler.hpp">
-      <Filter>Interface\GpuResource</Filter>
-    </ClInclude>
     <ClInclude Include="Interface\GpuResourceLayout.hpp">
       <Filter>Interface</Filter>
     </ClInclude>
@@ -66,5 +63,28 @@
     <ClInclude Include="Shared\Enum\ShaderVisable.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Enum\PixelFormat.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\ResourceUsage.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\ResourceInfo.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\Dimension.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\MemoryHeap.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\PixelFormatSizeOf.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
