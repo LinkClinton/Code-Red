@@ -159,6 +159,15 @@
     <ClInclude Include="Interface\GpuPipelineState\GpuPixelShaderState.hpp">
       <Filter>Interface\GpuPipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\ViewPort.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\ScissorRect.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuGraphicsCommandQueue.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">

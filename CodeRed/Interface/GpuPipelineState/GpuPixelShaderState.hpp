@@ -15,7 +15,7 @@ namespace CodeRed {
 			const std::vector<Byte>& code) :
 			mCode(code) {}
 	public:
-		auto code() const noexcept -> const std::vector<Byte> & { return mCode; }
+		auto code() const noexcept -> std::vector<Byte> { return mCode; }
 	protected:
 		std::vector<Byte> mCode = {};
 	};

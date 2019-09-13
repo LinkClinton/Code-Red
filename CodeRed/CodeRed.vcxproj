@@ -145,6 +145,7 @@
     <ClInclude Include="Interface\GpuFence.hpp" />
     <ClInclude Include="Interface\GpuGraphicsCommandList.hpp" />
     <ClInclude Include="Interface\GpuFrameBuffer.hpp" />
+    <ClInclude Include="Interface\GpuGraphicsCommandQueue.hpp" />
     <ClInclude Include="Interface\GpuGraphicsPipeline.hpp" />
     <ClInclude Include="Interface\GpuLogicalDevice.hpp" />
     <ClInclude Include="Interface\GpuDisplayAdapter.hpp" />
@@ -186,8 +187,10 @@
     <ClInclude Include="Shared\ResourceInfo.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />
     <ClInclude Include="Shared\Noncopyable.hpp" />
+    <ClInclude Include="Shared\ScissorRect.hpp" />
     <ClInclude Include="Shared\StencilOperatorInfo.hpp" />
     <ClInclude Include="Shared\Utility.hpp" />
+    <ClInclude Include="Shared\ViewPort.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp" />

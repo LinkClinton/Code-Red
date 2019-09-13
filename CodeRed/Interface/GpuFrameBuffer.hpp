@@ -21,6 +21,10 @@ namespace CodeRed {
 			mDepthStencil(depth_stencil) {}
 
 		~GpuFrameBuffer() = default;
+	public:
+		auto renderTarget(const size_t index = 0) const -> std::shared_ptr<GpuTexture> { return mRenderTargets[index]; }
+
+		auto depthStencil() const -> std::shared_ptr<GpuTexture> { return mDepthStencil; }
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 

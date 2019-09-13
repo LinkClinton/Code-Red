@@ -34,17 +34,20 @@ namespace CodeRed {
 			mDepthStencilState(depth_stencil_state),
 			mPixelShaderState(pixel_shader_state),
 			mResourceLayout(resource_layout),
-			mBlendState(blend_state) {}
+			mBlendState(blend_state),
+			mDevice(device) {}
 
 		~GpuGraphicsPipeline() = default;
 	protected:
-		std::shared_ptr<GpuRasterizationState> mRasterizationState = nullptr;
-		std::shared_ptr<GpuInputAssemblyState> mInputAssemblyState = nullptr;
-		std::shared_ptr<GpuVertexShaderState> mVertexShaderState = nullptr;
-		std::shared_ptr<GpuDepthStencilState> mDepthStencilState = nullptr;
-		std::shared_ptr<GpuPixelShaderState> mPixelShaderState = nullptr;
-		std::shared_ptr<GpuResourceLayout> mResourceLayout = nullptr;
-		std::shared_ptr<GpuBlendState> mBlendState = nullptr;
+		std::shared_ptr<GpuRasterizationState> mRasterizationState;
+		std::shared_ptr<GpuInputAssemblyState> mInputAssemblyState;
+		std::shared_ptr<GpuVertexShaderState> mVertexShaderState;
+		std::shared_ptr<GpuDepthStencilState> mDepthStencilState;
+		std::shared_ptr<GpuPixelShaderState> mPixelShaderState;
+		std::shared_ptr<GpuResourceLayout> mResourceLayout;
+		std::shared_ptr<GpuBlendState> mBlendState;
+
+		std::shared_ptr<GpuLogicalDevice> mDevice;
 	};
 	
 }
