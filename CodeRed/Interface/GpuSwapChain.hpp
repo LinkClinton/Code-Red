@@ -19,7 +19,7 @@ namespace CodeRed {
 	};
 	
 	class GpuSwapChain : public Noncopyable {
-	public:
+	protected:
 		GpuSwapChain(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const WindowInfo& info,

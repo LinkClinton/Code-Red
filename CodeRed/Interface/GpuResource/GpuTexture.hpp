@@ -6,12 +6,14 @@
 namespace CodeRed {
 	
 	class GpuTexture : public GpuResource {
-	public:
+	protected:
 		GpuTexture(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const ResourceInfo& resource_info) :
 			GpuResource(device, resource_info) {}
 
+		~GpuTexture() = default;
+	public:
 		auto size() const noexcept -> size_t override { return std::get<TextureProperty>(mResourceInfo.Property).Size; }
 
 		auto format() const noexcept -> PixelFormat { return std::get<TextureProperty>(mResourceInfo.Property).PixelFormat; }
@@ -33,8 +35,6 @@ namespace CodeRed {
 
 			return std::get<TextureProperty>(mResourceInfo.Property).Depth;
 		}
-		
-		~GpuTexture() = default;
 	};
 
 }

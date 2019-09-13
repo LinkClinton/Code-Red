@@ -11,7 +11,7 @@
 namespace CodeRed {
 
 	class GpuRasterizationState : GpuPipelineState {
-	public:
+	protected:
 		GpuRasterizationState() = default;
 
 		explicit GpuRasterizationState(
@@ -25,7 +25,7 @@ namespace CodeRed {
 			mCullMode(cull_mode),
 			mFillMode(fill_mode),
 			mDepthClamp(depth_clamp) {}
-
+	public:
 		auto renderTargetFormat(const size_t index = 0) const -> PixelFormat { return mRenderTargetFormats[index]; }
 		
 		auto frontFace() const noexcept -> FrontFace { return mFrontFace; }

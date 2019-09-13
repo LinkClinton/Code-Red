@@ -8,7 +8,7 @@
 namespace CodeRed {
 
 	class GpuBlendState : public GpuPipelineState {
-	public:
+	protected:
 		GpuBlendState() = default;
 		
 		explicit GpuBlendState(
@@ -16,7 +16,7 @@ namespace CodeRed {
 			mBlendProperties({ blend_property }) {}
 		
 		~GpuBlendState() = default;
-
+	public:
 		auto property(const size_t index = 0) const -> const BlendProperty & { return mBlendProperties[index]; }
 	protected:
 		std::vector<BlendProperty> mBlendProperties = { BlendProperty() };

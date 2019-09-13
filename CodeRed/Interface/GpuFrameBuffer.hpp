@@ -11,7 +11,7 @@ namespace CodeRed {
 	class GpuTexture;
 	
 	class GpuFrameBuffer : public Noncopyable {
-	public:
+	protected:
 		GpuFrameBuffer(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const std::shared_ptr<GpuTexture>& render_target,

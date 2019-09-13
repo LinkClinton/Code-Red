@@ -9,12 +9,10 @@ namespace CodeRed {
 	class GpuLogicalDevice;
 	
 	class GpuGraphicsCommandList : public Noncopyable {
-	public:
+	protected:
 		GpuGraphicsCommandList(const std::shared_ptr<GpuLogicalDevice>& device) {}
 		
 		~GpuGraphicsCommandList() = default;
-
-		
 	};
 	
 }

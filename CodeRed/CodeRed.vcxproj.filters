@@ -153,6 +153,12 @@
     <ClInclude Include="Shared\Enum\FrontFace.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuVertexShaderState.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuPixelShaderState.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">

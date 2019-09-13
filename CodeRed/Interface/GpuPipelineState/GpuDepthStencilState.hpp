@@ -7,7 +7,7 @@
 namespace CodeRed {
 
 	class GpuDepthStencilState : public GpuPipelineState {
-	public:
+	protected:
 		GpuDepthStencilState() = default;
 
 		explicit GpuDepthStencilState(
@@ -27,7 +27,7 @@ namespace CodeRed {
 			mBackFace(back) {}
 
 		~GpuDepthStencilState() = default;
-		
+	public:
 		bool depthWriteEnable() const noexcept { return mDepthWriteEnable; }
 
 		bool stencilEnable() const noexcept { return mStencilEnable; }

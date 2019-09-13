@@ -10,14 +10,14 @@
 namespace CodeRed {
 
 	struct ResourceLayoutElement {
-		ShaderVisable Visable;
-		ResourceType Type;
-		UInt32 Binding;
-		UInt32 Space;
+		ShaderVisable Visable = ShaderVisable::All;
+		ResourceType Type = ResourceType::Buffer;
+		UInt32 Binding = 0;
+		UInt32 Space = 0;
 	};
 
 	struct InputLayoutElement {
-		PixelFormat Format;
-		std::string Name;
+		PixelFormat Format = PixelFormat::Unknown;
+		std::string Name = "";
 	};
 }

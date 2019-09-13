@@ -1,22 +1,25 @@
 #pragma once
 
 #include "../Shared/LayoutElement.hpp"
-#include "../Shared/Noncopyable.hpp"
 
 #include <vector>
 
 namespace CodeRed {
 	
-	class GpuResourceLayout : public Noncopyable {
-	public:
-		GpuResourceLayout(const std::vector<ResourceLayoutElement>& elements)
+	class GpuResourceLayout {
+	protected:
+		GpuResourceLayout() = default;
+		
+		explicit GpuResourceLayout(const std::vector<ResourceLayoutElement>& elements)
 			: mElemnts(elements) {}
 		
 		~GpuResourceLayout() = default;
-
-		auto elements() const->std::vector<ResourceLayoutElement> { return mElemnts; }
+	public:
+		auto element(const size_t index) const -> ResourceLayoutElement { return mElemnts[index]; }
+		
+		auto elements() const noexcept -> std::vector<ResourceLayoutElement> { return mElemnts; }
 	protected:
-		std::vector<ResourceLayoutElement> mElemnts;
+		std::vector<ResourceLayoutElement> mElemnts = {};
 	};
 	
 }

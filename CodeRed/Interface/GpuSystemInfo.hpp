@@ -10,9 +10,11 @@ namespace CodeRed {
 	class GpuDisplayAdapter;
 	
 	class GpuSystemInfo : public Noncopyable {
-	public:	
+	protected:
+		GpuSystemInfo() = default;
+		
 		~GpuSystemInfo() = default;
-
+	public:
 		virtual auto selectDisplayAdapter() const->std::vector<std::shared_ptr<GpuDisplayAdapter>> = 0;
 	};
 	

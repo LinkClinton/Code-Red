@@ -152,7 +152,9 @@
     <ClInclude Include="Interface\GpuPipelineState\GpuDepthStencilState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuInputAssemblyState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuPipelineState.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuPixelShaderState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuRasterizationState.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuVertexShaderState.hpp" />
     <ClInclude Include="Interface\GpuResourceLayout.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuBuffer.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuResource.hpp" />

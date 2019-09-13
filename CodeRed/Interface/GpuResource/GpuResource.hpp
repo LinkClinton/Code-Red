@@ -10,7 +10,7 @@ namespace CodeRed {
 	class GpuLogicalDevice;
 	
 	class GpuResource : public Noncopyable {
-	public:
+	protected:
 		GpuResource(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const ResourceInfo& resource_info) :
@@ -18,7 +18,7 @@ namespace CodeRed {
 			mResourceInfo(resource_info) {}
 		
 		~GpuResource() = default;
-
+	public:
 		auto info() const -> ResourceInfo { return mResourceInfo; }
 
 		auto usage() const -> ResourceUsage { return mResourceInfo.Usage; }

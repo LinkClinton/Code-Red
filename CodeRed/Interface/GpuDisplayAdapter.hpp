@@ -7,9 +7,11 @@
 namespace CodeRed {
 
 	class GpuDisplayAdapter : public Noncopyable {
-	public:
+	protected:
+		GpuDisplayAdapter() = default;
+		
 		~GpuDisplayAdapter() = default;
-
+	public:
 		virtual auto name() const->std::string = 0;
 	};
 	
