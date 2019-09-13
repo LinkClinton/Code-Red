@@ -148,9 +148,11 @@
     <ClInclude Include="Interface\GpuGraphicsPipeline.hpp" />
     <ClInclude Include="Interface\GpuLogicalDevice.hpp" />
     <ClInclude Include="Interface\GpuDisplayAdapter.hpp" />
-    <ClInclude Include="Interface\GpuPipelineStage\GpuBlendStage.hpp" />
-    <ClInclude Include="Interface\GpuPipelineStage\GpuInputAssemblyStage.hpp" />
-    <ClInclude Include="Interface\GpuPipelineStage\GpuPipelineStage.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuBlendState.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuDepthStencilState.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuInputAssemblyState.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuPipelineState.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuRasterizationState.hpp" />
     <ClInclude Include="Interface\GpuResourceLayout.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuBuffer.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuResource.hpp" />
@@ -160,13 +162,19 @@
     <ClInclude Include="Shared\BlendProperty.hpp" />
     <ClInclude Include="Shared\Enum\BlendFactor.hpp" />
     <ClInclude Include="Shared\Enum\BlendOperator.hpp" />
+    <ClInclude Include="Shared\Enum\ColorMask.hpp" />
+    <ClInclude Include="Shared\Enum\CompareOperator.hpp" />
+    <ClInclude Include="Shared\Enum\CullMode.hpp" />
     <ClInclude Include="Shared\Enum\Dimension.hpp" />
+    <ClInclude Include="Shared\Enum\FillMode.hpp" />
+    <ClInclude Include="Shared\Enum\FrontFace.hpp" />
     <ClInclude Include="Shared\Enum\MemoryHeap.hpp" />
     <ClInclude Include="Shared\Enum\PixelFormat.hpp" />
     <ClInclude Include="Shared\Enum\PrimitiveTopology.hpp" />
     <ClInclude Include="Shared\Enum\ResourceType.hpp" />
     <ClInclude Include="Shared\Enum\ResourceUsage.hpp" />
     <ClInclude Include="Shared\Enum\ShaderVisable.hpp" />
+    <ClInclude Include="Shared\Enum\StencilOperator.hpp" />
     <ClInclude Include="Shared\Exception\AssertException.hpp" />
     <ClInclude Include="Shared\Exception\Exception.hpp" />
     <ClInclude Include="Shared\Exception\InvalidException.hpp" />
@@ -176,6 +184,7 @@
     <ClInclude Include="Shared\ResourceInfo.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />
     <ClInclude Include="Shared\Noncopyable.hpp" />
+    <ClInclude Include="Shared\StencilOperatorInfo.hpp" />
     <ClInclude Include="Shared\Utility.hpp" />
   </ItemGroup>
   <ItemGroup>

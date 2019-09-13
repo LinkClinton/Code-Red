@@ -4,9 +4,9 @@
 
 namespace CodeRed {
 
-	class GpuPipelineStage {
+	class GpuPipelineState {
 	public:
-		virtual ~GpuPipelineStage() = default;
+		virtual ~GpuPipelineState() = default;
 	};
 	
 }

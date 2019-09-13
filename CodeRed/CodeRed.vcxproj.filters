@@ -16,7 +16,7 @@
     <Filter Include="Shared\Exception">
       <UniqueIdentifier>{3d4330dd-cbe5-418a-bf45-0f23f8878aba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interface\GpuPipelineStage">
+    <Filter Include="Interface\GpuPipelineState">
       <UniqueIdentifier>{cb246ab6-e842-4d88-ad78-a8035862f3f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -105,17 +105,8 @@
     <ClInclude Include="Interface\GpuGraphicsPipeline.hpp">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\GpuPipelineStage\GpuInputAssemblyStage.hpp">
-      <Filter>Interface\GpuPipelineStage</Filter>
-    </ClInclude>
-    <ClInclude Include="Interface\GpuPipelineStage\GpuPipelineStage.hpp">
-      <Filter>Interface\GpuPipelineStage</Filter>
-    </ClInclude>
     <ClInclude Include="Shared\Enum\PrimitiveTopology.hpp">
       <Filter>Shared\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="Interface\GpuPipelineStage\GpuBlendStage.hpp">
-      <Filter>Interface\GpuPipelineStage</Filter>
     </ClInclude>
     <ClInclude Include="Shared\BlendProperty.hpp">
       <Filter>Shared</Filter>
@@ -124,6 +115,42 @@
       <Filter>Shared\Enum</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Enum\BlendFactor.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\ColorMask.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuBlendState.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuDepthStencilState.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuInputAssemblyState.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuPipelineState.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\CompareOperator.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\StencilOperator.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\StencilOperatorInfo.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuRasterizationState.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\CullMode.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\FillMode.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\FrontFace.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
   </ItemGroup>

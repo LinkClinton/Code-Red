@@ -2,22 +2,26 @@
 
 #include "../../Shared/Enum/PrimitiveTopology.hpp"
 #include "../../Shared/LayoutElement.hpp"
-#include "GpuPipelineStage.hpp"
+#include "GpuPipelineState.hpp"
 
 #include <vector>
 
 namespace CodeRed {
 
-	class GpuInputAssemblyStage : public GpuPipelineStage {
+	class GpuInputAssemblyState : public GpuPipelineState {
 	public:
-		GpuInputAssemblyStage(
+		explicit GpuInputAssemblyState(
 			const std::vector<InputLayoutElement>& elements,
 			const PrimitiveTopology primitive_topology = PrimitiveTopology::Undefined) :
 			mInputLayoutElements(elements), mPrimitiveTopology(primitive_topology) {}
 
-		auto elements() const -> std::vector<InputLayoutElement> { return mInputLayoutElements; }
+		~GpuInputAssemblyState() = default;
+
+		auto element(const size_t index) const -> const InputLayoutElement & { return mInputLayoutElements[index]; }
 		
-		auto primitiveTopology() const -> PrimitiveTopology { return mPrimitiveTopology; }
+		auto elements() const noexcept -> std::vector<InputLayoutElement> { return mInputLayoutElements; }
+
+		auto primitiveTopology() const noexcept -> PrimitiveTopology { return mPrimitiveTopology; }
 	protected:
 		std::vector<InputLayoutElement> mInputLayoutElements;
 		PrimitiveTopology mPrimitiveTopology;
