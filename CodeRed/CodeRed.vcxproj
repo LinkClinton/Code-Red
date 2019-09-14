@@ -171,6 +171,7 @@
     <ClInclude Include="Shared\Enum\Dimension.hpp" />
     <ClInclude Include="Shared\Enum\FillMode.hpp" />
     <ClInclude Include="Shared\Enum\FrontFace.hpp" />
+    <ClInclude Include="Shared\Enum\ResourceLayout.hpp" />
     <ClInclude Include="Shared\Enum\MemoryHeap.hpp" />
     <ClInclude Include="Shared\Enum\PixelFormat.hpp" />
     <ClInclude Include="Shared\Enum\PrimitiveTopology.hpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Shared\Exception\InvalidException.hpp" />
     <ClInclude Include="Shared\Exception\NotSupportException.hpp" />
     <ClInclude Include="Shared\Exception\ZeroException.hpp" />
+    <ClInclude Include="Shared\Extent.hpp" />
     <ClInclude Include="Shared\PixelFormatSizeOf.hpp" />
     <ClInclude Include="Shared\ResourceInfo.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />

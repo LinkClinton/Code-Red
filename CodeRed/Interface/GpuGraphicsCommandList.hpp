@@ -1,8 +1,10 @@
 #pragma once
 
+#include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Noncopyable.hpp"
 #include "../Shared/ScissorRect.hpp"
 #include "../Shared/ViewPort.hpp"
+#include "../Shared/Extent.hpp"
 
 #include <memory>
 
@@ -26,6 +28,8 @@ namespace CodeRed {
 
 		virtual void endRecoding() = 0;
 
+		virtual void reset() = 0;
+		
 		virtual void setGraphicsPipeline(
 			const std::shared_ptr<GpuGraphicsPipeline>& graphics_pipeline) = 0;
 		
@@ -34,6 +38,9 @@ namespace CodeRed {
 
 		virtual void setVertexBuffer(
 			const std::shared_ptr<GpuBuffer>& vertex_buffer) = 0;
+
+		virtual void setIndexBuffer(
+			const std::shared_ptr<GpuBuffer>& index_buffer) = 0;
 
 		virtual void setGraphicsConstantBuffer(
 			const size_t index,
@@ -62,6 +69,31 @@ namespace CodeRed {
 			const Real depth = 0,
 			const UInt8 stencil = 0) = 0;
 
+		virtual void layoutTransition(
+			const std::shared_ptr<GpuTexture>& texture,
+			const ResourceLayout old_layout,
+			const ResourceLayout new_layout) = 0;
+
+		virtual void layoutTransition(
+			const std::shared_ptr<GpuBuffer>& buffer,
+			const ResourceLayout old_layout,
+			const ResourceLayout new_layout) = 0;
+
+		virtual void copyBuffer(
+			const std::shared_ptr<GpuBuffer>& source,
+			const std::shared_ptr<GpuBuffer>& destination,
+			const size_t size = 0,
+			const size_t source_offset = 0,
+			const size_t destination_offset = 0) = 0;
+
+		virtual void copyTexture(
+			const std::shared_ptr<GpuTexture>& source,
+			const std::shared_ptr<GpuTexture>& destination,
+			const Extent3D<UInt32> &region,
+			const size_t x = 0,
+			const size_t y = 0,
+			const size_t z = 0) = 0;
+		
 		virtual void draw(
 			const size_t vertex_count,
 			const size_t instance_count = 1,

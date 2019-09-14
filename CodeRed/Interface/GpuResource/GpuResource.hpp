@@ -11,7 +11,7 @@ namespace CodeRed {
 	
 	class GpuResource : public Noncopyable {
 	protected:
-		GpuResource(
+		explicit GpuResource(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const ResourceInfo& resource_info) :
 			mDevice(device),
@@ -19,14 +19,16 @@ namespace CodeRed {
 		
 		~GpuResource() = default;
 	public:
-		auto info() const -> ResourceInfo { return mResourceInfo; }
+		auto info() const noexcept -> ResourceInfo { return mResourceInfo; }
 
-		auto usage() const -> ResourceUsage { return mResourceInfo.Usage; }
+		auto usage() const noexcept -> ResourceUsage { return mResourceInfo.Usage; }
 
-		auto heap() const -> MemoryHeap { return mResourceInfo.Heap; }
+		auto layout() const noexcept -> ResourceLayout { return mResourceInfo.Layout; }
+		
+		auto heap() const noexcept -> MemoryHeap { return mResourceInfo.Heap; }
 		
 		virtual auto size() const -> size_t = 0;
-		
+
 		virtual auto mapMemory() const -> void* = 0;
 
 		virtual void unmapMemory() const = 0;

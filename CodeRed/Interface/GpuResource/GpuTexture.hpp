@@ -7,7 +7,7 @@ namespace CodeRed {
 	
 	class GpuTexture : public GpuResource {
 	protected:
-		GpuTexture(
+		explicit GpuTexture(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const ResourceInfo& resource_info) :
 			GpuResource(device, resource_info) {}

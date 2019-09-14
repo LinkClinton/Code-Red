@@ -6,7 +6,7 @@ namespace CodeRed {
 
 	class GpuBuffer : public GpuResource {
 	protected:
-		GpuBuffer(
+		explicit GpuBuffer(
 			const std::shared_ptr<GpuLogicalDevice> &device,
 			const ResourceInfo &resource_info) :
 			GpuResource(device, resource_info) {}

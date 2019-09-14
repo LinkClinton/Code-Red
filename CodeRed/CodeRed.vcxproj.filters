@@ -168,6 +168,12 @@
     <ClInclude Include="Interface\GpuGraphicsCommandQueue.hpp">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Extent.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\ResourceLayout.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
