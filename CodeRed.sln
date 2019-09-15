@@ -5,12 +5,16 @@ VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeRed", "CodeRed\CodeRed.vcxproj", "{078AE23F-1CC2-43B5-9096-F6238C363520}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{AC756F56-F615-4EEC-8C06-7B981A6BB0EA}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo0", "Demo\Demo0\Demo0.vcxproj", "{46301E9B-A790-4499-A347-8B2B5E7B9671}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		DirectXOnly|x64 = DirectXOnly|x64
+		DirectXOnly|x86 = DirectXOnly|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -19,6 +23,10 @@ Global
 		{078AE23F-1CC2-43B5-9096-F6238C363520}.Debug|x64.Build.0 = Debug|x64
 		{078AE23F-1CC2-43B5-9096-F6238C363520}.Debug|x86.ActiveCfg = Debug|Win32
 		{078AE23F-1CC2-43B5-9096-F6238C363520}.Debug|x86.Build.0 = Debug|Win32
+		{078AE23F-1CC2-43B5-9096-F6238C363520}.DirectXOnly|x64.ActiveCfg = Debug|x64
+		{078AE23F-1CC2-43B5-9096-F6238C363520}.DirectXOnly|x64.Build.0 = Debug|x64
+		{078AE23F-1CC2-43B5-9096-F6238C363520}.DirectXOnly|x86.ActiveCfg = Debug|Win32
+		{078AE23F-1CC2-43B5-9096-F6238C363520}.DirectXOnly|x86.Build.0 = Debug|Win32
 		{078AE23F-1CC2-43B5-9096-F6238C363520}.Release|x64.ActiveCfg = Release|x64
 		{078AE23F-1CC2-43B5-9096-F6238C363520}.Release|x64.Build.0 = Release|x64
 		{078AE23F-1CC2-43B5-9096-F6238C363520}.Release|x86.ActiveCfg = Release|Win32
@@ -27,6 +35,10 @@ Global
 		{46301E9B-A790-4499-A347-8B2B5E7B9671}.Debug|x64.Build.0 = Debug|x64
 		{46301E9B-A790-4499-A347-8B2B5E7B9671}.Debug|x86.ActiveCfg = Debug|Win32
 		{46301E9B-A790-4499-A347-8B2B5E7B9671}.Debug|x86.Build.0 = Debug|Win32
+		{46301E9B-A790-4499-A347-8B2B5E7B9671}.DirectXOnly|x64.ActiveCfg = DirectXOnly|x64
+		{46301E9B-A790-4499-A347-8B2B5E7B9671}.DirectXOnly|x64.Build.0 = DirectXOnly|x64
+		{46301E9B-A790-4499-A347-8B2B5E7B9671}.DirectXOnly|x86.ActiveCfg = DirectXOnly|Win32
+		{46301E9B-A790-4499-A347-8B2B5E7B9671}.DirectXOnly|x86.Build.0 = DirectXOnly|Win32
 		{46301E9B-A790-4499-A347-8B2B5E7B9671}.Release|x64.ActiveCfg = Release|x64
 		{46301E9B-A790-4499-A347-8B2B5E7B9671}.Release|x64.Build.0 = Release|x64
 		{46301E9B-A790-4499-A347-8B2B5E7B9671}.Release|x86.ActiveCfg = Release|Win32
@@ -34,6 +46,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{46301E9B-A790-4499-A347-8B2B5E7B9671} = {AC756F56-F615-4EEC-8C06-7B981A6BB0EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A427E749-EEF2-4348-842A-BA049D2FFAF6}

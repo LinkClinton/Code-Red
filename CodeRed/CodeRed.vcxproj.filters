@@ -19,6 +19,12 @@
     <Filter Include="Interface\GpuPipelineState">
       <UniqueIdentifier>{cb246ab6-e842-4d88-ad78-a8035862f3f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vulkan">
+      <UniqueIdentifier>{3dcbe29d-c303-4fe2-8673-a5201709d6af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX12">
+      <UniqueIdentifier>{bf9d1fca-2732-42db-8a96-7cfc66bbcd90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Noncopyable.hpp">
@@ -174,10 +180,40 @@
     <ClInclude Include="Shared\Enum\ResourceLayout.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12SystemInfo.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12DisplayAdapter.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12Utility.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\FailedException.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\DebugReport.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuSampler.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
       <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12DisplayAdapter.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12SystemInfo.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\DebugReport.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12Utility.cpp">
+      <Filter>DirectX12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

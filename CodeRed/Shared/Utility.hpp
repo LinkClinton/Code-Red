@@ -7,4 +7,5 @@ namespace CodeRed {
 	using UInt8 = unsigned char;
 	using Byte = unsigned char;
 	using Real = float;
+	
 }

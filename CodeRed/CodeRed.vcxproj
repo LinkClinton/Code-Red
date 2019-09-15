@@ -92,6 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,6 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,6 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,6 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +146,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DirectX12\DirectX12DisplayAdapter.hpp" />
+    <ClInclude Include="DirectX12\DirectX12SystemInfo.hpp" />
+    <ClInclude Include="DirectX12\DirectX12Utility.hpp" />
     <ClInclude Include="Interface\GpuFence.hpp" />
     <ClInclude Include="Interface\GpuGraphicsCommandList.hpp" />
     <ClInclude Include="Interface\GpuFrameBuffer.hpp" />
@@ -160,9 +167,11 @@
     <ClInclude Include="Interface\GpuResource\GpuBuffer.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuResource.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuTexture.hpp" />
+    <ClInclude Include="Interface\GpuSampler.hpp" />
     <ClInclude Include="Interface\GpuSwapChain.hpp" />
     <ClInclude Include="Interface\GpuSystemInfo.hpp" />
     <ClInclude Include="Shared\BlendProperty.hpp" />
+    <ClInclude Include="Shared\DebugReport.hpp" />
     <ClInclude Include="Shared\Enum\BlendFactor.hpp" />
     <ClInclude Include="Shared\Enum\BlendOperator.hpp" />
     <ClInclude Include="Shared\Enum\ColorMask.hpp" />
@@ -181,6 +190,7 @@
     <ClInclude Include="Shared\Enum\StencilOperator.hpp" />
     <ClInclude Include="Shared\Exception\AssertException.hpp" />
     <ClInclude Include="Shared\Exception\Exception.hpp" />
+    <ClInclude Include="Shared\Exception\FailedException.hpp" />
     <ClInclude Include="Shared\Exception\InvalidException.hpp" />
     <ClInclude Include="Shared\Exception\NotSupportException.hpp" />
     <ClInclude Include="Shared\Exception\ZeroException.hpp" />
@@ -195,6 +205,10 @@
     <ClInclude Include="Shared\ViewPort.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DirectX12\DirectX12DisplayAdapter.cpp" />
+    <ClCompile Include="DirectX12\DirectX12SystemInfo.cpp" />
+    <ClCompile Include="DirectX12\DirectX12Utility.cpp" />
+    <ClCompile Include="Shared\DebugReport.cpp" />
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
