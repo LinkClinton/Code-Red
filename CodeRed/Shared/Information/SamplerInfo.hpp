@@ -24,18 +24,15 @@ namespace CodeRed {
 			const AddressMode addressU = AddressMode::Clamp,
 			const AddressMode addressV = AddressMode::Clamp,
 			const AddressMode addressW = AddressMode::Clamp,
-			const std::optional<Real[]>& border = std::nullopt) :
+			const Real* border = nullptr) :
 			Filter(filter),
 			AddressModeU(addressU),
 			AddressModeV(addressV),
 			AddressModeW(addressW)
 		{
-			if (border.has_value() == false) return;
+			if (border == nullptr) return;
 
-			Border[0] = border.value()[0];
-			Border[1] = border.value()[1];
-			Border[2] = border.value()[2];
-			Border[3] = border.value()[3];
+			std::copy(border, border + 4, Border);
 		}
 
 		explicit SamplerInfo(
@@ -43,19 +40,16 @@ namespace CodeRed {
 			const AddressMode addressU = AddressMode::Clamp,
 			const AddressMode addressV = AddressMode::Clamp,
 			const AddressMode addressW = AddressMode::Clamp,
-			const std::optional<Real[]>& border = std::nullopt) :
+			const Real* border = nullptr) :
 			Filter(FilterOptions::Anisotropy),
 			AddressModeU(addressU),
 			AddressModeV(addressV),
 			AddressModeW(addressW),
 			MaxAnisotropy(maxAnisotropy)
 		{
-			if (border.has_value() == false) return;
+			if (border == nullptr) return;
 
-			Border[0] = border.value()[0];
-			Border[1] = border.value()[1];
-			Border[2] = border.value()[2];
-			Border[3] = border.value()[3];
+			std::copy(border, border + 4, Border);
 		}
 	};
 	

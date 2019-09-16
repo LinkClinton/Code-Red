@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "../Shared/Information/ResourceInfo.hpp"
 #include "../Shared/Information/SamplerInfo.hpp"
 #include "../Shared/Information/WindowInfo.hpp"
@@ -21,9 +20,10 @@ namespace CodeRed {
 	class GpuResourceLayout;
 	class GpuBlendState;
 	
-	class GpuGraphicsCommandQueue;
 	class GpuGraphicsCommandList;
-
+	class GpuCommandAllocator;
+	class GpuCommandQueue;
+	
 	class GpuDisplayAdapter;
 
 	class GpuFrameBuffer;
@@ -48,10 +48,16 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& depth_stencil)
 			-> std::shared_ptr<GpuFrameBuffer> = 0;
 
-		virtual auto createGraphicsCommandList() -> std::shared_ptr<GpuGraphicsCommandList> = 0;
+		virtual auto createGraphicsCommandList(
+			const std::shared_ptr<GpuCommandAllocator> &allocator)
+			-> std::shared_ptr<GpuGraphicsCommandList> = 0;
 
-		virtual auto createGraphicsCommandQueue() -> std::shared_ptr<GpuGraphicsCommandQueue> = 0;
+		virtual auto createCommandQueue()
+			-> std::shared_ptr<GpuCommandQueue> = 0;
 
+		virtual auto createCommandAllocator()
+			->std::shared_ptr<GpuCommandAllocator> = 0;
+		
 		virtual auto createGraphicsPipeline(
 			const std::shared_ptr<GpuResourceLayout>& resource_layout,
 			const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,

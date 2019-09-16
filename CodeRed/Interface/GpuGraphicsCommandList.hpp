@@ -10,6 +10,7 @@
 
 namespace CodeRed {
 
+	class GpuCommandAllocator;
 	class GpuGraphicsPipeline;
 	class GpuLogicalDevice;
 	class GpuResourceLayout;
@@ -19,8 +20,11 @@ namespace CodeRed {
 	
 	class GpuGraphicsCommandList : public Noncopyable {
 	protected:
-		explicit GpuGraphicsCommandList(const std::shared_ptr<GpuLogicalDevice>& device) :
-			mDevice(device) {}
+		explicit GpuGraphicsCommandList(
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuCommandAllocator> &allocator) :
+			mDevice(device),
+			mAllocator(allocator) {}
 		
 		~GpuGraphicsCommandList() = default;
 	public:
@@ -108,6 +112,7 @@ namespace CodeRed {
 			const size_t start_instance_location = 0) = 0;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
+		std::shared_ptr<GpuCommandAllocator> mAllocator;
 	};
 	
 }

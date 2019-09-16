@@ -31,7 +31,8 @@ auto CodeRed::DirectX12SystemInfo::selectDisplayAdapter() const -> std::vector<s
 		
 		display_adapters.push_back(
 			std::make_shared<DirectX12DisplayAdapter>(
-				wideStringToMultiString(desc.Description)));
+				adapter,
+				wideStringToMultiString(desc.Description), desc.DeviceId, desc.VendorId));
 	}
 
 	return display_adapters;

@@ -93,6 +93,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,6 +107,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +123,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +141,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,13 +150,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DirectX12\DirectX12CommandAllocator.hpp" />
+    <ClInclude Include="DirectX12\DirectX12CommandQueue.hpp" />
     <ClInclude Include="DirectX12\DirectX12DisplayAdapter.hpp" />
+    <ClInclude Include="DirectX12\DirectX12GraphicsCommandList.hpp" />
+    <ClInclude Include="DirectX12\DirectX12LogicalDevice.hpp" />
     <ClInclude Include="DirectX12\DirectX12SystemInfo.hpp" />
     <ClInclude Include="DirectX12\DirectX12Utility.hpp" />
+    <ClInclude Include="Interface\GpuCommandAllocator.hpp" />
+    <ClInclude Include="Interface\GpuCommandQueue.hpp" />
     <ClInclude Include="Interface\GpuFence.hpp" />
     <ClInclude Include="Interface\GpuGraphicsCommandList.hpp" />
     <ClInclude Include="Interface\GpuFrameBuffer.hpp" />
-    <ClInclude Include="Interface\GpuGraphicsCommandQueue.hpp" />
     <ClInclude Include="Interface\GpuGraphicsPipeline.hpp" />
     <ClInclude Include="Interface\GpuLogicalDevice.hpp" />
     <ClInclude Include="Interface\GpuDisplayAdapter.hpp" />
@@ -210,7 +219,11 @@
     <ClInclude Include="Shared\ViewPort.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DirectX12\DirectX12CommandAllocator.cpp" />
+    <ClCompile Include="DirectX12\DirectX12CommandQueue.cpp" />
     <ClCompile Include="DirectX12\DirectX12DisplayAdapter.cpp" />
+    <ClCompile Include="DirectX12\DirectX12GraphicsCommandList.cpp" />
+    <ClCompile Include="DirectX12\DirectX12LogicalDevice.cpp" />
     <ClCompile Include="DirectX12\DirectX12SystemInfo.cpp" />
     <ClCompile Include="DirectX12\DirectX12Utility.cpp" />
     <ClCompile Include="Shared\DebugReport.cpp" />

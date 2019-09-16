@@ -8,21 +8,21 @@
 namespace CodeRed {
 
 	class GpuGraphicsCommandList;
-	class GpuLogicDevice;
+	class GpuLogicalDevice;
 	
-	class GpuGraphicsCommandQueue : public Noncopyable {
+	class GpuCommandQueue : public Noncopyable {
 	protected:
-		explicit GpuGraphicsCommandQueue(
-			const std::shared_ptr<GpuLogicDevice>& device) :
+		explicit GpuCommandQueue(
+			const std::shared_ptr<GpuLogicalDevice>& device) :
 			mDevice(device) {}
 
-		~GpuGraphicsCommandQueue() = default;
+		~GpuCommandQueue() = default;
 	public:
 		virtual void execute(const std::vector<std::shared_ptr<GpuGraphicsCommandList>>& lists) = 0;
 
 		virtual void waitIdle() = 0;
 	protected:
-		std::shared_ptr<GpuLogicDevice> mDevice;
+		std::shared_ptr<GpuLogicalDevice> mDevice;
 	};
 	
 }

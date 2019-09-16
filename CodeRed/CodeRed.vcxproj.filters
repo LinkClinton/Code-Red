@@ -171,9 +171,6 @@
     <ClInclude Include="Shared\ScissorRect.hpp">
       <Filter>Shared</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\GpuGraphicsCommandQueue.hpp">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="Shared\Extent.hpp">
       <Filter>Shared</Filter>
     </ClInclude>
@@ -216,6 +213,24 @@
     <ClInclude Include="Interface\GpuPipelineState\GpuPipelineFactory.hpp">
       <Filter>Interface\GpuPipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12LogicalDevice.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuCommandQueue.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuCommandAllocator.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12CommandQueue.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12CommandAllocator.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12GraphicsCommandList.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -231,6 +246,18 @@
       <Filter>Shared</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DirectX12Utility.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12LogicalDevice.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12CommandQueue.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12CommandAllocator.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12GraphicsCommandList.cpp">
       <Filter>DirectX12</Filter>
     </ClCompile>
   </ItemGroup>
