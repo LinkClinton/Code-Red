@@ -198,6 +198,12 @@
     <ClInclude Include="Interface\GpuSampler.hpp">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Enum\FilterOptions.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\AddressMode.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
