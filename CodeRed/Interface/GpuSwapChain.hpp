@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Shared/Information/WindowInfo.hpp"
 #include "../Shared/Enum/PixelFormat.hpp"
 #include "../Shared/Noncopyable.hpp"
 
@@ -10,13 +11,6 @@ namespace CodeRed {
 
 	class GpuLogicalDevice;
 	class GpuTexture;
-	
-	struct WindowInfo {
-		size_t width;
-		size_t height;
-
-		void* handle;
-	};
 	
 	class GpuSwapChain : public Noncopyable {
 	protected:
@@ -38,9 +32,9 @@ namespace CodeRed {
 
 		auto windowInfo() const noexcept -> WindowInfo { return mWindowInfo; }
 
-		auto width() const noexcept -> size_t { return mWindowInfo.width; }
+		auto width() const noexcept -> UInt32 { return mWindowInfo.width; }
 
-		auto height() const noexcept -> size_t { return mWindowInfo.height; }
+		auto height() const noexcept -> UInt32 { return mWindowInfo.height; }
 
 		auto format() const noexcept -> PixelFormat { return mPixelFormat; }
 		

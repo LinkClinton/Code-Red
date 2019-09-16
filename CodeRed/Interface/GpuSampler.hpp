@@ -1,77 +1,43 @@
 #pragma once
 
 
-#include "../Shared/Enum/FilterOptions.hpp"
-#include "../Shared/Enum/AddressMode.hpp"
+#include "../Shared/Information/SamplerInfo.hpp"
 #include "../Shared/Noncopyable.hpp"
 
 #include <optional>
+#include <memory>
 
 namespace CodeRed {
 
+	class GpuLogicalDevice;
+
 	class GpuSampler : public Noncopyable {
 	protected:
-		GpuSampler() = default;
-
 		explicit GpuSampler(
-			const FilterOptions filter,
-			const AddressMode addressU = AddressMode::Clamp,
-			const AddressMode addressV = AddressMode::Clamp,
-			const AddressMode addressW = AddressMode::Clamp,
-			const std::optional<Real[]>& border = std::nullopt) :
-			mFilter(filter),
-			mAddressModeU(addressU),
-			mAddressModeV(addressV),
-			mAddressModeW(addressW)
-		{
-			if (border.has_value() == false) return;
+			const std::shared_ptr<GpuLogicalDevice> &device,
+			const SamplerInfo& info) :
+			mDevice(device),
+			mInfo(info) {}
 
-			mBorderColor[0] = border.value()[0];
-			mBorderColor[1] = border.value()[1];
-			mBorderColor[2] = border.value()[2];
-			mBorderColor[3] = border.value()[3];
-		}
-
-		explicit GpuSampler(
-			const UInt32 maxAnisotropy,
-			const AddressMode addressU = AddressMode::Clamp,
-			const AddressMode addressV = AddressMode::Clamp,
-			const AddressMode addressW = AddressMode::Clamp,
-			const std::optional<Real[]> &border = std::nullopt) :
-			mFilter(FilterOptions::Anisotropy),
-			mAddressModeU(addressU),
-			mAddressModeV(addressV),
-			mAddressModeW(addressW),
-			mMaxAnisotropy(maxAnisotropy)
-		{
-			if (border.has_value() == false) return;
-
-			mBorderColor[0] = border.value()[0];
-			mBorderColor[1] = border.value()[1];
-			mBorderColor[2] = border.value()[2];
-			mBorderColor[3] = border.value()[3];
-		}
+		~GpuSampler() = default;
 	public:
-		auto filter() const noexcept -> FilterOptions { return mFilter; }
+		auto info() const noexcept -> SamplerInfo { return mInfo; }
+		
+		auto filter() const noexcept -> FilterOptions { return mInfo.Filter; }
 
-		auto addressU() const noexcept -> AddressMode { return mAddressModeU; }
+		auto addressU() const noexcept -> AddressMode { return mInfo.AddressModeU; }
 
-		auto addressV() const noexcept -> AddressMode { return mAddressModeV; }
+		auto addressV() const noexcept -> AddressMode { return mInfo.AddressModeV; }
 
-		auto addressW() const noexcept -> AddressMode { return mAddressModeW; }
+		auto addressW() const noexcept -> AddressMode { return mInfo.AddressModeW; }
 
-		auto maxAnisotropy() const noexcept -> UInt32 { return mMaxAnisotropy; }
+		auto maxAnisotropy() const noexcept -> UInt32 { return mInfo.MaxAnisotropy; }
 
-		auto border() const noexcept -> const Real* { return mBorderColor; }
+		auto border() const noexcept -> const Real* { return mInfo.Border; }
 	protected:
-		FilterOptions mFilter = FilterOptions::MinPointMagPointMipPoint;
+		std::shared_ptr<GpuLogicalDevice> mDevice;
 
-		AddressMode mAddressModeU = AddressMode::Clamp;
-		AddressMode mAddressModeV = AddressMode::Clamp;
-		AddressMode mAddressModeW = AddressMode::Clamp;
-
-		UInt32 mMaxAnisotropy = 1;
-		Real mBorderColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		SamplerInfo mInfo;
 	};
 	
 }

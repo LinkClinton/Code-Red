@@ -25,6 +25,9 @@
     <Filter Include="DirectX12">
       <UniqueIdentifier>{bf9d1fca-2732-42db-8a96-7cfc66bbcd90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shared\Information">
+      <UniqueIdentifier>{782c4430-43b5-41a8-a6a0-f10ecea5c7f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Noncopyable.hpp">
@@ -77,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="Shared\Enum\ResourceUsage.hpp">
       <Filter>Shared\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="Shared\ResourceInfo.hpp">
-      <Filter>Shared</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Enum\Dimension.hpp">
       <Filter>Shared\Enum</Filter>
@@ -203,6 +203,18 @@
     </ClInclude>
     <ClInclude Include="Shared\Enum\AddressMode.hpp">
       <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Information\WindowInfo.hpp">
+      <Filter>Shared\Information</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Information\ResourceInfo.hpp">
+      <Filter>Shared\Information</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Information\SamplerInfo.hpp">
+      <Filter>Shared\Information</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuPipelineFactory.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

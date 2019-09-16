@@ -159,6 +159,7 @@
     <ClInclude Include="Interface\GpuPipelineState\GpuBlendState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuDepthStencilState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuInputAssemblyState.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuPipelineFactory.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuPipelineState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuPixelShaderState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuRasterizationState.hpp" />
@@ -197,8 +198,10 @@
     <ClInclude Include="Shared\Exception\NotSupportException.hpp" />
     <ClInclude Include="Shared\Exception\ZeroException.hpp" />
     <ClInclude Include="Shared\Extent.hpp" />
+    <ClInclude Include="Shared\Information\ResourceInfo.hpp" />
+    <ClInclude Include="Shared\Information\SamplerInfo.hpp" />
+    <ClInclude Include="Shared\Information\WindowInfo.hpp" />
     <ClInclude Include="Shared\PixelFormatSizeOf.hpp" />
-    <ClInclude Include="Shared\ResourceInfo.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />
     <ClInclude Include="Shared\Noncopyable.hpp" />
     <ClInclude Include="Shared\ScissorRect.hpp" />

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Enum/ResourceLayout.hpp"
-#include "Enum/ResourceUsage.hpp"
-#include "Enum/PixelFormat.hpp"
-#include "Enum/MemoryHeap.hpp"
-#include "Enum/Dimension.hpp"
+#include "../Enum/ResourceLayout.hpp"
+#include "../Enum/ResourceUsage.hpp"
+#include "../Enum/PixelFormat.hpp"
+#include "../Enum/MemoryHeap.hpp"
+#include "../Enum/Dimension.hpp"
 
-#include "PixelFormatSizeOf.hpp"
+#include "../PixelFormatSizeOf.hpp"
 
 #include <variant>
 

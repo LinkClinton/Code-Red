@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Shared/ResourceInfo.hpp"
+#include "../../Shared/Information/ResourceInfo.hpp"
 #include "../../Shared/Noncopyable.hpp"
 
 #include <memory>

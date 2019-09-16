@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../Shared/Noncopyable.hpp"
-#include "GpuDisplayAdapter.hpp"
 
 #include <memory>
 #include <vector>
 
 namespace CodeRed {
 
+	class GpuDisplayAdapter;
+	
 	class GpuSystemInfo : public Noncopyable {
 	protected:
 		GpuSystemInfo() = default;

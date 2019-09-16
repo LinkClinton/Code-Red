@@ -15,7 +15,7 @@ namespace CodeRed {
 		GpuRasterizationState() = default;
 
 		explicit GpuRasterizationState(
-			const PixelFormat render_target_format = PixelFormat::Unknown,
+			const PixelFormat render_target_format,
 			const FrontFace front_face = FrontFace::Clockwise,
 			const CullMode cull_mode = CullMode::Back,
 			const FillMode fill_mode = FillMode::Solid,
