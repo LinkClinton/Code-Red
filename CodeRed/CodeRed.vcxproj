@@ -153,8 +153,11 @@
     <ClInclude Include="DirectX12\DirectX12CommandAllocator.hpp" />
     <ClInclude Include="DirectX12\DirectX12CommandQueue.hpp" />
     <ClInclude Include="DirectX12\DirectX12DisplayAdapter.hpp" />
+    <ClInclude Include="DirectX12\DirectX12Fence.hpp" />
     <ClInclude Include="DirectX12\DirectX12GraphicsCommandList.hpp" />
     <ClInclude Include="DirectX12\DirectX12LogicalDevice.hpp" />
+    <ClInclude Include="DirectX12\DirectX12ResourceLayout.hpp" />
+    <ClInclude Include="DirectX12\DirectX12Sampler.hpp" />
     <ClInclude Include="DirectX12\DirectX12SystemInfo.hpp" />
     <ClInclude Include="DirectX12\DirectX12Utility.hpp" />
     <ClInclude Include="Interface\GpuCommandAllocator.hpp" />
@@ -176,8 +179,8 @@
     <ClInclude Include="Interface\GpuResourceLayout.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuBuffer.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuResource.hpp" />
+    <ClInclude Include="Interface\GpuResource\GpuSampler.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuTexture.hpp" />
-    <ClInclude Include="Interface\GpuSampler.hpp" />
     <ClInclude Include="Interface\GpuSwapChain.hpp" />
     <ClInclude Include="Interface\GpuSystemInfo.hpp" />
     <ClInclude Include="Shared\BlendProperty.hpp" />
@@ -185,6 +188,7 @@
     <ClInclude Include="Shared\Enum\AddressMode.hpp" />
     <ClInclude Include="Shared\Enum\BlendFactor.hpp" />
     <ClInclude Include="Shared\Enum\BlendOperator.hpp" />
+    <ClInclude Include="Shared\Enum\BorderColor.hpp" />
     <ClInclude Include="Shared\Enum\ColorMask.hpp" />
     <ClInclude Include="Shared\Enum\CompareOperator.hpp" />
     <ClInclude Include="Shared\Enum\CullMode.hpp" />
@@ -198,7 +202,7 @@
     <ClInclude Include="Shared\Enum\PrimitiveTopology.hpp" />
     <ClInclude Include="Shared\Enum\ResourceType.hpp" />
     <ClInclude Include="Shared\Enum\ResourceUsage.hpp" />
-    <ClInclude Include="Shared\Enum\ShaderVisable.hpp" />
+    <ClInclude Include="Shared\Enum\ShaderVisibility.hpp" />
     <ClInclude Include="Shared\Enum\StencilOperator.hpp" />
     <ClInclude Include="Shared\Exception\AssertException.hpp" />
     <ClInclude Include="Shared\Exception\Exception.hpp" />
@@ -222,8 +226,11 @@
     <ClCompile Include="DirectX12\DirectX12CommandAllocator.cpp" />
     <ClCompile Include="DirectX12\DirectX12CommandQueue.cpp" />
     <ClCompile Include="DirectX12\DirectX12DisplayAdapter.cpp" />
+    <ClCompile Include="DirectX12\DirectX12Fence.cpp" />
     <ClCompile Include="DirectX12\DirectX12GraphicsCommandList.cpp" />
     <ClCompile Include="DirectX12\DirectX12LogicalDevice.cpp" />
+    <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp" />
+    <ClCompile Include="DirectX12\DirectX12Sampler.cpp" />
     <ClCompile Include="DirectX12\DirectX12SystemInfo.cpp" />
     <ClCompile Include="DirectX12\DirectX12Utility.cpp" />
     <ClCompile Include="Shared\DebugReport.cpp" />

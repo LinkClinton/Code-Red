@@ -9,7 +9,7 @@
 
 namespace CodeRed {
 
-	class FailedException : Exception {
+	class FailedException : public Exception {
 	public:
 		using Type = DebugType;
 	public:

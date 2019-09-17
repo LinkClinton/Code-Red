@@ -72,9 +72,6 @@
     <ClInclude Include="Shared\Utility.hpp">
       <Filter>Shared</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Enum\ShaderVisable.hpp">
-      <Filter>Shared\Enum</Filter>
-    </ClInclude>
     <ClInclude Include="Shared\Enum\PixelFormat.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
@@ -192,9 +189,6 @@
     <ClInclude Include="Shared\DebugReport.hpp">
       <Filter>Shared</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\GpuSampler.hpp">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="Shared\Enum\FilterOptions.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
@@ -231,6 +225,24 @@
     <ClInclude Include="DirectX12\DirectX12GraphicsCommandList.hpp">
       <Filter>DirectX12</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12Fence.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12Sampler.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuResource\GpuSampler.hpp">
+      <Filter>Interface\GpuResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\BorderColor.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12ResourceLayout.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\ShaderVisibility.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -258,6 +270,15 @@
       <Filter>DirectX12</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DirectX12GraphicsCommandList.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12Fence.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12Sampler.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp">
       <Filter>DirectX12</Filter>
     </ClCompile>
   </ItemGroup>

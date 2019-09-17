@@ -15,6 +15,7 @@ namespace CodeRed {
 	class GpuLogicalDevice;
 	class GpuResourceLayout;
 	class GpuFrameBuffer;
+	class GpuSampler;
 	class GpuTexture;
 	class GpuBuffer;
 	

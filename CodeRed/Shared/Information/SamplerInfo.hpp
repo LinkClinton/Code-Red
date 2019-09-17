@@ -2,8 +2,7 @@
 
 #include "../Enum/FilterOptions.hpp"
 #include "../Enum/AddressMode.hpp"
-
-#include <optional>
+#include "../Enum/BorderColor.hpp"
 
 namespace CodeRed {
 
@@ -14,8 +13,9 @@ namespace CodeRed {
 		AddressMode AddressModeV = AddressMode::Clamp;
 		AddressMode AddressModeW = AddressMode::Clamp;
 
+		BorderColor Border;
+		
 		UInt32 MaxAnisotropy = 1;
-		Real Border[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 		SamplerInfo() = default;
 
@@ -24,33 +24,26 @@ namespace CodeRed {
 			const AddressMode addressU = AddressMode::Clamp,
 			const AddressMode addressV = AddressMode::Clamp,
 			const AddressMode addressW = AddressMode::Clamp,
-			const Real* border = nullptr) :
+			const BorderColor border = BorderColor::TransparentBlack) :
 			Filter(filter),
 			AddressModeU(addressU),
 			AddressModeV(addressV),
-			AddressModeW(addressW)
-		{
-			if (border == nullptr) return;
-
-			std::copy(border, border + 4, Border);
-		}
+			AddressModeW(addressW),
+			Border(border) {}
 
 		explicit SamplerInfo(
 			const UInt32 maxAnisotropy,
 			const AddressMode addressU = AddressMode::Clamp,
 			const AddressMode addressV = AddressMode::Clamp,
 			const AddressMode addressW = AddressMode::Clamp,
-			const Real* border = nullptr) :
+			const BorderColor border = BorderColor::TransparentBlack) :
 			Filter(FilterOptions::Anisotropy),
 			AddressModeU(addressU),
 			AddressModeV(addressV),
 			AddressModeW(addressW),
-			MaxAnisotropy(maxAnisotropy)
-		{
-			if (border == nullptr) return;
-
-			std::copy(border, border + 4, Border);
-		}
+			MaxAnisotropy(maxAnisotropy),
+			Border(border) {}
+		
 	};
 	
 }

@@ -23,12 +23,6 @@ CodeRed::DirectX12LogicalDevice::DirectX12LogicalDevice(const std::shared_ptr<Gp
 	throwIfFailed(
 		D3D12CreateDevice(dxgiAdapter->adapter().Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mDevice)),
 		FailedException({ "ID3D12Device" }, DebugType::Create));
-
-	//create Direct3D 12 Command Allocator
-	//Direct3D 12 Command Allocator is used for Graphics Command List
-	throwIfFailed(
-		mDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mCommandAllocator)),
-		FailedException({ "ID3D12CommandAllocator" }, DebugType::Create));
 }
 
 #endif

@@ -1,25 +1,30 @@
 #pragma once
 
 #include "Enum/ResourceType.hpp"
-#include "Enum/ShaderVisable.hpp"
+#include "Enum/ShaderVisibility.hpp"
 #include "Enum/PixelFormat.hpp"
 #include "Utility.hpp"
 
-#include <optional>
-#include <memory>
 #include <string>
+#include <memory>
 
 namespace CodeRed {
 
 	class GpuSampler;
 	
 	struct ResourceLayoutElement {
-		ShaderVisable Visable = ShaderVisable::All;
+		ShaderVisibility Visibility = ShaderVisibility::All;
 		ResourceType Type = ResourceType::Buffer;
 		UInt32 Binding = 0;
 		UInt32 Space = 0;
+	};
 
-		std::optional<std::shared_ptr<GpuSampler>> Sampler = std::nullopt;
+	struct SamplerLayoutElement {
+		ShaderVisibility Visibility = ShaderVisibility::All;
+		UInt32 Binding = 0;
+		UInt32 Space = 0;
+
+		std::shared_ptr<GpuSampler> Sampler;
 	};
 
 	struct InputLayoutElement {

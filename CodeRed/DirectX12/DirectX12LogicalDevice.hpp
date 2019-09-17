@@ -16,10 +16,7 @@ namespace CodeRed {
 		~DirectX12LogicalDevice() = default;
 		
 		auto device() const noexcept -> WRL::ComPtr<ID3D12Device> { return mDevice; }
-
-		auto commandAllocator() const noexcept -> WRL::ComPtr<ID3D12CommandAllocator> { return mCommandAllocator; }
 	private:
-		WRL::ComPtr<ID3D12CommandAllocator> mCommandAllocator;
 		WRL::ComPtr<ID3D12Device> mDevice;
 	};
 	

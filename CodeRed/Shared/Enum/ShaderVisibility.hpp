@@ -4,7 +4,7 @@
 
 namespace CodeRed {
 
-	enum class ShaderVisable : UInt32
+	enum class ShaderVisibility : UInt32
 	{
 		All,
 		Vertex,

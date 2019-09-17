@@ -16,7 +16,7 @@ namespace CodeRed {
 
 		~DirectX12GraphicsCommandList() = default;
 
-		auto commandLIst() const noexcept -> WRL::ComPtr<ID3D12GraphicsCommandList> { return mGraphicsCommandList; }
+		auto commandList() const noexcept -> WRL::ComPtr<ID3D12GraphicsCommandList> { return mGraphicsCommandList; }
 	protected:
 		WRL::ComPtr<ID3D12GraphicsCommandList> mGraphicsCommandList;
 	};

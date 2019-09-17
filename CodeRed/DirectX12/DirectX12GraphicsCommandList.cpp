@@ -17,7 +17,7 @@ CodeRed::DirectX12GraphicsCommandList::DirectX12GraphicsCommandList(
 	throwIfFailed(
 		dxDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
 			dxAllocator.Get(), nullptr, IID_PPV_ARGS(&mGraphicsCommandList)),
-	FailedException({ "ID3D12GraphicsCommandList" }, DebugType::Create));
+		FailedException({ "ID3D12GraphicsCommandList" }, DebugType::Create));
 }
 
 #endif

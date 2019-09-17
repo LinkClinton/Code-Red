@@ -1,10 +1,9 @@
 #pragma once
 
 
-#include "../Shared/Information/SamplerInfo.hpp"
-#include "../Shared/Noncopyable.hpp"
+#include "../../Shared/Information/SamplerInfo.hpp"
+#include "../../Shared/Noncopyable.hpp"
 
-#include <optional>
 #include <memory>
 
 namespace CodeRed {
@@ -33,7 +32,7 @@ namespace CodeRed {
 
 		auto maxAnisotropy() const noexcept -> UInt32 { return mInfo.MaxAnisotropy; }
 
-		auto border() const noexcept -> const Real* { return mInfo.Border; }
+		auto border() const noexcept -> BorderColor { return mInfo.Border; }
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 

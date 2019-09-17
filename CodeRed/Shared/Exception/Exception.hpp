@@ -16,7 +16,7 @@ namespace CodeRed {
 	public:
 		Exception() = default;
 
-		Exception(const char* const message) :
+		explicit Exception(const char* const message) :
 			std::exception(message) {}
 	};
 }

@@ -29,6 +29,7 @@ namespace CodeRed {
 	class GpuFrameBuffer;
 	class GpuSwapChain;
 
+	class GpuSampler;
 	class GpuTexture;
 	class GpuBuffer;
 
@@ -69,7 +70,8 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuGraphicsPipeline> = 0;
 
 		virtual auto createResourceLayout(
-			const std::vector<ResourceLayoutElement>& elements)
+			const std::vector<ResourceLayoutElement>& elements,
+			const std::vector<SamplerLayoutElement>& samplers)
 			-> std::shared_ptr<GpuResourceLayout> = 0;
 
 		virtual auto createSampler(
