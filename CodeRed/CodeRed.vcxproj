@@ -163,6 +163,7 @@
     <ClInclude Include="DirectX12\DirectX12ResourceLayout.hpp" />
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Buffer.hpp" />
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Sampler.hpp" />
+    <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Texture.hpp" />
     <ClInclude Include="DirectX12\DirectX12SystemInfo.hpp" />
     <ClInclude Include="DirectX12\DirectX12Utility.hpp" />
     <ClInclude Include="Interface\GpuCommandAllocator.hpp" />
@@ -237,6 +238,7 @@
     <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp" />
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp" />
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Sampler.cpp" />
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Texture.cpp" />
     <ClCompile Include="DirectX12\DirectX12SystemInfo.cpp" />
     <ClCompile Include="DirectX12\DirectX12Utility.cpp" />
     <ClCompile Include="Shared\DebugReport.cpp" />

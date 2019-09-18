@@ -27,5 +27,9 @@ namespace CodeRed {
 			static_cast<UInt32>(left) &
 			static_cast<UInt32>(right));
 	}
-	
+
+	inline bool enumHas(const ResourceUsage& left, const ResourceUsage& right) {
+		if ((left & right) == right) return true;
+		return false;
+	}
 }

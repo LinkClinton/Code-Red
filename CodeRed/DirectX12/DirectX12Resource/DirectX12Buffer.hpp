@@ -14,6 +14,8 @@ namespace CodeRed {
 			const ResourceInfo info);
 
 		~DirectX12Buffer() = default;
+
+		auto buffer() const noexcept -> WRL::ComPtr<ID3D12Resource> { return mBuffer; }
 	private:
 		WRL::ComPtr<ID3D12Resource> mBuffer;
 	};

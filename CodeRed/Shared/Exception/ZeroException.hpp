@@ -7,8 +7,10 @@ namespace CodeRed {
 	template<typename T>
 	class ZeroException : public InvalidException<T> {
 	public:
-		ZeroException(T* value = nullptr) :
-			InvalidException<T>(value, "The value is zeor.") {}
+		explicit ZeroException(
+			const std::vector<std::string> &messages,
+			T* value = nullptr) :
+			InvalidException<T>(messages, value, "The [0] is zero.") {}
 	};
 	
 }

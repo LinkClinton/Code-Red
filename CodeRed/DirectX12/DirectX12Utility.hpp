@@ -20,6 +20,7 @@ namespace CodeRed {
 	enum class FilterOptions : UInt32;
 	enum class ResourceUsage : UInt32;
 	enum class ResourceType : UInt32;
+	enum class PixelFormat : UInt32;
 	enum class AddressMode : UInt32;
 	enum class BorderColor : UInt32;
 	enum class MemoryHeap : UInt32;
@@ -44,6 +45,8 @@ namespace CodeRed {
 	auto enumConvert(const ResourceUsage usage) -> D3D12_RESOURCE_FLAGS;
 
 	auto enumConvert(const MemoryHeap heap) -> D3D12_HEAP_TYPE;
+
+	auto enumConvert(const PixelFormat format) -> DXGI_FORMAT;
 }
 
 #endif

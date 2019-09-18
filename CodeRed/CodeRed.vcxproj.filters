@@ -249,6 +249,9 @@
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Sampler.hpp">
       <Filter>DirectX12\DirectX12Resource</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Texture.hpp">
+      <Filter>DirectX12\DirectX12Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -288,6 +291,9 @@
       <Filter>DirectX12\DirectX12Resource</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp">
+      <Filter>DirectX12\DirectX12Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Texture.cpp">
       <Filter>DirectX12\DirectX12Resource</Filter>
     </ClCompile>
   </ItemGroup>

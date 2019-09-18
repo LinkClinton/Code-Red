@@ -7,6 +7,7 @@
 #include "../Shared/Enum/FilterOptions.hpp"
 #include "../Shared/Enum/ResourceUsage.hpp"
 #include "../Shared/Enum/ResourceType.hpp"
+#include "../Shared/Enum/PixelFormat.hpp"
 #include "../Shared/Enum/AddressMode.hpp"
 #include "../Shared/Enum/BorderColor.hpp"
 #include "../Shared/Enum/MemoryHeap.hpp"
@@ -142,9 +143,8 @@ auto CodeRed::enumConvert(const ResourceUsage usage)
 
 	//if usage has this mask we disable, we will throw a InvalidException with nullptr
 	for (auto mask : disableMask) {
-		throwIf(
-			(usage & mask) == mask,
-			InvalidException<ResourceUsage>(nullptr));
+		if (enumHas(usage, mask))
+			throw InvalidException<ResourceUsage>({ "usage" });
 	}
 #endif
 
@@ -169,7 +169,7 @@ auto CodeRed::enumConvert(const ResourceUsage usage)
 	auto res = D3D12_RESOURCE_FLAG_NONE;
 	
 	for (size_t index = 0; index < sourcePool.size(); index++) {
-		if ((usage & sourcePool[index]) == sourcePool[index])
+		if (enumHas(usage, sourcePool[index]))
 			res = res | targetPool[index];
 	}
 
@@ -185,6 +185,17 @@ auto CodeRed::enumConvert(const MemoryHeap heap)
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
+}
+
+auto CodeRed::enumConvert(const PixelFormat format)
+	-> DXGI_FORMAT
+{
+	switch (format) {
+	case PixelFormat::RedGreenBlueAlpha8BitUnknown: return DXGI_FORMAT_R8G8B8A8_UNORM;
+	case PixelFormat::Unknown: return DXGI_FORMAT_UNKNOWN;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}	
 }
 
 #endif

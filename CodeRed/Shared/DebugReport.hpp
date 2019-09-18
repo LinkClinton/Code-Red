@@ -28,6 +28,8 @@ namespace CodeRed {
 			const std::string& message_template, 
 			const std::vector<std::string>& messages) -> std::string;
 
+		template<typename T>
+		friend class InvalidException;
 		friend class FailedException;
 	};
 	
