@@ -8,10 +8,8 @@ namespace CodeRed {
 
 	class GpuDepthStencilState : public GpuPipelineState {
 	protected:
-		GpuDepthStencilState() = default;
-
 		explicit GpuDepthStencilState(
-			const PixelFormat depth_stencil_format,
+			const PixelFormat format,
 			const bool depth_enable = true,
 			const bool depth_write_enable = true,
 			const bool stencil_enable = false,
@@ -22,7 +20,7 @@ namespace CodeRed {
 			mStencilEnable(stencil_enable),
 			mDepthEnable(depth_enable),
 			mDepthOperator(depth_operator),
-			mDepthStencilFormat(depth_stencil_format),
+			mDepthStencilFormat(format),
 			mFrontFace(front),
 			mBackFace(back) {}
 

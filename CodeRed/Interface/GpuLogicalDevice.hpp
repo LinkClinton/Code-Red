@@ -14,10 +14,9 @@ namespace CodeRed {
 	class GpuRasterizationState;
 	class GpuInputAssemblyState;
 	class GpuDepthStencilState;
-	class GpuVertexShaderState;
 	class GpuGraphicsPipeline;
-	class GpuPixelShaderState;
 	class GpuResourceLayout;
+	class GpuShaderState;
 	class GpuBlendState;
 	
 	class GpuGraphicsCommandList;
@@ -62,8 +61,8 @@ namespace CodeRed {
 		virtual auto createGraphicsPipeline(
 			const std::shared_ptr<GpuResourceLayout>& resource_layout,
 			const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
-			const std::shared_ptr<GpuVertexShaderState>& vertex_shader_state,
-			const std::shared_ptr<GpuPixelShaderState>& pixel_shader_state,
+			const std::shared_ptr<GpuShaderState>& vertex_shader_state,
+			const std::shared_ptr<GpuShaderState>& pixel_shader_state,
 			const std::shared_ptr<GpuDepthStencilState>& depth_stencil_state,
 			const std::shared_ptr<GpuBlendState>& blend_state,
 			const std::shared_ptr<GpuRasterizationState>& rasterization_state)

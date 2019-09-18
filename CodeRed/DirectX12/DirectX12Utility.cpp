@@ -3,14 +3,21 @@
 #include "../Shared/Exception/Exception.hpp"
 
 #include "../Shared/Enum/ShaderVisibility.hpp"
+#include "../Shared/Enum/CompareOperator.hpp"
+#include "../Shared/Enum/StencilOperator.hpp"
 #include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Enum/FilterOptions.hpp"
 #include "../Shared/Enum/ResourceUsage.hpp"
+#include "../Shared/Enum/BlendOperator.hpp"
 #include "../Shared/Enum/ResourceType.hpp"
 #include "../Shared/Enum/PixelFormat.hpp"
 #include "../Shared/Enum/AddressMode.hpp"
 #include "../Shared/Enum/BorderColor.hpp"
+#include "../Shared/Enum/BlendFactor.hpp"
 #include "../Shared/Enum/MemoryHeap.hpp"
+#include "../Shared/Enum/Dimension.hpp"
+#include "../Shared/Enum/FillMode.hpp"
+#include "../Shared/Enum/CullMode.hpp"
 
 
 #include "DirectX12Utility.hpp"
@@ -196,6 +203,118 @@ auto CodeRed::enumConvert(const PixelFormat format)
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}	
+}
+
+auto CodeRed::enumConvert(const Dimension dimension)
+	-> D3D12_RESOURCE_DIMENSION
+{
+	switch (dimension) {
+	case Dimension::Dimension1D: return D3D12_RESOURCE_DIMENSION_TEXTURE1D;
+	case Dimension::Dimension2D: return D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	case Dimension::Dimension3D: return D3D12_RESOURCE_DIMENSION_TEXTURE3D;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}	
+}
+
+auto CodeRed::enumConvert(const CompareOperator op)
+	-> D3D12_COMPARISON_FUNC
+{
+	switch (op) {
+	case CompareOperator::Never: return D3D12_COMPARISON_FUNC_NEVER;
+	case CompareOperator::Less: return D3D12_COMPARISON_FUNC_LESS;
+	case CompareOperator::Equal: return D3D12_COMPARISON_FUNC_EQUAL;
+	case CompareOperator::LessEqual: return D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	case CompareOperator::Greater: return D3D12_COMPARISON_FUNC_GREATER;
+	case CompareOperator::NotEqual: return D3D12_COMPARISON_FUNC_NOT_EQUAL;
+	case CompareOperator::GreaterEqual: return D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+	case CompareOperator::Always: return D3D12_COMPARISON_FUNC_ALWAYS;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert(const StencilOperator op)
+	-> D3D12_STENCIL_OP
+{
+	switch (op) {
+	case StencilOperator::Keep: return D3D12_STENCIL_OP_KEEP;
+	case StencilOperator::Zero: return D3D12_STENCIL_OP_ZERO;
+	case StencilOperator::Replace: return D3D12_STENCIL_OP_REPLACE;
+	case StencilOperator::IncrementAndClamp: return D3D12_STENCIL_OP_INCR_SAT;
+	case StencilOperator::DecrementAndClamp: return D3D12_STENCIL_OP_DECR_SAT;
+	case StencilOperator::Invert: return D3D12_STENCIL_OP_INVERT;
+	case StencilOperator::IncrementAndWrap: return D3D12_STENCIL_OP_INCR;
+	case StencilOperator::DecrementAndWrap: return D3D12_STENCIL_OP_DECR;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert(const BlendOperator op)
+	-> D3D12_BLEND_OP
+{
+	switch (op) {
+	case BlendOperator::Add: return D3D12_BLEND_OP_ADD;
+	case BlendOperator::Subtract: return D3D12_BLEND_OP_SUBTRACT;
+	case BlendOperator::ReverseSubtract: return D3D12_BLEND_OP_REV_SUBTRACT;
+	case BlendOperator::Min: return D3D12_BLEND_OP_MIN;
+	case BlendOperator::Max: return D3D12_BLEND_OP_MAX;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert(const BlendFactor factor)
+	-> D3D12_BLEND
+{
+	switch (factor) {
+	case BlendFactor::Zero: return D3D12_BLEND_ZERO;
+	case BlendFactor::One: return D3D12_BLEND_ONE;
+	case BlendFactor::SrcColor: return D3D12_BLEND_SRC_COLOR;
+	case BlendFactor::InvSrcColor: return D3D12_BLEND_INV_SRC_COLOR;
+	case BlendFactor::SrcAlpha: return D3D12_BLEND_SRC_ALPHA;
+	case BlendFactor::InvSrcAlpha: return D3D12_BLEND_INV_SRC_ALPHA;
+	case BlendFactor::DestAlpha: return D3D12_BLEND_DEST_ALPHA;
+	case BlendFactor::InvDestAlpha: return D3D12_BLEND_INV_DEST_ALPHA;
+	case BlendFactor::DescColor: return D3D12_BLEND_DEST_COLOR;
+	case BlendFactor::InvDestColor: return D3D12_BLEND_INV_DEST_COLOR;
+	case BlendFactor::Factor: return D3D12_BLEND_BLEND_FACTOR;
+	case BlendFactor::InvFactor: return D3D12_BLEND_INV_BLEND_FACTOR;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert(const ColorMask mask)
+	-> D3D12_COLOR_WRITE_ENABLE
+{
+	//the enum is same as D3D12_COLOR_WRITE_ENABLE
+	//so we only change the type
+	return static_cast<D3D12_COLOR_WRITE_ENABLE>(mask);
+}
+
+auto CodeRed::enumConvert(const FillMode mode)
+	-> D3D12_FILL_MODE
+{
+	switch (mode) {
+	case FillMode::Wireframe: return D3D12_FILL_MODE_WIREFRAME;
+	case FillMode::Solid: return D3D12_FILL_MODE_SOLID;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert(const CullMode mode)
+	-> D3D12_CULL_MODE
+{
+	switch (mode) {
+	case CullMode::None: return D3D12_CULL_MODE_NONE;
+	case CullMode::Front: return D3D12_CULL_MODE_FRONT;
+	case CullMode::Back: return D3D12_CULL_MODE_BACK;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
 }
 
 #endif

@@ -28,8 +28,11 @@
     <Filter Include="Shared\Information">
       <UniqueIdentifier>{782c4430-43b5-41a8-a6a0-f10ecea5c7f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12\DirectX12PipelineState">
+      <UniqueIdentifier>{1a72c95d-d246-409b-8a80-773b79bcad50}</UniqueIdentifier>
+    </Filter>
     <Filter Include="DirectX12\DirectX12Resource">
-      <UniqueIdentifier>{cd1cc6a3-ca27-4f70-b0e2-2aa26a3056c6}</UniqueIdentifier>
+      <UniqueIdentifier>{f828545d-72c7-4e1d-8ba4-351977393692}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,12 +162,6 @@
     <ClInclude Include="Shared\Enum\FrontFace.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\GpuPipelineState\GpuVertexShaderState.hpp">
-      <Filter>Interface\GpuPipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="Interface\GpuPipelineState\GpuPixelShaderState.hpp">
-      <Filter>Interface\GpuPipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="Shared\ViewPort.hpp">
       <Filter>Shared</Filter>
     </ClInclude>
@@ -252,6 +249,24 @@
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Texture.hpp">
       <Filter>DirectX12\DirectX12Resource</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12InputAssemblyState.hpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuPipelineState\GpuShaderState.hpp">
+      <Filter>Interface\GpuPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12ShaderState.hpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12DepthStencilState.hpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12BlendState.hpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.hpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -287,14 +302,29 @@
     <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp">
       <Filter>DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Sampler.cpp">
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp">
       <Filter>DirectX12\DirectX12Resource</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp">
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Sampler.cpp">
       <Filter>DirectX12\DirectX12Resource</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Texture.cpp">
       <Filter>DirectX12\DirectX12Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12InputAssemblyState.cpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12ShaderState.cpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12DepthStencilState.cpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12BlendState.cpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.cpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

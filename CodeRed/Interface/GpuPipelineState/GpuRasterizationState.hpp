@@ -12,8 +12,6 @@ namespace CodeRed {
 
 	class GpuRasterizationState : GpuPipelineState {
 	protected:
-		GpuRasterizationState() = default;
-
 		explicit GpuRasterizationState(
 			const PixelFormat render_target_format,
 			const FrontFace front_face = FrontFace::Clockwise,

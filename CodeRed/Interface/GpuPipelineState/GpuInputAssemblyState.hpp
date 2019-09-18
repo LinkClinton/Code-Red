@@ -15,17 +15,17 @@ namespace CodeRed {
 		explicit GpuInputAssemblyState(
 			const std::vector<InputLayoutElement>& elements,
 			const PrimitiveTopology primitive_topology = PrimitiveTopology::Undefined) :
-			mInputLayoutElements(elements), mPrimitiveTopology(primitive_topology) {}
+			mElements(elements), mPrimitiveTopology(primitive_topology) {}
 
 		~GpuInputAssemblyState() = default;
 	public:
-		auto element(const size_t index) const -> const InputLayoutElement & { return mInputLayoutElements[index]; }
+		auto element(const size_t index) const -> const InputLayoutElement & { return mElements[index]; }
 		
-		auto elements() const noexcept -> std::vector<InputLayoutElement> { return mInputLayoutElements; }
+		auto elements() const noexcept -> std::vector<InputLayoutElement> { return mElements; }
 
 		auto primitiveTopology() const noexcept -> PrimitiveTopology { return mPrimitiveTopology; }
 	protected:
-		std::vector<InputLayoutElement> mInputLayoutElements = {};
+		std::vector<InputLayoutElement> mElements = {};
 		
 		PrimitiveTopology mPrimitiveTopology = PrimitiveTopology::Undefined;
 	};

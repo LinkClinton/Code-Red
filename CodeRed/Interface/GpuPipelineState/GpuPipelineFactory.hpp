@@ -19,8 +19,7 @@ namespace CodeRed {
 	class GpuInputAssemblyState;
 	class GpuRasterizationState;
 	class GpuDepthStencilState;
-	class GpuVertexShaderState;
-	class GpuPixelShaderState;
+	class GpuShaderState;
 	class GpuBlendState;
 	
 	class GpuPipelineFactory : public Noncopyable {
@@ -52,13 +51,9 @@ namespace CodeRed {
 			const StencilOperatorInfo& back = StencilOperatorInfo())
 			-> std::shared_ptr<GpuDepthStencilState> = 0;
 
-		virtual auto createVertexShaderState(
+		virtual auto createShaderState(
 			const std::vector<Byte>& code)
-			-> std::shared_ptr<GpuVertexShaderState> = 0;
-
-		virtual auto createPixelShaderState(
-			const std::vector<Byte>& code)
-			-> std::shared_ptr<GpuPixelShaderState> = 0;
+			-> std::shared_ptr<GpuShaderState> = 0;
 
 		virtual auto createBlendState(
 			const BlendProperty& property = BlendProperty())

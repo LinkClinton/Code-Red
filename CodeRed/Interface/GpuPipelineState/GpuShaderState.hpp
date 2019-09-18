@@ -7,11 +7,11 @@
 
 namespace CodeRed {
 
-	class GpuPixelShaderState : public GpuPipelineState {
+	class GpuShaderState : public GpuPipelineState {
 	protected:
-		GpuPixelShaderState() = default;
+		GpuShaderState() = default;
 
-		explicit GpuPixelShaderState(
+		explicit GpuShaderState(
 			const std::vector<Byte>& code) :
 			mCode(code) {}
 	public:

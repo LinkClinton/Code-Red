@@ -16,7 +16,7 @@ namespace CodeRed {
 		~DirectX12Texture() = default;
 
 		auto texture() const noexcept -> WRL::ComPtr<ID3D12Resource> { return mTexture; }
-	protected:
+	private:
 		WRL::ComPtr<ID3D12Resource> mTexture;
 	};
 	

@@ -160,6 +160,11 @@
     <ClInclude Include="DirectX12\DirectX12Fence.hpp" />
     <ClInclude Include="DirectX12\DirectX12GraphicsCommandList.hpp" />
     <ClInclude Include="DirectX12\DirectX12LogicalDevice.hpp" />
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12BlendState.hpp" />
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12DepthStencilState.hpp" />
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12InputAssemblyState.hpp" />
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.hpp" />
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12ShaderState.hpp" />
     <ClInclude Include="DirectX12\DirectX12ResourceLayout.hpp" />
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Buffer.hpp" />
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Sampler.hpp" />
@@ -179,9 +184,8 @@
     <ClInclude Include="Interface\GpuPipelineState\GpuInputAssemblyState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuPipelineFactory.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuPipelineState.hpp" />
-    <ClInclude Include="Interface\GpuPipelineState\GpuPixelShaderState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuRasterizationState.hpp" />
-    <ClInclude Include="Interface\GpuPipelineState\GpuVertexShaderState.hpp" />
+    <ClInclude Include="Interface\GpuPipelineState\GpuShaderState.hpp" />
     <ClInclude Include="Interface\GpuResourceLayout.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuBuffer.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuResource.hpp" />
@@ -235,6 +239,11 @@
     <ClCompile Include="DirectX12\DirectX12Fence.cpp" />
     <ClCompile Include="DirectX12\DirectX12GraphicsCommandList.cpp" />
     <ClCompile Include="DirectX12\DirectX12LogicalDevice.cpp" />
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12BlendState.cpp" />
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12DepthStencilState.cpp" />
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12InputAssemblyState.cpp" />
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.cpp" />
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12ShaderState.cpp" />
     <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp" />
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp" />
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Sampler.cpp" />
