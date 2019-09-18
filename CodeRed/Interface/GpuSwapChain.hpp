@@ -18,11 +18,7 @@ namespace CodeRed {
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const WindowInfo& info,
 			const PixelFormat& format,
-			const size_t buffer_count = 2) :
-			mDevice(device),
-			mBuffers(buffer_count),
-			mWindowInfo(info),
-			mPixelFormat(format) {}
+			const size_t buffer_count = 2);
 		
 		~GpuSwapChain() = default;
 	public:
@@ -37,6 +33,8 @@ namespace CodeRed {
 		auto height() const noexcept -> UInt32 { return mWindowInfo.height; }
 
 		auto format() const noexcept -> PixelFormat { return mPixelFormat; }
+
+		virtual void resize(const UInt32 width, const UInt32 height) = 0;
 		
 		virtual void present(bool sync = true) = 0;
 

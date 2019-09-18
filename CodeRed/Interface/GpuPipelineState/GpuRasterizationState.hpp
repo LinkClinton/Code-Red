@@ -13,12 +13,12 @@ namespace CodeRed {
 	class GpuRasterizationState : GpuPipelineState {
 	protected:
 		explicit GpuRasterizationState(
-			const PixelFormat render_target_format,
+			const PixelFormat format,
 			const FrontFace front_face = FrontFace::Clockwise,
 			const CullMode cull_mode = CullMode::Back,
 			const FillMode fill_mode = FillMode::Solid,
 			const bool depth_clamp = true) :
-			mRenderTargetFormats({ render_target_format }),
+			mRenderTargetFormats({ format }),
 			mFrontFace(front_face),
 			mCullMode(cull_mode),
 			mFillMode(fill_mode),

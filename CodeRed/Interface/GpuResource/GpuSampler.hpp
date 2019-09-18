@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <Shared/Information/SamplerInfo.hpp>
 #include <Shared/Noncopyable.hpp>
 
@@ -13,10 +12,8 @@ namespace CodeRed {
 	class GpuSampler : public Noncopyable {
 	protected:
 		explicit GpuSampler(
-			const std::shared_ptr<GpuLogicalDevice> &device,
-			const SamplerInfo& info) :
-			mDevice(device),
-			mInfo(info) {}
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const SamplerInfo& info);
 
 		~GpuSampler() = default;
 	public:

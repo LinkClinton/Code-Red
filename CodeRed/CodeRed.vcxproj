@@ -158,7 +158,9 @@
     <ClInclude Include="DirectX12\DirectX12CommandQueue.hpp" />
     <ClInclude Include="DirectX12\DirectX12DisplayAdapter.hpp" />
     <ClInclude Include="DirectX12\DirectX12Fence.hpp" />
+    <ClInclude Include="DirectX12\DirectX12FrameBuffer.hpp" />
     <ClInclude Include="DirectX12\DirectX12GraphicsCommandList.hpp" />
+    <ClInclude Include="DirectX12\DirectX12GraphicsPipeline.hpp" />
     <ClInclude Include="DirectX12\DirectX12LogicalDevice.hpp" />
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12BlendState.hpp" />
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12DepthStencilState.hpp" />
@@ -169,6 +171,7 @@
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Buffer.hpp" />
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Sampler.hpp" />
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Texture.hpp" />
+    <ClInclude Include="DirectX12\DirectX12SwapChain.hpp" />
     <ClInclude Include="DirectX12\DirectX12SystemInfo.hpp" />
     <ClInclude Include="DirectX12\DirectX12Utility.hpp" />
     <ClInclude Include="Interface\GpuCommandAllocator.hpp" />
@@ -237,7 +240,9 @@
     <ClCompile Include="DirectX12\DirectX12CommandQueue.cpp" />
     <ClCompile Include="DirectX12\DirectX12DisplayAdapter.cpp" />
     <ClCompile Include="DirectX12\DirectX12Fence.cpp" />
+    <ClCompile Include="DirectX12\DirectX12FrameBuffer.cpp" />
     <ClCompile Include="DirectX12\DirectX12GraphicsCommandList.cpp" />
+    <ClCompile Include="DirectX12\DirectX12GraphicsPipeline.cpp" />
     <ClCompile Include="DirectX12\DirectX12LogicalDevice.cpp" />
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12BlendState.cpp" />
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12DepthStencilState.cpp" />
@@ -248,8 +253,10 @@
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp" />
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Sampler.cpp" />
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Texture.cpp" />
+    <ClCompile Include="DirectX12\DirectX12SwapChain.cpp" />
     <ClCompile Include="DirectX12\DirectX12SystemInfo.cpp" />
     <ClCompile Include="DirectX12\DirectX12Utility.cpp" />
+    <ClCompile Include="Interface\GpuConstructor.cpp" />
     <ClCompile Include="Shared\DebugReport.cpp" />
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp" />
   </ItemGroup>

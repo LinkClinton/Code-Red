@@ -13,8 +13,7 @@ namespace CodeRed {
 	class GpuFence : public Noncopyable {
 	protected:
 		explicit GpuFence(
-			const std::shared_ptr<GpuLogicalDevice>& device) :
-			mDevice(device) {}
+			const std::shared_ptr<GpuLogicalDevice>& device);
 		
 		~GpuFence() = default;
 	public:

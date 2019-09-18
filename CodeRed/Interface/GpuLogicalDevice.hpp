@@ -36,8 +36,7 @@ namespace CodeRed {
 	
 	class GpuLogicalDevice : public Noncopyable {
 	protected:
-		explicit GpuLogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter) :
-			mDisplayAdapter(adapter) {};
+		explicit GpuLogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter);
 			
 		~GpuLogicalDevice() = default;
 	public:

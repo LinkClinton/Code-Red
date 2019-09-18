@@ -26,15 +26,7 @@ namespace CodeRed {
 			const std::shared_ptr<GpuShaderState>& pixel_shader_state,
 			const std::shared_ptr<GpuDepthStencilState>& depth_stencil_state,
 			const std::shared_ptr<GpuBlendState>& blend_state,
-			const std::shared_ptr<GpuRasterizationState>& rasterization_state) :
-			mRasterizationState(rasterization_state),
-			mInputAssemblyState(input_assembly_state),
-			mVertexShaderState(vertex_shader_state),
-			mDepthStencilState(depth_stencil_state),
-			mPixelShaderState(pixel_shader_state),
-			mResourceLayout(resource_layout),
-			mBlendState(blend_state),
-			mDevice(device) {}
+			const std::shared_ptr<GpuRasterizationState>& rasterization_state);
 
 		~GpuGraphicsPipeline() = default;
 	protected:

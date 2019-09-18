@@ -23,9 +23,7 @@ namespace CodeRed {
 	protected:
 		explicit GpuGraphicsCommandList(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const std::shared_ptr<GpuCommandAllocator> &allocator) :
-			mDevice(device),
-			mAllocator(allocator) {}
+			const std::shared_ptr<GpuCommandAllocator>& allocator);
 		
 		~GpuGraphicsCommandList() = default;
 	public:

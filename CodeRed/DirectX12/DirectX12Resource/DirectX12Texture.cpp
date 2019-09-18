@@ -11,13 +11,6 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	const ResourceInfo& info) :
 	GpuTexture(device, info)
 {
-	//check the width, height and depth is 0
-	//the real size we need will calculate soon
-	CODE_RED_DEBUG_THROW_IF(
-		std::get<TextureProperty>(mInfo.Property).Size == 0,
-		ZeroException<size_t>({ "info.Property.Size" })
-	);
-
 	const auto property = std::get<TextureProperty>(mInfo.Property);
 	
 	D3D12_RESOURCE_DESC desc = {};
@@ -64,6 +57,24 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 			&clearValue,
 			IID_PPV_ARGS(&mTexture)),
 		FailedException({ "ID3D12Resource of Texture" }, DebugType::Create));
+}
+
+CodeRed::DirectX12Texture::DirectX12Texture(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const WRL::ComPtr<ID3D12Resource>& texture, 
+	const ResourceInfo& info) :
+	GpuTexture(device, info),
+	mTexture(texture)
+{
+	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
+	const auto desc = mTexture->GetDesc();
+
+	//we only update size property
+	//the other properties of ID3D12Resource we do not update
+	//because it is not necessary to make info and desc same
+	//we only need to make sure the important properties are same
+	std::get<TextureProperty>(mInfo.Property).Size =
+		dxDevice->GetResourceAllocationInfo(0, 1, &desc).SizeInBytes;
 }
 
 #endif

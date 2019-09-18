@@ -12,9 +12,8 @@ namespace CodeRed {
 	class GpuCommandAllocator : public Noncopyable {
 	protected:
 		explicit GpuCommandAllocator(
-			const std::shared_ptr<GpuLogicalDevice> &device) :
-			mDevice(device) {}
-
+			const std::shared_ptr<GpuLogicalDevice>& device);
+		
 		~GpuCommandAllocator() = default;
 
 		virtual void reset() = 0;

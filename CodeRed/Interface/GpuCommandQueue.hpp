@@ -13,9 +13,8 @@ namespace CodeRed {
 	class GpuCommandQueue : public Noncopyable {
 	protected:
 		explicit GpuCommandQueue(
-			const std::shared_ptr<GpuLogicalDevice>& device) :
-			mDevice(device) {}
-
+			const std::shared_ptr<GpuLogicalDevice>& device);
+		
 		~GpuCommandQueue() = default;
 	public:
 		virtual void execute(const std::vector<std::shared_ptr<GpuGraphicsCommandList>>& lists) = 0;

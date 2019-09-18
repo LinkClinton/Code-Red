@@ -13,9 +13,9 @@ namespace CodeRed {
 	protected:
 		explicit GpuResource(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const ResourceInfo& resource_info) :
+			const ResourceInfo& info) :
 			mDevice(device),
-			mInfo(resource_info) {}
+			mInfo(info) {}
 		
 		~GpuResource() = default;
 	public:

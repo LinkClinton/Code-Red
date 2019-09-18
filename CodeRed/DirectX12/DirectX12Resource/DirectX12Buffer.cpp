@@ -12,21 +12,6 @@ CodeRed::DirectX12Buffer::DirectX12Buffer(
 	const ResourceInfo info) :
 	GpuBuffer(device, info)
 {
-	//if we enable CODE_RED_DEBUG
-	//we will throw the zero exception when we get zero value
-	//current size is not the real size we will used
-	CODE_RED_DEBUG_THROW_IF(
-		std::get<BufferProperty>(mInfo.Property).Size == 0,
-		ZeroException<size_t>({ "info.Property.Size" })
-	);
-
-	//the buffer can not be used to "render target" or "depth stencil"
-	CODE_RED_DEBUG_THROW_IF(
-		enumHas(mInfo.Usage, ResourceUsage::RenderTarget) ||
-		enumHas(mInfo.Usage, ResourceUsage::DepthStencil),
-		InvalidException<ResourceUsage>({ "info.Usage" })
-	);
-
 	D3D12_RESOURCE_DESC desc = {};
 
 	desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;

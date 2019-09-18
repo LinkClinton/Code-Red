@@ -12,10 +12,9 @@ namespace CodeRed {
 	class GpuResourceLayout {
 	protected:
 		explicit GpuResourceLayout(
-			const std::shared_ptr<GpuLogicalDevice> &device,
+			const std::shared_ptr<GpuLogicalDevice>& device,
 			const std::vector<ResourceLayoutElement>& elements,
-			const std::vector<SamplerLayoutElement>& samplers)
-			: mDevice(device), mElements(elements), mSamplers(samplers) {}
+			const std::vector<SamplerLayoutElement>& samplers);
 		
 		~GpuResourceLayout() = default;
 	public:

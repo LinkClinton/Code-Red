@@ -267,6 +267,15 @@
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.hpp">
       <Filter>DirectX12\DirectX12PipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12FrameBuffer.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12SwapChain.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12GraphicsPipeline.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -325,6 +334,18 @@
     </ClCompile>
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.cpp">
       <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12FrameBuffer.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface\GpuConstructor.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12SwapChain.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12GraphicsPipeline.cpp">
+      <Filter>DirectX12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
