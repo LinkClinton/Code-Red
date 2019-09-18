@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Exception.hpp"
+#include <Shared/Exception/Exception.hpp>
 
 namespace CodeRed {
 
 	template<typename T>
 	class InvalidException : public Exception {
 	public:
-		InvalidException(T* value = nullptr) :
+		explicit InvalidException(T* value = nullptr) :
 			InvalidException(value, "The value is invalid.") {}
 
 		auto value() const -> T* { return mValue; }

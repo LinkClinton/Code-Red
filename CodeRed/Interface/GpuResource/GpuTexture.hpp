@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Shared/Exception/NotSupportException.hpp"
-#include "GpuResource.hpp"
+#include <Shared/Exception/NotSupportException.hpp>
+#include <Interface/GpuResource/GpuResource.hpp>
 
 namespace CodeRed {
 	
@@ -14,26 +14,26 @@ namespace CodeRed {
 
 		~GpuTexture() = default;
 	public:
-		auto size() const noexcept -> size_t override { return std::get<TextureProperty>(mResourceInfo.Property).Size; }
+		auto size() const noexcept -> size_t override { return std::get<TextureProperty>(mInfo.Property).Size; }
 
-		auto format() const noexcept -> PixelFormat { return std::get<TextureProperty>(mResourceInfo.Property).PixelFormat; }
+		auto format() const noexcept -> PixelFormat { return std::get<TextureProperty>(mInfo.Property).PixelFormat; }
 
-		auto dimension() const noexcept -> Dimension { return std::get<TextureProperty>(mResourceInfo.Property).Dimension; }
+		auto dimension() const noexcept -> Dimension { return std::get<TextureProperty>(mInfo.Property).Dimension; }
 
-		auto width() const noexcept -> size_t { return std::get<TextureProperty>(mResourceInfo.Property).Width; }
+		auto width() const noexcept -> size_t { return std::get<TextureProperty>(mInfo.Property).Width; }
 
 		auto height() const -> size_t {
 			//only for texture2D or texture3D
-			throwIf(dimension() != Dimension::Dimension1D, NotSupportException(NotSupportType::Method));
+			throwIf(dimension() == Dimension::Dimension1D, NotSupportException(NotSupportType::Method));
 
-			return std::get<TextureProperty>(mResourceInfo.Property).Height;
+			return std::get<TextureProperty>(mInfo.Property).Height;
 		}
 
 		auto depth() const -> size_t {
 			//only for texture3D
-			throwIf(dimension() == Dimension::Dimension3D, NotSupportException(NotSupportType::Method));
+			throwIf(dimension() != Dimension::Dimension3D, NotSupportException(NotSupportType::Method));
 
-			return std::get<TextureProperty>(mResourceInfo.Property).Depth;
+			return std::get<TextureProperty>(mInfo.Property).Depth;
 		}
 	};
 

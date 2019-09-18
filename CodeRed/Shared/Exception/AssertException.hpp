@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Exception.hpp"
+#include <Shared/Exception/Exception.hpp>
 
 #undef assert
 

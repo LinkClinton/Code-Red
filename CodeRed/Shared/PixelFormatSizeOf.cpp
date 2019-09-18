@@ -1,5 +1,5 @@
-#include "PixelFormatSizeOf.hpp"
 #include "Exception/NotSupportException.hpp"
+#include "PixelFormatSizeOf.hpp"
 
 auto CodeRed::PixelFormatSizeOf::get(const PixelFormat pixel_format) -> size_t {
 	switch (pixel_format) {

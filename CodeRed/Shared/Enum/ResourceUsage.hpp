@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Utility.hpp"
+#include <Shared/Utility.hpp>
 
 namespace CodeRed {
 
@@ -18,6 +18,13 @@ namespace CodeRed {
 		return
 			static_cast<ResourceUsage>(
 			static_cast<UInt32>(left) |
+			static_cast<UInt32>(right));
+	}
+
+	inline ResourceUsage operator & (const ResourceUsage &left, const ResourceUsage& right) {
+		return
+			static_cast<ResourceUsage>(
+			static_cast<UInt32>(left) &
 			static_cast<UInt32>(right));
 	}
 	

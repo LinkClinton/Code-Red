@@ -28,6 +28,9 @@
     <Filter Include="Shared\Information">
       <UniqueIdentifier>{782c4430-43b5-41a8-a6a0-f10ecea5c7f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12\DirectX12Resource">
+      <UniqueIdentifier>{cd1cc6a3-ca27-4f70-b0e2-2aa26a3056c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Noncopyable.hpp">
@@ -228,9 +231,6 @@
     <ClInclude Include="DirectX12\DirectX12Fence.hpp">
       <Filter>DirectX12</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\DirectX12Sampler.hpp">
-      <Filter>DirectX12</Filter>
-    </ClInclude>
     <ClInclude Include="Interface\GpuResource\GpuSampler.hpp">
       <Filter>Interface\GpuResource</Filter>
     </ClInclude>
@@ -242,6 +242,12 @@
     </ClInclude>
     <ClInclude Include="Shared\Enum\ShaderVisibility.hpp">
       <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Buffer.hpp">
+      <Filter>DirectX12\DirectX12Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Sampler.hpp">
+      <Filter>DirectX12\DirectX12Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,11 +281,14 @@
     <ClCompile Include="DirectX12\DirectX12Fence.cpp">
       <Filter>DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\DirectX12Sampler.cpp">
-      <Filter>DirectX12</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp">
       <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Sampler.cpp">
+      <Filter>DirectX12\DirectX12Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp">
+      <Filter>DirectX12\DirectX12Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

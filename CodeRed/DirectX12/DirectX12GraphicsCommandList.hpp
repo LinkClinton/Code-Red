@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../Interface/GpuGraphicsCommandList.hpp"
-
-#include "DirectX12Utility.hpp"
+#include <Interface/GpuGraphicsCommandList.hpp>
+#include <DirectX12/DirectX12Utility.hpp>
 
 #ifdef __ENABLE__DIRECTX12__
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Shared/BlendProperty.hpp"
-#include "GpuPipelineState.hpp"
+#include <Interface/GpuPipelineState/GpuPipelineState.hpp>
+#include <Shared/BlendProperty.hpp>
 
 #include <vector>
 

@@ -1,11 +1,15 @@
 #include "../Shared/Exception/NotSupportException.hpp"
+#include "../Shared/Exception/InvalidException.hpp"
 #include "../Shared/Exception/Exception.hpp"
 
 #include "../Shared/Enum/ShaderVisibility.hpp"
+#include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Enum/FilterOptions.hpp"
+#include "../Shared/Enum/ResourceUsage.hpp"
 #include "../Shared/Enum/ResourceType.hpp"
 #include "../Shared/Enum/AddressMode.hpp"
 #include "../Shared/Enum/BorderColor.hpp"
+#include "../Shared/Enum/MemoryHeap.hpp"
 
 
 #include "DirectX12Utility.hpp"
@@ -107,6 +111,80 @@ auto CodeRed::enumConvert(const ShaderVisibility visibility)
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}	
+}
+
+auto CodeRed::enumConvert(const ResourceLayout layout)
+	-> D3D12_RESOURCE_STATES
+{
+	switch (layout) {
+	case ResourceLayout::GeneralRead: return D3D12_RESOURCE_STATE_GENERIC_READ;
+	case ResourceLayout::RenderTarget: return D3D12_RESOURCE_STATE_RENDER_TARGET;
+	case ResourceLayout::DepthStencil: return D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	case ResourceLayout::CopyDestination: return D3D12_RESOURCE_STATE_COPY_DEST;
+	case ResourceLayout::CopySource: return D3D12_RESOURCE_STATE_COPY_SOURCE;
+	case ResourceLayout::Present: return D3D12_RESOURCE_STATE_PRESENT;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert(const ResourceUsage usage)
+	-> D3D12_RESOURCE_FLAGS
+{
+	//only run with macro __ENABLE_CODE_RED_DEBUG__
+	//This macro is used to enable internal debug in lib
+#ifdef __ENABLE__CODE__RED__DEBUG__
+
+	//we record all masks that we can not combine
+	static ResourceUsage disableMask[] = {
+		ResourceUsage::RenderTarget | ResourceUsage::DepthStencil
+	};
+
+	//if usage has this mask we disable, we will throw a InvalidException with nullptr
+	for (auto mask : disableMask) {
+		throwIf(
+			(usage & mask) == mask,
+			InvalidException<ResourceUsage>(nullptr));
+	}
+#endif
+
+	static std::vector<ResourceUsage> sourcePool = {
+		ResourceUsage::None,
+		ResourceUsage::VertexBuffer,
+		ResourceUsage::IndexBuffer,
+		ResourceUsage::ConstantBuffer,
+		ResourceUsage::RenderTarget,
+		ResourceUsage::DepthStencil
+	};
+
+	static std::vector<D3D12_RESOURCE_FLAGS> targetPool = {
+		D3D12_RESOURCE_FLAG_NONE,
+		D3D12_RESOURCE_FLAG_NONE,
+		D3D12_RESOURCE_FLAG_NONE,
+		D3D12_RESOURCE_FLAG_NONE,
+		D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
+		D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
+	};
+
+	auto res = D3D12_RESOURCE_FLAG_NONE;
+	
+	for (size_t index = 0; index < sourcePool.size(); index++) {
+		if ((usage & sourcePool[index]) == sourcePool[index])
+			res = res | targetPool[index];
+	}
+
+	return res;
+}
+
+auto CodeRed::enumConvert(const MemoryHeap heap)
+	-> D3D12_HEAP_TYPE
+{
+	switch (heap) {
+	case MemoryHeap::Default: return D3D12_HEAP_TYPE_DEFAULT;
+	case MemoryHeap::Upload: return D3D12_HEAP_TYPE_UPLOAD;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
 }
 
 #endif

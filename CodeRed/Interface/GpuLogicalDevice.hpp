@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Shared/Information/ResourceInfo.hpp"
-#include "../Shared/Information/SamplerInfo.hpp"
-#include "../Shared/Information/WindowInfo.hpp"
-#include "../Shared/LayoutElement.hpp"
-#include "../Shared/Noncopyable.hpp"
+#include <Shared/Information/ResourceInfo.hpp>
+#include <Shared/Information/SamplerInfo.hpp>
+#include <Shared/Information/WindowInfo.hpp>
+#include <Shared/LayoutElement.hpp>
+#include <Shared/Noncopyable.hpp>
 
 #include <vector>
 #include <memory>

@@ -16,10 +16,13 @@ namespace CodeRed {
 	class Exception;
 
 	enum class ShaderVisibility : UInt32;
+	enum class ResourceLayout : UInt32;
 	enum class FilterOptions : UInt32;
+	enum class ResourceUsage : UInt32;
 	enum class ResourceType : UInt32;
 	enum class AddressMode : UInt32;
 	enum class BorderColor : UInt32;
+	enum class MemoryHeap : UInt32;
 	
 	auto wideStringToMultiString(const std::wstring& wstring)->std::string;
 
@@ -35,6 +38,12 @@ namespace CodeRed {
 	auto enumConvert(const ResourceType type) -> D3D12_ROOT_PARAMETER_TYPE;
 	
 	auto enumConvert(const ShaderVisibility visibility) -> D3D12_SHADER_VISIBILITY;
+
+	auto enumConvert(const ResourceLayout layout) -> D3D12_RESOURCE_STATES;
+
+	auto enumConvert(const ResourceUsage usage) -> D3D12_RESOURCE_FLAGS;
+
+	auto enumConvert(const MemoryHeap heap) -> D3D12_HEAP_TYPE;
 }
 
 #endif

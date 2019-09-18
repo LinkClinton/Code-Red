@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Enum/CompareOperator.hpp"
-#include "Enum/StencilOperator.hpp"
+#include <Shared/Enum/CompareOperator.hpp>
+#include <Shared/Enum/StencilOperator.hpp>
 
 namespace CodeRed {
 

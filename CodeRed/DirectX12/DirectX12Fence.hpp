@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../Interface/GpuFence.hpp"
-
-#include "DirectX12Utility.hpp"
+#include <DirectX12/DirectX12Utility.hpp>
+#include <Interface/GpuFence.hpp>
 
 #ifdef __ENABLE__DIRECTX12__
 

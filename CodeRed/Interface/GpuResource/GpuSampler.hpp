@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include "../../Shared/Information/SamplerInfo.hpp"
-#include "../../Shared/Noncopyable.hpp"
+#include <Shared/Information/SamplerInfo.hpp>
+#include <Shared/Noncopyable.hpp>
 
 #include <memory>
 

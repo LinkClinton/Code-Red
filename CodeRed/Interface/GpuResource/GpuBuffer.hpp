@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GpuResource.hpp"
+#include <Interface/GpuResource/GpuResource.hpp>
 
 namespace CodeRed {
 
@@ -13,11 +13,11 @@ namespace CodeRed {
 
 		~GpuBuffer() = default;
 	public:
-		auto size() const -> size_t override { return std::get<BufferProperty>(mResourceInfo.Property).Size; }
+		auto size() const -> size_t override { return std::get<BufferProperty>(mInfo.Property).Size; }
 
-		auto stride() const -> size_t { return std::get<BufferProperty>(mResourceInfo.Property).Stride; }
+		auto stride() const -> size_t { return std::get<BufferProperty>(mInfo.Property).Stride; }
 
-		auto count() const -> size_t { return std::get<BufferProperty>(mResourceInfo.Property).Count; }
+		auto count() const -> size_t { return std::get<BufferProperty>(mInfo.Property).Count; }
 	};
 	
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Enum/FilterOptions.hpp"
-#include "../Enum/AddressMode.hpp"
-#include "../Enum/BorderColor.hpp"
+#include <Shared/Enum/FilterOptions.hpp>
+#include <Shared/Enum/AddressMode.hpp>
+#include <Shared/Enum/BorderColor.hpp>
 
 namespace CodeRed {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "InvalidException.hpp"
+#include <Shared/Exception/InvalidException.hpp>
 
 namespace CodeRed {
 

@@ -2,9 +2,9 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
-#include "../Interface/GpuDisplayAdapter.hpp"
+#include <Interface/GpuDisplayAdapter.hpp>
+#include <DirectX12/DirectX12Utility.hpp>
 
-#include "DirectX12Utility.hpp"
 
 namespace CodeRed {
 

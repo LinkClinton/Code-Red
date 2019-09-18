@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Shared/Utility.hpp"
-#include "GpuPipelineState.hpp"
+#include <Interface/GpuPipelineState/GpuPipelineState.hpp>
+#include <Shared/Utility.hpp>
 
 #include <vector>
 

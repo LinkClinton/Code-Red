@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Shared/Noncopyable.hpp"
+#include <Shared/Noncopyable.hpp>
 
 #include <memory>
 #include <vector>

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Enum/ResourceType.hpp"
-#include "Enum/ShaderVisibility.hpp"
-#include "Enum/PixelFormat.hpp"
-#include "Utility.hpp"
+#include <Shared/Enum/ShaderVisibility.hpp>
+#include <Shared/Enum/ResourceType.hpp>
+#include <Shared/Enum/PixelFormat.hpp>
+#include <Shared/Utility.hpp>
 
 #include <string>
 #include <memory>

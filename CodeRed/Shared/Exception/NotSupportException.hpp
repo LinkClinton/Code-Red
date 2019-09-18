@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Utility.hpp"
-#include "Exception.hpp"
+#include <Shared/Exception/Exception.hpp>
+#include <Shared/Utility.hpp>
 
 namespace CodeRed {
 

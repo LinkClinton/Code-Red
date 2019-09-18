@@ -2,7 +2,7 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
-#include "../Interface/GpuSystemInfo.hpp"
+#include <Interface/GpuSystemInfo.hpp>
 
 namespace CodeRed {
 

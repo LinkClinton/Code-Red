@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Enum/PixelFormat.hpp"
+#include <Shared/Enum/PixelFormat.hpp>
 
 namespace CodeRed {
 

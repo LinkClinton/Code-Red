@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../../Shared/Enum/PixelFormat.hpp"
-#include "../../Shared/Enum/FrontFace.hpp"
-#include "../../Shared/Enum/CullMode.hpp"
-#include "../../Shared/Enum/FillMode.hpp"
-#include "GpuPipelineState.hpp"
+#include <Interface/GpuPipelineState/GpuPipelineState.hpp>
+#include <Shared/Enum/PixelFormat.hpp>
+#include <Shared/Enum/FrontFace.hpp>
+#include <Shared/Enum/CullMode.hpp>
+#include <Shared/Enum/FillMode.hpp>
 
 #include <vector>
 

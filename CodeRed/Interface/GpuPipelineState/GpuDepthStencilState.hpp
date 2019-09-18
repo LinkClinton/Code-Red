@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../Shared/StencilOperatorInfo.hpp"
-#include "../../Shared/Enum/PixelFormat.hpp"
-#include "GpuPipelineState.hpp"
+#include <Interface/GpuPipelineState/GpuPipelineState.hpp>
+#include <Shared/StencilOperatorInfo.hpp>
+#include <Shared/Enum/PixelFormat.hpp>
 
 namespace CodeRed {
 

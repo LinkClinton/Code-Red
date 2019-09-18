@@ -1,8 +1,8 @@
 #include "../Shared/Exception/FailedException.hpp"
 
+#include "DirectX12Resource/DirectX12Sampler.hpp"
 #include "DirectX12ResourceLayout.hpp"
 #include "DirectX12LogicalDevice.hpp"
-#include "DirectX12Sampler.hpp"
 
 #ifdef __ENABLE__DIRECTX12__
 

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../../Shared/StencilOperatorInfo.hpp"
-#include "../../Shared/LayoutElement.hpp"
-#include "../../Shared/BlendProperty.hpp"
-#include "../../Shared/Noncopyable.hpp"
+#include <Shared/StencilOperatorInfo.hpp>
+#include <Shared/LayoutElement.hpp>
+#include <Shared/BlendProperty.hpp>
+#include <Shared/Noncopyable.hpp>
 
-#include "../../Shared/Enum/PrimitiveTopology.hpp"
-#include "../../Shared/Enum/PixelFormat.hpp"
-#include "../../Shared/Enum/FrontFace.hpp"
-#include "../../Shared/Enum/CullMode.hpp"
-#include "../../Shared/Enum/FillMode.hpp"
+#include <Shared/Enum/PrimitiveTopology.hpp>
+#include <Shared/Enum/PixelFormat.hpp>
+#include <Shared/Enum/FrontFace.hpp>
+#include <Shared/Enum/CullMode.hpp>
+#include <Shared/Enum/FillMode.hpp>
 
 #include <vector>
 #include <memory>

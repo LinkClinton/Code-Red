@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Shared/DebugReport.hpp"
-#include "../Utility.hpp"
-#include "Exception.hpp"
+#include <Shared/Exception/Exception.hpp>
+#include <Shared/DebugReport.hpp>
+#include <Shared/Utility.hpp>
 
 #include <string>
 #include <vector>

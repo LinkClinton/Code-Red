@@ -72,18 +72,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -92,7 +96,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;__ENABLE__CODE__RED__DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -106,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;__ENABLE__CODE__RED__DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -157,7 +161,8 @@
     <ClInclude Include="DirectX12\DirectX12GraphicsCommandList.hpp" />
     <ClInclude Include="DirectX12\DirectX12LogicalDevice.hpp" />
     <ClInclude Include="DirectX12\DirectX12ResourceLayout.hpp" />
-    <ClInclude Include="DirectX12\DirectX12Sampler.hpp" />
+    <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Buffer.hpp" />
+    <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Sampler.hpp" />
     <ClInclude Include="DirectX12\DirectX12SystemInfo.hpp" />
     <ClInclude Include="DirectX12\DirectX12Utility.hpp" />
     <ClInclude Include="Interface\GpuCommandAllocator.hpp" />
@@ -230,7 +235,8 @@
     <ClCompile Include="DirectX12\DirectX12GraphicsCommandList.cpp" />
     <ClCompile Include="DirectX12\DirectX12LogicalDevice.cpp" />
     <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp" />
-    <ClCompile Include="DirectX12\DirectX12Sampler.cpp" />
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp" />
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Sampler.cpp" />
     <ClCompile Include="DirectX12\DirectX12SystemInfo.cpp" />
     <ClCompile Include="DirectX12\DirectX12Utility.cpp" />
     <ClCompile Include="Shared\DebugReport.cpp" />

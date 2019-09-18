@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Shared/Noncopyable.hpp"
-#include "../Shared/Utility.hpp"
+#include <Shared/Noncopyable.hpp>
+#include <Shared/Utility.hpp>
 
 #include <string>
 

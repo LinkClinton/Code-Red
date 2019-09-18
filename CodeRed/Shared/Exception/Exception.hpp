@@ -5,7 +5,7 @@
 #undef throwIf
 
 #ifdef _DEBUG
-#define throwIf(condition, exception) if ((condition) == false) throw exception;
+#define throwIf(condition, exception) if ((condition) == true) throw exception;
 #else
 #define throwIf(condition, exception) 
 #endif

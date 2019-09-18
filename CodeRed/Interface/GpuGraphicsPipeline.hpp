@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../Shared/Noncopyable.hpp"
+#include <Shared/Noncopyable.hpp>
 
-#include "GpuPipelineState/GpuRasterizationState.hpp"
-#include "GpuPipelineState/GpuInputAssemblyState.hpp"
-#include "GpuPipelineState/GpuVertexShaderState.hpp"
-#include "GpuPipelineState/GpuDepthStencilState.hpp"
-#include "GpuPipelineState/GpuPixelShaderState.hpp"
-#include "GpuPipelineState/GpuBlendState.hpp"
+#include <Interface/GpuPipelineState/GpuRasterizationState.hpp>
+#include <Interface/GpuPipelineState/GpuInputAssemblyState.hpp>
+#include <Interface/GpuPipelineState/GpuVertexShaderState.hpp>
+#include <Interface/GpuPipelineState/GpuDepthStencilState.hpp>
+#include <Interface/GpuPipelineState/GpuPixelShaderState.hpp>
+#include <Interface/GpuPipelineState/GpuBlendState.hpp>
 
-#include "GpuResourceLayout.hpp"
+#include <Interface/GpuResourceLayout.hpp>
 
 #include <memory>
 

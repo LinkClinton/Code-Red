@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Enum/BlendOperator.hpp"
-#include "Enum/BlendFactor.hpp"
-#include "Enum/ColorMask.hpp"
+#include <Shared/Enum/BlendOperator.hpp>
+#include <Shared/Enum/BlendFactor.hpp>
+#include <Shared/Enum/ColorMask.hpp>
 
 namespace CodeRed {
 

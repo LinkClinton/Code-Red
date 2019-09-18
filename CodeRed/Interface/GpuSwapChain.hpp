@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Shared/Information/WindowInfo.hpp"
-#include "../Shared/Enum/PixelFormat.hpp"
-#include "../Shared/Noncopyable.hpp"
+#include <Shared/Information/WindowInfo.hpp>
+#include <Shared/Enum/PixelFormat.hpp>
+#include <Shared/Noncopyable.hpp>
 
 #include <memory>
 #include <vector>

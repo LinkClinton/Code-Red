@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../Shared/Enum/PrimitiveTopology.hpp"
-#include "../../Shared/LayoutElement.hpp"
-#include "GpuPipelineState.hpp"
+#include <Interface/GpuPipelineState/GpuPipelineState.hpp>
+#include <Shared/Enum/PrimitiveTopology.hpp>
+#include <Shared/LayoutElement.hpp>
 
 #include <vector>
 

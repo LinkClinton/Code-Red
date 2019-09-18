@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Shared/Enum/ResourceLayout.hpp"
-#include "../Shared/Noncopyable.hpp"
-#include "../Shared/ScissorRect.hpp"
-#include "../Shared/ViewPort.hpp"
-#include "../Shared/Extent.hpp"
+#include <Shared/Enum/ResourceLayout.hpp>
+#include <Shared/Noncopyable.hpp>
+#include <Shared/ScissorRect.hpp>
+#include <Shared/ViewPort.hpp>
+#include <Shared/Extent.hpp>
 
 #include <memory>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Shared/LayoutElement.hpp"
+#include <Shared/LayoutElement.hpp>
 
 #include <memory>
 #include <vector>
