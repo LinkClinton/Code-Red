@@ -14,6 +14,10 @@ namespace CodeRed {
 
 		~DirectX12CommandQueue() = default;
 
+		void execute(const std::vector<std::shared_ptr<GpuGraphicsCommandList>>& lists) override;
+
+		void waitIdle() override;
+		
 		auto queue() const noexcept -> WRL::ComPtr<ID3D12CommandQueue> { return mCommandQueue; }
 	protected:
 		WRL::ComPtr<ID3D12CommandQueue> mCommandQueue;

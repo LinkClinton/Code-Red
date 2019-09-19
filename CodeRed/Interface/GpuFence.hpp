@@ -8,7 +8,7 @@
 namespace CodeRed {
 
 	class GpuLogicalDevice;
-	class GpuGraphicsCommandQueue;
+	class GpuCommandQueue;
 	
 	class GpuFence : public Noncopyable {
 	protected:
@@ -16,9 +16,6 @@ namespace CodeRed {
 			const std::shared_ptr<GpuLogicalDevice>& device);
 		
 		~GpuFence() = default;
-	public:
-		virtual void wait(
-			const std::vector<std::shared_ptr<GpuGraphicsCommandQueue>>& queues) = 0;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 	};

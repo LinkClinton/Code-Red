@@ -14,8 +14,10 @@ namespace CodeRed {
 
 		~DirectX12CommandAllocator() = default;
 
+		void reset() override;
+		
 		auto allocator() const noexcept -> WRL::ComPtr<ID3D12CommandAllocator> { return mCommandAllocator; }
-	protected:
+	private:
 		WRL::ComPtr<ID3D12CommandAllocator> mCommandAllocator;
 	};
 	

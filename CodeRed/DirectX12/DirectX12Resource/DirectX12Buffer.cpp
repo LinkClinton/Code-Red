@@ -51,4 +51,18 @@ CodeRed::DirectX12Buffer::DirectX12Buffer(
 		FailedException({ "ID3D12Resource of Buffer" }, DebugType::Create));
 }
 
+auto CodeRed::DirectX12Buffer::mapMemory() const -> void* 
+{
+	void* data = nullptr;
+
+	mBuffer->Map(0, nullptr, &data);
+
+	return data;
+}
+
+void CodeRed::DirectX12Buffer::unmapMemory() const
+{
+	mBuffer->Unmap(0, nullptr);
+}
+
 #endif

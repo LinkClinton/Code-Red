@@ -17,6 +17,12 @@ namespace CodeRed{
 
 		~DirectX12SwapChain() = default;
 
+		void resize(const UInt32 width, const UInt32 height) override;
+
+		void present(bool sync) override;
+
+		auto currentBufferIndex() const -> size_t override;
+		
 		auto swapChain() const noexcept -> WRL::ComPtr<IDXGISwapChain3> { return mSwapChain; }
 	private:
 		WRL::ComPtr<ID3D12CommandQueue> mPresentQueue;

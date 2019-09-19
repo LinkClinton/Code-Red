@@ -7,13 +7,19 @@
 
 namespace CodeRed {
 
-	class DirectX12Fence : public GpuFence {
+	class DirectX12Fence final : public GpuFence {
 	public:
 		explicit DirectX12Fence(
 			const std::shared_ptr<GpuLogicalDevice>& device);
 
 		~DirectX12Fence() = default;
-	protected:
+
+		auto fence() const noexcept -> WRL::ComPtr<ID3D12Fence> { return mFence; }
+	private:
+		void wait(const WRL::ComPtr<ID3D12CommandQueue>& queue);
+	private:
+		friend class DirectX12CommandQueue;
+		
 		WRL::ComPtr<ID3D12Fence> mFence;
 
 		UINT64 mFenceValue = 0;

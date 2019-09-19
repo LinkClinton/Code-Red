@@ -15,6 +15,10 @@ namespace CodeRed {
 
 		~DirectX12Buffer() = default;
 
+		auto mapMemory() const -> void* override;
+
+		void unmapMemory() const override;
+		
 		auto buffer() const noexcept -> WRL::ComPtr<ID3D12Resource> { return mBuffer; }
 	private:
 		WRL::ComPtr<ID3D12Resource> mBuffer;

@@ -77,4 +77,18 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 		dxDevice->GetResourceAllocationInfo(0, 1, &desc).SizeInBytes;
 }
 
+auto CodeRed::DirectX12Texture::mapMemory() const -> void* 
+{
+	void* data = nullptr;
+	
+	mTexture->Map(0, nullptr, &data);
+
+	return data;
+}
+
+void CodeRed::DirectX12Texture::unmapMemory() const
+{
+	mTexture->Unmap(0, nullptr);
+}
+
 #endif

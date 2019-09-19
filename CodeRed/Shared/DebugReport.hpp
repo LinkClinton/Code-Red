@@ -9,8 +9,12 @@ namespace CodeRed {
 
 	enum class DebugType
 	{
+		//Create [0] failed.
 		Create,
-		Get
+		//Get [0] failed from [1].
+		Get,
+		//Set [0] failed because [1].
+		Set
 	};
 	
 	class DebugReport final {

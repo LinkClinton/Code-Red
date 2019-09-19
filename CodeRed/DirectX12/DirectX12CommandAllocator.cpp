@@ -16,4 +16,9 @@ CodeRed::DirectX12CommandAllocator::DirectX12CommandAllocator(
 		FailedException({ "ID3D12CommandAllocator" }, DebugType::Create));
 }
 
+void CodeRed::DirectX12CommandAllocator::reset()
+{
+	mCommandAllocator->Reset();
+}
+
 #endif

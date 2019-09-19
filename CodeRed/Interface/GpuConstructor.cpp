@@ -31,13 +31,13 @@ CodeRed::GpuSwapChain::GpuSwapChain(
 	const size_t buffer_count) :
 	mDevice(device),
 	mBuffers(buffer_count),
-	mWindowInfo(info),
+	mInfo(info),
 	mPixelFormat(format)
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 	
 	CODE_RED_DEBUG_THROW_IF(
-		mWindowInfo.handle == nullptr || mWindowInfo.width == 0 || mWindowInfo.height == 0,
+		mInfo.handle == nullptr || mInfo.width == 0 || mInfo.height == 0,
 		ZeroException<WindowInfo>({ "info" })
 	);
 

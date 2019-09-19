@@ -16,7 +16,7 @@ CodeRed::DirectX12FrameBuffer::DirectX12FrameBuffer(
 
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapInfo = {
 		D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
-		static_cast<UINT>(render_target->size()),
+		1,
 		D3D12_DESCRIPTOR_HEAP_FLAG_NONE,
 		0
 	};
@@ -39,6 +39,42 @@ CodeRed::DirectX12FrameBuffer::DirectX12FrameBuffer(
 	);
 	
 	DirectX12FrameBuffer::reset(render_target, depth_stencil);
+}
+
+void CodeRed::DirectX12FrameBuffer::reset(
+	const std::shared_ptr<GpuTexture>& render_target,
+	const std::shared_ptr<GpuTexture>& depth_stencil)
+{
+	//reset the render target and depth stencil
+	for (auto& rtv : mRenderTargets) rtv.reset();
+
+	mDepthStencil.reset();
+
+	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
+
+	//create rtv on render target heap
+	//if the render target is nullptr, we do not create it
+	if (render_target != nullptr) {
+		mRenderTargets[0] = render_target;
+		
+		dxDevice->CreateRenderTargetView(
+			static_cast<DirectX12Texture*>(mRenderTargets[0].get())->texture().Get(),
+			nullptr,
+			mRenderTargetHeap->GetCPUDescriptorHandleForHeapStart()
+		);
+	}
+
+	//create dsv on depth stencil heap
+	//if the depth stencil is nullptr, we do not create it
+	if (depth_stencil != nullptr) {
+		mDepthStencil = depth_stencil;
+
+		dxDevice->CreateDepthStencilView(
+			static_cast<DirectX12Texture*>(mDepthStencil.get())->texture().Get(),
+			nullptr,
+			mDepthStencilHeap->GetCPUDescriptorHandleForHeapStart()
+		);
+	}
 }
 
 #endif

@@ -5,10 +5,10 @@
 namespace CodeRed {
 
 	struct ScissorRect {
-		Real Left = 0;
-		Real Top = 0;
-		Real Right = 0;
-		Real Bottom = 0;
+		UInt32 Left = 0;
+		UInt32 Top = 0;
+		UInt32 Right = 0;
+		UInt32 Bottom = 0;
 	};
 	
 }

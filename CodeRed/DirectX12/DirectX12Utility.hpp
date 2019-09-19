@@ -15,6 +15,7 @@ namespace CodeRed {
 
 	class Exception;
 
+	enum class PrimitiveTopology : UInt32;
 	enum class ShaderVisibility : UInt32;
 	enum class CompareOperator : UInt32;
 	enum class StencilOperator : UInt32;
@@ -71,6 +72,8 @@ namespace CodeRed {
 	auto enumConvert(const FillMode mode) -> D3D12_FILL_MODE;
 
 	auto enumConvert(const CullMode mode) -> D3D12_CULL_MODE;
+
+	auto enumConvert(const PrimitiveTopology topology) -> D3D_PRIMITIVE_TOPOLOGY;
 }
 
 #endif

@@ -2,6 +2,7 @@
 #include "../Shared/Exception/InvalidException.hpp"
 #include "../Shared/Exception/Exception.hpp"
 
+#include "../Shared/Enum/PrimitiveTopology.hpp"
 #include "../Shared/Enum/ShaderVisibility.hpp"
 #include "../Shared/Enum/CompareOperator.hpp"
 #include "../Shared/Enum/StencilOperator.hpp"
@@ -312,6 +313,17 @@ auto CodeRed::enumConvert(const CullMode mode)
 	case CullMode::None: return D3D12_CULL_MODE_NONE;
 	case CullMode::Front: return D3D12_CULL_MODE_FRONT;
 	case CullMode::Back: return D3D12_CULL_MODE_BACK;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert(const PrimitiveTopology topology)
+	-> D3D_PRIMITIVE_TOPOLOGY
+{
+	switch (topology) {
+	case PrimitiveTopology::TriangleList: return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	case PrimitiveTopology::Undefined: return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

@@ -29,6 +29,20 @@ namespace CodeRed {
 			const std::shared_ptr<GpuRasterizationState>& rasterization_state);
 
 		~GpuGraphicsPipeline() = default;
+	public:
+		auto layout() const noexcept -> std::shared_ptr<GpuResourceLayout> { return mResourceLayout; }
+
+		auto inputAssembly() const noexcept -> std::shared_ptr<GpuInputAssemblyState> { return mInputAssemblyState; }
+
+		auto vertexShader() const noexcept -> std::shared_ptr<GpuShaderState> { return mVertexShaderState; }
+
+		auto pixelShader() const noexcept -> std::shared_ptr<GpuShaderState> { return mPixelShaderState; }
+
+		auto depthStencil() const noexcept -> std::shared_ptr<GpuDepthStencilState> { return mDepthStencilState; }
+
+		auto blend() const noexcept -> std::shared_ptr<GpuBlendState> { return mBlendState; }
+
+		auto rasterization() const noexcept -> std::shared_ptr<GpuRasterizationState> { return mRasterizationState; }
 	protected:
 		std::shared_ptr<GpuRasterizationState> mRasterizationState;
 		std::shared_ptr<GpuInputAssemblyState> mInputAssemblyState;

@@ -16,6 +16,7 @@ auto CodeRed::DebugReport::select(const Type type) -> std::string
 	switch (type) {
 	case Type::Create: return "Create [0] failed.";
 	case Type::Get: return "Get [0] failed from [1].";
+	case Type::Set: return "Set [0] failed because [1].";
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

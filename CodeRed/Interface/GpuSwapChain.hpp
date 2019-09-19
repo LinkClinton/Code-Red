@@ -26,11 +26,11 @@ namespace CodeRed {
 
 		auto bufferCount() const noexcept -> size_t { return mBuffers.size(); }
 
-		auto windowInfo() const noexcept -> WindowInfo { return mWindowInfo; }
+		auto info() const noexcept -> WindowInfo { return mInfo; }
 
-		auto width() const noexcept -> UInt32 { return mWindowInfo.width; }
+		auto width() const noexcept -> UInt32 { return mInfo.width; }
 
-		auto height() const noexcept -> UInt32 { return mWindowInfo.height; }
+		auto height() const noexcept -> UInt32 { return mInfo.height; }
 
 		auto format() const noexcept -> PixelFormat { return mPixelFormat; }
 
@@ -44,7 +44,7 @@ namespace CodeRed {
 
 		std::vector<std::shared_ptr<GpuTexture>> mBuffers;
 		
-		WindowInfo mWindowInfo;
+		WindowInfo mInfo;
 		PixelFormat mPixelFormat;
 	};
 	

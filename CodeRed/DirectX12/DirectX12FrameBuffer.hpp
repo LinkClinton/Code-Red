@@ -16,6 +16,10 @@ namespace CodeRed {
 
 		~DirectX12FrameBuffer() = default;
 
+		void reset(
+			const std::shared_ptr<GpuTexture>& render_target, 
+			const std::shared_ptr<GpuTexture>& depth_stencil) override;
+		
 		auto rtvHeap() const noexcept -> WRL::ComPtr<ID3D12DescriptorHeap> { return mRenderTargetHeap; }
 
 		auto dsvHeap() const noexcept -> WRL::ComPtr<ID3D12DescriptorHeap> { return mDepthStencilHeap; }
