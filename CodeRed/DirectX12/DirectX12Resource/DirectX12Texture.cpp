@@ -1,5 +1,5 @@
-#include <Shared/Exception/FailedException.hpp>
-#include <Shared/Exception/ZeroException.hpp>
+#include "../../Shared/Exception/FailedException.hpp"
+#include "../../Shared/Exception/ZeroException.hpp"
 
 #include "../DirectX12LogicalDevice.hpp"
 #include "DirectX12Texture.hpp"
