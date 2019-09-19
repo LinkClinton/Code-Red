@@ -1,8 +1,12 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Exception/Exception.hpp>
 #include <Shared/DebugReport.hpp>
-#include <Shared/Utility.hpp>
+#else
+#include "Exception.hpp"
+#include "../DebugReport.hpp"
+#endif
 
 #include <string>
 #include <vector>

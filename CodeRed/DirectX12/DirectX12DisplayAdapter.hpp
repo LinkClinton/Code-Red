@@ -1,10 +1,14 @@
 #pragma once
 
-#ifdef __ENABLE__DIRECTX12__
-
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuDisplayAdapter.hpp>
 #include <DirectX12/DirectX12Utility.hpp>
+#else
+#include "../Interface/GpuDisplayAdapter.hpp"
+#include "DirectX12Utility.hpp"
+#endif
 
+#ifdef __ENABLE__DIRECTX12__
 
 namespace CodeRed {
 
@@ -13,8 +17,8 @@ namespace CodeRed {
 		explicit DirectX12DisplayAdapter(
 			const WRL::ComPtr<IDXGIAdapter1> &dxgi_adapter,
 			const std::string &name,
-			const UInt32 device_id,
-			const UInt32 vendor_id);
+			const size_t device_id,
+			const size_t vendor_id);
 
 		~DirectX12DisplayAdapter() = default;
 

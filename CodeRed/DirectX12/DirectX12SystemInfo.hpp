@@ -1,8 +1,12 @@
 #pragma once
 
-#ifdef __ENABLE__DIRECTX12__
-
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuSystemInfo.hpp>
+#else
+#include "../Interface/GpuSystemInfo.hpp"
+#endif
+
+#ifdef __ENABLE__DIRECTX12__
 
 namespace CodeRed {
 

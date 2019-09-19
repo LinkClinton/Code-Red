@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Noncopyable.hpp>
 
 #include <Interface/GpuPipelineState/GpuRasterizationState.hpp>
@@ -9,6 +10,17 @@
 #include <Interface/GpuPipelineState/GpuBlendState.hpp>
 
 #include <Interface/GpuResourceLayout.hpp>
+#else
+#include "../Shared/Noncopyable.hpp"
+
+#include "GpuPipelineState/GpuRasterizationState.hpp"
+#include "GpuPipelineState/GpuInputAssemblyState.hpp"
+#include "GpuPipelineState/GpuDepthStencilState.hpp"
+#include "GpuPipelineState/GpuShaderState.hpp"
+#include "GpuPipelineState/GpuBlendState.hpp"
+
+#include "GpuResourceLayout.hpp"
+#endif
 
 #include <memory>
 

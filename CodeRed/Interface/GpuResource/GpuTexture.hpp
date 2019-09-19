@@ -1,8 +1,14 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Exception/NotSupportException.hpp>
 
 #include <Interface/GpuResource/GpuResource.hpp>
+#else
+#include "../../Shared/Exception/NotSupportException.hpp"
+
+#include "GpuResource.hpp"
+#endif
 
 namespace CodeRed {
 	

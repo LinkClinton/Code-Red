@@ -1,8 +1,14 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Enum/FilterOptions.hpp>
 #include <Shared/Enum/AddressMode.hpp>
 #include <Shared/Enum/BorderColor.hpp>
+#else
+#include "../Enum/FilterOptions.hpp"
+#include "../Enum/AddressMode.hpp"
+#include "../Enum/BorderColor.hpp"
+#endif
 
 namespace CodeRed {
 

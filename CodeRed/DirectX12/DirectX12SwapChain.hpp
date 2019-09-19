@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <DirectX12/DirectX12Utility.hpp>
 #include <Interface/GpuSwapChain.hpp>
+#else
+#include "DirectX12Utility.hpp"
+#include "../Interface/GpuSwapChain.hpp"
+#endif
 
 #ifdef __ENABLE__DIRECTX12__
 
@@ -17,7 +22,7 @@ namespace CodeRed{
 
 		~DirectX12SwapChain() = default;
 
-		void resize(const UInt32 width, const UInt32 height) override;
+		void resize(const size_t width, const size_t height) override;
 
 		void present(bool sync) override;
 

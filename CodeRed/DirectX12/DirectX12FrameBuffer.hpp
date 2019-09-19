@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <DirectX12/DirectX12Utility.hpp>
 #include <Interface/GpuFrameBuffer.hpp>
+#else
+#include "DirectX12Utility.hpp"
+#include "../Interface/GpuFrameBuffer.hpp"
+#endif
 
 #ifdef __ENABLE__DIRECTX12__
 

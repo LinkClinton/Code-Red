@@ -72,22 +72,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Core\CodeRedGraphics.hpp" />
     <ClInclude Include="DirectX12\DirectX12CommandAllocator.hpp" />
     <ClInclude Include="DirectX12\DirectX12CommandQueue.hpp" />
     <ClInclude Include="DirectX12\DirectX12DisplayAdapter.hpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12BlendState.hpp" />
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12DepthStencilState.hpp" />
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12InputAssemblyState.hpp" />
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12PipelineFactory.hpp" />
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.hpp" />
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12ShaderState.hpp" />
     <ClInclude Include="DirectX12\DirectX12ResourceLayout.hpp" />
@@ -247,6 +249,7 @@
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12BlendState.cpp" />
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12DepthStencilState.cpp" />
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12InputAssemblyState.cpp" />
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12PipelineFactory.cpp" />
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.cpp" />
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12ShaderState.cpp" />
     <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp" />

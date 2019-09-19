@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Enum/ResourceLayout.hpp>
 #include <Shared/Enum/ResourceUsage.hpp>
 #include <Shared/Enum/PixelFormat.hpp>
@@ -7,6 +8,15 @@
 #include <Shared/Enum/Dimension.hpp>
 
 #include <Shared/PixelFormatSizeOf.hpp>
+#else
+#include "../Enum/ResourceLayout.hpp"
+#include "../Enum/ResourceUsage.hpp"
+#include "../Enum/PixelFormat.hpp"
+#include "../Enum/MemoryHeap.hpp"
+#include "../Enum/Dimension.hpp"
+
+#include "../PixelFormatSizeOf.hpp"
+#endif
 
 #include <variant>
 

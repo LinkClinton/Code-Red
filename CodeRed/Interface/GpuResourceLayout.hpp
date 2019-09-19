@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/LayoutElement.hpp>
+#else
+#include "../Shared/LayoutElement.hpp"
+#endif
 
 #include <memory>
 #include <vector>

@@ -75,7 +75,7 @@ CodeRed::DirectX12SwapChain::DirectX12SwapChain(
 	resize(temp.width, temp.height);
 }
 
-void CodeRed::DirectX12SwapChain::resize(const UInt32 width, const UInt32 height)
+void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height)
 {
 	//if the size is not change, we do nothing
 	if (width == mInfo.width && height == mInfo.height) return;

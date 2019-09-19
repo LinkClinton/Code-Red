@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Exception/InvalidException.hpp>
+#else
+#include "InvalidException.hpp"
+#endif
 
 namespace CodeRed {
 

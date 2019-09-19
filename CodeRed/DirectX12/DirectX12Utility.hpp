@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
+#include <Shared/Utility.hpp>
+#else
+#include "../Shared/Utility.hpp"
+#endif
+
 #ifdef __ENABLE__DIRECTX12__
 
 #include <wrl/client.h>

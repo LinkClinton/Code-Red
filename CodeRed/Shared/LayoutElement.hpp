@@ -1,9 +1,17 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Enum/ShaderVisibility.hpp>
 #include <Shared/Enum/ResourceType.hpp>
 #include <Shared/Enum/PixelFormat.hpp>
 #include <Shared/Utility.hpp>
+#else
+#include "Enum/ShaderVisibility.hpp"
+#include "Enum/ResourceType.hpp"
+#include "Enum/PixelFormat.hpp"
+#include "Utility.hpp"
+#endif
+
 
 #include <string>
 #include <memory>

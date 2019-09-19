@@ -1,10 +1,18 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuPipelineState/GpuPipelineState.hpp>
 #include <Shared/Enum/PixelFormat.hpp>
 #include <Shared/Enum/FrontFace.hpp>
 #include <Shared/Enum/CullMode.hpp>
 #include <Shared/Enum/FillMode.hpp>
+#else
+#include "GpuPipelineState.hpp"
+#include "../../Shared/Enum/PixelFormat.hpp"
+#include "../../Shared/Enum/FrontFace.hpp"
+#include "../../Shared/Enum/CullMode.hpp"
+#include "../../Shared/Enum/FillMode.hpp"
+#endif
 
 #include <vector>
 

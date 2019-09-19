@@ -1,8 +1,14 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Information/WindowInfo.hpp>
 #include <Shared/Enum/PixelFormat.hpp>
 #include <Shared/Noncopyable.hpp>
+#else
+#include "../Shared/Information/WindowInfo.hpp"
+#include "../Shared/Enum/PixelFormat.hpp"
+#include "../Shared/Noncopyable.hpp"
+#endif
 
 #include <memory>
 #include <vector>
@@ -28,13 +34,13 @@ namespace CodeRed {
 
 		auto info() const noexcept -> WindowInfo { return mInfo; }
 
-		auto width() const noexcept -> UInt32 { return mInfo.width; }
+		auto width() const noexcept -> size_t { return mInfo.width; }
 
-		auto height() const noexcept -> UInt32 { return mInfo.height; }
+		auto height() const noexcept -> size_t { return mInfo.height; }
 
 		auto format() const noexcept -> PixelFormat { return mPixelFormat; }
 
-		virtual void resize(const UInt32 width, const UInt32 height) = 0;
+		virtual void resize(const size_t width, const size_t height) = 0;
 		
 		virtual void present(bool sync = true) = 0;
 

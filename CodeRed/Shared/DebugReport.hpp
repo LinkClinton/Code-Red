@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Shared/Utility.hpp>
-
 #include <vector>
 #include <string>
 

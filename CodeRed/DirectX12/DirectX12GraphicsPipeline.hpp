@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuGraphicsPipeline.hpp>
 #include <DirectX12/DirectX12Utility.hpp>
+#else
+#include "../Interface/GpuGraphicsPipeline.hpp"
+#include "DirectX12Utility.hpp"
+#endif
 
 #ifdef __ENABLE__DIRECTX12__
 

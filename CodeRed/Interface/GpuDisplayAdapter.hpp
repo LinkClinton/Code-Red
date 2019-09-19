@@ -1,7 +1,11 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Noncopyable.hpp>
 #include <Shared/Utility.hpp>
+#else
+#include "../Shared/Noncopyable.hpp"
+#endif
 
 #include <string>
 
@@ -11,8 +15,8 @@ namespace CodeRed {
 	protected:
 		explicit GpuDisplayAdapter(
 			const std::string& name,
-			const UInt32 device_id,
-			const UInt32 vendor_id) :
+			const size_t device_id,
+			const size_t vendor_id) :
 			mName(name),
 			mDeviceId(device_id),
 			mVendorId(vendor_id) {}
@@ -21,14 +25,14 @@ namespace CodeRed {
 	public:
 		auto name() const noexcept ->std::string { return mName; }
 		
-		auto deviceId() const noexcept -> UInt32 { return mDeviceId; }
+		auto deviceId() const noexcept -> size_t { return mDeviceId; }
 
-		auto vendorId() const noexcept -> UInt32 { return mVendorId; }
+		auto vendorId() const noexcept -> size_t { return mVendorId; }
 	protected:
 		std::string mName = "";
 
-		UInt32 mDeviceId = 0;
-		UInt32 mVendorId = 0;
+		size_t mDeviceId = 0;
+		size_t mVendorId = 0;
 	};
 	
 }

@@ -1,4 +1,4 @@
-#include <Shared/Exception/ZeroException.hpp>
+#include "../Shared/Exception/ZeroException.hpp"
 
 #include "GpuResource/GpuTexture.hpp"
 #include "GpuResource/GpuSampler.hpp"

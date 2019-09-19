@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuResource/GpuResource.hpp>
 #include <Shared/Exception/ZeroException.hpp>
+#else
+#include "GpuResource.hpp"
+#include "../../Shared/Exception/ZeroException.hpp"
+#endif
 
 namespace CodeRed {
 

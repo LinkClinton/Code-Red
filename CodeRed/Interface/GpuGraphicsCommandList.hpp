@@ -1,10 +1,18 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Enum/ResourceLayout.hpp>
 #include <Shared/Noncopyable.hpp>
 #include <Shared/ScissorRect.hpp>
 #include <Shared/ViewPort.hpp>
 #include <Shared/Extent.hpp>
+#else
+#include "../Shared/Enum/ResourceLayout.hpp"
+#include "../Shared/Noncopyable.hpp"
+#include "../Shared/ScissorRect.hpp"
+#include "../Shared/ViewPort.hpp"
+#include "../Shared/Extent.hpp"
+#endif
 
 #include <memory>
 
@@ -46,11 +54,11 @@ namespace CodeRed {
 			const std::shared_ptr<GpuBuffer>& buffer) = 0;
 
 		virtual void setGraphicsConstantBuffer(
-			const UInt32 index,
+			const size_t index,
 			const std::shared_ptr<GpuBuffer>& buffer) = 0;
 
 		virtual void setGraphicsTexture(
-			const UInt32 index,
+			const size_t index,
 			const std::shared_ptr<GpuTexture> &texture) = 0;
 
 		virtual void setFrameBuffer(

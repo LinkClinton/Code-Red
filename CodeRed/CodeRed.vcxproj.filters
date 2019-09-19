@@ -34,6 +34,9 @@
     <Filter Include="DirectX12\DirectX12Resource">
       <UniqueIdentifier>{f828545d-72c7-4e1d-8ba4-351977393692}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{21e5ad3b-e080-45e7-a5da-af735d0037e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Noncopyable.hpp">
@@ -276,6 +279,12 @@
     <ClInclude Include="DirectX12\DirectX12GraphicsPipeline.hpp">
       <Filter>DirectX12</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12PipelineFactory.hpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CodeRedGraphics.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -346,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="DirectX12\DirectX12GraphicsPipeline.cpp">
       <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12PipelineFactory.cpp">
+      <Filter>DirectX12\DirectX12PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

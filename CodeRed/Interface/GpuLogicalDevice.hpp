@@ -1,10 +1,18 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Information/ResourceInfo.hpp>
 #include <Shared/Information/SamplerInfo.hpp>
 #include <Shared/Information/WindowInfo.hpp>
 #include <Shared/LayoutElement.hpp>
 #include <Shared/Noncopyable.hpp>
+#else
+#include "../Shared/Information/ResourceInfo.hpp"
+#include "../Shared/Information/SamplerInfo.hpp"
+#include "../Shared/Information/WindowInfo.hpp"
+#include "../Shared/LayoutElement.hpp"
+#include "../Shared/Noncopyable.hpp"
+#endif
 
 #include <vector>
 #include <memory>
@@ -15,6 +23,7 @@ namespace CodeRed {
 	class GpuInputAssemblyState;
 	class GpuDepthStencilState;
 	class GpuGraphicsPipeline;
+	class GpuPipelineFactory;
 	class GpuResourceLayout;
 	class GpuShaderState;
 	class GpuBlendState;
@@ -34,7 +43,9 @@ namespace CodeRed {
 
 	class GpuFence;
 	
-	class GpuLogicalDevice : public Noncopyable {
+	class GpuLogicalDevice :
+		protected std::enable_shared_from_this<GpuLogicalDevice>,
+		public Noncopyable {
 	protected:
 		explicit GpuLogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter);
 			
@@ -89,7 +100,11 @@ namespace CodeRed {
 		virtual auto createTexture(
 			const ResourceInfo& info)
 			-> std::shared_ptr<GpuTexture> = 0;
+
+		virtual auto createPipelineFactory()
+			-> std::shared_ptr<GpuPipelineFactory> = 0;
 	protected:
+		
 		std::shared_ptr<GpuDisplayAdapter> mDisplayAdapter;
 	};
 	

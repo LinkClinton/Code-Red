@@ -95,7 +95,7 @@ void CodeRed::DirectX12GraphicsCommandList::setIndexBuffer(const std::shared_ptr
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setGraphicsConstantBuffer(
-	const UInt32 index,
+	const size_t index,
 	const std::shared_ptr<GpuBuffer>& buffer)
 {
 	CODE_RED_DEBUG_THROW_IF(
@@ -110,7 +110,7 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsConstantBuffer(
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setGraphicsTexture(
-	const UInt32 index,
+	const size_t index,
 	const std::shared_ptr<GpuTexture>& texture)
 {
 	CODE_RED_DEBUG_THROW_IF(

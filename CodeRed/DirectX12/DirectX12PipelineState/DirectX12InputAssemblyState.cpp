@@ -1,6 +1,6 @@
 #include "DirectX12InputAssemblyState.hpp"
 
-#include <Shared/PixelFormatSizeOf.hpp>
+#include "../../Shared/PixelFormatSizeOf.hpp"
 
 #ifdef __ENABLE__DIRECTX12__
 

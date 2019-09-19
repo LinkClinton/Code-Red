@@ -1,8 +1,14 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Enum/BlendOperator.hpp>
 #include <Shared/Enum/BlendFactor.hpp>
 #include <Shared/Enum/ColorMask.hpp>
+#else
+#include "Enum/BlendOperator.hpp"
+#include "Enum/BlendFactor.hpp"
+#include "Enum/ColorMask.hpp"
+#endif
 
 namespace CodeRed {
 

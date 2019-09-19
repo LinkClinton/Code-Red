@@ -1,8 +1,14 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuPipelineState/GpuPipelineState.hpp>
 #include <Shared/Enum/PrimitiveTopology.hpp>
 #include <Shared/LayoutElement.hpp>
+#else
+#include "GpuPipelineState.hpp"
+#include "../../Shared/Enum/PrimitiveTopology.hpp"
+#include "../../Shared/LayoutElement.hpp"
+#endif
 
 #include <vector>
 
