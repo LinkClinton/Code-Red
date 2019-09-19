@@ -31,12 +31,16 @@ namespace CodeRed {
 		auto layout() const noexcept -> ResourceLayout { return mInfo.Layout; }
 		
 		auto heap() const noexcept -> MemoryHeap { return mInfo.Heap; }
-		
+
 		virtual auto size() const -> size_t = 0;
 
 		virtual auto mapMemory() const -> void* = 0;
 
 		virtual void unmapMemory() const = 0;
+	protected:
+		friend class DirectX12GraphicsCommandList;
+		
+		void setLayout(const ResourceLayout layout) { mInfo.Layout = layout; }
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 		

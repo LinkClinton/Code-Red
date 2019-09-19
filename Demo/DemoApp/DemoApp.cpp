@@ -49,16 +49,14 @@ Demo::DemoApp::DemoApp(const std::string& name, size_t width, size_t height)
 		rect.right - rect.left, rect.bottom - rect.top, nullptr, nullptr, hInstance, nullptr);
 
 	mExisted = true;
-
-	initialize();
 }
 
-void Demo::DemoApp::show()
+void Demo::DemoApp::show() const
 {
 	ShowWindow(mHwnd, SW_SHOW);
 }
 
-void Demo::DemoApp::hide()
+void Demo::DemoApp::hide() const
 {
 	ShowWindow(mHwnd, SW_HIDE);
 }
@@ -80,6 +78,7 @@ void Demo::DemoApp::runLoop()
 		}
 
 		update();
+		render();
 	}
 }
 

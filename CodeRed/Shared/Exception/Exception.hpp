@@ -1,6 +1,7 @@
 #pragma once
 
 #include <exception>
+#include <string>
 
 #undef throwIf
 
@@ -16,7 +17,11 @@ namespace CodeRed {
 	public:
 		Exception() = default;
 
-		explicit Exception(const char* const message) :
-			std::exception(message) {}
+		explicit Exception(const std::string &message) :
+			mMesaage(message) {}
+
+		char const* what() const override { return mMesaage.c_str(); }
+	private:
+		std::string mMesaage;
 	};
 }

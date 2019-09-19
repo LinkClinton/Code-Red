@@ -32,6 +32,8 @@ namespace CodeRed {
 
 		template<typename T>
 		friend class InvalidException;
+		template<typename T>
+		friend class ZeroException;
 		friend class FailedException;
 	};
 	

@@ -55,6 +55,7 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuSampler> override;
 
 		auto createSwapChain(
+			const std::shared_ptr<GpuCommandQueue>& queue,
 			const WindowInfo& info, 
 			const PixelFormat& format, 
 			const size_t buffer_count)

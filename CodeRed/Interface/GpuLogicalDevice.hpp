@@ -44,7 +44,7 @@ namespace CodeRed {
 	class GpuFence;
 	
 	class GpuLogicalDevice :
-		protected std::enable_shared_from_this<GpuLogicalDevice>,
+		public std::enable_shared_from_this<GpuLogicalDevice>,
 		public Noncopyable {
 	protected:
 		explicit GpuLogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter);
@@ -88,6 +88,7 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuSampler> = 0;
 
 		virtual auto createSwapChain(
+			const std::shared_ptr<GpuCommandQueue> &queue,
 			const WindowInfo& info,
 			const PixelFormat& format,
 			const size_t buffer_count = 2)

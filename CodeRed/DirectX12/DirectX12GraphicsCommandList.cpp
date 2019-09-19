@@ -224,6 +224,8 @@ void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
 	);
 	
 	mGraphicsCommandList->ResourceBarrier(1, &barrier);
+
+	texture->setLayout(new_layout);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
@@ -242,7 +244,7 @@ void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
 		buffer->layout() != old_layout,
 		InvalidException<ResourceLayout>({ "old_layout" })
 	);
-
+	
 	auto barrier = resource_barrier(
 		static_cast<DirectX12Buffer*>(buffer.get())->buffer().Get(),
 		enumConvert(old_layout),
@@ -250,6 +252,8 @@ void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
 	);
 
 	mGraphicsCommandList->ResourceBarrier(1, &barrier);
+
+	buffer->setLayout(new_layout);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::layoutTransition(

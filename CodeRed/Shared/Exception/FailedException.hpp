@@ -20,9 +20,6 @@ namespace CodeRed {
 		explicit FailedException(
 			const std::vector<std::string> &objects, 
 			const Type type = Type::Create) :
-			Exception((
-				mMessage = DebugReport::push(DebugReport::select(type), objects)).c_str()) {}
-	protected:
-		std::string mMessage;
+			Exception(DebugReport::push(DebugReport::select(type), objects)) {}
 	};
 }

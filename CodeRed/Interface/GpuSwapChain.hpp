@@ -16,12 +16,14 @@
 namespace CodeRed {
 
 	class GpuLogicalDevice;
+	class GpuCommandQueue;
 	class GpuTexture;
 	
 	class GpuSwapChain : public Noncopyable {
 	protected:
 		explicit GpuSwapChain(
 			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuCommandQueue>& queue,
 			const WindowInfo& info,
 			const PixelFormat& format,
 			const size_t buffer_count = 2);
@@ -47,6 +49,7 @@ namespace CodeRed {
 		virtual auto currentBufferIndex() const -> size_t = 0;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
+		std::shared_ptr<GpuCommandQueue> mQueue;
 
 		std::vector<std::shared_ptr<GpuTexture>> mBuffers;
 		

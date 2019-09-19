@@ -4,6 +4,7 @@
 #include "DirectX12Resource/DirectX12Texture.hpp"
 
 #include "DirectX12LogicalDevice.hpp"
+#include "DirectX12CommandQueue.hpp"
 #include "DirectX12SwapChain.hpp"
 
 #include <algorithm>
@@ -12,24 +13,14 @@
 
 CodeRed::DirectX12SwapChain::DirectX12SwapChain(
 	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuCommandQueue>& queue,
 	const WindowInfo& info, 
 	const PixelFormat& format, 
 	const size_t buffer_count) :
-	GpuSwapChain(device, info, format, buffer_count)
+	GpuSwapChain(device, queue, info, format, buffer_count)
 {
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
-	
-	D3D12_COMMAND_QUEUE_DESC queueInfo = {
-		D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT,
-		0,
-		D3D12_COMMAND_QUEUE_FLAG_NONE,
-		0
-	};
-
-	throwIfFailed(
-		dxDevice->CreateCommandQueue(&queueInfo, IID_PPV_ARGS(&mPresentQueue)),
-		FailedException({ "ID3D12CommandQueue of Present" }, DebugType::Create)
-	);
+	const auto dxQueue = static_cast<DirectX12CommandQueue*>(mQueue.get())->queue();
 	
 	DXGI_SWAP_CHAIN_DESC swapInfo = {};
 
@@ -58,13 +49,13 @@ CodeRed::DirectX12SwapChain::DirectX12SwapChain(
 	);
 
 	throwIfFailed(
-		factory->CreateSwapChain(mPresentQueue.Get(), &swapInfo, temp_swap_chain.GetAddressOf()),
+		factory->CreateSwapChain(dxQueue.Get(), &swapInfo, temp_swap_chain.GetAddressOf()),
 		FailedException({ "IDXGISwapChain" }, DebugType::Create)
 	);
 
 	throwIfFailed(
 		temp_swap_chain->QueryInterface(IID_PPV_ARGS(&mSwapChain)),
-		FailedException({ "IDXGISwapChain3" }, DebugType::Get)
+		FailedException({ "IDXGISwapChain3", "IDXGISwapChain" }, DebugType::Get)
 	);
 
 	//we use resize to create the texture of back buffer

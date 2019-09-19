@@ -16,10 +16,10 @@ namespace Demo {
 
 		~DemoApp() = default;
 		
-		void show();
+		void show() const;
 
-		void hide();
-
+		void hide() const;
+		
 		void runLoop();
 
 		auto width() const noexcept -> size_t { return mWidth; }
@@ -27,11 +27,13 @@ namespace Demo {
 		auto height() const noexcept -> size_t { return mHeight; }
 
 		auto name() const noexcept -> std::string { return mName; }
+
+		auto handle() const noexcept -> void* { return mHwnd; }
 	protected:
 		virtual void update() {}
 		virtual void render() {}
 		virtual void initialize() {}
-	protected:
+	private:
 		std::string mName;
 
 		size_t mWidth;

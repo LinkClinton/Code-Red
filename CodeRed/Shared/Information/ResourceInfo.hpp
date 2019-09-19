@@ -135,7 +135,7 @@ namespace CodeRed {
 			const MemoryHeap heap = MemoryHeap::Default)
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, 1, format, Dimension::Dimension1D),
+				TextureProperty(width, height, 1, format, Dimension::Dimension2D),
 				layout, usage, heap);
 		}
 
@@ -149,7 +149,7 @@ namespace CodeRed {
 			const MemoryHeap heap = MemoryHeap::Default)
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, depth, format, Dimension::Dimension1D),
+				TextureProperty(width, height, depth, format, Dimension::Dimension3D),
 				layout, usage, heap);
 		}
 	};

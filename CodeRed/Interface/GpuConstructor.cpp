@@ -25,16 +25,20 @@
 		ZeroException<void>( { name }));
 
 CodeRed::GpuSwapChain::GpuSwapChain(
-	const std::shared_ptr<GpuLogicalDevice>& device, 
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuCommandQueue>& queue,
 	const WindowInfo& info,
 	const PixelFormat& format, 
 	const size_t buffer_count) :
 	mDevice(device),
+	mQueue(queue),
 	mBuffers(buffer_count),
 	mInfo(info),
 	mPixelFormat(format)
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
+
+	CODE_RED_DEBUG_PTR_VALID(queue, "queue");
 	
 	CODE_RED_DEBUG_THROW_IF(
 		mInfo.handle == nullptr || mInfo.width == 0 || mInfo.height == 0,

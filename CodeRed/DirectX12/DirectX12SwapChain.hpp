@@ -16,6 +16,7 @@ namespace CodeRed{
 	public:
 		explicit DirectX12SwapChain(
 			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuCommandQueue>& queue,
 			const WindowInfo& info,
 			const PixelFormat& format,
 			const size_t buffer_count = 2);
@@ -30,7 +31,6 @@ namespace CodeRed{
 		
 		auto swapChain() const noexcept -> WRL::ComPtr<IDXGISwapChain3> { return mSwapChain; }
 	private:
-		WRL::ComPtr<ID3D12CommandQueue> mPresentQueue;
 		WRL::ComPtr<IDXGISwapChain3> mSwapChain;
 	};
 	

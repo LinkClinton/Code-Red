@@ -126,6 +126,7 @@ auto CodeRed::DirectX12LogicalDevice::createSampler(const SamplerInfo& info)
 }
 
 auto CodeRed::DirectX12LogicalDevice::createSwapChain(
+	const std::shared_ptr<GpuCommandQueue> &queue,
 	const WindowInfo& info,
 	const PixelFormat& format,
 	const size_t buffer_count)
@@ -134,6 +135,7 @@ auto CodeRed::DirectX12LogicalDevice::createSwapChain(
 	return std::static_pointer_cast<GpuSwapChain>(
 		std::make_shared<DirectX12SwapChain>(
 			shared_from_this(),
+			queue,
 			info,
 			format,
 			buffer_count));

@@ -25,11 +25,10 @@ namespace CodeRed {
 		InvalidException(
 			const std::vector<std::string> &messages, T* value, 
 			const char* const message) :
-			Exception((mMessage = DebugReport::push(message, messages)).c_str()),
+			Exception(DebugReport::push(message, messages)),
 			mValue(value) {}
 	private:
-		std::string mMessage;
-		
+
 		T* mValue;
 	};
 }

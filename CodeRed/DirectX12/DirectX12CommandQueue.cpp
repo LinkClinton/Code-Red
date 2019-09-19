@@ -44,6 +44,8 @@ void CodeRed::DirectX12CommandQueue::execute(
 void CodeRed::DirectX12CommandQueue::waitIdle()
 {
 	static auto fence = std::make_shared<DirectX12Fence>(mDevice);
+
+	fence->wait(mCommandQueue);
 }
 
 #endif

@@ -19,7 +19,7 @@ namespace CodeRed {
 			const std::shared_ptr<GpuLogicalDevice>& device);
 		
 		~GpuCommandAllocator() = default;
-
+	public:
 		virtual void reset() = 0;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
