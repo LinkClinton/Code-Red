@@ -13,7 +13,7 @@ CodeRed::DirectX12Sampler::DirectX12Sampler(
 	mSampler.AddressW = enumConvert(mInfo.AddressModeW);
 	mSampler.BorderColor = enumConvert(mInfo.Border);
 	mSampler.MipLODBias = 0;
-	mSampler.MaxAnisotropy = mInfo.MaxAnisotropy;
+	mSampler.MaxAnisotropy = static_cast<UINT>(mInfo.MaxAnisotropy);
 	mSampler.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	mSampler.MinLOD = 0.0f;
 	mSampler.MaxLOD = D3D12_FLOAT32_MAX;

@@ -32,7 +32,7 @@ namespace CodeRed {
 
 		auto addressW() const noexcept -> AddressMode { return mInfo.AddressModeW; }
 
-		auto maxAnisotropy() const noexcept -> UInt32 { return mInfo.MaxAnisotropy; }
+		auto maxAnisotropy() const noexcept -> size_t { return mInfo.MaxAnisotropy; }
 
 		auto border() const noexcept -> BorderColor { return mInfo.Border; }
 	protected:

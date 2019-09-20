@@ -23,8 +23,8 @@ namespace CodeRed {
 	struct ResourceLayoutElement {
 		ShaderVisibility Visibility = ShaderVisibility::All;
 		ResourceType Type = ResourceType::Buffer;
-		UInt32 Binding = 0;
-		UInt32 Space = 0;
+		size_t Binding = 0;
+		size_t Space = 0;
 
 		ResourceLayoutElement() = default;
 
@@ -38,8 +38,8 @@ namespace CodeRed {
 
 	struct SamplerLayoutElement {
 		ShaderVisibility Visibility = ShaderVisibility::All;
-		UInt32 Binding = 0;
-		UInt32 Space = 0;
+		size_t Binding = 0;
+		size_t Space = 0;
 
 		std::shared_ptr<GpuSampler> Sampler;
 
@@ -47,8 +47,8 @@ namespace CodeRed {
 		
 		explicit SamplerLayoutElement(
 			const std::shared_ptr<GpuSampler> &sampler,
-			const UInt32 binding = 0,
-			const UInt32 space = 0,
+			const size_t binding = 0,
+			const size_t space = 0,
 			const ShaderVisibility visibility = ShaderVisibility::All
 		) : Visibility(visibility), Binding(binding), Space(space), Sampler(sampler) {}
 	};

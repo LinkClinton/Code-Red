@@ -42,6 +42,6 @@ namespace CodeRed {
 			Right(right), Bottom(bottom), Back(back) {}
 	};
 
-	using UExtent2D = Extent2D<UInt32>;
-	using UExtent3D = Extent3D<UInt32>;
+	using UExtent2D = Extent2D<size_t>;
+	using UExtent3D = Extent3D<size_t>;
 }

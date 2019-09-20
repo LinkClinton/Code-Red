@@ -21,7 +21,7 @@ namespace CodeRed {
 
 		BorderColor Border;
 		
-		UInt32 MaxAnisotropy = 1;
+		size_t MaxAnisotropy = 1;
 
 		SamplerInfo() = default;
 

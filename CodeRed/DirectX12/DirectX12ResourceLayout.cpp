@@ -20,8 +20,8 @@ CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 
 		parameter.ParameterType = enumConvert(element.Type);
 		parameter.ShaderVisibility = enumConvert(element.Visibility);
-		parameter.Descriptor.ShaderRegister = element.Binding;
-		parameter.Descriptor.RegisterSpace = element.Space;
+		parameter.Descriptor.ShaderRegister = static_cast<UINT>(element.Binding);
+		parameter.Descriptor.RegisterSpace = static_cast<UINT>(element.Space);
 
 		parameterArrays.push_back(parameter);
 	}
@@ -30,9 +30,9 @@ CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 		auto desc = static_cast<DirectX12Sampler*>(sampler.Sampler.get())->sampler();
 
 		desc.ShaderVisibility = enumConvert(sampler.Visibility);
-		desc.ShaderRegister = sampler.Binding;
-		desc.RegisterSpace = sampler.Space;
-
+		desc.ShaderRegister = static_cast<UINT>(sampler.Binding);
+		desc.RegisterSpace = static_cast<UINT>(sampler.Space);
+		
 		samplerArrays.push_back(desc);
 	}
 

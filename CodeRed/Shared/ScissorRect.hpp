@@ -9,10 +9,10 @@
 namespace CodeRed {
 
 	struct ScissorRect {
-		UInt32 Left = 0;
-		UInt32 Top = 0;
-		UInt32 Right = 0;
-		UInt32 Bottom = 0;
+		size_t Left = 0;
+		size_t Top = 0;
+		size_t Right = 0;
+		size_t Bottom = 0;
 	};
 	
 }
