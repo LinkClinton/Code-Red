@@ -25,7 +25,7 @@ namespace CodeRed {
 
 		auto constexpr state() const noexcept -> D3D12_RASTERIZER_DESC { return mRasterizationState; }
 	private:
-		D3D12_RASTERIZER_DESC mRasterizationState;
+		D3D12_RASTERIZER_DESC mRasterizationState = {};
 	};
 	
 }

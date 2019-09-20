@@ -2,8 +2,10 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="DemoApp.hpp" />
+    <ClInclude Include="PipelineInfo.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoApp.cpp" />
+    <ClCompile Include="PipelineInfo.cpp" />
   </ItemGroup>
 </Project>

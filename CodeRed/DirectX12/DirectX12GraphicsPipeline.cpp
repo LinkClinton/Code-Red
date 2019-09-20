@@ -35,7 +35,8 @@ CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 	
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
-
+	
+	desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	desc.pRootSignature = static_cast<DirectX12ResourceLayout*>(mResourceLayout.get())->rootSignature().Get();
 	desc.InputLayout = static_cast<DirectX12InputAssemblyState*>(mInputAssemblyState.get())->layout();
 	desc.VS = static_cast<DirectX12ShaderState*>(mVertexShaderState.get())->shader();
@@ -52,7 +53,7 @@ CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
 	desc.SampleMask = UINT_MAX;
-
+	
 	throwIfFailed(
 		dxDevice->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&mGraphicsPipeline)),
 		FailedException({ "ID3D12Pipeline of Graphics" }, DebugType::Create)

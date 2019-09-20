@@ -44,10 +44,6 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 
-	//get the real size in bytes of texture we will use
-	std::get<TextureProperty>(mInfo.Property).Size =
-		dxDevice->GetResourceAllocationInfo(0, 1, &desc).SizeInBytes;
-	
 	throwIfFailed(
 		dxDevice->CreateCommittedResource(
 			&heapProperties,

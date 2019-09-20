@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DemoApp.hpp" />
+    <ClInclude Include="PipelineInfo.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CodeRed\CodeRed.vcxproj">
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoApp.cpp" />
+    <ClCompile Include="PipelineInfo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

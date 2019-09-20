@@ -1,9 +1,15 @@
 #pragma once
 
 #ifdef __CODE__RED__GLOBAL__INCLUDE__
+#include <Interface/GpuResource/GpuTexture.hpp>
 #include <Shared/Noncopyable.hpp>
+#include <Shared/ScissorRect.hpp>
+#include <Shared/ViewPort.hpp>
 #else
+#include "GpuResource/GpuTexture.hpp"
 #include "../Shared/Noncopyable.hpp"
+#include "../Shared/ScissorRect.hpp"
+#include "../Shared/ViewPort.hpp"
 #endif
 
 #include <memory>
@@ -29,6 +35,23 @@ namespace CodeRed {
 		auto renderTarget(const size_t index = 0) const -> std::shared_ptr<GpuTexture> { return mRenderTargets[index]; }
 
 		auto depthStencil() const -> std::shared_ptr<GpuTexture> { return mDepthStencil; }
+
+		auto fullViewPort(const size_t index = 0) const noexcept -> ViewPort {
+			return {
+				0,0,
+				static_cast<Real>(mRenderTargets[index]->width()),
+				static_cast<Real>(mRenderTargets[index]->height()),
+				0.0f,1.0f
+			};
+		}
+
+		auto fullScissorRect(const size_t index = 0) const noexcept -> ScissorRect {
+			return {
+				0, 0,
+				static_cast<UInt32>(mRenderTargets[index]->width()),
+				static_cast<UInt32>(mRenderTargets[index]->height())
+			};
+		}
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 

@@ -8,6 +8,7 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+#include <d3dcompiler.h>
 #include <wrl/client.h>
 #include <dxgi1_5.h>
 #include <d3d12.h>

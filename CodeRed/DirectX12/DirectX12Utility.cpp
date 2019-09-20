@@ -200,6 +200,7 @@ auto CodeRed::enumConvert(const PixelFormat format)
 {
 	switch (format) {
 	case PixelFormat::RedGreenBlueAlpha8BitUnknown: return DXGI_FORMAT_R8G8B8A8_UNORM;
+	case PixelFormat::RedGreenBlue32BitFloat: return DXGI_FORMAT_R32G32B32_FLOAT;
 	case PixelFormat::Unknown: return DXGI_FORMAT_UNKNOWN;
 	default:
 		throw NotSupportException(NotSupportType::Enum);

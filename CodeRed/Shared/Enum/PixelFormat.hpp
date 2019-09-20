@@ -11,7 +11,8 @@ namespace CodeRed {
 	enum class PixelFormat : UInt32
 	{
 		Unknown,
-		RedGreenBlueAlpha8BitUnknown
+		RedGreenBlueAlpha8BitUnknown,
+		RedGreenBlue32BitFloat
 	};
 	
 }

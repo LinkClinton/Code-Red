@@ -12,7 +12,7 @@ namespace CodeRed {
 #ifdef __ENABLE__CODE__RED__DEBUG__
 #define CODE_RED_DEBUG_THROW_IF(condition, exception) if ((condition)) throw exception;
 #else
-#define CODE_RED_DEBUG_THROW_IF()
+#define CODE_RED_DEBUG_THROW_IF(condition, exception)
 #endif
 	
 }

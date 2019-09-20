@@ -27,7 +27,7 @@ namespace CodeRed {
 
 		auto constexpr state() const noexcept -> D3D12_DEPTH_STENCIL_DESC { return mDepthStencilDesc; }
 	private:
-		D3D12_DEPTH_STENCIL_DESC mDepthStencilDesc;
+		D3D12_DEPTH_STENCIL_DESC mDepthStencilDesc = {};
 	};
 	
 }

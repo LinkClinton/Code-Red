@@ -23,7 +23,7 @@ namespace CodeRed {
 
 		auto constexpr state() const noexcept -> D3D12_BLEND_DESC { return mBlendState; }
 	private:
-		D3D12_BLEND_DESC mBlendState;
+		D3D12_BLEND_DESC mBlendState = {};
 	};
 	
 }
