@@ -114,6 +114,18 @@ namespace CodeRed {
 				layout, ResourceUsage::ConstantBuffer, heap);
 		}
 
+		static auto UploadBuffer(
+			const size_t stride,
+			const size_t count) -> ResourceInfo
+		{
+			return ResourceInfo(
+				BufferProperty(stride, count),
+				ResourceLayout::GeneralRead,
+				ResourceUsage::None,
+				MemoryHeap::Upload
+			);
+		}
+
 		static auto Texture1D(
 			const size_t width, 
 			const PixelFormat format,

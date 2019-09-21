@@ -24,8 +24,6 @@ namespace CodeRed {
 
 		void endRecoding() override;
 
-		void reset() override;
-
 		void setGraphicsPipeline(
 			const std::shared_ptr<GpuGraphicsPipeline>& pipeline) override;
 

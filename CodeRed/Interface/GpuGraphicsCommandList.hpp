@@ -39,8 +39,6 @@ namespace CodeRed {
 
 		virtual void endRecoding() = 0;
 
-		virtual void reset() = 0;
-		
 		virtual void setGraphicsPipeline(
 			const std::shared_ptr<GpuGraphicsPipeline>& pipeline) = 0;
 		

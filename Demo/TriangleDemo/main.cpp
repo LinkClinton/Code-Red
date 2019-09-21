@@ -27,7 +27,6 @@ private:
 		//reset the command allocator and command list
 		//we can reuse the memory that we used in the previous frame
 		mCommandAllocator->reset();
-		mCommandList->reset();
 
 		//begin recoding with command list
 		mCommandList->beginRecoding();

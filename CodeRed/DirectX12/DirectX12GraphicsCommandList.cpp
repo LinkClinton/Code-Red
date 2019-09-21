@@ -32,6 +32,10 @@ CodeRed::DirectX12GraphicsCommandList::DirectX12GraphicsCommandList(
 
 void CodeRed::DirectX12GraphicsCommandList::beginRecoding()
 {
+	mGraphicsCommandList->Reset(
+		static_cast<DirectX12CommandAllocator*>(mAllocator.get())->allocator().Get(),
+		nullptr);
+	
 	mGraphicsCommandList->ClearState(nullptr);
 
 	mResourceLayout.reset();
@@ -40,15 +44,6 @@ void CodeRed::DirectX12GraphicsCommandList::beginRecoding()
 void CodeRed::DirectX12GraphicsCommandList::endRecoding()
 {
 	mGraphicsCommandList->Close();
-}
-
-void CodeRed::DirectX12GraphicsCommandList::reset()
-{
-	mGraphicsCommandList->Reset(
-		static_cast<DirectX12CommandAllocator*>(mAllocator.get())->allocator().Get(),
-		nullptr);
-
-	mResourceLayout.reset();
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setGraphicsPipeline(
