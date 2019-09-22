@@ -37,7 +37,6 @@ namespace Demo {
 		virtual void update(float delta) {}
 		virtual void render(float delta) {}
 		virtual void initialize() {}
-		virtual void finalize() {}
 	private:
 		std::string mName;
 

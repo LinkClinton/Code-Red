@@ -87,8 +87,6 @@ void Demo::DemoApp::runLoop()
 		update(duration.count());
 		render(duration.count());
 	}
-
-	finalize();
 }
 
 void Demo::DemoApp::processMessage(DemoApp* app, const MSG& message)

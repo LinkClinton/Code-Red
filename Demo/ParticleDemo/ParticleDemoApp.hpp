@@ -48,12 +48,13 @@ public:
 	{
 		initialize();
 	}
+
+	~ParticleDemoApp();
 private:
 	void update(float delta) override;
 	void render(float delta) override;
 	void initialize() override;
-	void finalize() override;
-
+	
 	void initializeParticles();
 	
 	void initializeCommands();

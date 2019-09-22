@@ -3,6 +3,11 @@
 #include <iostream>
 #include <random>
 
+ParticleDemoApp::~ParticleDemoApp()
+{
+	mCommandQueue->waitIdle();
+}
+
 void ParticleDemoApp::update(float delta)
 {
 	const auto speed = 100.0f;
@@ -11,7 +16,6 @@ void ParticleDemoApp::update(float delta)
 	for (size_t index = 0; index < mParticles.size(); index++) {
 		auto& particle = mParticles[index];
 		auto& transform = mTransform[index];
-
 		auto offset = particle.Forward * length;
 
 		particle.reverseIfOut(offset, width(), height());
@@ -83,7 +87,7 @@ void ParticleDemoApp::initialize()
 	//for this demo, we choose the second adapter
 #ifdef __DIRECTX12__MODE__
 	mDevice = std::static_pointer_cast<CodeRed::GpuLogicalDevice>(
-		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[0])
+		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[1])
 		);
 #endif
 	
@@ -95,11 +99,6 @@ void ParticleDemoApp::initialize()
 	initializeSamplers();
 	initializeTextures();
 	initializePipeline();
-}
-
-void ParticleDemoApp::finalize()
-{
-	mCommandQueue->waitIdle();
 }
 
 void ParticleDemoApp::initializeParticles()
