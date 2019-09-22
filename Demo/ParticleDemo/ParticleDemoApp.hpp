@@ -18,21 +18,23 @@ struct Particle {
 		Position(position), Forward(forward), Size(size) {}
 
 	void reverseIfOut(
-		const glm::vec2& offset,
+		glm::vec2& offset,
 		const size_t width,
 		const size_t height)
 	{
-		auto target = Position + offset;
-
-		//out of screen, need reverse
-		if (target.x - Size.x < 0 || target.x + Size.x > width ||
-			target.y - Size.y < 0 || target.y + Size.y > height) {
-			target = Position - offset;
-
-			Forward = -Forward;
+		const auto target = Position + offset;
+		
+		if (target.x - Size.x < 0 || target.x + Size.x > width) {
+			offset.x = -offset.x;
+			Forward.x = -Forward.x;
+		}
+		
+		if (target.y - Size.y < 0 || target.y + Size.y > height) {
+			offset.y = -offset.y;
+			Forward.y = -Forward.y;
 		}
 
-		Position = target;
+		Position = Position + offset;
 	}
 };
 

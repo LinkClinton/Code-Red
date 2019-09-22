@@ -33,7 +33,7 @@ CodeRed::DirectX12SwapChain::DirectX12SwapChain(
 	swapInfo.BufferDesc.Scaling = DXGI_MODE_SCALING::DXGI_MODE_SCALING_UNSPECIFIED;
 	swapInfo.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER::DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	swapInfo.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapInfo.Flags = 0;
+	swapInfo.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	swapInfo.OutputWindow = static_cast<HWND>(mInfo.handle);
 	swapInfo.SampleDesc.Count = 1;
 	swapInfo.SampleDesc.Quality = 0;

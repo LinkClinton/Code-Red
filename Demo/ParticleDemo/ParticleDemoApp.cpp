@@ -1,22 +1,22 @@
 #include "ParticleDemoApp.hpp"
 
+#include <iostream>
 #include <random>
 
 void ParticleDemoApp::update(float delta)
 {
-	const auto speed = 5.0f;
+	const auto speed = 100.0f;
 	const auto length = speed * delta;
 
 	for (size_t index = 0; index < mParticles.size(); index++) {
 		auto& particle = mParticles[index];
 		auto& transform = mTransform[index];
 
-		auto oldPosition = particle.Position;
 		auto offset = particle.Forward * length;
 
 		particle.reverseIfOut(offset, width(), height());
 
-		transform = glm::translate(transform, glm::vec3(particle.Position - oldPosition, 0.0f));
+		transform = glm::translate(glm::mat4x4(1), glm::vec3(offset, 0.0f)) * transform;
 	}
 
 	const auto buffer = mFrameResources[mCurrentFrameIndex].
@@ -67,7 +67,8 @@ void ParticleDemoApp::render(float delta)
 	mCommandList->endRecoding();
 
 	mCommandQueue->execute({ mCommandList });
-	mSwapChain->present();
+
+	mSwapChain->present(false);
 
 	mCurrentFrameIndex = (mCurrentFrameIndex + 1) % maxFrameResources;
 }
@@ -82,7 +83,7 @@ void ParticleDemoApp::initialize()
 	//for this demo, we choose the second adapter
 #ifdef __DIRECTX12__MODE__
 	mDevice = std::static_pointer_cast<CodeRed::GpuLogicalDevice>(
-		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[1])
+		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[0])
 		);
 #endif
 	
@@ -103,13 +104,13 @@ void ParticleDemoApp::finalize()
 
 void ParticleDemoApp::initializeParticles()
 {
-	std::default_random_engine random(0); //(unsigned int)time(0));
+	std::default_random_engine random(0);
 
 	const std::uniform_real_distribution<float> xRange(0.0f, static_cast<float>(width()));
 	const std::uniform_real_distribution<float> yRange(0.0f, static_cast<float>(height()));
 
 	const std::uniform_real_distribution<float> forwardRange(-1.0f, 1.0f);
-	const std::uniform_real_distribution<float> sizeRange(0.0f, static_cast<float>(maxParticleSize));
+	const std::uniform_real_distribution<float> sizeRange(10.0f, static_cast<float>(maxParticleSize));
 
 	for (size_t index = 0; index < mParticles.size(); index++) {
 		auto& particle = mParticles[index];
@@ -199,25 +200,27 @@ void ParticleDemoApp::initializeShaders()
 	//in DirectX 12 mode, we use HLSL and compile them with D3DCompile
 	static const auto vertexShaderText =
 		"#pragma pack_matrix(row_major)\n"
-		"cbuffer view : register(b0)\n"
+		"struct Transform\n"
 		"{\n"
-		"    float4x4 project;\n"
-		"}\n"
-		"cbuffer transform : register(b1)\n"
-		"{\n"
-		"	float4x4 world[1000];\n"
-		"}\n"
+		"	matrix world[1000];\n"
+		"};\n"
 		"struct output\n"
 		"{\n"
 		"	float4 position : SV_POSITION;\n"
 		"	float2 texcoord : TEXCOORD;\n"
 		"	uint id : SV_INSTANCEID;\n"
 		"};\n"
+		"struct Project\n"
+		"{\n"
+		"	matrix project;\n"
+		"};\n"
+		"ConstantBuffer<Project> project : register(b0);\n"
+		"ConstantBuffer<Transform> transforms : register(b1);\n"
 		"output main(float2 position : POSITION, float2 texcoord : TEXCOORD, uint id : SV_INSTANCEID)\n"
 		"{\n"
 		"	output res;\n"
-		"	res.position = mul(float4(position, 0, 1), world[id]);\n"
-		"	res.position = mul(res.position, project);\n"
+		"	res.position = mul(float4(position, 0, 1), transforms.world[id]);\n"
+		"	res.position = mul(res.position, project.project);\n"
 		"	res.texcoord = texcoord;\n"
 		"	res.id = id;\n"
 		"	return res;\n"
@@ -241,7 +244,7 @@ void ParticleDemoApp::initializeShaders()
 		D3DCompile(vertexShaderText,
 			std::strlen(vertexShaderText),
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-			"main", "vs_5_0", D3DCOMPILE_DEBUG, 0,
+			"main", "vs_5_1", D3DCOMPILE_DEBUG, 0,
 			vertex.GetAddressOf(), error.GetAddressOf()),
 		CodeRed::FailedException({ "Vertex Shader of HLSL" }, CodeRed::DebugType::Create)
 	);
@@ -250,7 +253,7 @@ void ParticleDemoApp::initializeShaders()
 		D3DCompile(pixelShaderText,
 			std::strlen(pixelShaderText),
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-			"main", "ps_5_0", D3DCOMPILE_DEBUG, 0,
+			"main", "ps_5_1", D3DCOMPILE_DEBUG, 0,
 			pixel.GetAddressOf(), error.GetAddressOf()),
 		CodeRed::FailedException({ "Pixel Shader of HLSL" }, CodeRed::DebugType::Create)
 	);
