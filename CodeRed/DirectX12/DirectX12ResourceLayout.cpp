@@ -136,7 +136,7 @@ void CodeRed::DirectX12ResourceLayout::bindTexture(
 	{
 		view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1D;
 		view.Texture1D.MostDetailedMip = 0;
-		view.Texture1D.MipLevels = 0;
+		view.Texture1D.MipLevels = 1;
 		view.Texture1D.ResourceMinLODClamp = 0.0f;
 		break;
 	}
@@ -144,7 +144,7 @@ void CodeRed::DirectX12ResourceLayout::bindTexture(
 	{
 		view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 		view.Texture2D.MostDetailedMip = 0;
-		view.Texture2D.MipLevels = 0;
+		view.Texture2D.MipLevels = 1;
 		view.Texture2D.ResourceMinLODClamp = 0.0f;
 		view.Texture2D.PlaneSlice = 0;
 		break;
@@ -152,7 +152,7 @@ void CodeRed::DirectX12ResourceLayout::bindTexture(
 	case Dimension::Dimension3D:
 		view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE3D;
 		view.Texture3D.MostDetailedMip = 0;
-		view.Texture3D.MipLevels = 0;
+		view.Texture3D.MipLevels = 1;
 		view.Texture3D.ResourceMinLODClamp = 0.0f;
 		break;
 	}

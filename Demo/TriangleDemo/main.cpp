@@ -17,8 +17,8 @@ public:
 		initialize();
 	}
 private:
-	void update() override {}
-	void render() override
+	void update(float delta) override {}
+	void render(float delta) override
 	{
 		//get current back buffer we can render
 		const auto index = mSwapChain->currentBufferIndex();

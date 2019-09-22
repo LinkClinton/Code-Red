@@ -4,6 +4,38 @@
 #include <ResourceHelper.hpp>
 #include <DemoApp.hpp>
 
+struct Particle {
+	glm::vec2 Position = glm::vec2(0);
+	glm::vec2 Forward = glm::vec2(0);
+	glm::vec2 Size = glm::vec2(1);
+
+	Particle() = default;
+
+	Particle(
+		const glm::vec2 &position,
+		const glm::vec2 &forward,
+		const glm::vec2 &size) :
+		Position(position), Forward(forward), Size(size) {}
+
+	void reverseIfOut(
+		const glm::vec2& offset,
+		const size_t width,
+		const size_t height)
+	{
+		auto target = Position + offset;
+
+		//out of screen, need reverse
+		if (target.x - Size.x < 0 || target.x + Size.x > width ||
+			target.y - Size.y < 0 || target.y + Size.y > height) {
+			target = Position - offset;
+
+			Forward = -Forward;
+		}
+
+		Position = target;
+	}
+};
+
 class ParticleDemoApp final : public Demo::DemoApp {
 public:
 	ParticleDemoApp(
@@ -15,10 +47,13 @@ public:
 		initialize();
 	}
 private:
-	void update() override;
-	void render() override;
+	void update(float delta) override;
+	void render(float delta) override;
 	void initialize() override;
+	void finalize() override;
 
+	void initializeParticles();
+	
 	void initializeCommands();
 
 	void initializeSwapChain();
@@ -34,7 +69,10 @@ private:
 	void initializePipeline();
 private:
 	const size_t maxFrameResources = 2;
+	const size_t maxParticleSize = 50;
 	const size_t particleCount = 1000;
+
+	size_t mCurrentFrameIndex = 0;
 
 	std::shared_ptr<CodeRed::GpuLogicalDevice> mDevice;
 	std::shared_ptr<CodeRed::GpuSwapChain> mSwapChain;
@@ -59,4 +97,7 @@ private:
 	
 	std::vector<CodeRed::Byte> mVertexShaderCode;
 	std::vector<CodeRed::Byte> mPixelShaderCode;
+
+	std::vector<Particle> mParticles = std::vector<Particle>(particleCount);
+	std::vector<glm::mat4x4> mTransform = std::vector<glm::mat4x4>(particleCount);
 };

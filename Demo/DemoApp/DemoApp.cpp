@@ -63,6 +63,8 @@ void Demo::DemoApp::hide() const
 
 void Demo::DemoApp::runLoop()
 {
+	auto currentTime = Time::now();
+	
 	while (mExisted == true) {
 		MSG message;
 
@@ -76,10 +78,17 @@ void Demo::DemoApp::runLoop()
 
 			if (message.message == WM_QUIT) mExisted = false;
 		}
+		
+		auto duration = std::chrono::duration_cast<
+			std::chrono::duration<float>>(Time::now() - currentTime);
 
-		update();
-		render();
+		currentTime = Time::now();
+
+		update(duration.count());
+		render(duration.count());
 	}
+
+	finalize();
 }
 
 void Demo::DemoApp::processMessage(DemoApp* app, const MSG& message)

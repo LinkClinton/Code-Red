@@ -1,9 +1,75 @@
 #include "ParticleDemoApp.hpp"
 
-void ParticleDemoApp::update() {
+#include <random>
+
+void ParticleDemoApp::update(float delta)
+{
+	const auto speed = 5.0f;
+	const auto length = speed * delta;
+
+	for (size_t index = 0; index < mParticles.size(); index++) {
+		auto& particle = mParticles[index];
+		auto& transform = mTransform[index];
+
+		auto oldPosition = particle.Position;
+		auto offset = particle.Forward * length;
+
+		particle.reverseIfOut(offset, width(), height());
+
+		transform = glm::translate(transform, glm::vec3(particle.Position - oldPosition, 0.0f));
+	}
+
+	const auto buffer = mFrameResources[mCurrentFrameIndex].
+		get<CodeRed::GpuBuffer>("Transform");
+
+	const auto memory = buffer->mapMemory();
+	std::memcpy(memory, mTransform.data(), buffer->size());
+	buffer->unmapMemory();
 }
 
-void ParticleDemoApp::render() {
+void ParticleDemoApp::render(float delta)
+{
+	const float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	const auto frameBuffer = 
+		mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuFrameBuffer>("FrameBuffer");
+	const auto transformBuffer =
+		mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuBuffer>("Transform");
+
+	mCommandQueue->waitIdle();
+	mCommandAllocator->reset();
+	
+	mCommandList->beginRecoding();
+
+	mCommandList->setGraphicsPipeline(mPipelineInfo->graphicsPipeline());
+	mCommandList->setResourceLayout(mPipelineInfo->graphicsPipeline()->layout());
+
+	mCommandList->setFrameBuffer(frameBuffer);
+	mCommandList->setViewPort(frameBuffer->fullViewPort());
+	mCommandList->setScissorRect(frameBuffer->fullScissorRect());
+
+	mCommandList->setVertexBuffer(mVertexBuffer);
+	mCommandList->setIndexBuffer(mIndexBuffer);
+
+	mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
+	mCommandList->setGraphicsConstantBuffer(1, transformBuffer);
+	mCommandList->setGraphicsTexture(2, mParticleTextureGenerator->texture());
+
+	mCommandList->layoutTransition(frameBuffer->renderTarget(), 
+		CodeRed::ResourceLayout::RenderTarget);
+	
+	mCommandList->clearRenderTarget(frameBuffer, color);
+
+	mCommandList->drawIndexed(6, particleCount);
+	
+	mCommandList->layoutTransition(frameBuffer->renderTarget(), 
+		CodeRed::ResourceLayout::Present);
+	
+	mCommandList->endRecoding();
+
+	mCommandQueue->execute({ mCommandList });
+	mSwapChain->present();
+
+	mCurrentFrameIndex = (mCurrentFrameIndex + 1) % maxFrameResources;
 }
 
 void ParticleDemoApp::initialize()
@@ -13,13 +79,14 @@ void ParticleDemoApp::initialize()
 	const auto adapters = systemInfo->selectDisplayAdapter();
 
 	//create device with adapter we choose
-	//for this demo, we choose the first adapter
+	//for this demo, we choose the second adapter
 #ifdef __DIRECTX12__MODE__
 	mDevice = std::static_pointer_cast<CodeRed::GpuLogicalDevice>(
-		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[0])
+		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[1])
 		);
 #endif
-
+	
+	initializeParticles();
 	initializeCommands();
 	initializeSwapChain();
 	initializeBuffers();
@@ -27,6 +94,34 @@ void ParticleDemoApp::initialize()
 	initializeSamplers();
 	initializeTextures();
 	initializePipeline();
+}
+
+void ParticleDemoApp::finalize()
+{
+	mCommandQueue->waitIdle();
+}
+
+void ParticleDemoApp::initializeParticles()
+{
+	std::default_random_engine random(0); //(unsigned int)time(0));
+
+	const std::uniform_real_distribution<float> xRange(0.0f, static_cast<float>(width()));
+	const std::uniform_real_distribution<float> yRange(0.0f, static_cast<float>(height()));
+
+	const std::uniform_real_distribution<float> forwardRange(-1.0f, 1.0f);
+	const std::uniform_real_distribution<float> sizeRange(0.0f, static_cast<float>(maxParticleSize));
+
+	for (size_t index = 0; index < mParticles.size(); index++) {
+		auto& particle = mParticles[index];
+		auto& transform = mTransform[index];
+		
+		particle.Position = glm::vec2(xRange(random), yRange(random));
+		particle.Forward = glm::normalize(glm::vec2(forwardRange(random), forwardRange(random)));
+		particle.Size = glm::vec2(sizeRange(random));
+
+		transform = glm::translate(glm::mat4x4(1), glm::vec3(particle.Position, 0.0f));
+		transform = glm::scale(transform, glm::vec3(particle.Size, 1.0f));
+	}
 }
 
 void ParticleDemoApp::initializeCommands()
@@ -135,7 +230,7 @@ void ParticleDemoApp::initializeShaders()
 		"{\n"
 		"	float alpha = particleTexture.Sample(particleSampler, texcoord).r;\n"
 		"	if (alpha <= 0.0f) discard;\n"
-		"	return float4(1, 0, 0, 1) * alpha;\n"
+		"	return float4(1, 0, 0, 1 * alpha);\n"
 		"}\n";
 
 	WRL::ComPtr<ID3DBlob> error;
@@ -191,7 +286,7 @@ void ParticleDemoApp::initializeSwapChain()
 
 	for (size_t index = 0; index < maxFrameResources; index++) {
 		mFrameResources[index].set(
-			"FrameBufer",
+			"FrameBuffer",
 			mDevice->createFrameBuffer(
 				mSwapChain->buffer(index),
 				nullptr
@@ -274,7 +369,21 @@ void ParticleDemoApp::initializePipeline()
 			mPixelShaderCode
 		)
 	);
-
+	
+	mPipelineInfo->setBlendState(
+		mPipelineFactory->createBlendState(
+			{
+				true,
+				CodeRed::BlendOperator::Add,
+				CodeRed::BlendOperator::Add,
+				CodeRed::BlendFactor::InvSrcAlpha,
+				CodeRed::BlendFactor::InvSrcAlpha,
+				CodeRed::BlendFactor::SrcAlpha,
+				CodeRed::BlendFactor::SrcAlpha
+			}
+		)
+	);
+	
 	//update state to graphics pipeline
 	mPipelineInfo->updateState();
 }

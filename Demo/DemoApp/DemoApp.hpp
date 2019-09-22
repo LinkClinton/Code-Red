@@ -3,10 +3,14 @@
 #include <Core/CodeRedGraphics.hpp>
 
 #include <Windows.h>
+
 #include <string>
+#include <chrono>
 
 namespace Demo {
 
+	using Time = std::chrono::high_resolution_clock;
+	
 	class DemoApp : public CodeRed::Noncopyable {
 	public:
 		explicit DemoApp(
@@ -30,9 +34,10 @@ namespace Demo {
 
 		auto handle() const noexcept -> void* { return mHwnd; }
 	protected:
-		virtual void update() {}
-		virtual void render() {}
+		virtual void update(float delta) {}
+		virtual void render(float delta) {}
 		virtual void initialize() {}
+		virtual void finalize() {}
 	private:
 		std::string mName;
 

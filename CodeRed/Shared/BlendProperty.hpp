@@ -26,6 +26,25 @@ namespace CodeRed {
 		bool Enable = false;
 
 		BlendProperty() = default;
+
+		BlendProperty(
+			const bool enable,
+			const BlendOperator colorOp = BlendOperator::Add,
+			const BlendOperator alphaOp = BlendOperator::Add,
+			const BlendFactor alphaDest = BlendFactor::Zero,
+			const BlendFactor colorDest = BlendFactor::Zero,
+			const BlendFactor alphaSrc = BlendFactor::One,
+			const BlendFactor colorSrc = BlendFactor::One,
+			const CodeRed::ColorMask mask = CodeRed::ColorMask::All
+		) :
+		ColorOperator(colorOp),
+		AlphaOperator(alphaOp),
+		DestinationAlpha(alphaDest),
+		Destination(colorDest),
+		SourceAlpha(alphaSrc),
+		Source(colorSrc),
+		ColorMask(mask),
+		Enable(enable) {}
 	};
 	
 }

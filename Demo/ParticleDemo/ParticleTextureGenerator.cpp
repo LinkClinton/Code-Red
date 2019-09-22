@@ -102,7 +102,7 @@ void ParticleTextureGenerator::initializeBuffers()
 
 	for (size_t index = 1; index < vertices.size(); index++) {
 		//we divide the arc of circle into mDetailLevel sub-arcs
-		const auto arc = glm::two_pi<float>() / mDetailLevel * (index - 1);
+		const auto arc = glm::two_pi<float>() / (mDetailLevel - 1) * (index - 1);
 		//and we use complex coordinate system to describe the vertex buffer
 		auto complex_positon = glm::vec2(glm::cos(arc), glm::sin(arc));
 
@@ -146,15 +146,23 @@ void ParticleTextureGenerator::initializeShaders()
 		"{\n"
 		"    float4x4 project;\n"
 		"}\n"
-		"float4 main(float2 position : POSITION) : SV_POSITION\n"
+		"struct output\n"
 		"{\n"
-		"    return mul(float4(position, 0, 1), project);\n"
+		"	float4 position : SV_POSITION;\n"
+		"	float2 texcoord : TEXCOORD;\n"
+		"};\n"
+		"output main(float2 position : POSITION, float2 texcoord : TEXCOORD)\n"
+		"{\n"
+		"	output res;\n"
+		"	res.position = mul(float4(position, 0, 1), project);\n"
+		"   res.texcoord = texcoord;\n"
+		"	return res;"
 		"}\n";
 
 	static const auto pixelShaderText =
-		"float4 main(float4 position : SV_POSITION) : SV_TARGET\n"
+		"float4 main(float4 position : SV_POSITION, float2 texcoord : TEXCOORD) : SV_TARGET\n"
 		"{\n"
-		"    return float4(1.0f, 1.0f, 1.0f, 1.0f) * (1.01f - length(position.xy));\n"
+		"    return float4(1.0f, 1.0f, 1.0f, 1.0f) * (1.01f - length(texcoord));\n"
 		"}\n";
 
 	WRL::ComPtr<ID3DBlob> error;
@@ -263,7 +271,7 @@ void ParticleTextureGenerator::initializePipeline()
 			mPixelShaderCode
 		)
 	);
-
+	
 	//update state to graphics pipeline
 	mPipelineInfo->updateState();
 }
