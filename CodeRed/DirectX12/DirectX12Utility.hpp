@@ -43,7 +43,6 @@ namespace CodeRed {
 	
 	auto wideStringToMultiString(const std::wstring& wstring)->std::string;
 
-	
 	void throwIfFailed(HRESULT result, const Exception& exception);
 
 	auto enumConvert(const FilterOptions filter) -> D3D12_FILTER;
@@ -52,7 +51,7 @@ namespace CodeRed {
 
 	auto enumConvert(const BorderColor border) -> D3D12_STATIC_BORDER_COLOR;
 
-	auto enumConvert(const ResourceType type) -> D3D12_ROOT_PARAMETER_TYPE;
+	auto enumConvert(const ResourceType type) -> D3D12_DESCRIPTOR_RANGE_TYPE;
 	
 	auto enumConvert(const ShaderVisibility visibility) -> D3D12_SHADER_VISIBILITY;
 
@@ -81,6 +80,9 @@ namespace CodeRed {
 	auto enumConvert(const CullMode mode) -> D3D12_CULL_MODE;
 
 	auto enumConvert(const PrimitiveTopology topology) -> D3D_PRIMITIVE_TOPOLOGY;
+
+	auto enumConvert1(const Dimension dimension)->D3D12_SRV_DIMENSION;
+
 }
 
 #endif

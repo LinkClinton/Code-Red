@@ -23,6 +23,9 @@ namespace CodeRed {
 		static void warning(
 			const DebugType& type,
 			const std::vector<std::string>& messages);
+
+		static void warning(
+			const std::string& message);
 	private:
 		static auto select(const Type type) -> std::string;
 

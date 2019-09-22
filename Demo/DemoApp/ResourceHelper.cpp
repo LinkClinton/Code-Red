@@ -28,7 +28,9 @@ void CodeRed::ResourceHelper::updateBuffer(
 	commandList->layoutTransition(buffer, ResourceLayout::CopyDestination);
 
 	//copy upload buffer to buffer
-	commandList->copyBuffer(uploadBuffer, buffer, buffer->size());
+	//because the size of constant buffer may not equal stride * count(256bytes limit)
+	//so we use upload buffer size instead of buffer size
+	commandList->copyBuffer(uploadBuffer, buffer, uploadBuffer->size());
 
 	//translate back the layout of buffer
 	commandList->layoutTransition(buffer, oldLayout);

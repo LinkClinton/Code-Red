@@ -100,11 +100,11 @@ auto CodeRed::enumConvert(const BorderColor border)
 }
 
 auto CodeRed::enumConvert(const ResourceType type)
-	-> D3D12_ROOT_PARAMETER_TYPE
+	-> D3D12_DESCRIPTOR_RANGE_TYPE
 {
 	switch (type) {
-	case ResourceType::Buffer: return D3D12_ROOT_PARAMETER_TYPE_CBV;
-	case ResourceType::Texture: return D3D12_ROOT_PARAMETER_TYPE_SRV;
+	case ResourceType::Buffer: return D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+	case ResourceType::Texture: return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
@@ -327,6 +327,18 @@ auto CodeRed::enumConvert(const PrimitiveTopology topology)
 	switch (topology) {
 	case PrimitiveTopology::TriangleList: return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	case PrimitiveTopology::Undefined: return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert1(const Dimension dimension)
+	-> D3D12_SRV_DIMENSION
+{
+	switch (dimension) {
+	case Dimension::Dimension1D: return D3D12_SRV_DIMENSION_TEXTURE1D;
+	case Dimension::Dimension2D: return D3D12_SRV_DIMENSION_TEXTURE2D;
+	case Dimension::Dimension3D: return D3D12_SRV_DIMENSION_TEXTURE3D;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

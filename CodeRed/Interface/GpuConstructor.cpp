@@ -14,6 +14,10 @@
 #include "GpuSwapChain.hpp"
 #include "GpuFence.hpp"
 
+#include <algorithm>
+
+#undef max
+
 #define CODE_RED_DEBUG_DEVICE_VALID(device) \
 	CODE_RED_DEBUG_THROW_IF( \
 		device == nullptr, \
@@ -171,12 +175,35 @@ CodeRed::GpuBuffer::GpuBuffer(
 	GpuResource(device, info)
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mInfo.Type != ResourceType::Buffer,
+		InvalidException<ResourceInfo>({ "info.Type" })
+	);
 	
 	CODE_RED_DEBUG_THROW_IF(
 		std::get<BufferProperty>(mInfo.Property).Size == 0,
 		ZeroException<size_t>({ "info.Property.Size" })
 	);
 
+	//if we want to use the buffer as constant buffer,
+	//the size of buffer need more than 256bytes
+	//so we will check, warning and modify the size
+	if (mInfo.Usage == ResourceUsage::ConstantBuffer) {
+		
+#ifdef __ENABLE__CODE__RED__DEBUG__
+		if (std::get<BufferProperty>(mInfo.Property).Size < 256)
+			DebugReport::warning("The size of constant buffer is less than 256bytes,"
+				" we will create it with 256bytes.");
+#endif
+
+		//modify the size if it less than 256bytes
+		std::get<BufferProperty>(mInfo.Property).Size = std::max(
+			std::get<BufferProperty>(mInfo.Property).Size,
+			static_cast<size_t>(256)
+		);
+	}
+	
 	CODE_RED_DEBUG_THROW_IF(
 		enumHas(mInfo.Usage, ResourceUsage::RenderTarget) ||
 		enumHas(mInfo.Usage, ResourceUsage::DepthStencil),

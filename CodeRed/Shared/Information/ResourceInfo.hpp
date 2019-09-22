@@ -3,6 +3,7 @@
 #ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Enum/ResourceLayout.hpp>
 #include <Shared/Enum/ResourceUsage.hpp>
+#include <Shared/Enum/ResourceType.hpp>
 #include <Shared/Enum/PixelFormat.hpp>
 #include <Shared/Enum/MemoryHeap.hpp>
 #include <Shared/Enum/Dimension.hpp>
@@ -11,6 +12,7 @@
 #else
 #include "../Enum/ResourceLayout.hpp"
 #include "../Enum/ResourceUsage.hpp"
+#include "../Enum/ResourceType.hpp"
 #include "../Enum/PixelFormat.hpp"
 #include "../Enum/MemoryHeap.hpp"
 #include "../Enum/Dimension.hpp"
@@ -68,6 +70,7 @@ namespace CodeRed {
 		ResourceProperty Property = BufferProperty();
 		ResourceLayout Layout = ResourceLayout::GeneralRead;
 		ResourceUsage Usage = ResourceUsage::None;
+		ResourceType Type = ResourceType::Buffer;
 		MemoryHeap Heap = MemoryHeap::Default;
 		
 		ResourceInfo() = default;
@@ -76,10 +79,12 @@ namespace CodeRed {
 			const ResourceProperty& property,
 			const ResourceLayout layout,
 			const ResourceUsage usage,
+			const ResourceType type,
 			const MemoryHeap heap) :
 			Property(property),
 			Layout(layout),
 			Usage(usage),
+			Type(type),
 			Heap(heap) {}
 
 		static auto VertexBuffer(
@@ -90,7 +95,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				BufferProperty(stride, count),
-				layout, ResourceUsage::VertexBuffer, heap);
+				layout, ResourceUsage::VertexBuffer, ResourceType::Buffer, heap);
 		}
 
 		static auto IndexBuffer(
@@ -101,7 +106,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				BufferProperty(stride, count),
-				layout, ResourceUsage::IndexBuffer, heap);
+				layout, ResourceUsage::IndexBuffer, ResourceType::Buffer, heap);
 		}
 
 		static auto ConstantBuffer(
@@ -111,7 +116,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				BufferProperty(size, 1),
-				layout, ResourceUsage::ConstantBuffer, heap);
+				layout, ResourceUsage::ConstantBuffer, ResourceType::Buffer, heap);
 		}
 
 		static auto UploadBuffer(
@@ -122,6 +127,7 @@ namespace CodeRed {
 				BufferProperty(stride, count),
 				ResourceLayout::GeneralRead,
 				ResourceUsage::None,
+				ResourceType::Buffer,
 				MemoryHeap::Upload
 			);
 		}
@@ -135,7 +141,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, 1, 1, format, Dimension::Dimension1D),
-				layout, usage, heap);
+				layout, usage, ResourceType::Texture, heap);
 		}
 
 		static auto Texture2D(
@@ -148,7 +154,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, 1, format, Dimension::Dimension2D),
-				layout, usage, heap);
+				layout, usage, ResourceType::Texture, heap);
 		}
 
 		static auto Texture3D(
@@ -162,7 +168,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, depth, format, Dimension::Dimension3D),
-				layout, usage, heap);
+				layout, usage, ResourceType::Texture, heap);
 		}
 	};
 

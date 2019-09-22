@@ -28,6 +28,8 @@ namespace CodeRed {
 
 		auto usage() const noexcept -> ResourceUsage { return mInfo.Usage; }
 
+		auto type() const noexcept -> ResourceType { return mInfo.Type; }
+		
 		auto layout() const noexcept -> ResourceLayout { return mInfo.Layout; }
 		
 		auto heap() const noexcept -> MemoryHeap { return mInfo.Heap; }

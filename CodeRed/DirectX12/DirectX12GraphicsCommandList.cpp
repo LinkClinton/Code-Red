@@ -57,13 +57,27 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsPipeline(
 		enumConvert(pipeline->inputAssembly()->primitiveTopology()));
 }
 
-void CodeRed::DirectX12GraphicsCommandList::
-setResourceLayout(const std::shared_ptr<GpuResourceLayout>& layout)
+void CodeRed::DirectX12GraphicsCommandList::setResourceLayout(const std::shared_ptr<GpuResourceLayout>& layout)
 {
+	const auto dxLayout = std::static_pointer_cast<DirectX12ResourceLayout>(layout);
+	
 	mGraphicsCommandList->SetGraphicsRootSignature(
-		static_cast<DirectX12ResourceLayout*>(layout.get())->rootSignature().Get()
+		dxLayout->rootSignature().Get()
 	);
 
+	//set the descriptor heap the resource layout use
+	mGraphicsCommandList->SetDescriptorHeaps(1,
+		dxLayout->descriptorHeap().GetAddressOf());
+
+	const auto gpuHandle = dxLayout->descriptorHeap()->GetGPUDescriptorHandleForHeapStart();
+
+	//set the descriptors the resource layout use
+	for (size_t index = 0; index < dxLayout->elements().size(); index++)
+		mGraphicsCommandList->SetGraphicsRootDescriptorTable(
+			static_cast<UINT>(index),
+			gpuHandle
+		);
+	
 	mResourceLayout = layout;
 }
 
@@ -94,14 +108,11 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsConstantBuffer(
 	const std::shared_ptr<GpuBuffer>& buffer)
 {
 	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout->element(index).Type != ResourceType::Buffer,
-		InvalidException<UInt32>({ "index" })
+		mResourceLayout == nullptr,
+		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
 	);
-
-	mGraphicsCommandList->SetGraphicsRootConstantBufferView(
-		static_cast<UINT>(index),
-		static_cast<DirectX12Buffer*>(buffer.get())->buffer()->GetGPUVirtualAddress()
-	);
+	
+	mResourceLayout->bindBuffer(index, buffer);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setGraphicsTexture(
@@ -109,14 +120,11 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsTexture(
 	const std::shared_ptr<GpuTexture>& texture)
 {
 	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout->element(index).Type != ResourceType::Texture,
-		InvalidException<size_t>({ "index" })
+		mResourceLayout == nullptr,
+		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
 	);
-
-	mGraphicsCommandList->SetGraphicsRootShaderResourceView(
-		static_cast<UINT>(index),
-		static_cast<DirectX12Texture*>(texture.get())->texture()->GetGPUVirtualAddress()
-	);
+	
+	mResourceLayout->bindTexture(index, texture);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setFrameBuffer(

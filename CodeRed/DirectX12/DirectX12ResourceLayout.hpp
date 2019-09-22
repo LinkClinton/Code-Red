@@ -21,9 +21,26 @@ namespace CodeRed {
 
 		~DirectX12ResourceLayout() = default;
 
+		void bindResource(
+			const size_t index, 
+			const std::shared_ptr<GpuResource>& resource) override;
+
+		void bindTexture(
+			const size_t index, 
+			const std::shared_ptr<GpuTexture>& resource) override;
+
+		void bindBuffer(
+			const size_t index, 
+			const std::shared_ptr<GpuBuffer>& resource) override;
+		
 		auto rootSignature() const noexcept -> WRL::ComPtr<ID3D12RootSignature> { return mRootSignature; }
+
+		auto descriptorHeap() const noexcept -> WRL::ComPtr<ID3D12DescriptorHeap> { return mDescriptorHeap; }
 	protected:
 		WRL::ComPtr<ID3D12RootSignature> mRootSignature;
+		WRL::ComPtr<ID3D12DescriptorHeap> mDescriptorHeap;
+
+		size_t mDescriptorSize = 0;
 	};
 	
 }

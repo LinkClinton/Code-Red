@@ -12,6 +12,9 @@
 namespace CodeRed {
 
 	class GpuLogicalDevice;
+	class GpuResource;
+	class GpuTexture;
+	class GpuBuffer;
 	
 	class GpuResourceLayout {
 	protected:
@@ -29,6 +32,18 @@ namespace CodeRed {
 		auto elements() const noexcept -> std::vector<ResourceLayoutElement> { return mElements; }
 
 		auto samplers() const noexcept -> std::vector<SamplerLayoutElement> { return mSamplers; }
+
+		virtual void bindResource(
+			const size_t index, 
+			const std::shared_ptr<GpuResource>& resource) = 0;
+
+		virtual void bindTexture(
+			const size_t index,
+			const std::shared_ptr<GpuTexture>& resource) = 0;
+		
+		virtual void bindBuffer(
+			const size_t index,
+			const std::shared_ptr<GpuBuffer>& resource) = 0;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 		

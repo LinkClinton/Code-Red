@@ -11,6 +11,11 @@ void CodeRed::DebugReport::warning(
 	std::cout << "warning : " << push(select(type), messages) << std::endl;
 }
 
+void CodeRed::DebugReport::warning(const std::string& message)
+{
+	std::cout << "warning : " << message << std::endl;
+}
+
 auto CodeRed::DebugReport::select(const Type type) -> std::string
 {
 	switch (type) {
