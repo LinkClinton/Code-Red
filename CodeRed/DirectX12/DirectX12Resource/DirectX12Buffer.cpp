@@ -35,7 +35,7 @@ CodeRed::DirectX12Buffer::DirectX12Buffer(
 
 	auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateCommittedResource(
 			&heapProperties,
 			D3D12_HEAP_FLAG_NONE,

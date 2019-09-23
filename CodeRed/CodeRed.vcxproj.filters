@@ -108,9 +108,6 @@
     <ClInclude Include="Shared\Exception\InvalidException.hpp">
       <Filter>Shared\Exception</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Exception\AssertException.hpp">
-      <Filter>Shared\Exception</Filter>
-    </ClInclude>
     <ClInclude Include="Interface\GpuFence.hpp">
       <Filter>Interface</Filter>
     </ClInclude>
@@ -285,6 +282,9 @@
     <ClInclude Include="Core\CodeRedGraphics.hpp">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Enum\DebugType.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -358,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12PipelineFactory.cpp">
       <Filter>DirectX12\DirectX12PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\Exception\Exception.cpp">
+      <Filter>Shared\Exception</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

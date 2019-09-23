@@ -72,7 +72,7 @@ void ParticleDemoApp::render(float delta)
 
 	mCommandQueue->execute({ mCommandList });
 
-	mSwapChain->present(false);
+	mSwapChain->present();
 
 	mCurrentFrameIndex = (mCurrentFrameIndex + 1) % maxFrameResources;
 }
@@ -87,7 +87,7 @@ void ParticleDemoApp::initialize()
 	//for this demo, we choose the second adapter
 #ifdef __DIRECTX12__MODE__
 	mDevice = std::static_pointer_cast<CodeRed::GpuLogicalDevice>(
-		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[1])
+		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[0])
 		);
 #endif
 	
@@ -239,22 +239,24 @@ void ParticleDemoApp::initializeShaders()
 	WRL::ComPtr<ID3DBlob> vertex;
 	WRL::ComPtr<ID3DBlob> pixel;
 
-	CodeRed::throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		D3DCompile(vertexShaderText,
 			std::strlen(vertexShaderText),
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main", "vs_5_1", D3DCOMPILE_DEBUG, 0,
 			vertex.GetAddressOf(), error.GetAddressOf()),
-		CodeRed::FailedException({ "Vertex Shader of HLSL" }, CodeRed::DebugType::Create)
+		CodeRed::FailedException({ "Vertex Shader of HLSL" }, 
+			CodeRed::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()), CodeRed::DebugType::Create)
 	);
 
-	CodeRed::throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		D3DCompile(pixelShaderText,
 			std::strlen(pixelShaderText),
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main", "ps_5_1", D3DCOMPILE_DEBUG, 0,
 			pixel.GetAddressOf(), error.GetAddressOf()),
-		CodeRed::FailedException({ "Pixel Shader of HLSL" }, CodeRed::DebugType::Create)
+		CodeRed::FailedException({ "Pixel Shader of HLSL" },
+			CodeRed::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()), CodeRed::DebugType::Create)
 	);
 
 	mVertexShaderCode = std::vector<CodeRed::Byte>(vertex->GetBufferSize());

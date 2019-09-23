@@ -8,6 +8,7 @@
 #include "GpuCommandAllocator.hpp"
 #include "GpuGraphicsPipeline.hpp"
 #include "GpuResourceLayout.hpp"
+#include "GpuDisplayAdapter.hpp"
 #include "GpuLogicalDevice.hpp"
 #include "GpuCommandQueue.hpp"
 #include "GpuFrameBuffer.hpp"

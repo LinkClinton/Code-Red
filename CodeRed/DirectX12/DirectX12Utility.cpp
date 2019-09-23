@@ -45,8 +45,14 @@ auto CodeRed::wideStringToMultiString(const std::wstring& wstring) -> std::strin
 	return res;
 }
 
-void CodeRed::throwIfFailed(HRESULT result, const Exception& exception) {
-	if (result != S_OK) throw exception;
+auto CodeRed::charArrayToString(void* str, const size_t length) -> std::string
+{
+	std::string res = "";
+
+	for (size_t index = 0; index < length; index++) 
+		res.push_back(static_cast<char*>(str)[index]);
+
+	return res;
 }
 
 auto CodeRed::enumConvert(const FilterOptions filter) -> D3D12_FILTER {

@@ -38,7 +38,6 @@
 #include "../Shared/Exception/NotSupportException.hpp"
 #include "../Shared/Exception/FailedException.hpp"
 #include "../Shared/Exception/InvalidException.hpp"
-#include "../Shared/Exception/AssertException.hpp"
 #include "../Shared/Exception/ZeroException.hpp"
 
 #include "../Interface/GpuSystemInfo.hpp"

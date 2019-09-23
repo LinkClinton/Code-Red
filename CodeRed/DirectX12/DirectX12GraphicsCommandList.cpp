@@ -22,7 +22,7 @@ CodeRed::DirectX12GraphicsCommandList::DirectX12GraphicsCommandList(
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 	const auto dxAllocator = static_cast<DirectX12CommandAllocator*>(mAllocator.get())->allocator();
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
 			dxAllocator.Get(), nullptr, IID_PPV_ARGS(&mGraphicsCommandList)),
 		FailedException({ "ID3D12GraphicsCommandList" }, DebugType::Create));

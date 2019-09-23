@@ -2,10 +2,10 @@
 
 #ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Shared/Exception/Exception.hpp>
-#include <Shared/DebugReport.hpp>
+#include <Shared/Enum/DebugType.hpp>
 #else
 #include "Exception.hpp"
-#include "../DebugReport.hpp"
+#include "../Enum/DebugType.hpp"
 #endif
 
 #include <string>
@@ -18,8 +18,12 @@ namespace CodeRed {
 		using Type = DebugType;
 	public:
 		explicit FailedException(
-			const std::vector<std::string> &objects, 
-			const Type type = Type::Create) :
-			Exception(DebugReport::push(DebugReport::select(type), objects)) {}
+			const std::vector<std::string>& messages,
+			const Type type = Type::Create);
+
+		explicit FailedException(
+			const std::vector<std::string>& messages,
+			const std::string& debugMessage,
+			const Type type = Type::Create);
 	};
 }

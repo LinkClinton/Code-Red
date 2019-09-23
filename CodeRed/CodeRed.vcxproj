@@ -207,6 +207,7 @@
     <ClInclude Include="Shared\Enum\ColorMask.hpp" />
     <ClInclude Include="Shared\Enum\CompareOperator.hpp" />
     <ClInclude Include="Shared\Enum\CullMode.hpp" />
+    <ClInclude Include="Shared\Enum\DebugType.hpp" />
     <ClInclude Include="Shared\Enum\Dimension.hpp" />
     <ClInclude Include="Shared\Enum\FillMode.hpp" />
     <ClInclude Include="Shared\Enum\FilterOptions.hpp" />
@@ -219,7 +220,6 @@
     <ClInclude Include="Shared\Enum\ResourceUsage.hpp" />
     <ClInclude Include="Shared\Enum\ShaderVisibility.hpp" />
     <ClInclude Include="Shared\Enum\StencilOperator.hpp" />
-    <ClInclude Include="Shared\Exception\AssertException.hpp" />
     <ClInclude Include="Shared\Exception\Exception.hpp" />
     <ClInclude Include="Shared\Exception\FailedException.hpp" />
     <ClInclude Include="Shared\Exception\InvalidException.hpp" />
@@ -261,6 +261,7 @@
     <ClCompile Include="DirectX12\DirectX12Utility.cpp" />
     <ClCompile Include="Interface\GpuConstructor.cpp" />
     <ClCompile Include="Shared\DebugReport.cpp" />
+    <ClCompile Include="Shared\Exception\Exception.cpp" />
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

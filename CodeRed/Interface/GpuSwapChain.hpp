@@ -44,7 +44,7 @@ namespace CodeRed {
 
 		virtual void resize(const size_t width, const size_t height) = 0;
 		
-		virtual void present(bool sync = true) = 0;
+		virtual void present(bool sync = false) = 0;
 
 		virtual auto currentBufferIndex() const -> size_t = 0;
 	protected:

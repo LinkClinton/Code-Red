@@ -28,12 +28,12 @@ CodeRed::DirectX12FrameBuffer::DirectX12FrameBuffer(
 		0
 	};
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateDescriptorHeap(&rtvHeapInfo, IID_PPV_ARGS(&mRenderTargetHeap)),
 		FailedException({ "ID3D12DescriptorHeap of Render Target" }, DebugType::Create)
 	);
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateDescriptorHeap(&dsvHeapInfo, IID_PPV_ARGS(&mDepthStencilHeap)),
 		FailedException({ "ID3D12DescriptorHeap of Depth Stencil" }, DebugType::Create)
 	);

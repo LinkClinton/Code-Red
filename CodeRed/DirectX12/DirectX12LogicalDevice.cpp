@@ -33,7 +33,7 @@ CodeRed::DirectX12LogicalDevice::DirectX12LogicalDevice(const std::shared_ptr<Gp
 	const auto dxgiAdapter = static_cast<DirectX12DisplayAdapter*>(adapter.get());
 
 	//create Direct3D 12 Device.
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		D3D12CreateDevice(dxgiAdapter->adapter().Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mDevice)),
 		FailedException({ "ID3D12Device" }, DebugType::Create));
 }

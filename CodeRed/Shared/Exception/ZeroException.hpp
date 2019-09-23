@@ -14,7 +14,15 @@ namespace CodeRed {
 		explicit ZeroException(
 			const std::vector<std::string> &messages,
 			T* value = nullptr) :
-			InvalidException<T>(messages, value, "The [0] is zero.") {}
+			InvalidException<T>(messages, value, messageTemplate) {}
+
+		explicit ZeroException(
+			const std::vector<std::string> &messages,
+			const std::string& debugMessage,
+			T* value = nullptr) :
+			InvalidException<T>(messages, debugMessage, messageTemplate, value) {}
+	private:
+		const std::string messageTemplate = std::string("The [0](type : ") + typeid(T).name() + ") is zero/nullptr.";
 	};
 	
 }

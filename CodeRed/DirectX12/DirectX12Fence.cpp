@@ -1,4 +1,5 @@
 #include "../Shared/Exception/FailedException.hpp"
+#include "../Shared/DebugReport.hpp"
 
 #include "DirectX12LogicalDevice.hpp"
 #include "DirectX12CommandQueue.hpp"
@@ -12,7 +13,7 @@ CodeRed::DirectX12Fence::DirectX12Fence(
 {
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateFence(mFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence)),
 		FailedException({ "ID3D12Fence" }, DebugType::Create));
 }

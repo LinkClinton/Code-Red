@@ -1,19 +1,15 @@
 #pragma once
 
+#ifdef __CODE__RED__GLOBAL__INCLUDE__
+#include <Shared/Enum/DebugType.hpp>
+#else
+#include "Enum/DebugType.hpp"
+#endif
+
 #include <vector>
 #include <string>
 
 namespace CodeRed {
-
-	enum class DebugType
-	{
-		//Create [0] failed.
-		Create,
-		//Get [0] failed from [1].
-		Get,
-		//Set [0] failed because [1].
-		Set
-	};
 	
 	class DebugReport final {
 	public:
@@ -26,13 +22,26 @@ namespace CodeRed {
 
 		static void warning(
 			const std::string& message);
+
+		static void warning(
+			const std::string& format,
+			const std::vector<std::string>& messages);
+
+		static void error(
+			const std::string& message);
+
+		static void error(
+			const std::string& format,
+			const std::vector<std::string>& messages);
 	private:
+		static void output(const std::string& text);
+		
 		static auto select(const Type type) -> std::string;
 
 		static auto push(
 			const std::string& message_template, 
 			const std::vector<std::string>& messages) -> std::string;
-
+		
 		template<typename T>
 		friend class InvalidException;
 		template<typename T>

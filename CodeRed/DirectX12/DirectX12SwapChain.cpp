@@ -30,30 +30,30 @@ CodeRed::DirectX12SwapChain::DirectX12SwapChain(
 	swapInfo.BufferDesc.Height = static_cast<UINT>(mInfo.height);
 	swapInfo.BufferDesc.RefreshRate.Denominator = 1;
 	swapInfo.BufferDesc.RefreshRate.Numerator = 60;
-	swapInfo.BufferDesc.Scaling = DXGI_MODE_SCALING::DXGI_MODE_SCALING_UNSPECIFIED;
-	swapInfo.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER::DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	swapInfo.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	swapInfo.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	swapInfo.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapInfo.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	swapInfo.OutputWindow = static_cast<HWND>(mInfo.handle);
 	swapInfo.SampleDesc.Count = 1;
 	swapInfo.SampleDesc.Quality = 0;
-	swapInfo.SwapEffect = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	swapInfo.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapInfo.Windowed = true;
 
 	WRL::ComPtr<IDXGIFactory4> factory;
 	WRL::ComPtr<IDXGISwapChain> temp_swap_chain;
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&factory)),
 		FailedException({ "IDXGIFactory4" }, DebugType::Create)
 	);
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		factory->CreateSwapChain(dxQueue.Get(), &swapInfo, temp_swap_chain.GetAddressOf()),
 		FailedException({ "IDXGISwapChain" }, DebugType::Create)
 	);
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		temp_swap_chain->QueryInterface(IID_PPV_ARGS(&mSwapChain)),
 		FailedException({ "IDXGISwapChain3", "IDXGISwapChain" }, DebugType::Get)
 	);
@@ -84,7 +84,7 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 	//we need to destory them before we resize the swap chain
 	for (auto& buffer : mBuffers) buffer.reset();
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		mSwapChain->ResizeBuffers(2,
 			static_cast<UINT>(mInfo.width),
 			static_cast<UINT>(mInfo.height),
@@ -95,7 +95,7 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 	for (size_t index = 0; index < mBuffers.size(); index++) {
 		WRL::ComPtr<ID3D12Resource> backBuffer;
 
-		throwIfFailed(
+		CODE_RED_THROW_IF_FAILED(
 			mSwapChain->GetBuffer(static_cast<UINT>(index), IID_PPV_ARGS(&backBuffer)),
 			FailedException({ "ID3D12Resource of Back Buffer", "IDXGISwapChain" }, DebugType::Get)
 		);

@@ -169,7 +169,7 @@ void ParticleTextureGenerator::initializeShaders()
 	WRL::ComPtr<ID3DBlob> vertex;
 	WRL::ComPtr<ID3DBlob> pixel;
 
-	CodeRed::throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		D3DCompile(vertexShaderText,
 			std::strlen(vertexShaderText),
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
@@ -178,7 +178,7 @@ void ParticleTextureGenerator::initializeShaders()
 		CodeRed::FailedException({ "Vertex Shader of HLSL" }, CodeRed::DebugType::Create)
 	);
 
-	CodeRed::throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		D3DCompile(pixelShaderText,
 			std::strlen(pixelShaderText),
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,

@@ -18,6 +18,8 @@
 
 using namespace Microsoft;
 
+#define CODE_RED_THROW_IF_FAILED(result, exception) if (result != S_OK) throw exception;
+
 namespace CodeRed {
 
 	class Exception;
@@ -43,8 +45,8 @@ namespace CodeRed {
 	
 	auto wideStringToMultiString(const std::wstring& wstring)->std::string;
 
-	void throwIfFailed(HRESULT result, const Exception& exception);
-
+	auto charArrayToString(void* str, const size_t length)->std::string;
+	
 	auto enumConvert(const FilterOptions filter) -> D3D12_FILTER;
 
 	auto enumConvert(const AddressMode mode) -> D3D12_TEXTURE_ADDRESS_MODE;

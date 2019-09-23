@@ -1,27 +1,47 @@
 #include "Exception/NotSupportException.hpp"
-#include "Exception/AssertException.hpp"
 #include "DebugReport.hpp"
 
 #include <iostream>
+#include <cassert>
 
 void CodeRed::DebugReport::warning(
 	const DebugType& type, 
 	const std::vector<std::string>& messages)
 {
-	std::cout << "warning : " << push(select(type), messages) << std::endl;
+	output("warning : " + push(select(type), messages));
 }
 
 void CodeRed::DebugReport::warning(const std::string& message)
 {
-	std::cout << "warning : " << message << std::endl;
+	output("warning : " + message);
+}
+
+void CodeRed::DebugReport::warning(const std::string& format, const std::vector<std::string>& messages)
+{
+	output("warning : " + push(format, messages));
+}
+
+void CodeRed::DebugReport::error(const std::string& message)
+{
+	output("error : " + message);
+}
+
+void CodeRed::DebugReport::error(const std::string& format, const std::vector<std::string>& messages)
+{
+	output("error : " + push(format, messages));
+}
+
+void CodeRed::DebugReport::output(const std::string& text)
+{
+	std::cout << text << std::endl;
 }
 
 auto CodeRed::DebugReport::select(const Type type) -> std::string
 {
 	switch (type) {
 	case Type::Create: return "Create [0] failed.";
-	case Type::Get: return "Get [0] failed from [1].";
-	case Type::Set: return "Set [0] failed because [1].";
+	case Type::Get: return "Get [0] from [1] failed.";
+	case Type::Set: return "Set [0] to [1] failed.";
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
@@ -45,13 +65,15 @@ auto CodeRed::DebugReport::push(const std::string& message_template,
 			message_template[index - 1] == '[' && message_template[index + 1] == ']') {
 			const auto location = message_template[index] - '0';
 
-			assert(location < messages.size());
-
 			//Because we add "[x" to message, we need to pop them.
 			//Then we replace messages[x] to [x] in message_template
 			message.pop_back();
 			message.pop_back();
-			message.append(messages[location]);
+
+			//if there no messages need to push
+			//we ignore the [x]
+			if (location < messages.size())
+				message.append(messages[location]);
 
 			//skip the "]" char.
 			index++;

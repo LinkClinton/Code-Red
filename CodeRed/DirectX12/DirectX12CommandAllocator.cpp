@@ -11,7 +11,7 @@ CodeRed::DirectX12CommandAllocator::DirectX12CommandAllocator(
 {
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mCommandAllocator)),
 		FailedException({ "ID3D12CommandAllocator" }, DebugType::Create));
 }

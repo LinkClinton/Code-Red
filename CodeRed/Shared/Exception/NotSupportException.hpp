@@ -21,19 +21,9 @@ namespace CodeRed {
 	public:
 		using Type = NotSupportType;
 	public:
-		NotSupportException(const Type type = Type::Any) :
-			Exception(select(type)) {}
+		NotSupportException(const Type type = Type::Any);
 	private:
-		static auto select(const Type type) -> const char* {
-			switch (type) {
-			case Type::Any: return "We do not support this.";
-			case Type::Method: return "We do not support this method.";
-			case Type::Object: return "We do not support this object";
-			case Type::Enum: return "We do not support this enum.";
-			default:
-				throw NotSupportException(Type::Enum);
-			}
-		}
+		static auto select(const Type type) -> const char*;
 	};
 	
 }

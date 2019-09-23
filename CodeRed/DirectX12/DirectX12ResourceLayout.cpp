@@ -64,14 +64,14 @@ CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 	WRL::ComPtr<ID3DBlob> rootBlob;
 	WRL::ComPtr<ID3DBlob> errorBlob;
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1,
 			rootBlob.GetAddressOf(), errorBlob.GetAddressOf()),
 		FailedException({ "SerializeRootSignature" }, DebugType::Create));
 
 	const auto dxDevice = std::static_pointer_cast<DirectX12LogicalDevice>(mDevice)->device();
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateRootSignature(0, 
 			rootBlob->GetBufferPointer(), 
 			rootBlob->GetBufferSize(),
@@ -86,7 +86,7 @@ CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 		0
 	};
 
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateDescriptorHeap(&heapInfo, IID_PPV_ARGS(&mDescriptorHeap)),
 		FailedException({ "ID3D12DescriptorHeap" }, DebugType::Create)
 	);

@@ -21,7 +21,7 @@ CodeRed::DirectX12CommandQueue::DirectX12CommandQueue(
 	};
 
 	//create Direct3D 12 Command Queue
-	throwIfFailed(
+	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateCommandQueue(&desc, IID_PPV_ARGS(&mCommandQueue)),
 		FailedException({ "ID3D12CommandQueue" }, DebugType::Create));
 }
