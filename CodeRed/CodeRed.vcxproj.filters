@@ -37,6 +37,12 @@
     <Filter Include="Core">
       <UniqueIdentifier>{21e5ad3b-e080-45e7-a5da-af735d0037e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vulkan\VulkanResource">
+      <UniqueIdentifier>{f8274785-6fdf-4480-bde2-83889f2feeff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vulkan\VulkanPipelineState">
+      <UniqueIdentifier>{d9dc317a-61e0-4e1c-98b0-c336c8ec55be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Noncopyable.hpp">
@@ -285,6 +291,36 @@
     <ClInclude Include="Shared\Enum\DebugType.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
+    <ClInclude Include="Vulkan\VulkanUtility.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanDisplayAdapter.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanSystemInfo.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanLogicalDevice.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanCommandAllocator.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanGraphicsCommandList.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanCommandQueue.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanFence.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanResourceLayout.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanResource\VulkanSampler.hpp">
+      <Filter>Vulkan\VulkanResource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -361,6 +397,36 @@
     </ClCompile>
     <ClCompile Include="Shared\Exception\Exception.cpp">
       <Filter>Shared\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanDisplayAdapter.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanSystemInfo.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanLogicalDevice.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanUtility.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanCommandAllocator.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanGraphicsCommandList.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanCommandQueue.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanFence.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanResourceLayout.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanResource\VulkanSampler.cpp">
+      <Filter>Vulkan\VulkanResource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

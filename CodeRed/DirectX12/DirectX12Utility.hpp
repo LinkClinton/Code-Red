@@ -51,7 +51,7 @@ namespace CodeRed {
 
 	auto enumConvert(const AddressMode mode) -> D3D12_TEXTURE_ADDRESS_MODE;
 
-	auto enumConvert(const BorderColor border) -> D3D12_STATIC_BORDER_COLOR;
+	auto enumConvert(const BorderColor color) -> D3D12_STATIC_BORDER_COLOR;
 
 	auto enumConvert(const ResourceType type) -> D3D12_DESCRIPTOR_RANGE_TYPE;
 	

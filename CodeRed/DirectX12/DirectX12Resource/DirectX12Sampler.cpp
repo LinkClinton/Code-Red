@@ -16,7 +16,7 @@ CodeRed::DirectX12Sampler::DirectX12Sampler(
 	mSampler.MaxAnisotropy = static_cast<UINT>(mInfo.MaxAnisotropy);
 	mSampler.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	mSampler.MinLOD = 0.0f;
-	mSampler.MaxLOD = D3D12_FLOAT32_MAX;
+	mSampler.MaxLOD = 1.0f;
 }
 
 #endif

@@ -93,10 +93,10 @@ auto CodeRed::enumConvert(const AddressMode mode)
 	}
 }
 
-auto CodeRed::enumConvert(const BorderColor border)
+auto CodeRed::enumConvert(const BorderColor color)
 	-> D3D12_STATIC_BORDER_COLOR
 {
-	switch (border) {
+	switch (color) {
 	case BorderColor::TransparentBlack: return D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
 	case BorderColor::OpaqueBlack: return D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
 	case BorderColor::OpaqueWhite: return D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE;

@@ -31,6 +31,11 @@ void CodeRed::DebugReport::error(const std::string& format, const std::vector<st
 	output("error : " + push(format, messages));
 }
 
+void CodeRed::DebugReport::message(const std::string& message)
+{
+	output(message);
+}
+
 void CodeRed::DebugReport::output(const std::string& text)
 {
 	std::cout << text << std::endl;

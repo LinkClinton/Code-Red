@@ -33,6 +33,9 @@ namespace CodeRed {
 		static void error(
 			const std::string& format,
 			const std::vector<std::string>& messages);
+
+		static void message(
+			const std::string& message);
 	private:
 		static void output(const std::string& text);
 		

@@ -72,22 +72,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -102,6 +106,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -116,6 +121,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -134,6 +140,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -152,6 +159,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\CodeRedGraphics.hpp" />
@@ -236,6 +244,16 @@
     <ClInclude Include="Shared\StencilOperatorInfo.hpp" />
     <ClInclude Include="Shared\Utility.hpp" />
     <ClInclude Include="Shared\ViewPort.hpp" />
+    <ClInclude Include="Vulkan\VulkanCommandAllocator.hpp" />
+    <ClInclude Include="Vulkan\VulkanCommandQueue.hpp" />
+    <ClInclude Include="Vulkan\VulkanDisplayAdapter.hpp" />
+    <ClInclude Include="Vulkan\VulkanFence.hpp" />
+    <ClInclude Include="Vulkan\VulkanGraphicsCommandList.hpp" />
+    <ClInclude Include="Vulkan\VulkanLogicalDevice.hpp" />
+    <ClInclude Include="Vulkan\VulkanResourceLayout.hpp" />
+    <ClInclude Include="Vulkan\VulkanResource\VulkanSampler.hpp" />
+    <ClInclude Include="Vulkan\VulkanSystemInfo.hpp" />
+    <ClInclude Include="Vulkan\VulkanUtility.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\DirectX12CommandAllocator.cpp" />
@@ -263,6 +281,16 @@
     <ClCompile Include="Shared\DebugReport.cpp" />
     <ClCompile Include="Shared\Exception\Exception.cpp" />
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp" />
+    <ClCompile Include="Vulkan\VulkanCommandAllocator.cpp" />
+    <ClCompile Include="Vulkan\VulkanCommandQueue.cpp" />
+    <ClCompile Include="Vulkan\VulkanDisplayAdapter.cpp" />
+    <ClCompile Include="Vulkan\VulkanFence.cpp" />
+    <ClCompile Include="Vulkan\VulkanGraphicsCommandList.cpp" />
+    <ClCompile Include="Vulkan\VulkanLogicalDevice.cpp" />
+    <ClCompile Include="Vulkan\VulkanResourceLayout.cpp" />
+    <ClCompile Include="Vulkan\VulkanResource\VulkanSampler.cpp" />
+    <ClCompile Include="Vulkan\VulkanSystemInfo.cpp" />
+    <ClCompile Include="Vulkan\VulkanUtility.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
