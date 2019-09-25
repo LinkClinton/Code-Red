@@ -8,9 +8,10 @@
 
 namespace CodeRed {
 
-	enum class PrimitiveTopology : UInt32
+	enum class ShaderType : UInt32
 	{
-		TriangleList
+		Vertex,
+		Pixel
 	};
-	
+
 }

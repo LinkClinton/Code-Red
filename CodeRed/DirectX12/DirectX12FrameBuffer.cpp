@@ -1,4 +1,5 @@
 #include "../Shared/Exception/FailedException.hpp"
+#include "../Shared/Exception/ZeroException.hpp"
 
 #include "DirectX12Resource/DirectX12Texture.hpp"
 #include "DirectX12LogicalDevice.hpp"
@@ -45,6 +46,11 @@ void CodeRed::DirectX12FrameBuffer::reset(
 	const std::shared_ptr<GpuTexture>& render_target,
 	const std::shared_ptr<GpuTexture>& depth_stencil)
 {
+	CODE_RED_DEBUG_THROW_IF(
+		render_target == nullptr,
+		ZeroException<GpuTexture>({ "render_target" })
+	);
+	
 	//reset the render target and depth stencil
 	for (auto& rtv : mRenderTargets) rtv.reset();
 
@@ -53,16 +59,13 @@ void CodeRed::DirectX12FrameBuffer::reset(
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 
 	//create rtv on render target heap
-	//if the render target is nullptr, we do not create it
-	if (render_target != nullptr) {
-		mRenderTargets[0] = render_target;
-		
-		dxDevice->CreateRenderTargetView(
-			static_cast<DirectX12Texture*>(mRenderTargets[0].get())->texture().Get(),
-			nullptr,
-			mRenderTargetHeap->GetCPUDescriptorHandleForHeapStart()
-		);
-	}
+	mRenderTargets[0] = render_target;
+
+	dxDevice->CreateRenderTargetView(
+		static_cast<DirectX12Texture*>(mRenderTargets[0].get())->texture().Get(),
+		nullptr,
+		mRenderTargetHeap->GetCPUDescriptorHandleForHeapStart()
+	);
 
 	//create dsv on depth stencil heap
 	//if the depth stencil is nullptr, we do not create it

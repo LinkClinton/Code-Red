@@ -15,6 +15,7 @@ namespace CodeRed {
 	class GpuDepthStencilState : public GpuPipelineState {
 	protected:
 		explicit GpuDepthStencilState(
+			const std::shared_ptr<GpuLogicalDevice> &device,
 			const PixelFormat format,
 			const bool depth_enable = true,
 			const bool depth_write_enable = true,
@@ -22,6 +23,7 @@ namespace CodeRed {
 			const CompareOperator depth_operator = CompareOperator::LessEqual,
 			const StencilOperatorInfo& front = StencilOperatorInfo(),
 			const StencilOperatorInfo& back = StencilOperatorInfo()) :
+			GpuPipelineState(device),
 			mDepthWriteEnable(depth_write_enable),
 			mStencilEnable(stencil_enable),
 			mDepthEnable(depth_enable),

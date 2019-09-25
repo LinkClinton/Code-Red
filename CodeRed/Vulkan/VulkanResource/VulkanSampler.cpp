@@ -21,7 +21,7 @@ CodeRed::VulkanSampler::VulkanSampler(
 		.setAddressModeW(enumConvert(mInfo.AddressModeW))
 		.setMipLodBias(0)
 		.setAnisotropyEnable(mInfo.Filter == FilterOptions::Anisotropy)
-		.setMaxAnisotropy(mInfo.MaxAnisotropy)
+		.setMaxAnisotropy(static_cast<float>(mInfo.MaxAnisotropy))
 		.setCompareEnable(true)
 		.setCompareOp(vk::CompareOp::eLessOrEqual)
 		.setMinLod(0.0f)

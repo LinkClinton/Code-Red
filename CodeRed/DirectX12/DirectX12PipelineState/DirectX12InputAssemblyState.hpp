@@ -14,11 +14,10 @@ namespace CodeRed {
 
 	class DirectX12InputAssemblyState final : public GpuInputAssemblyState {
 	public:
-		DirectX12InputAssemblyState() = default;
-		
 		explicit DirectX12InputAssemblyState(
+			const std::shared_ptr<GpuLogicalDevice> &device,
 			const std::vector<InputLayoutElement>& elements,
-			const PrimitiveTopology primitive_topology = PrimitiveTopology::Undefined);
+			const PrimitiveTopology primitive_topology = PrimitiveTopology::TriangleList);
 
 		~DirectX12InputAssemblyState() = default;
 

@@ -29,8 +29,16 @@ namespace CodeRed {
 		auto allocateQueue() -> size_t;
 
 		void freeQueue(const size_t index);
-		
+
+		auto getMemoryTypeIndex(
+			uint32_t type_bits, 
+			const vk::MemoryPropertyFlags& flags)
+			const -> uint32_t;
+
 		friend class VulkanCommandQueue;
+		friend class VulkanSwapChain;
+		friend class VulkanTexture;
+		friend class VulkanBuffer;
 	private:
 		std::vector<const char*> mInstanceExtensions;
 		std::vector<const char*> mDeviceExtensions;

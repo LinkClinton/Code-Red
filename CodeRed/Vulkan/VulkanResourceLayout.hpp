@@ -26,8 +26,9 @@ namespace CodeRed {
 		std::vector<vk::DescriptorSetLayout> mDescriptorSetLayouts;
 		std::vector<vk::WriteDescriptorSet> mWriteDescriptorSets;
 		std::vector<vk::DescriptorSet> mDescriptorSets;
+		std::vector<size_t> mDescriptorBindings;
 	};
-	
+
 }
 
 #endif

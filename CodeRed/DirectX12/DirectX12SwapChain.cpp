@@ -85,7 +85,8 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 	for (auto& buffer : mBuffers) buffer.reset();
 
 	CODE_RED_THROW_IF_FAILED(
-		mSwapChain->ResizeBuffers(2,
+		mSwapChain->ResizeBuffers(
+			static_cast<UINT>(mBuffers.size()),
 			static_cast<UINT>(mInfo.width),
 			static_cast<UINT>(mInfo.height),
 			enumConvert(mPixelFormat), 0),

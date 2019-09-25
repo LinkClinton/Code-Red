@@ -20,7 +20,7 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	desc.Width = property.Width;
 	desc.Height = static_cast<UINT>(property.Height);
 	desc.DepthOrArraySize = 1;
-	desc.MipLevels = 0;
+	desc.MipLevels = 1;
 	desc.Format = enumConvert(property.PixelFormat);
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
@@ -62,15 +62,6 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	GpuTexture(device, info),
 	mTexture(texture)
 {
-	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
-	const auto desc = mTexture->GetDesc();
-
-	//we only update size property
-	//the other properties of ID3D12Resource we do not update
-	//because it is not necessary to make info and desc same
-	//we only need to make sure the important properties are same
-	std::get<TextureProperty>(mInfo.Property).Size =
-		dxDevice->GetResourceAllocationInfo(0, 1, &desc).SizeInBytes;
 }
 
 auto CodeRed::DirectX12Texture::mapMemory() const -> void* 

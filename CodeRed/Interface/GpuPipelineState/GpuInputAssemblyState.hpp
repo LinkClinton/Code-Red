@@ -16,11 +16,11 @@ namespace CodeRed {
 
 	class GpuInputAssemblyState : public GpuPipelineState {
 	protected:
-		GpuInputAssemblyState() = default;
-		
 		explicit GpuInputAssemblyState(
+			const std::shared_ptr<GpuLogicalDevice> &device,
 			const std::vector<InputLayoutElement>& elements,
-			const PrimitiveTopology primitive_topology = PrimitiveTopology::Undefined) :
+			const PrimitiveTopology primitive_topology = PrimitiveTopology::TriangleList) :
+			GpuPipelineState(device),
 			mElements(elements), mPrimitiveTopology(primitive_topology) {}
 
 		~GpuInputAssemblyState() = default;
@@ -33,7 +33,7 @@ namespace CodeRed {
 	protected:
 		std::vector<InputLayoutElement> mElements = {};
 		
-		PrimitiveTopology mPrimitiveTopology = PrimitiveTopology::Undefined;
+		PrimitiveTopology mPrimitiveTopology = PrimitiveTopology::TriangleList;
 	};
 	
 }

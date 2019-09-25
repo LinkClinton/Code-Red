@@ -21,16 +21,20 @@ namespace CodeRed {
 	class GpuRasterizationState : GpuPipelineState {
 	protected:
 		explicit GpuRasterizationState(
+			const std::shared_ptr<GpuLogicalDevice>& device,
 			const PixelFormat format,
 			const FrontFace front_face = FrontFace::Clockwise,
 			const CullMode cull_mode = CullMode::Back,
 			const FillMode fill_mode = FillMode::Solid,
 			const bool depth_clamp = true) :
+			GpuPipelineState(device),
 			mRenderTargetFormats({ format }),
 			mFrontFace(front_face),
 			mCullMode(cull_mode),
 			mFillMode(fill_mode),
 			mDepthClamp(depth_clamp) {}
+
+		~GpuRasterizationState() = default;
 	public:
 		auto renderTargetFormat(const size_t index = 0) const -> PixelFormat { return mRenderTargetFormats[index]; }
 		

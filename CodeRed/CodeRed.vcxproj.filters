@@ -321,6 +321,42 @@
     <ClInclude Include="Vulkan\VulkanResource\VulkanSampler.hpp">
       <Filter>Vulkan\VulkanResource</Filter>
     </ClInclude>
+    <ClInclude Include="Vulkan\VulkanResource\VulkanBuffer.hpp">
+      <Filter>Vulkan\VulkanResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanResource\VulkanTexture.hpp">
+      <Filter>Vulkan\VulkanResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanFrameBuffer.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanSwapChain.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanPipelineState\VulkanBlendState.hpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanPipelineState\VulkanDepthStencilState.hpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanPipelineState\VulkanInputAssemblyState.hpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanPipelineState\VulkanRasterizationState.hpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanPipelineState\VulkanShaderState.hpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\ShaderType.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanPipelineState\VulkanPipelineFactory.hpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanGraphicsPipeline.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -427,6 +463,39 @@
     </ClCompile>
     <ClCompile Include="Vulkan\VulkanResource\VulkanSampler.cpp">
       <Filter>Vulkan\VulkanResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanResource\VulkanBuffer.cpp">
+      <Filter>Vulkan\VulkanResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanResource\VulkanTexture.cpp">
+      <Filter>Vulkan\VulkanResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanFrameBuffer.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanSwapChain.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanPipelineState\VulkanBlendState.cpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanPipelineState\VulkanDepthStencilState.cpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanPipelineState\VulkanInputAssemblyState.cpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanPipelineState\VulkanRasterizationState.cpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanPipelineState\VulkanShaderState.cpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanPipelineState\VulkanPipelineFactory.cpp">
+      <Filter>Vulkan\VulkanPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanGraphicsPipeline.cpp">
+      <Filter>Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

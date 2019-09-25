@@ -15,6 +15,7 @@ namespace CodeRed {
 	class DirectX12DepthStencilState final : public GpuDepthStencilState {
 	public:
 		explicit DirectX12DepthStencilState(
+			const std::shared_ptr<GpuLogicalDevice> &device,
 			const PixelFormat format,
 			const bool depth_enable = true,
 			const bool depth_write_enable = true,

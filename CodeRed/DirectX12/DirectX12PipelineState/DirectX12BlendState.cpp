@@ -2,14 +2,10 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
-CodeRed::DirectX12BlendState::DirectX12BlendState()
-	: DirectX12BlendState(BlendProperty())
-{
-}
-
 CodeRed::DirectX12BlendState::DirectX12BlendState(
+	const std::shared_ptr<GpuLogicalDevice> &device,
 	const BlendProperty& blend_property) :
-	GpuBlendState(blend_property)
+	GpuBlendState(device, blend_property)
 {
 	const auto& property = mBlendProperties[0];
 

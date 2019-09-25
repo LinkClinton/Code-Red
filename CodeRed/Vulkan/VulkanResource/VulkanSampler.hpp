@@ -17,6 +17,8 @@ namespace CodeRed {
 
 		auto sampler() const noexcept -> vk::Sampler { return mSampler; }
 	private:
+		friend class VulkanResourceLayout;
+		
 		vk::Sampler mSampler;
 	};
 	

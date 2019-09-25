@@ -8,6 +8,13 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+CodeRed::DirectX12PipelineFactory::DirectX12PipelineFactory(
+	const std::shared_ptr<GpuLogicalDevice>& device) :
+	GpuPipelineFactory(device)
+{
+	
+}
+
 auto CodeRed::DirectX12PipelineFactory::createInputAssemblyState(
 	const std::vector<InputLayoutElement>& elements,
 	const PrimitiveTopology primitive_topology)
@@ -15,6 +22,7 @@ auto CodeRed::DirectX12PipelineFactory::createInputAssemblyState(
 {
 	return std::static_pointer_cast<GpuInputAssemblyState>(
 		std::make_shared<DirectX12InputAssemblyState>(
+			mDevice,
 			elements,
 			primitive_topology));
 }
@@ -29,6 +37,7 @@ auto CodeRed::DirectX12PipelineFactory::createRasterizationState(
 {
 	return std::static_pointer_cast<GpuRasterizationState>(
 		std::make_shared<DirectX12RasterizationState>(
+			mDevice,
 			format,
 			front_face,
 			cull_mode,
@@ -48,6 +57,7 @@ auto CodeRed::DirectX12PipelineFactory::createDetphStencilState(
 {
 	return std::static_pointer_cast<GpuDepthStencilState>(
 		std::make_shared<DirectX12DepthStencilState>(
+			mDevice,
 			format,
 			depth_enable,
 			depth_write_enable,
@@ -58,11 +68,13 @@ auto CodeRed::DirectX12PipelineFactory::createDetphStencilState(
 }
 
 auto CodeRed::DirectX12PipelineFactory::createShaderState(
-	const std::vector<Byte>& code)
+	const ShaderType type,
+	const std::vector<Byte>& code,
+	const std::string& name)
 	-> std::shared_ptr<GpuShaderState>
 {
 	return std::static_pointer_cast<GpuShaderState>(
-		std::make_shared<DirectX12ShaderState>(code));
+		std::make_shared<DirectX12ShaderState>(mDevice, type, code, name));
 }
 
 auto CodeRed::DirectX12PipelineFactory::createBlendState(
@@ -70,7 +82,7 @@ auto CodeRed::DirectX12PipelineFactory::createBlendState(
 	-> std::shared_ptr<GpuBlendState>
 {
 	return std::static_pointer_cast<GpuBlendState>(
-		std::make_shared<DirectX12BlendState>(property));
+		std::make_shared<DirectX12BlendState>(mDevice, property));
 }
 
 #endif

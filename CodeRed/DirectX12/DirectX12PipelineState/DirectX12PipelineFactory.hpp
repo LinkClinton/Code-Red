@@ -12,13 +12,14 @@ namespace CodeRed {
 
 	class DirectX12PipelineFactory final : public GpuPipelineFactory {
 	public:
-		DirectX12PipelineFactory() = default;
+		explicit DirectX12PipelineFactory(
+			const std::shared_ptr<GpuLogicalDevice>& device);
 
 		~DirectX12PipelineFactory() = default;
 
 		auto createInputAssemblyState(
 			const std::vector<InputLayoutElement>& elements, 
-			const PrimitiveTopology primitive_topology = PrimitiveTopology::Undefined)
+			const PrimitiveTopology primitive_topology = PrimitiveTopology::TriangleList)
 			-> std::shared_ptr<GpuInputAssemblyState> override;
 
 		auto createRasterizationState(
@@ -40,7 +41,9 @@ namespace CodeRed {
 			->std::shared_ptr<GpuDepthStencilState> override;
 
 		auto createShaderState(
-			const std::vector<Byte>& code)
+			const ShaderType type,
+			const std::vector<Byte>& code,
+			const std::string& name = "main")
 			->std::shared_ptr<GpuShaderState> override;
 
 		auto createBlendState(

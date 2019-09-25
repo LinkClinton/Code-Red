@@ -38,6 +38,7 @@ namespace CodeRed {
 	enum class BlendFactor : UInt32;
 	enum class BorderColor : UInt32;
 	enum class MemoryHeap : UInt32;
+	enum class FrontFace : UInt32;
 	enum class Dimension : UInt32;
 	enum class ColorMask : UInt32;
 	enum class FillMode : UInt32;
@@ -80,6 +81,8 @@ namespace CodeRed {
 	auto enumConvert(const FillMode mode) -> D3D12_FILL_MODE;
 
 	auto enumConvert(const CullMode mode) -> D3D12_CULL_MODE;
+
+	auto enumConvert(const FrontFace face) -> bool;
 
 	auto enumConvert(const PrimitiveTopology topology) -> D3D_PRIMITIVE_TOPOLOGY;
 

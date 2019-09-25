@@ -200,7 +200,7 @@ private:
 		WRL::ComPtr<ID3DBlob> vertex;
 		WRL::ComPtr<ID3DBlob> pixel;
 
-		CodeRed::CODE_RED_THROW_IF_FAILED(
+		CODE_RED_THROW_IF_FAILED(
 			D3DCompile(vertShaderText,
 				std::strlen(vertShaderText),
 				nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
@@ -209,7 +209,7 @@ private:
 			CodeRed::FailedException({"Vertex Shader of HLSL"}, CodeRed::DebugType::Create)
 		);
 
-		CodeRed::CODE_RED_THROW_IF_FAILED(
+		CODE_RED_THROW_IF_FAILED(
 			D3DCompile(pixelShaderText,
 				std::strlen(pixelShaderText),
 				nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
@@ -226,12 +226,14 @@ private:
 
 		mPipelineInfo->setVertexShaderState(
 			mPipelineFactory->createShaderState(
+				CodeRed::ShaderType::Vertex,
 				vsCode
 			)
 		);
 
 		mPipelineInfo->setPixelShaderState(
 			mPipelineFactory->createShaderState(
+				CodeRed::ShaderType::Pixel,
 				psCode
 			)
 		);

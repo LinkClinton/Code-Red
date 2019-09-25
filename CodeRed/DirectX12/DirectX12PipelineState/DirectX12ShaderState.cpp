@@ -3,8 +3,11 @@
 #ifdef __ENABLE__DIRECTX12__
 
 CodeRed::DirectX12ShaderState::DirectX12ShaderState(
-	const std::vector<Byte>& code)
-	: GpuShaderState(code)
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const ShaderType type,
+	const std::vector<Byte>& code,
+	const std::string& name)
+	: GpuShaderState(device, type, code, name)
 {
 	mShaderCode.BytecodeLength = mCode.size();
 	mShaderCode.pShaderBytecode = mCode.data();

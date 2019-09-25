@@ -5,9 +5,10 @@
 #ifdef __ENABLE__DIRECTX12__
 
 CodeRed::DirectX12InputAssemblyState::DirectX12InputAssemblyState(
+	const std::shared_ptr<GpuLogicalDevice> &device,
 	const std::vector<InputLayoutElement>& elements,
 	const PrimitiveTopology primitive_topology) :
-	GpuInputAssemblyState(elements, primitive_topology)
+	GpuInputAssemblyState(device, elements, primitive_topology)
 {
 	UINT offsetInBytes = 0;
 	

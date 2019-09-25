@@ -163,7 +163,7 @@ auto CodeRed::DirectX12LogicalDevice::createPipelineFactory()
 	-> std::shared_ptr<GpuPipelineFactory>
 {
 	return std::static_pointer_cast<GpuPipelineFactory>(
-		std::make_shared<DirectX12PipelineFactory>());
+		std::make_shared<DirectX12PipelineFactory>(shared_from_this()));
 }
 
 #endif

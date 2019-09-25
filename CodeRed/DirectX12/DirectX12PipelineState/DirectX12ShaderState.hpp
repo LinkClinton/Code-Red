@@ -14,10 +14,13 @@ namespace CodeRed {
 
 	class DirectX12ShaderState final : public GpuShaderState {
 	public:
-		DirectX12ShaderState() = default;
-
 		explicit DirectX12ShaderState(
-			const std::vector<Byte>& code);
+			const std::shared_ptr<GpuLogicalDevice> &device,
+			const ShaderType type,
+			const std::vector<Byte>& code,
+			const std::string &name = "main");
+
+		~DirectX12ShaderState() = default;
 
 		auto constexpr shader() const noexcept -> D3D12_SHADER_BYTECODE { return mShaderCode; }
 	private:

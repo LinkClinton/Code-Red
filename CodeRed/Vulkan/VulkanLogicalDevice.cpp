@@ -237,4 +237,20 @@ void CodeRed::VulkanLogicalDevice::freeQueue(const size_t index)
 	mFreeQueues.push_back(index);
 }
 
+auto CodeRed::VulkanLogicalDevice::getMemoryTypeIndex(
+	uint32_t type_bits,
+	const vk::MemoryPropertyFlags& flags) const -> uint32_t
+{
+	for (size_t index = 0; index < mMemoryProperties.memoryTypeCount; index++) {
+		if ((type_bits & 1) == 1) {
+			if ((mMemoryProperties.memoryTypes[index].propertyFlags & flags) == flags) 
+				return static_cast<uint32_t>(index);
+		}
+
+		type_bits >>= 1;
+	}
+
+	throw FailedException({ "memory type index", "memory properties" }, DebugType::Get);
+}
+
 #endif

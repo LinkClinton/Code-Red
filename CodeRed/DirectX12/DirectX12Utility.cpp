@@ -16,6 +16,7 @@
 #include "../Shared/Enum/BorderColor.hpp"
 #include "../Shared/Enum/BlendFactor.hpp"
 #include "../Shared/Enum/MemoryHeap.hpp"
+#include "../Shared/Enum/FrontFace.hpp"
 #include "../Shared/Enum/Dimension.hpp"
 #include "../Shared/Enum/FillMode.hpp"
 #include "../Shared/Enum/CullMode.hpp"
@@ -152,7 +153,13 @@ auto CodeRed::enumConvert(const ResourceUsage usage)
 
 	//we record all masks that we can not combine
 	static ResourceUsage disableMask[] = {
-		ResourceUsage::RenderTarget | ResourceUsage::DepthStencil
+		ResourceUsage::RenderTarget | ResourceUsage::DepthStencil,
+		ResourceUsage::VertexBuffer | ResourceUsage::RenderTarget,
+		ResourceUsage::VertexBuffer | ResourceUsage::DepthStencil,
+		ResourceUsage::IndexBuffer | ResourceUsage::RenderTarget,
+		ResourceUsage::IndexBuffer | ResourceUsage::DepthStencil,
+		ResourceUsage::ConstantBuffer | ResourceUsage::RenderTarget,
+		ResourceUsage::ConstantBuffer | ResourceUsage::DepthStencil
 	};
 
 	//if usage has this mask we disable, we will throw a InvalidException with nullptr
@@ -327,12 +334,17 @@ auto CodeRed::enumConvert(const CullMode mode)
 	}
 }
 
+auto CodeRed::enumConvert(const FrontFace face)
+	-> bool
+{
+	return face == FrontFace::CounterClockwise;
+}
+
 auto CodeRed::enumConvert(const PrimitiveTopology topology)
 	-> D3D_PRIMITIVE_TOPOLOGY
 {
 	switch (topology) {
 	case PrimitiveTopology::TriangleList: return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	case PrimitiveTopology::Undefined: return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

@@ -8,6 +8,7 @@
 
 #include <Shared/Enum/PrimitiveTopology.hpp>
 #include <Shared/Enum/PixelFormat.hpp>
+#include <Shared/Enum/ShaderType.hpp>
 #include <Shared/Enum/FrontFace.hpp>
 #include <Shared/Enum/CullMode.hpp>
 #include <Shared/Enum/FillMode.hpp>
@@ -19,6 +20,7 @@
 
 #include "../../Shared/Enum/PrimitiveTopology.hpp"
 #include "../../Shared/Enum/PixelFormat.hpp"
+#include "../../Shared/Enum/ShaderType.hpp"
 #include "../../Shared/Enum/FrontFace.hpp"
 #include "../../Shared/Enum/CullMode.hpp"
 #include "../../Shared/Enum/FillMode.hpp"
@@ -29,6 +31,8 @@
 
 namespace CodeRed {
 
+
+	class GpuLogicalDevice;
 	class GpuInputAssemblyState;
 	class GpuRasterizationState;
 	class GpuDepthStencilState;
@@ -37,13 +41,15 @@ namespace CodeRed {
 	
 	class GpuPipelineFactory : public Noncopyable {
 	protected:
-		GpuPipelineFactory() = default;
+		explicit GpuPipelineFactory(
+			const std::shared_ptr<GpuLogicalDevice> &device) :
+			mDevice(device) {}
 
-		~GpuPipelineFactory() = default;
+		virtual ~GpuPipelineFactory() = default;
 	public:
 		virtual auto createInputAssemblyState(
 			const std::vector<InputLayoutElement>& elements,
-			const PrimitiveTopology primitive_topology = PrimitiveTopology::Undefined)
+			const PrimitiveTopology primitive_topology = PrimitiveTopology::TriangleList)
 			-> std::shared_ptr<GpuInputAssemblyState> = 0;
 
 		virtual auto createRasterizationState(
@@ -65,12 +71,16 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuDepthStencilState> = 0;
 
 		virtual auto createShaderState(
-			const std::vector<Byte>& code)
+			const ShaderType type,
+			const std::vector<Byte>& code,
+			const std::string& name = "main")
 			-> std::shared_ptr<GpuShaderState> = 0;
 
 		virtual auto createBlendState(
 			const BlendProperty& property = BlendProperty())
 			-> std::shared_ptr<GpuBlendState> = 0;
+	protected:
+		std::shared_ptr<GpuLogicalDevice> mDevice;
 	};
 	
 }

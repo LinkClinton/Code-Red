@@ -3,12 +3,14 @@
 #ifdef __ENABLE__DIRECTX12__
 
 CodeRed::DirectX12RasterizationState::DirectX12RasterizationState(
+	const std::shared_ptr<GpuLogicalDevice>& device,
 	const PixelFormat format,
 	const FrontFace front_face, 
 	const CullMode cull_mode, 
 	const FillMode fill_mode, 
 	const bool depth_clamp) :
 	GpuRasterizationState(
+		device,
 		format,
 		front_face,
 		cull_mode,
@@ -18,7 +20,7 @@ CodeRed::DirectX12RasterizationState::DirectX12RasterizationState(
 {
 	mRasterizationState.FillMode = enumConvert(mFillMode);
 	mRasterizationState.CullMode = enumConvert(mCullMode);
-	mRasterizationState.FrontCounterClockwise = mFrontFace == FrontFace::CounterClockwise;
+	mRasterizationState.FrontCounterClockwise = enumConvert(mFrontFace);
 	mRasterizationState.DepthBias = 0;
 	mRasterizationState.DepthBiasClamp = 0.0f;
 	mRasterizationState.SlopeScaledDepthBias = 0.0f;

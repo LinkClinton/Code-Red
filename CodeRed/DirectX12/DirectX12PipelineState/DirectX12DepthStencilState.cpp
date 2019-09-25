@@ -3,6 +3,7 @@
 #ifdef __ENABLE__DIRECTX12__
 
 CodeRed::DirectX12DepthStencilState::DirectX12DepthStencilState(
+	const std::shared_ptr<GpuLogicalDevice> &device,
 	const PixelFormat format,
 	const bool depth_enable, 
 	const bool depth_write_enable, 
@@ -11,6 +12,7 @@ CodeRed::DirectX12DepthStencilState::DirectX12DepthStencilState(
 	const StencilOperatorInfo& front, 
 	const StencilOperatorInfo& back) :
 	GpuDepthStencilState(
+		device,
 		format,
 		depth_enable,
 		depth_write_enable,
