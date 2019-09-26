@@ -69,17 +69,9 @@ namespace CodeRed {
 			const ResourceLayout new_layout) override;
 
 		void layoutTransition(
-			const std::shared_ptr<GpuTexture>& texture, 
-			const ResourceLayout layout) override;
-
-		void layoutTransition(
 			const std::shared_ptr<GpuBuffer>& buffer, 
 			const ResourceLayout old_layout, 
 			const ResourceLayout new_layout) override;
-
-		void layoutTransition(
-			const std::shared_ptr<GpuBuffer>& buffer, 
-			const ResourceLayout layout) override;
 
 		void copyBuffer(
 			const std::shared_ptr<GpuBuffer>& source, 

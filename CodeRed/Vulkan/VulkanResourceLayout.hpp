@@ -16,6 +16,14 @@ namespace CodeRed {
 
 		~VulkanResourceLayout();
 
+		void bindTexture(
+			const size_t index, 
+			const std::shared_ptr<GpuTexture>& resource) override;
+
+		void bindBuffer(
+			const size_t index, 
+			const std::shared_ptr<GpuBuffer>& resource) override;
+		
 		auto layout() const noexcept -> vk::PipelineLayout { return mPipelineLayout; }
 
 		auto pool() const noexcept -> vk::DescriptorPool { return mDescriptorPool; }

@@ -232,13 +232,6 @@ void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
 }
 
 void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
-	const std::shared_ptr<GpuTexture>& texture,
-	const ResourceLayout layout)
-{
-	layoutTransition(texture, texture->layout(), layout);
-}
-
-void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
 	const std::shared_ptr<GpuBuffer>& buffer,
 	const ResourceLayout old_layout, 
 	const ResourceLayout new_layout)
@@ -257,13 +250,6 @@ void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
 	mGraphicsCommandList->ResourceBarrier(1, &barrier);
 
 	buffer->setLayout(new_layout);
-}
-
-void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
-	const std::shared_ptr<GpuBuffer>& buffer,
-	const ResourceLayout layout)
-{
-	layoutTransition(buffer, buffer->layout(), layout);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::copyBuffer(

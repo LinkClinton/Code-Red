@@ -85,7 +85,7 @@ namespace CodeRed {
 
 		virtual void layoutTransition(
 			const std::shared_ptr<GpuTexture>& texture,
-			const ResourceLayout layout) = 0;
+			const ResourceLayout layout);
 
 		virtual void layoutTransition(
 			const std::shared_ptr<GpuBuffer>& buffer,
@@ -94,7 +94,7 @@ namespace CodeRed {
 
 		virtual void layoutTransition(
 			const std::shared_ptr<GpuBuffer>& buffer,
-			const ResourceLayout layout) = 0;
+			const ResourceLayout layout);
 		
 		virtual void copyBuffer(
 			const std::shared_ptr<GpuBuffer>& source,

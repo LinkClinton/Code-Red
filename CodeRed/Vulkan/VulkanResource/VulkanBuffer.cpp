@@ -46,4 +46,18 @@ CodeRed::VulkanBuffer::~VulkanBuffer()
 	vkDevice.destroyBuffer(mBuffer);
 }
 
+auto CodeRed::VulkanBuffer::mapMemory() const -> void* 
+{
+	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
+
+	return vkDevice.mapMemory(mMemory, 0, VK_WHOLE_SIZE);
+}
+
+void CodeRed::VulkanBuffer::unmapMemory() const
+{
+	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
+
+	vkDevice.unmapMemory(mMemory);
+}
+
 #endif

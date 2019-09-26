@@ -83,13 +83,13 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 	//if we use these back buffers to create rtv or any things
 	//we need to destory them before we resize the swap chain
 	for (auto& buffer : mBuffers) buffer.reset();
-
+	
 	CODE_RED_THROW_IF_FAILED(
 		mSwapChain->ResizeBuffers(
 			static_cast<UINT>(mBuffers.size()),
 			static_cast<UINT>(mInfo.width),
 			static_cast<UINT>(mInfo.height),
-			enumConvert(mPixelFormat), 0),
+			enumConvert(mPixelFormat), DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH),
 		FailedException({ "Resize of IDXGISwapChain" }, DebugType::Create)
 	);
 	
@@ -113,9 +113,9 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 	}
 }
 
-void CodeRed::DirectX12SwapChain::present(bool sync)
+void CodeRed::DirectX12SwapChain::present()
 {
-	mSwapChain->Present(sync ? 1 : 0, 0);
+	mSwapChain->Present(0, 0);
 }
 
 auto CodeRed::DirectX12SwapChain::currentBufferIndex() const

@@ -21,10 +21,6 @@ namespace CodeRed {
 
 		~DirectX12ResourceLayout() = default;
 
-		void bindResource(
-			const size_t index, 
-			const std::shared_ptr<GpuResource>& resource) override;
-
 		void bindTexture(
 			const size_t index, 
 			const std::shared_ptr<GpuTexture>& resource) override;

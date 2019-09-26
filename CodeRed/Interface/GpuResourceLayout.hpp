@@ -33,9 +33,9 @@ namespace CodeRed {
 
 		auto samplers() const noexcept -> std::vector<SamplerLayoutElement> { return mSamplers; }
 
-		virtual void bindResource(
-			const size_t index, 
-			const std::shared_ptr<GpuResource>& resource) = 0;
+		void bindResource(
+			const size_t index,
+			const std::shared_ptr<GpuResource>& resource);
 
 		virtual void bindTexture(
 			const size_t index,

@@ -240,3 +240,26 @@ CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 	CODE_RED_DEBUG_PTR_VALID(mResourceLayout, "resource_layout");
 	CODE_RED_DEBUG_PTR_VALID(mBlendState, "blend_state");
 }
+
+void CodeRed::GpuResourceLayout::bindResource(
+	const size_t index, const std::shared_ptr<GpuResource>& resource)
+{
+	if (resource->type() == ResourceType::Buffer)
+		bindBuffer(index, std::static_pointer_cast<GpuBuffer>(resource));
+	else
+		bindTexture(index, std::static_pointer_cast<GpuTexture>(resource));
+}
+
+void CodeRed::GpuGraphicsCommandList::layoutTransition(
+	const std::shared_ptr<GpuTexture>& texture,
+	const ResourceLayout layout)
+{
+	layoutTransition(texture, texture->layout(), layout);
+}
+
+void CodeRed::GpuGraphicsCommandList::layoutTransition(
+	const std::shared_ptr<GpuBuffer>& buffer,
+	const ResourceLayout layout)
+{
+	layoutTransition(buffer, buffer->layout(), layout);
+}

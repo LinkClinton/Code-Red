@@ -10,10 +10,14 @@ namespace CodeRed {
 	class VulkanCommandQueue final : public GpuCommandQueue {
 	public:
 		explicit VulkanCommandQueue(
-			std::shared_ptr<GpuLogicalDevice>& device);
+			const std::shared_ptr<GpuLogicalDevice>& device);
 
 		~VulkanCommandQueue();
 
+		void execute(const std::vector<std::shared_ptr<GpuGraphicsCommandList>>& lists) override;
+
+		void waitIdle() override;
+		
 		auto queue() const noexcept -> vk::Queue { return mQueue; }
 	private:
 		vk::Queue mQueue;

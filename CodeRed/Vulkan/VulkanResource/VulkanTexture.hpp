@@ -20,6 +20,10 @@ namespace CodeRed {
 		
 		~VulkanTexture();
 
+		auto mapMemory() const -> void* override;
+
+		void unmapMemory() const override;
+		
 		auto image() const noexcept -> vk::Image { return mImage; }
 
 		auto view() const noexcept -> vk::ImageView { return mImageView; }

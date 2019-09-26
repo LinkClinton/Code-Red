@@ -14,6 +14,8 @@ namespace CodeRed {
 
 		~VulkanCommandAllocator();
 
+		void reset() override;
+		
 		auto allocator() const noexcept -> vk::CommandPool {return mCommandPool; }
 	private:
 		vk::CommandPool mCommandPool;

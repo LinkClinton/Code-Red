@@ -25,7 +25,7 @@ namespace CodeRed{
 
 		void resize(const size_t width, const size_t height) override;
 
-		void present(bool sync) override;
+		void present() override;
 
 		auto currentBufferIndex() const -> size_t override;
 		

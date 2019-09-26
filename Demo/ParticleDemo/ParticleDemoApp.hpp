@@ -74,6 +74,7 @@ private:
 	const size_t maxFrameResources = 2;
 	const size_t maxParticleSize = 50;
 	const size_t particleCount = 1000;
+	const size_t particleTimes = 2;
 
 	size_t mCurrentFrameIndex = 0;
 
@@ -101,6 +102,6 @@ private:
 	std::vector<CodeRed::Byte> mVertexShaderCode;
 	std::vector<CodeRed::Byte> mPixelShaderCode;
 
-	std::vector<Particle> mParticles = std::vector<Particle>(particleCount);
-	std::vector<glm::mat4x4> mTransform = std::vector<glm::mat4x4>(particleCount);
+	std::vector<Particle> mParticles = std::vector<Particle>(particleCount * particleTimes);
+	std::vector<glm::mat4x4> mTransform = std::vector<glm::mat4x4>(particleCount * particleTimes);
 };

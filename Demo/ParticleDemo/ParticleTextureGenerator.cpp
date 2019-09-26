@@ -246,7 +246,9 @@ void ParticleTextureGenerator::initializePipeline()
 
 	mPipelineInfo->setVertexShaderState(
 		mPipelineFactory->createShaderState(
-			mVertexShaderCode
+			CodeRed::ShaderType::Vertex,
+			mVertexShaderCode,
+			"main"
 		)
 	);
 
@@ -268,7 +270,9 @@ void ParticleTextureGenerator::initializePipeline()
 
 	mPipelineInfo->setPixelShaderState(
 		mPipelineFactory->createShaderState(
-			mPixelShaderCode
+			CodeRed::ShaderType::Pixel,
+			mPixelShaderCode,
+			"main"
 		)
 	);
 	

@@ -2,9 +2,22 @@
 #include "../Shared/Exception/InvalidException.hpp"
 #include "../Shared/Exception/FailedException.hpp"
 
-#include "VulkanDisplayAdapter.hpp"
-#include "VulkanLogicalDevice.hpp"
+#include "VulkanPipelineState/VulkanPipelineFactory.hpp"
 
+#include "VulkanResource/VulkanTexture.hpp"
+#include "VulkanResource/VulkanSampler.hpp"
+#include "VulkanResource/VulkanBuffer.hpp"
+
+#include "VulkanGraphicsCommandList.hpp"
+#include "VulkanGraphicsPipeline.hpp"
+#include "VulkanCommandAllocator.hpp"
+#include "VulkanDisplayAdapter.hpp"
+#include "VulkanResourceLayout.hpp"
+#include "VulkanLogicalDevice.hpp"
+#include "VulkanCommandQueue.hpp"
+#include "VulkanFrameBuffer.hpp"
+#include "VulkanSwapChain.hpp"
+#include "VulkanFence.hpp"
 
 #ifdef __ENABLE__VULKAN__
 
@@ -140,6 +153,120 @@ CodeRed::VulkanLogicalDevice::~VulkanLogicalDevice()
 		mInstance.destroyDebugReportCallbackEXT(mDebugReportCallBack, nullptr, mDynamicLoader);
 
 	mInstance.destroy();
+}
+
+auto CodeRed::VulkanLogicalDevice::createFence()
+	-> std::shared_ptr<GpuFence>
+{
+	return std::make_shared<VulkanFence>(shared_from_this());
+}
+
+auto CodeRed::VulkanLogicalDevice::createFrameBuffer(
+	const std::shared_ptr<GpuTexture>& render_target,
+	const std::shared_ptr<GpuTexture>& depth_stencil)
+	-> std::shared_ptr<GpuFrameBuffer>
+{
+	return std::make_shared<VulkanFrameBuffer>(
+		shared_from_this(),
+		render_target,
+		depth_stencil);
+}
+
+auto CodeRed::VulkanLogicalDevice::createGraphicsCommandList(
+	const std::shared_ptr<GpuCommandAllocator>& allocator)
+	-> std::shared_ptr<GpuGraphicsCommandList>
+{
+	return std::make_shared<VulkanGraphicsCommandList>(
+		shared_from_this(),
+		allocator);
+}
+
+auto CodeRed::VulkanLogicalDevice::createCommandQueue()
+	-> std::shared_ptr<GpuCommandQueue>
+{
+	return std::make_shared<VulkanCommandQueue>(
+		shared_from_this());
+}
+
+auto CodeRed::VulkanLogicalDevice::createCommandAllocator()
+	-> std::shared_ptr<GpuCommandAllocator>
+{
+	return std::make_shared<VulkanCommandAllocator>(
+		shared_from_this());
+}
+
+auto CodeRed::VulkanLogicalDevice::createGraphicsPipeline(
+	const std::shared_ptr<GpuResourceLayout>& resource_layout,
+	const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
+	const std::shared_ptr<GpuShaderState>& vertex_shader_state,
+	const std::shared_ptr<GpuShaderState>& pixel_shader_state,
+	const std::shared_ptr<GpuDepthStencilState>& depth_stencil_state, 
+	const std::shared_ptr<GpuBlendState>& blend_state,
+	const std::shared_ptr<GpuRasterizationState>& rasterization_state)
+	-> std::shared_ptr<GpuGraphicsPipeline>
+{
+	return std::make_shared<VulkanGraphicsPipeline>(
+		shared_from_this(),
+		resource_layout,
+		input_assembly_state,
+		vertex_shader_state,
+		pixel_shader_state,
+		depth_stencil_state,
+		blend_state,
+		rasterization_state);
+}
+
+auto CodeRed::VulkanLogicalDevice::createResourceLayout(
+	const std::vector<ResourceLayoutElement>& elements,
+	const std::vector<SamplerLayoutElement>& samplers)
+	-> std::shared_ptr<GpuResourceLayout>
+{
+	return std::make_shared<VulkanResourceLayout>(
+		shared_from_this(),
+		elements,
+		samplers);
+}
+
+auto CodeRed::VulkanLogicalDevice::createSampler(const SamplerInfo& info)
+	-> std::shared_ptr<GpuSampler>
+{
+	return std::make_shared<VulkanSampler>(
+		shared_from_this(), info);
+}
+
+auto CodeRed::VulkanLogicalDevice::createSwapChain(
+	const std::shared_ptr<GpuCommandQueue>& queue,
+	const WindowInfo& info,
+	const PixelFormat& format, 
+	const size_t buffer_count)
+	-> std::shared_ptr<GpuSwapChain>
+{
+	return std::make_shared<VulkanSwapChain>(
+		shared_from_this(),
+		queue,
+		info,
+		format,
+		buffer_count);
+}
+
+auto CodeRed::VulkanLogicalDevice::createBuffer(const ResourceInfo& info)
+	-> std::shared_ptr<GpuBuffer>
+{
+	return std::make_shared<VulkanBuffer>(
+		shared_from_this(), info);
+}
+
+auto CodeRed::VulkanLogicalDevice::createTexture(const ResourceInfo& info)
+	-> std::shared_ptr<GpuTexture>
+{
+	return std::make_shared<VulkanTexture>(
+		shared_from_this(), info);
+}
+
+auto CodeRed::VulkanLogicalDevice::createPipelineFactory()
+	-> std::shared_ptr<GpuPipelineFactory>
+{
+	return std::make_shared<VulkanPipelineFactory>(shared_from_this());
 }
 
 void CodeRed::VulkanLogicalDevice::initializeExtensions()

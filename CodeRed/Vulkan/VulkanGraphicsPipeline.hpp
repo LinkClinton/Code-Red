@@ -22,6 +22,8 @@ namespace CodeRed {
 		~VulkanGraphicsPipeline();
 
 		auto pipeline() const noexcept -> vk::Pipeline { return mGraphicsPipeline; }
+
+		auto renderPass() const noexcept -> vk::RenderPass { return mRenderPass; }
 	private:
 		std::vector<vk::DynamicState> mDynamicStates = {};
 		

@@ -15,6 +15,10 @@ namespace CodeRed {
 
 		~VulkanBuffer();
 
+		auto mapMemory() const -> void* override;
+
+		void unmapMemory() const override;
+		
 		auto buffer() const noexcept -> vk::Buffer { return mBuffer; }
 	private:
 		vk::DeviceMemory mMemory;

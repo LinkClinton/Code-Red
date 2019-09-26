@@ -128,4 +128,28 @@ CodeRed::VulkanTexture::~VulkanTexture()
 	}
 }
 
+auto CodeRed::VulkanTexture::mapMemory() const -> void* 
+{
+	CODE_RED_THROW_IF(
+		!mMemory,
+		Exception("This texture is not support map memory.")
+	);
+
+	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
+
+	return vkDevice.mapMemory(mMemory, 0, VK_WHOLE_SIZE);
+}
+
+void CodeRed::VulkanTexture::unmapMemory() const
+{
+	CODE_RED_THROW_IF(
+		!mMemory,
+		Exception("This texture is not support unmap memory.")
+	);
+
+	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
+
+	vkDevice.unmapMemory(mMemory);
+}
+
 #endif

@@ -94,15 +94,6 @@ CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 	mDescriptorSize = dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void CodeRed::DirectX12ResourceLayout::bindResource(
-	const size_t index, const std::shared_ptr<GpuResource>& resource)
-{
-	if (resource->type() == ResourceType::Buffer)
-		bindBuffer(index, std::static_pointer_cast<GpuBuffer>(resource));
-	else
-		bindTexture(index, std::static_pointer_cast<GpuTexture>(resource));
-}
-
 void CodeRed::DirectX12ResourceLayout::bindTexture(
 	const size_t index,
 	const std::shared_ptr<GpuTexture>& resource)

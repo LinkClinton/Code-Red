@@ -26,4 +26,10 @@ CodeRed::VulkanCommandAllocator::~VulkanCommandAllocator()
 
 }
 
+void CodeRed::VulkanCommandAllocator::reset()
+{
+	std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device()
+		.resetCommandPool(mCommandPool, vk::CommandPoolResetFlagBits::eReleaseResources);
+}
+
 #endif

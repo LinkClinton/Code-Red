@@ -1,6 +1,10 @@
+#include "../Shared/Exception/FailedException.hpp"
+#include "../Shared/Exception/ZeroException.hpp"
+
 #include "VulkanResource/VulkanTexture.hpp"
 
 #include "VulkanLogicalDevice.hpp"
+#include "VulkanCommandQueue.hpp"
 #include "VulkanSwapChain.hpp"
 
 #ifdef __ENABLE__VULKAN__
@@ -33,7 +37,57 @@ CodeRed::VulkanSwapChain::~VulkanSwapChain()
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice);
 
 	vkDevice->device().destroySwapchainKHR(mSwapChain);
+	vkDevice->device().destroySemaphore(mSemaphore);
 	vkDevice->mInstance.destroySurfaceKHR(mSurface);
+}
+
+void CodeRed::VulkanSwapChain::resize(const size_t width, const size_t height)
+{
+	if (width == mInfo.width && height == mInfo.height) return;
+
+	CODE_RED_DEBUG_THROW_IF(
+		width == 0 || height == 0,
+		ZeroException<size_t>({ "width or height" })
+	);
+	
+	mInfo.width = width;
+	mInfo.height = height;
+
+	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
+
+	//destroy the old resources and create the new resource
+	for (auto& buffer : mBuffers) buffer.reset();
+
+	vkDevice.destroySwapchainKHR(mSwapChain);
+	vkDevice.destroySemaphore(mSemaphore);
+
+	initializeSwapChain();
+}
+
+void CodeRed::VulkanSwapChain::present()
+{
+	vk::PresentInfoKHR info = {};
+
+	info
+		.setPNext(nullptr)
+		.setSwapchainCount(1)
+		.setPSwapchains(&mSwapChain)
+		.setPImageIndices(&mCurrentBufferIndex)
+		.setWaitSemaphoreCount(0)
+		.setPWaitSemaphores(nullptr)
+		.setPResults(nullptr);
+
+	const auto vkQueue = std::static_pointer_cast<VulkanCommandQueue>(mQueue)->queue();
+
+	CODE_RED_THROW_IF(
+		vkQueue.presentKHR(info) != vk::Result::eSuccess,
+		Exception("Present failed.")
+	);
+}
+
+auto CodeRed::VulkanSwapChain::currentBufferIndex() const -> size_t
+{
+	return static_cast<size_t>(mCurrentBufferIndex);
 }
 
 void CodeRed::VulkanSwapChain::initializeSwapChain()
@@ -96,6 +150,29 @@ void CodeRed::VulkanSwapChain::initializeSwapChain()
 				ResourceLayout::Present),
 			swapChainImages[index]);
 	}
+
+	vk::SemaphoreCreateInfo semaphoreInfo = {};
+
+	semaphoreInfo
+		.setPNext(nullptr)
+		.setFlags(vk::SemaphoreCreateFlags(0));
+
+	mSemaphore = vkDevice->device().createSemaphore(semaphoreInfo);
+
+	updateCurrentFrameIndex();
+}
+
+void CodeRed::VulkanSwapChain::updateCurrentFrameIndex()
+{
+	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice);
+	const auto nextImage = vkDevice->device().acquireNextImageKHR(mSwapChain, UINT64_MAX, mSemaphore, nullptr);
+
+	CODE_RED_THROW_IF(
+		nextImage.result != vk::Result::eSuccess,
+		FailedException({ "current frame index", "swap chain" }, DebugType::Get)
+	);
+
+	mCurrentBufferIndex = nextImage.value;
 }
 
 #endif
