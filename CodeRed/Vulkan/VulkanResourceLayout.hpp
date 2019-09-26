@@ -12,17 +12,21 @@ namespace CodeRed {
 		explicit VulkanResourceLayout(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const std::vector<ResourceLayoutElement>& elements,
-			const std::vector<SamplerLayoutElement>& samplers);
+			const std::vector<SamplerLayoutElement>& samplers,
+			const size_t maxBindResources = 1 << 10);
 
 		~VulkanResourceLayout();
 
+		void reset() override;
+
 		void bindTexture(
-			const size_t index, 
 			const std::shared_ptr<GpuTexture>& resource) override;
 
 		void bindBuffer(
-			const size_t index, 
 			const std::shared_ptr<GpuBuffer>& resource) override;
+
+		void unbindResource(
+			const std::shared_ptr<GpuResource>& resource) override;
 		
 		auto layout() const noexcept -> vk::PipelineLayout { return mPipelineLayout; }
 

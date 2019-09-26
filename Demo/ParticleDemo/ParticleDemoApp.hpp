@@ -72,7 +72,7 @@ private:
 	void initializePipeline();
 private:
 	const size_t maxFrameResources = 2;
-	const size_t maxParticleSize = 50;
+	const size_t maxParticleSize = 20;
 	const size_t particleCount = 1000;
 	const size_t particleTimes = 2;
 

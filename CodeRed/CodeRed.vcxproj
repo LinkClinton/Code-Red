@@ -235,6 +235,7 @@
     <ClInclude Include="Shared\Exception\NotSupportException.hpp" />
     <ClInclude Include="Shared\Exception\ZeroException.hpp" />
     <ClInclude Include="Shared\Extent.hpp" />
+    <ClInclude Include="Shared\IdentityAllocator.hpp" />
     <ClInclude Include="Shared\Information\ResourceInfo.hpp" />
     <ClInclude Include="Shared\Information\SamplerInfo.hpp" />
     <ClInclude Include="Shared\Information\WindowInfo.hpp" />

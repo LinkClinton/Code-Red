@@ -12,6 +12,8 @@
 
 namespace CodeRed {
 
+	class DirectX12ResourceLayout;
+	
 	class DirectX12GraphicsCommandList final : public GpuGraphicsCommandList {
 	public:
 		explicit DirectX12GraphicsCommandList(
@@ -110,7 +112,7 @@ namespace CodeRed {
 	private:
 		WRL::ComPtr<ID3D12GraphicsCommandList> mGraphicsCommandList;
 
-		std::shared_ptr<GpuResourceLayout> mResourceLayout;
+		std::shared_ptr<DirectX12ResourceLayout> mResourceLayout;
 	};
 	
 }

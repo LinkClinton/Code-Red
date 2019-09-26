@@ -15,8 +15,9 @@
 CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 	const std::shared_ptr<GpuLogicalDevice> &device,
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers)
-	: GpuResourceLayout(device, elements, samplers)
+	const std::vector<SamplerLayoutElement>& samplers,
+	const size_t maxBindResources)
+	: GpuResourceLayout(device, elements, samplers, maxBindResources)
 {
 	std::vector<D3D12_ROOT_PARAMETER> parameterArrays;
 	std::vector<D3D12_STATIC_SAMPLER_DESC> samplerArrays;
@@ -32,7 +33,7 @@ CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 			1,
 			static_cast<UINT>(element.Binding),
 			static_cast<UINT>(element.Space),
-			static_cast<UINT>(index)
+			0
 			};
 		
 		parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
@@ -78,10 +79,9 @@ CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 			IID_PPV_ARGS(&mRootSignature)),
 		FailedException({ "ID3D12RootSignature" }, DebugType::Create));
 
-
 	D3D12_DESCRIPTOR_HEAP_DESC heapInfo = {
 		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		static_cast<UINT>(std::max(elements.size(), static_cast<size_t>(1))),
+		static_cast<UINT>(mMaxBindResources),
 		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 		0
 	};
@@ -94,27 +94,38 @@ CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 	mDescriptorSize = dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
+void CodeRed::DirectX12ResourceLayout::reset()
+{
+	mIdentityAllocator.reset();
+}
+
 void CodeRed::DirectX12ResourceLayout::bindTexture(
-	const size_t index,
 	const std::shared_ptr<GpuTexture>& resource)
 {
-	CODE_RED_DEBUG_THROW_IF(
-		index >= mElements.size(),
-		InvalidException<size_t>({ "index" })
-	);
+	auto& descriptors = mIdentityAllocator.container();
+
+	//the resource is bound, so we do not need to bind again
+	if (descriptors.find(resource) != descriptors.end()) return;
 
 	CODE_RED_DEBUG_THROW_IF(
-		mElements[index].Type != ResourceType::Texture || 
-		resource->type() != ResourceType::Texture,
-		InvalidException<ResourceType>({ "texture.type()" })
+		descriptors.size() >= mMaxBindResources,
+		Exception(
+			"Bind resource to the resource layout failed."
+			"Because the number of resources are too many.")
 	);
-
+	
 	const auto dxDevice = std::static_pointer_cast<DirectX12LogicalDevice>(mDevice)->device();
 	const auto texture = std::static_pointer_cast<DirectX12Texture>(resource);
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE viewHandle = {
+	const auto index = mIdentityAllocator.allocate();
+	
+	const D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = {
 		mDescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr + 
 			static_cast<SIZE_T>(index) * mDescriptorSize
+	};
+	const D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = {
+		mDescriptorHeap->GetGPUDescriptorHandleForHeapStart().ptr +
+			static_cast<SIZE_T>(index)* mDescriptorSize
 	};
 	
 	D3D12_SHADER_RESOURCE_VIEW_DESC view = {};
@@ -148,38 +159,78 @@ void CodeRed::DirectX12ResourceLayout::bindTexture(
 		break;
 	}
 
-	dxDevice->CreateShaderResourceView(texture->texture().Get(), &view, viewHandle);
+	dxDevice->CreateShaderResourceView(texture->texture().Get(), &view, cpuHandle);
+	
+	descriptors.insert({ resource, gpuHandle });
 }
 
 void CodeRed::DirectX12ResourceLayout::bindBuffer(
-	const size_t index,
 	const std::shared_ptr<GpuBuffer>& resource)
 {
-	CODE_RED_DEBUG_THROW_IF(
-		index >= mElements.size(),
-		InvalidException<size_t>({ "index" })
-	);
+	auto& descriptors = mIdentityAllocator.container();
+
+	//the resource is bound, so we do not need to bind again
+	if (descriptors.find(resource) != descriptors.end()) return;
 
 	CODE_RED_DEBUG_THROW_IF(
-		mElements[index].Type != ResourceType::Buffer ||
-		resource->type() != ResourceType::Buffer,
-		InvalidException<ResourceType>({ "resource.type()" })
+		descriptors.size() >= mMaxBindResources,
+		Exception(
+			"Bind resource to the resource layout failed."
+			"Because the number of resources are too many.")
 	);
-
+	
 	const auto dxDevice = std::static_pointer_cast<DirectX12LogicalDevice>(mDevice)->device();
 	const auto buffer = std::static_pointer_cast<DirectX12Buffer>(resource);
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE viewHandle = {
+	const auto index = mIdentityAllocator.allocate();
+	
+	const D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = {
 		mDescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr +
 			static_cast<SIZE_T>(index) * mDescriptorSize
 	};
-
+	const D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = {
+		mDescriptorHeap->GetGPUDescriptorHandleForHeapStart().ptr +
+			static_cast<SIZE_T>(index)* mDescriptorSize
+	};
+	
 	D3D12_CONSTANT_BUFFER_VIEW_DESC view = {
 		buffer->buffer()->GetGPUVirtualAddress(),
 		static_cast<UINT>(buffer->size())
 	};
 
-	dxDevice->CreateConstantBufferView(&view, viewHandle);
+	dxDevice->CreateConstantBufferView(&view, cpuHandle);
+
+	descriptors.insert({ resource, gpuHandle });
+}
+
+void CodeRed::DirectX12ResourceLayout::unbindResource(const std::shared_ptr<GpuResource>& resource)
+{
+	auto& descriptors = mIdentityAllocator.container();
+	const auto it = descriptors.find(resource);
+	
+	CODE_RED_DEBUG_THROW_IF(
+		it == descriptors.end(),
+		Exception(
+			"Unbind resource from resource layout failed."
+			"Because the resource is not bound to the resource layout.")
+	);
+
+	if (it == descriptors.end()) return;
+
+	mIdentityAllocator.free(
+		(it->second.ptr - mDescriptorHeap->GetGPUDescriptorHandleForHeapStart().ptr) 
+		/ mDescriptorSize);
+	
+	descriptors.erase(it);
+}
+
+auto CodeRed::DirectX12ResourceLayout::gpuHandle(
+	const std::shared_ptr<GpuResource>& resource)
+	-> D3D12_GPU_DESCRIPTOR_HANDLE
+{
+	bindResource(resource);
+
+	return mIdentityAllocator.container()[resource];
 }
 
 #endif

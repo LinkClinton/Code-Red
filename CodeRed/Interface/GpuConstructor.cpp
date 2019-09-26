@@ -59,12 +59,19 @@ CodeRed::GpuSwapChain::GpuSwapChain(
 CodeRed::GpuResourceLayout::GpuResourceLayout(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers) :
+	const std::vector<SamplerLayoutElement>& samplers,
+	const size_t maxBindResources) :
 	mDevice(device),
 	mElements(elements),
-	mSamplers(samplers)
+	mSamplers(samplers),
+	mMaxBindResources(maxBindResources)
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mMaxBindResources == 0,
+		ZeroException<size_t>({ "maxBindResources" })
+	);
 }
 
 CodeRed::GpuLogicalDevice::GpuLogicalDevice(
@@ -242,12 +249,12 @@ CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 }
 
 void CodeRed::GpuResourceLayout::bindResource(
-	const size_t index, const std::shared_ptr<GpuResource>& resource)
+	const std::shared_ptr<GpuResource>& resource)
 {
 	if (resource->type() == ResourceType::Buffer)
-		bindBuffer(index, std::static_pointer_cast<GpuBuffer>(resource));
+		bindBuffer(std::static_pointer_cast<GpuBuffer>(resource));
 	else
-		bindTexture(index, std::static_pointer_cast<GpuTexture>(resource));
+		bindTexture(std::static_pointer_cast<GpuTexture>(resource));
 }
 
 void CodeRed::GpuGraphicsCommandList::layoutTransition(

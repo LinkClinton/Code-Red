@@ -70,15 +70,8 @@ void CodeRed::DirectX12GraphicsCommandList::setResourceLayout(const std::shared_
 		dxLayout->descriptorHeap().GetAddressOf());
 
 	const auto gpuHandle = dxLayout->descriptorHeap()->GetGPUDescriptorHandleForHeapStart();
-
-	//set the descriptors the resource layout use
-	for (size_t index = 0; index < dxLayout->elements().size(); index++)
-		mGraphicsCommandList->SetGraphicsRootDescriptorTable(
-			static_cast<UINT>(index),
-			gpuHandle
-		);
 	
-	mResourceLayout = layout;
+	mResourceLayout = dxLayout;
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setVertexBuffer(const std::shared_ptr<GpuBuffer>& buffer)
@@ -112,7 +105,20 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsConstantBuffer(
 		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
 	);
 	
-	mResourceLayout->bindBuffer(index, buffer);
+	CODE_RED_DEBUG_THROW_IF(
+		index >= mResourceLayout->mElements.size(),
+		InvalidException<size_t>({ "index" })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mResourceLayout->mElements[index].Type != ResourceType::Buffer,
+		InvalidException<ResourceType>({ "ResourceLayout.element(index).Type" })
+	);
+
+	mGraphicsCommandList->SetGraphicsRootDescriptorTable(
+		static_cast<UINT>(index),
+		mResourceLayout->gpuHandle(buffer)
+	);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setGraphicsTexture(
@@ -124,7 +130,20 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsTexture(
 		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
 	);
 	
-	mResourceLayout->bindTexture(index, texture);
+	CODE_RED_DEBUG_THROW_IF(
+		index >= mResourceLayout->mElements.size(),
+		InvalidException<size_t>({ "index" })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mResourceLayout->mElements[index].Type != ResourceType::Texture,
+		InvalidException<ResourceType>({ "ResourceLayout.element(index).Type" })
+	);
+	
+	mGraphicsCommandList->SetGraphicsRootDescriptorTable(
+		static_cast<UINT>(index),
+		mResourceLayout->gpuHandle(texture)
+	);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setFrameBuffer(

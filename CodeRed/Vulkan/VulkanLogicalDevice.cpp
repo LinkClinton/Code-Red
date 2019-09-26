@@ -218,13 +218,15 @@ auto CodeRed::VulkanLogicalDevice::createGraphicsPipeline(
 
 auto CodeRed::VulkanLogicalDevice::createResourceLayout(
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers)
+	const std::vector<SamplerLayoutElement>& samplers,
+	const size_t maxBindResources)
 	-> std::shared_ptr<GpuResourceLayout>
 {
 	return std::make_shared<VulkanResourceLayout>(
 		shared_from_this(),
 		elements,
-		samplers);
+		samplers,
+		maxBindResources);
 }
 
 auto CodeRed::VulkanLogicalDevice::createSampler(const SamplerInfo& info)

@@ -48,7 +48,8 @@ namespace CodeRed {
 
 		auto createResourceLayout(
 			const std::vector<ResourceLayoutElement>& elements, 
-			const std::vector<SamplerLayoutElement>& samplers)
+			const std::vector<SamplerLayoutElement>& samplers,
+			const size_t maxBindResources = 1 << 10)
 			-> std::shared_ptr<GpuResourceLayout> override;
 
 		auto createSampler(const SamplerInfo& info)

@@ -13,8 +13,9 @@
 CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers) :
-	GpuResourceLayout(device, elements, samplers)
+	const std::vector<SamplerLayoutElement>& samplers,
+	const size_t maxBindResources) :
+	GpuResourceLayout(device, elements, samplers, maxBindResources)
 {
 	size_t maxSpace = 0;
 	size_t bufferCount = 0;
@@ -152,72 +153,6 @@ CodeRed::VulkanResourceLayout::~VulkanResourceLayout()
 
 	for (auto& setLayout : mDescriptorSetLayouts) 
 		vkDevice.destroyDescriptorSetLayout(setLayout);
-}
-
-void CodeRed::VulkanResourceLayout::bindTexture(
-	const size_t index, 
-	const std::shared_ptr<GpuTexture>& resource)
-{
-	CODE_RED_DEBUG_THROW_IF(
-		index >= mElements.size(),
-		InvalidException<size_t>({ "index" })
-	);
-
-	CODE_RED_DEBUG_THROW_IF(
-		mElements[index].Type != ResourceType::Texture ||
-		resource->type() != ResourceType::Texture,
-		InvalidException<ResourceType>({ "texture.type()" })
-	);
-
-	vk::DescriptorImageInfo imageInfo = {};
-
-	imageInfo
-		.setImageLayout(enumConvert(resource->layout()))
-		.setImageView(std::static_pointer_cast<VulkanTexture>(resource)->view())
-		.setSampler(nullptr);
-	
-	auto& write = mWriteDescriptorSets[index];
-
-	write
-		.setDescriptorType(enumConvert(resource->type()))
-		.setPImageInfo(&imageInfo);
-
-	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-
-	vkDevice.updateDescriptorSets(1, &mWriteDescriptorSets[index], 0, nullptr);
-}
-
-void CodeRed::VulkanResourceLayout::bindBuffer(
-	const size_t index, 
-	const std::shared_ptr<GpuBuffer>& resource)
-{
-	CODE_RED_DEBUG_THROW_IF(
-		index >= mElements.size(),
-		InvalidException<size_t>({ "index" })
-	);
-
-	CODE_RED_DEBUG_THROW_IF(
-		mElements[index].Type != ResourceType::Buffer ||
-		resource->type() != ResourceType::Buffer,
-		InvalidException<ResourceType>({ "resource.type()" })
-	);
-
-	vk::DescriptorBufferInfo bufferInfo = {};
-
-	bufferInfo
-		.setBuffer(std::static_pointer_cast<VulkanBuffer>(resource)->buffer())
-		.setOffset(0)
-		.setRange(resource->size());
-
-	auto& write = mWriteDescriptorSets[index];
-
-	write
-		.setDescriptorType(enumConvert(resource->type()))
-		.setPBufferInfo(&bufferInfo);
-
-	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-
-	vkDevice.updateDescriptorSets(1, &mWriteDescriptorSets[index], 0, nullptr);
 }
 
 #endif
