@@ -105,16 +105,8 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsConstantBuffer(
 		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
 	);
 	
-	CODE_RED_DEBUG_THROW_IF(
-		index >= mResourceLayout->mElements.size(),
-		InvalidException<size_t>({ "index" })
-	);
-
-	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout->mElements[index].Type != ResourceType::Buffer,
-		InvalidException<ResourceType>({ "ResourceLayout.element(index).Type" })
-	);
-
+	mResourceLayout->bindBuffer(index, buffer);
+	
 	mGraphicsCommandList->SetGraphicsRootDescriptorTable(
 		static_cast<UINT>(index),
 		mResourceLayout->gpuHandle(buffer)
@@ -130,15 +122,7 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsTexture(
 		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
 	);
 	
-	CODE_RED_DEBUG_THROW_IF(
-		index >= mResourceLayout->mElements.size(),
-		InvalidException<size_t>({ "index" })
-	);
-
-	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout->mElements[index].Type != ResourceType::Texture,
-		InvalidException<ResourceType>({ "ResourceLayout.element(index).Type" })
-	);
+	mResourceLayout->bindTexture(index, texture);
 	
 	mGraphicsCommandList->SetGraphicsRootDescriptorTable(
 		static_cast<UINT>(index),

@@ -249,12 +249,13 @@ CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 }
 
 void CodeRed::GpuResourceLayout::bindResource(
+	const size_t index,
 	const std::shared_ptr<GpuResource>& resource)
 {
 	if (resource->type() == ResourceType::Buffer)
-		bindBuffer(std::static_pointer_cast<GpuBuffer>(resource));
+		bindBuffer(index, std::static_pointer_cast<GpuBuffer>(resource));
 	else
-		bindTexture(std::static_pointer_cast<GpuTexture>(resource));
+		bindTexture(index, std::static_pointer_cast<GpuTexture>(resource));
 }
 
 void CodeRed::GpuGraphicsCommandList::layoutTransition(

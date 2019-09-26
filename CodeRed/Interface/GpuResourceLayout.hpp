@@ -37,14 +37,17 @@ namespace CodeRed {
 		auto maxBindResources() const noexcept -> size_t { return mMaxBindResources; }
 		
 		void bindResource(
+			const size_t index,
 			const std::shared_ptr<GpuResource>& resource);
 
 		virtual void reset() = 0;
 		
 		virtual void bindTexture(
+			const size_t index,
 			const std::shared_ptr<GpuTexture>& resource) = 0;
 		
 		virtual void bindBuffer(
+			const size_t index,
 			const std::shared_ptr<GpuBuffer>& resource) = 0;
 
 		virtual void unbindResource(

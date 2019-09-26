@@ -100,6 +100,7 @@ void CodeRed::DirectX12ResourceLayout::reset()
 }
 
 void CodeRed::DirectX12ResourceLayout::bindTexture(
+	const size_t index,
 	const std::shared_ptr<GpuTexture>& resource)
 {
 	auto& descriptors = mIdentityAllocator.container();
@@ -113,19 +114,29 @@ void CodeRed::DirectX12ResourceLayout::bindTexture(
 			"Bind resource to the resource layout failed."
 			"Because the number of resources are too many.")
 	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		index >= mElements.size(),
+		InvalidException<size_t>({ "index" })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mElements[index].Type != ResourceType::Texture,
+		InvalidException<ResourceType>({ "element(index).Type" })
+	);
 	
 	const auto dxDevice = std::static_pointer_cast<DirectX12LogicalDevice>(mDevice)->device();
 	const auto texture = std::static_pointer_cast<DirectX12Texture>(resource);
 
-	const auto index = mIdentityAllocator.allocate();
+	const auto identity = mIdentityAllocator.allocate();
 	
 	const D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = {
 		mDescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr + 
-			static_cast<SIZE_T>(index) * mDescriptorSize
+			static_cast<SIZE_T>(identity) * mDescriptorSize
 	};
 	const D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = {
 		mDescriptorHeap->GetGPUDescriptorHandleForHeapStart().ptr +
-			static_cast<SIZE_T>(index)* mDescriptorSize
+			static_cast<SIZE_T>(identity)* mDescriptorSize
 	};
 	
 	D3D12_SHADER_RESOURCE_VIEW_DESC view = {};
@@ -165,6 +176,7 @@ void CodeRed::DirectX12ResourceLayout::bindTexture(
 }
 
 void CodeRed::DirectX12ResourceLayout::bindBuffer(
+	const size_t index,
 	const std::shared_ptr<GpuBuffer>& resource)
 {
 	auto& descriptors = mIdentityAllocator.container();
@@ -178,19 +190,29 @@ void CodeRed::DirectX12ResourceLayout::bindBuffer(
 			"Bind resource to the resource layout failed."
 			"Because the number of resources are too many.")
 	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		index >= mElements.size(),
+		InvalidException<size_t>({ "index" })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mElements[index].Type != ResourceType::Buffer,
+		InvalidException<ResourceType>({ "element(index).Type" })
+	);
 	
 	const auto dxDevice = std::static_pointer_cast<DirectX12LogicalDevice>(mDevice)->device();
 	const auto buffer = std::static_pointer_cast<DirectX12Buffer>(resource);
 
-	const auto index = mIdentityAllocator.allocate();
+	const auto identity = mIdentityAllocator.allocate();
 	
 	const D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = {
 		mDescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr +
-			static_cast<SIZE_T>(index) * mDescriptorSize
+			static_cast<SIZE_T>(identity) * mDescriptorSize
 	};
 	const D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = {
 		mDescriptorHeap->GetGPUDescriptorHandleForHeapStart().ptr +
-			static_cast<SIZE_T>(index)* mDescriptorSize
+			static_cast<SIZE_T>(identity)* mDescriptorSize
 	};
 	
 	D3D12_CONSTANT_BUFFER_VIEW_DESC view = {
@@ -228,8 +250,6 @@ auto CodeRed::DirectX12ResourceLayout::gpuHandle(
 	const std::shared_ptr<GpuResource>& resource)
 	-> D3D12_GPU_DESCRIPTOR_HANDLE
 {
-	bindResource(resource);
-
 	return mIdentityAllocator.container()[resource];
 }
 

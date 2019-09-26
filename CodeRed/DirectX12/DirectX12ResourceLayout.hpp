@@ -29,9 +29,11 @@ namespace CodeRed {
 		void reset() override;
 		
 		void bindTexture(
+			const size_t index,
 			const std::shared_ptr<GpuTexture>& resource) override;
 
 		void bindBuffer(
+			const size_t index,
 			const std::shared_ptr<GpuBuffer>& resource) override;
 
 		void unbindResource(
