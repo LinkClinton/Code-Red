@@ -177,6 +177,7 @@
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12PipelineFactory.hpp" />
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.hpp" />
     <ClInclude Include="DirectX12\DirectX12PipelineState\DirectX12ShaderState.hpp" />
+    <ClInclude Include="DirectX12\DirectX12RenderPass.hpp" />
     <ClInclude Include="DirectX12\DirectX12ResourceLayout.hpp" />
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Buffer.hpp" />
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Sampler.hpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Interface\GpuPipelineState\GpuPipelineState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuRasterizationState.hpp" />
     <ClInclude Include="Interface\GpuPipelineState\GpuShaderState.hpp" />
+    <ClInclude Include="Interface\GpuRenderPass.hpp" />
     <ClInclude Include="Interface\GpuResourceLayout.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuBuffer.hpp" />
     <ClInclude Include="Interface\GpuResource\GpuResource.hpp" />
@@ -206,9 +208,13 @@
     <ClInclude Include="Interface\GpuResource\GpuTexture.hpp" />
     <ClInclude Include="Interface\GpuSwapChain.hpp" />
     <ClInclude Include="Interface\GpuSystemInfo.hpp" />
+    <ClInclude Include="Shared\Attachment.hpp" />
     <ClInclude Include="Shared\BlendProperty.hpp" />
+    <ClInclude Include="Shared\ClearValue.hpp" />
     <ClInclude Include="Shared\DebugReport.hpp" />
     <ClInclude Include="Shared\Enum\AddressMode.hpp" />
+    <ClInclude Include="Shared\Enum\AttachmentLoad.hpp" />
+    <ClInclude Include="Shared\Enum\AttachmentStore.hpp" />
     <ClInclude Include="Shared\Enum\BlendFactor.hpp" />
     <ClInclude Include="Shared\Enum\BlendOperator.hpp" />
     <ClInclude Include="Shared\Enum\BorderColor.hpp" />
@@ -260,6 +266,7 @@
     <ClInclude Include="Vulkan\VulkanPipelineState\VulkanPipelineFactory.hpp" />
     <ClInclude Include="Vulkan\VulkanPipelineState\VulkanRasterizationState.hpp" />
     <ClInclude Include="Vulkan\VulkanPipelineState\VulkanShaderState.hpp" />
+    <ClInclude Include="Vulkan\VulkanRenderPass.hpp" />
     <ClInclude Include="Vulkan\VulkanResourceLayout.hpp" />
     <ClInclude Include="Vulkan\VulkanResource\VulkanBuffer.hpp" />
     <ClInclude Include="Vulkan\VulkanResource\VulkanSampler.hpp" />
@@ -283,6 +290,7 @@
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12PipelineFactory.cpp" />
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12RasterizationState.cpp" />
     <ClCompile Include="DirectX12\DirectX12PipelineState\DirectX12ShaderState.cpp" />
+    <ClCompile Include="DirectX12\DirectX12RenderPass.cpp" />
     <ClCompile Include="DirectX12\DirectX12ResourceLayout.cpp" />
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Buffer.cpp" />
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Sampler.cpp" />
@@ -308,6 +316,7 @@
     <ClCompile Include="Vulkan\VulkanPipelineState\VulkanPipelineFactory.cpp" />
     <ClCompile Include="Vulkan\VulkanPipelineState\VulkanRasterizationState.cpp" />
     <ClCompile Include="Vulkan\VulkanPipelineState\VulkanShaderState.cpp" />
+    <ClCompile Include="Vulkan\VulkanRenderPass.cpp" />
     <ClCompile Include="Vulkan\VulkanResourceLayout.cpp" />
     <ClCompile Include="Vulkan\VulkanResource\VulkanBuffer.cpp" />
     <ClCompile Include="Vulkan\VulkanResource\VulkanSampler.cpp" />

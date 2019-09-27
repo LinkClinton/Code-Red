@@ -5,13 +5,15 @@ CodeRed::PipelineInfo::PipelineInfo(const std::shared_ptr<GpuLogicalDevice>& dev
 {
 	mPipelineFactory = mDevice->createPipelineFactory();
 
-	mRasterizationState = mPipelineFactory->createRasterizationState(PixelFormat::Unknown);
+	mRasterizationState = mPipelineFactory->createRasterizationState();
 	mInputAssemblyState = mPipelineFactory->createInputAssemblyState({});
 	mVertexShaderState = mPipelineFactory->createShaderState(ShaderType::Vertex, {});
-	mDepthStencilState = mPipelineFactory->createDetphStencilState(PixelFormat::Unknown);
+	mDepthStencilState = mPipelineFactory->createDetphStencilState();
 	mPixelShaderState = mPipelineFactory->createShaderState(ShaderType::Pixel, {});
 	mBlendState = mPipelineFactory->createBlendState();
 	mResourceLayout = mDevice->createResourceLayout({}, {});
+	mRenderPass = mDevice->createRenderPass(
+		Attachment::RenderTarget(PixelFormat::RedGreenBlueAlpha8BitUnknown));
 }
 
 void CodeRed::PipelineInfo::setRasterizationState(const std::shared_ptr<GpuRasterizationState>& state)
@@ -49,9 +51,14 @@ void CodeRed::PipelineInfo::setBlendState(const std::shared_ptr<GpuBlendState>& 
 	mBlendState = state;
 }
 
+void CodeRed::PipelineInfo::setRenderPass(const std::shared_ptr<GpuRenderPass>& render_pass) {
+	mRenderPass = render_pass;
+}
+
 void CodeRed::PipelineInfo::updateState()
 {
 	mGraphicsPipeline = mDevice->createGraphicsPipeline(
+		mRenderPass,
 		mResourceLayout,
 		mInputAssemblyState,
 		mVertexShaderState,

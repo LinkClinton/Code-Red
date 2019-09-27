@@ -41,6 +41,7 @@ namespace CodeRed {
 		virtual void unmapMemory() const = 0;
 	protected:
 		friend class DirectX12GraphicsCommandList;
+		friend class VulkanGraphicsCommandList;
 		
 		void setLayout(const ResourceLayout layout) { mInfo.Layout = layout; }
 	protected:

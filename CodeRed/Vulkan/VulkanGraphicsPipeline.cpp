@@ -1,6 +1,7 @@
 #include "VulkanGraphicsPipeline.hpp"
 #include "VulkanResourceLayout.hpp"
 #include "VulkanLogicalDevice.hpp"
+#include "VulkanRenderPass.hpp"
 
 #include "VulkanPipelineState/VulkanInputAssemblyState.hpp"
 #include "VulkanPipelineState/VulkanRasterizationState.hpp"
@@ -12,6 +13,7 @@
 
 CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuRenderPass>& render_pass,
 	const std::shared_ptr<GpuResourceLayout>& resource_layout,
 	const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 	const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -21,6 +23,7 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 	const std::shared_ptr<GpuRasterizationState>& rasterization_state) :
 	GpuGraphicsPipeline(
 		device,
+		render_pass,
 		resource_layout,
 		input_assembly_state,
 		vertex_shader_state,
@@ -34,12 +37,6 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 	vk::GraphicsPipelineCreateInfo info = {};
 
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-
-	mRenderPass = createRenderPass(
-		vkDevice,
-		enumConvert(mRasterizationState->renderTargetFormat()),
-		enumConvert(mDepthStencilState->depthStencilFormat())
-	);
 	
 	mDynamicStates = std::vector<vk::DynamicState>(3);
 	mDynamicStates[0] = vk::DynamicState::eViewport;
@@ -57,6 +54,7 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 	auto rasterizationState = std::static_pointer_cast<VulkanRasterizationState>(mRasterizationState)->state();
 	auto depthStencilState = std::static_pointer_cast<VulkanDepthStencilState>(mDepthStencilState)->state();
 	auto colorBlendState = std::static_pointer_cast<VulkanBlendState>(mBlendState)->state();
+	auto renderPass = std::static_pointer_cast<VulkanRenderPass>(mRenderPass)->renderPass();
 	
 	std::vector<vk::PipelineShaderStageCreateInfo> shaderStage;
 
@@ -80,7 +78,7 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 		.setPViewportState(nullptr)
 		.setStageCount(static_cast<uint32_t>(shaderStage.size()))
 		.setPStages(shaderStage.data())
-		.setRenderPass(mRenderPass)
+		.setRenderPass(renderPass)
 		.setSubpass(0);
 
 	mGraphicsPipeline = vkDevice.createGraphicsPipeline(nullptr, info);
@@ -91,7 +89,6 @@ CodeRed::VulkanGraphicsPipeline::~VulkanGraphicsPipeline()
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
 
 	vkDevice.destroyPipeline(mGraphicsPipeline);
-	vkDevice.destroyRenderPass(mRenderPass);
 }
 
 #endif

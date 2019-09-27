@@ -1,6 +1,13 @@
+#include "VulkanResource/VulkanTexture.hpp"
+#include "VulkanResource/VulkanBuffer.hpp"
+
 #include "VulkanGraphicsCommandList.hpp"
+#include "VulkanGraphicsPipeline.hpp"
 #include "VulkanCommandAllocator.hpp"
+#include "VulkanResourceLayout.hpp"
 #include "VulkanLogicalDevice.hpp"
+#include "VulkanFrameBuffer.hpp"
+#include "VulkanRenderPass.hpp"
 
 #ifdef __ENABLE__VULKAN__
 
@@ -34,75 +41,332 @@ CodeRed::VulkanGraphicsCommandList::~VulkanGraphicsCommandList()
 void CodeRed::VulkanGraphicsCommandList::beginRecoding()
 {
 	mCommandBuffer.reset(vk::CommandBufferResetFlagBits::eReleaseResources);
-	mCommandBuffer.begin({});
-	
+
 	mResourceLayout.reset();
+	
+	mCommandBuffer.begin({});
 }
 
-void CodeRed::VulkanGraphicsCommandList::endRecoding() {
+void CodeRed::VulkanGraphicsCommandList::endRecoding()
+{
+	mCommandBuffer.end();
 }
 
-void CodeRed::VulkanGraphicsCommandList::setGraphicsPipeline(const std::shared_ptr<GpuGraphicsPipeline>& pipeline) {
+void CodeRed::VulkanGraphicsCommandList::beginRenderPass(
+	const std::shared_ptr<GpuRenderPass>& render_pass,
+	const std::shared_ptr<GpuFrameBuffer>& frame_buffer)
+{
+	mRenderPass = std::static_pointer_cast<VulkanRenderPass>(render_pass);
+	mFrameBuffer = std::static_pointer_cast<VulkanFrameBuffer>(frame_buffer);
+
+	const auto clear = mRenderPass->getClear();
+
+	vk::ClearValue clearValue[] = {
+		vk::ClearColorValue(std::array<float, 4>({
+			clear.first.Red,
+			clear.first.Green,
+			clear.first.Blue,
+			clear.first.Alpha
+		})),
+		vk::ClearDepthStencilValue(clear.second.Depth, clear.second.Stencil)
+	};
+	
+	vk::RenderPassBeginInfo info = {};
+
+	info
+		.setPNext(nullptr)
+		.setClearValueCount(2)
+		.setPClearValues(clearValue)
+		.setRenderPass(mRenderPass->renderPass())
+		.setFramebuffer(mFrameBuffer->frameBuffer())
+		.setRenderArea(vk::Rect2D(
+			vk::Offset2D(0, 0),
+			vk::Extent2D(
+				static_cast<uint32_t>(mFrameBuffer->frameBufferWidth()),
+				static_cast<uint32_t>(mFrameBuffer->frameBufferHeight())
+			)
+		));
+
+	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), false);
+	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), false);
+
+	mCommandBuffer.beginRenderPass(info, vk::SubpassContents::eInline);
 }
 
-void CodeRed::VulkanGraphicsCommandList::setResourceLayout(const std::shared_ptr<GpuResourceLayout>& layout) {
+void CodeRed::VulkanGraphicsCommandList::endRenderPass()
+{
+	mCommandBuffer.endRenderPass();
+
+	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), true);
+	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), true);
 }
 
-void CodeRed::VulkanGraphicsCommandList::setVertexBuffer(const std::shared_ptr<GpuBuffer>& buffer) {
+void CodeRed::VulkanGraphicsCommandList::setGraphicsPipeline(
+	const std::shared_ptr<GpuGraphicsPipeline>& pipeline)
+{
+	mCommandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics,
+		std::static_pointer_cast<VulkanGraphicsPipeline>(pipeline)->pipeline());
 }
 
-void CodeRed::VulkanGraphicsCommandList::setIndexBuffer(const std::shared_ptr<GpuBuffer>& buffer) {
+void CodeRed::VulkanGraphicsCommandList::setResourceLayout(
+	const std::shared_ptr<GpuResourceLayout>& layout)
+{
+	mResourceLayout = std::static_pointer_cast<VulkanResourceLayout>(layout);
 }
 
-void CodeRed::VulkanGraphicsCommandList::setGraphicsConstantBuffer(const size_t index,
-	const std::shared_ptr<GpuBuffer>& buffer) {
+void CodeRed::VulkanGraphicsCommandList::setVertexBuffer(
+	const std::shared_ptr<GpuBuffer>& buffer)
+{
+	const auto vkBuffer = std::static_pointer_cast<VulkanBuffer>(buffer);
+	
+	mCommandBuffer.bindVertexBuffers(0, vkBuffer->buffer(), { 0 });
 }
 
-void CodeRed::VulkanGraphicsCommandList::setGraphicsTexture(const size_t index,
-	const std::shared_ptr<GpuTexture>& texture) {
+void CodeRed::VulkanGraphicsCommandList::setIndexBuffer(
+	const std::shared_ptr<GpuBuffer>& buffer)
+{
+	const auto vkBuffer = std::static_pointer_cast<VulkanBuffer>(buffer);
+
+	mCommandBuffer.bindIndexBuffer(vkBuffer->buffer(), 0, vk::IndexType::eUint32);
 }
 
-void CodeRed::VulkanGraphicsCommandList::setFrameBuffer(const std::shared_ptr<GpuFrameBuffer>& buffer) {
+void CodeRed::VulkanGraphicsCommandList::setGraphicsConstantBuffer(
+	const size_t index,
+	const std::shared_ptr<GpuBuffer>& buffer)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		mResourceLayout == nullptr,
+		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
+	);
+
+	mResourceLayout->bindBuffer(index, buffer);
+
+	mCommandBuffer.bindDescriptorSets(
+		vk::PipelineBindPoint::eGraphics,
+		mResourceLayout->layout(),
+		static_cast<uint32_t>(mResourceLayout->element(index).Space),
+		mResourceLayout->descriptor(buffer),
+		{});
 }
 
-void CodeRed::VulkanGraphicsCommandList::setViewPort(const ViewPort& view_port) {
+void CodeRed::VulkanGraphicsCommandList::setGraphicsTexture(
+	const size_t index,
+	const std::shared_ptr<GpuTexture>& texture)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		mResourceLayout == nullptr,
+		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
+	);
+
+	mResourceLayout->bindTexture(index, texture);
+
+	mCommandBuffer.bindDescriptorSets(
+		vk::PipelineBindPoint::eGraphics,
+		mResourceLayout->layout(),
+		static_cast<uint32_t>(mResourceLayout->element(index).Space),
+		mResourceLayout->descriptor(texture),
+		{});
 }
 
-void CodeRed::VulkanGraphicsCommandList::setScissorRect(const ScissorRect& rect) {
+void CodeRed::VulkanGraphicsCommandList::setViewPort(const ViewPort& view_port)
+{
+	mCommandBuffer.setViewport(
+		0, vk::Viewport(
+			view_port.X,
+			view_port.Y,
+			view_port.Width,
+			view_port.Height,
+			view_port.MinDepth,
+			view_port.MaxDepth
+		)
+	);
 }
 
-void CodeRed::VulkanGraphicsCommandList::clearRenderTarget(const std::shared_ptr<GpuFrameBuffer>& buffer,
-	const Real color[4], const size_t index) {
+void CodeRed::VulkanGraphicsCommandList::setScissorRect(
+	const ScissorRect& rect)
+{
+	mCommandBuffer.setScissor(0, vk::Rect2D(
+		vk::Offset2D(
+			static_cast<int32_t>(rect.Left),
+			static_cast<int32_t>(rect.Top)),
+		vk::Extent2D(
+			static_cast<int32_t>(rect.Right), 
+			static_cast<int32_t>(rect.Bottom))
+	));
 }
 
-void CodeRed::VulkanGraphicsCommandList::clearDepthStencil(const std::shared_ptr<GpuFrameBuffer>& buffer,
-	const Real depth, const UInt8 stencil) {
+void CodeRed::VulkanGraphicsCommandList::layoutTransition(
+	const std::shared_ptr<GpuTexture>& texture,
+	const ResourceLayout old_layout, 
+	const ResourceLayout new_layout)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		texture->layout() != old_layout,
+		InvalidException<ResourceLayout>({ "old_layout" })
+	);
+	
+	vk::ImageMemoryBarrier barrier = {};
+
+	barrier
+		.setPNext(nullptr)
+		.setSrcAccessMask(enumConvert1(old_layout, ResourceType::Texture))
+		.setSrcQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
+		.setOldLayout(enumConvert(old_layout))
+		.setDstAccessMask(enumConvert1(new_layout, ResourceType::Texture))
+		.setDstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
+		.setNewLayout(enumConvert(new_layout))
+		.setImage(std::static_pointer_cast<VulkanTexture>(texture)->image())
+		.setSubresourceRange(
+			vk::ImageSubresourceRange(
+				enumHas(texture->usage(), ResourceUsage::DepthStencil) ?
+				vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil :
+				vk::ImageAspectFlagBits::eColor,
+				0,1,0,1
+			));
+
+	mCommandBuffer.pipelineBarrier(
+		vk::PipelineStageFlagBits::eAllGraphics,
+		vk::PipelineStageFlagBits::eAllGraphics,
+		vk::DependencyFlags(0),
+		{}, {},
+		barrier);
+
+	texture->setLayout(new_layout);
 }
 
-void CodeRed::VulkanGraphicsCommandList::layoutTransition(const std::shared_ptr<GpuTexture>& texture,
-	const ResourceLayout old_layout, const ResourceLayout new_layout) {
+void CodeRed::VulkanGraphicsCommandList::layoutTransition(
+	const std::shared_ptr<GpuBuffer>& buffer,
+	const ResourceLayout old_layout, 
+	const ResourceLayout new_layout)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		buffer->layout() != old_layout,
+		InvalidException<ResourceLayout>({ "old_layout" })
+	);
+
+	vk::BufferMemoryBarrier barrier = {};
+
+	barrier
+		.setPNext(nullptr)
+		.setSrcAccessMask(enumConvert1(old_layout, ResourceType::Buffer))
+		.setSrcQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
+		.setDstAccessMask(enumConvert1(new_layout, ResourceType::Buffer))
+		.setDstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
+		.setBuffer(std::static_pointer_cast<VulkanBuffer>(buffer)->buffer())
+		.setOffset(0)
+		.setSize(VK_WHOLE_SIZE);
+
+	mCommandBuffer.pipelineBarrier(
+		vk::PipelineStageFlagBits::eAllGraphics,
+		vk::PipelineStageFlagBits::eAllGraphics,
+		vk::DependencyFlags(0),
+		{}, barrier, {});
+
+	buffer->setLayout(new_layout);
 }
 
-void CodeRed::VulkanGraphicsCommandList::layoutTransition(const std::shared_ptr<GpuBuffer>& buffer,
-	const ResourceLayout old_layout, const ResourceLayout new_layout) {
+void CodeRed::VulkanGraphicsCommandList::copyBuffer(
+	const std::shared_ptr<GpuBuffer>& source,
+	const std::shared_ptr<GpuBuffer>& destination, 
+	const size_t size, 
+	const size_t source_offset,
+	const size_t destination_offset)
+{
+	const vk::BufferCopy copy = {
+		source_offset, destination_offset, static_cast<vk::DeviceSize>(size)
+	};
+
+	mCommandBuffer.copyBuffer(
+		std::static_pointer_cast<VulkanBuffer>(source)->buffer(),
+		std::static_pointer_cast<VulkanBuffer>(destination)->buffer(),
+		copy);
 }
 
-void CodeRed::VulkanGraphicsCommandList::copyBuffer(const std::shared_ptr<GpuBuffer>& source,
-	const std::shared_ptr<GpuBuffer>& destination, const size_t size, const size_t source_offset,
-	const size_t destination_offset) {
+void CodeRed::VulkanGraphicsCommandList::copyTexture(
+	const std::shared_ptr<GpuTexture>& source,
+	const std::shared_ptr<GpuTexture>& destination,
+	const Extent3D<UInt32>& region,
+	const size_t x,
+	const size_t y,
+	const size_t z)
+{
+	vk::ImageCopy copy = {};
+
+	const auto size = vk::Extent3D(
+		static_cast<uint32_t>(region.Right - region.Left),
+		static_cast<uint32_t>(region.Bottom - region.Top),
+		static_cast<uint32_t>(region.Back - region.Front)
+	);
+
+	copy
+		.setExtent(size)
+		.setSrcOffset(vk::Offset3D(
+			static_cast<int32_t>(region.Left),
+			static_cast<int32_t>(region.Top),
+			static_cast<int32_t>(region.Front)))
+		.setSrcSubresource(vk::ImageSubresourceLayers(
+			enumHas(source->usage(), ResourceUsage::DepthStencil) ?
+			vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil :
+			vk::ImageAspectFlagBits::eColor,
+			0, 0, 1))
+		.setDstOffset(vk::Offset3D(
+			static_cast<int32_t>(x),
+			static_cast<int32_t>(y),
+			static_cast<int32_t>(z)))
+		.setDstSubresource(vk::ImageSubresourceLayers(
+			enumHas(destination->usage(), ResourceUsage::DepthStencil) ?
+			vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil :
+			vk::ImageAspectFlagBits::eColor,
+			0, 0, 1));
+
+	mCommandBuffer.copyImage(
+		std::static_pointer_cast<VulkanTexture>(source)->image(),
+		enumConvert(source->layout()),
+		std::static_pointer_cast<VulkanTexture>(destination)->image(),
+		enumConvert(destination->layout()),
+		copy
+	);
 }
 
-void CodeRed::VulkanGraphicsCommandList::copyTexture(const std::shared_ptr<GpuTexture>& source,
-	const std::shared_ptr<GpuTexture>& destination, const Extent3D<UInt32>& region, const size_t x, const size_t y,
-	const size_t z) {
+void CodeRed::VulkanGraphicsCommandList::draw(
+	const size_t vertex_count, 
+	const size_t instance_count,
+	const size_t start_vertex_location, 
+	const size_t start_instance_location)
+{
+	mCommandBuffer.draw(
+		static_cast<uint32_t>(vertex_count),
+		static_cast<uint32_t>(instance_count),
+		static_cast<uint32_t>(start_vertex_location),
+		static_cast<uint32_t>(start_instance_location));
 }
 
-void CodeRed::VulkanGraphicsCommandList::draw(const size_t vertex_count, const size_t instance_count,
-	const size_t start_vertex_location, const size_t start_instance_location) {
+void CodeRed::VulkanGraphicsCommandList::drawIndexed(
+	const size_t index_count, 
+	const size_t instance_count,
+	const size_t start_index_location, 
+	const size_t base_vertex_location, 
+	const size_t start_instance_location)
+{
+	mCommandBuffer.drawIndexed(
+		static_cast<uint32_t>(index_count),
+		static_cast<uint32_t>(instance_count),
+		static_cast<uint32_t>(start_index_location),
+		static_cast<uint32_t>(base_vertex_location),
+		static_cast<uint32_t>(start_instance_location)
+	);
 }
 
-void CodeRed::VulkanGraphicsCommandList::drawIndexed(const size_t index_count, const size_t instance_count,
-	const size_t start_index_location, const size_t base_vertex_location, const size_t start_instance_location) {
+void CodeRed::VulkanGraphicsCommandList::tryLayoutTransition(
+	const std::shared_ptr<GpuTexture>& texture,
+	const std::optional<Attachment>& attachment, 
+	const bool final)
+{
+	CODE_RED_TRY_EXECUTE(
+		texture != nullptr && attachment.has_value(),
+		layoutTransition(texture, texture->layout(),
+			final ? attachment->FinalLayout : attachment->InitialLayout)
+	);
 }
 
 #endif

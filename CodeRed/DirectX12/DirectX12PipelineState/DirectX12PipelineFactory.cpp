@@ -28,7 +28,6 @@ auto CodeRed::DirectX12PipelineFactory::createInputAssemblyState(
 }
 
 auto CodeRed::DirectX12PipelineFactory::createRasterizationState(
-	const PixelFormat format,
 	const FrontFace front_face, 
 	const CullMode cull_mode, 
 	const FillMode fill_mode,
@@ -38,7 +37,6 @@ auto CodeRed::DirectX12PipelineFactory::createRasterizationState(
 	return std::static_pointer_cast<GpuRasterizationState>(
 		std::make_shared<DirectX12RasterizationState>(
 			mDevice,
-			format,
 			front_face,
 			cull_mode,
 			fill_mode,
@@ -46,7 +44,6 @@ auto CodeRed::DirectX12PipelineFactory::createRasterizationState(
 }
 
 auto CodeRed::DirectX12PipelineFactory::createDetphStencilState(
-	const PixelFormat format, 
 	const bool depth_enable,
 	const bool depth_write_enable, 
 	const bool stencil_enable, 
@@ -58,7 +55,6 @@ auto CodeRed::DirectX12PipelineFactory::createDetphStencilState(
 	return std::static_pointer_cast<GpuDepthStencilState>(
 		std::make_shared<DirectX12DepthStencilState>(
 			mDevice,
-			format,
 			depth_enable,
 			depth_write_enable,
 			stencil_enable,

@@ -2,17 +2,23 @@
 
 #ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuGraphicsCommandList.hpp>
+#include <Shared/Attachment.hpp>
 #include <DirectX12/DirectX12Utility.hpp>
 #else
 #include "../Interface/GpuGraphicsCommandList.hpp"
+#include "../Shared/Attachment.hpp"
 #include "DirectX12Utility.hpp"
 #endif
+
+#include <optional>
 
 #ifdef __ENABLE__DIRECTX12__
 
 namespace CodeRed {
 
 	class DirectX12ResourceLayout;
+	class DirectX12FrameBuffer;
+	class DirectX12RenderPass;
 	
 	class DirectX12GraphicsCommandList final : public GpuGraphicsCommandList {
 	public:
@@ -26,6 +32,12 @@ namespace CodeRed {
 
 		void endRecoding() override;
 
+		void beginRenderPass(
+			const std::shared_ptr<GpuRenderPass>& render_pass, 
+			const std::shared_ptr<GpuFrameBuffer>& frame_buffer) override;
+
+		void endRenderPass() override;
+		
 		void setGraphicsPipeline(
 			const std::shared_ptr<GpuGraphicsPipeline>& pipeline) override;
 
@@ -46,24 +58,11 @@ namespace CodeRed {
 			const size_t index,
 			const std::shared_ptr<GpuTexture>& texture) override;
 
-		void setFrameBuffer(
-			const std::shared_ptr<GpuFrameBuffer>& buffer) override;
-
 		void setViewPort(
 			const ViewPort& view_port) override;
 
 		void setScissorRect(
 			const ScissorRect& rect) override;
-
-		void clearRenderTarget(
-			const std::shared_ptr<GpuFrameBuffer>& buffer, 
-			const Real color[4],
-			const size_t index = 0) override;
-
-		void clearDepthStencil(
-			const std::shared_ptr<GpuFrameBuffer>& buffer, 
-			const Real depth = 0, 
-			const UInt8 stencil = 0) override;
 
 		void layoutTransition(
 			const std::shared_ptr<GpuTexture>& texture, 
@@ -109,10 +108,17 @@ namespace CodeRed {
 			ID3D12Resource* pResource,
 			const D3D12_RESOURCE_STATES before,
 			const D3D12_RESOURCE_STATES after);
+
+		void tryLayoutTransition(
+			const std::shared_ptr<GpuTexture>& texture,
+			const std::optional<Attachment>& attachment,
+			const bool final = false);
 	private:
 		WRL::ComPtr<ID3D12GraphicsCommandList> mGraphicsCommandList;
 
 		std::shared_ptr<DirectX12ResourceLayout> mResourceLayout;
+		std::shared_ptr<DirectX12FrameBuffer> mFrameBuffer;
+		std::shared_ptr<DirectX12RenderPass> mRenderPass;
 	};
 	
 }

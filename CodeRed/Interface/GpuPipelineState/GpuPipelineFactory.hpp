@@ -7,7 +7,6 @@
 #include <Shared/Noncopyable.hpp>
 
 #include <Shared/Enum/PrimitiveTopology.hpp>
-#include <Shared/Enum/PixelFormat.hpp>
 #include <Shared/Enum/ShaderType.hpp>
 #include <Shared/Enum/FrontFace.hpp>
 #include <Shared/Enum/CullMode.hpp>
@@ -19,7 +18,6 @@
 #include "../../Shared/Noncopyable.hpp"
 
 #include "../../Shared/Enum/PrimitiveTopology.hpp"
-#include "../../Shared/Enum/PixelFormat.hpp"
 #include "../../Shared/Enum/ShaderType.hpp"
 #include "../../Shared/Enum/FrontFace.hpp"
 #include "../../Shared/Enum/CullMode.hpp"
@@ -53,7 +51,6 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuInputAssemblyState> = 0;
 
 		virtual auto createRasterizationState(
-			const PixelFormat format,
 			const FrontFace front_face = FrontFace::Clockwise,
 			const CullMode cull_mode = CullMode::Back,
 			const FillMode fill_mode = FillMode::Solid,
@@ -61,7 +58,6 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuRasterizationState> = 0;
 
 		virtual auto createDetphStencilState(
-			const PixelFormat format,
 			const bool depth_enable = true,
 			const bool depth_write_enable = true,
 			const bool stencil_enable = false,

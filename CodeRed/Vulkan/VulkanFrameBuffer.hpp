@@ -21,9 +21,17 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& depth_stencil) override;
 		
 		auto frameBuffer() const noexcept -> vk::Framebuffer { return mFrameBuffer; }
+
+		auto frameBufferWidth() const noexcept -> size_t { return mFrameBufferWidth; }
+
+		auto frameBufferHeight() const noexcept -> size_t { return mFrameBufferHeight; }
 	private:
 		vk::Framebuffer mFrameBuffer;
-		vk::RenderPass mRenderPass;
+
+		std::shared_ptr<GpuRenderPass> mRenderPass;
+
+		size_t mFrameBufferWidth;
+		size_t mFrameBufferHeight;
 	};
 	
 }

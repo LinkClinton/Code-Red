@@ -16,6 +16,7 @@ namespace CodeRed {
 	public:
 		explicit DirectX12GraphicsPipeline(
 			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuRenderPass>& render_pass,
 			const std::shared_ptr<GpuResourceLayout>& resource_layout,
 			const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 			const std::shared_ptr<GpuShaderState>& vertex_shader_state,

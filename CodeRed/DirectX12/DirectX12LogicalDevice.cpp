@@ -1,3 +1,4 @@
+
 #include "DirectX12PipelineState/DirectX12PipelineFactory.hpp"
 
 #include "../Shared/Exception/FailedException.hpp"
@@ -14,6 +15,7 @@
 #include "DirectX12LogicalDevice.hpp"
 #include "DirectX12CommandQueue.hpp"
 #include "DirectX12FrameBuffer.hpp"
+#include "DirectX12RenderPass.hpp"
 #include "DirectX12SwapChain.hpp"
 #include "DirectX12Fence.hpp"
 
@@ -82,6 +84,7 @@ auto CodeRed::DirectX12LogicalDevice::createCommandAllocator()
 }
 
 auto CodeRed::DirectX12LogicalDevice::createGraphicsPipeline(
+	const std::shared_ptr<GpuRenderPass>& render_pass,
 	const std::shared_ptr<GpuResourceLayout>& resource_layout,
 	const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 	const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -94,6 +97,7 @@ auto CodeRed::DirectX12LogicalDevice::createGraphicsPipeline(
 	return std::static_pointer_cast<GpuGraphicsPipeline>(
 		std::make_shared<DirectX12GraphicsPipeline>(
 			shared_from_this(),
+			render_pass,
 			resource_layout,
 			input_assembly_state,
 			vertex_shader_state,
@@ -116,6 +120,17 @@ auto CodeRed::DirectX12LogicalDevice::createResourceLayout(
 			elements,
 			samplers,
 			maxBindResources));
+}
+
+auto CodeRed::DirectX12LogicalDevice::createRenderPass(
+	const std::optional<Attachment>& color,
+	const std::optional<Attachment>& depth)
+	-> std::shared_ptr<GpuRenderPass>
+{
+	return std::static_pointer_cast<GpuRenderPass>(
+		std::make_shared<DirectX12RenderPass>(
+			shared_from_this(),
+			color, depth));
 }
 
 auto CodeRed::DirectX12LogicalDevice::createSampler(const SamplerInfo& info)

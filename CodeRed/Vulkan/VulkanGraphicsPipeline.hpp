@@ -11,6 +11,7 @@ namespace CodeRed {
 	public:
 		explicit VulkanGraphicsPipeline(
 			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuRenderPass>& render_pass,
 			const std::shared_ptr<GpuResourceLayout>& resource_layout,
 			const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 			const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -22,13 +23,10 @@ namespace CodeRed {
 		~VulkanGraphicsPipeline();
 
 		auto pipeline() const noexcept -> vk::Pipeline { return mGraphicsPipeline; }
-
-		auto renderPass() const noexcept -> vk::RenderPass { return mRenderPass; }
 	private:
 		std::vector<vk::DynamicState> mDynamicStates = {};
 		
 		vk::Pipeline mGraphicsPipeline;
-		vk::RenderPass mRenderPass;
 	};
 	
 }

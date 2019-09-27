@@ -12,6 +12,7 @@
 #include "GpuLogicalDevice.hpp"
 #include "GpuCommandQueue.hpp"
 #include "GpuFrameBuffer.hpp"
+#include "GpuRenderPass.hpp"
 #include "GpuSwapChain.hpp"
 #include "GpuFence.hpp"
 
@@ -109,27 +110,26 @@ CodeRed::GpuFrameBuffer::GpuFrameBuffer(
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 	
 	CODE_RED_DEBUG_THROW_IF(
-		mRenderTargets[0] == nullptr,
-		ZeroException<GpuTexture>({ "render_target" })
-	);
-
-	CODE_RED_DEBUG_THROW_IF(
+		mRenderTargets[0] != nullptr && 
 		mRenderTargets[0]->dimension() != Dimension::Dimension2D,
 		InvalidException<GpuTexture>({ "render_target->dimension()" })
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
+		mRenderTargets[0] != nullptr && 
 		!enumHas(mRenderTargets[0]->usage(), ResourceUsage::RenderTarget),
 		InvalidException<GpuTexture>({ "render_target->usage()" })
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mDepthStencil != nullptr && mDepthStencil->dimension() != Dimension::Dimension2D,
+		mDepthStencil != nullptr && 
+		mDepthStencil->dimension() != Dimension::Dimension2D,
 		InvalidException<GpuTexture>({ "depth_stencil->dimension()" })
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mDepthStencil != nullptr && !enumHas(mDepthStencil->usage(), ResourceUsage::DepthStencil),
+		mDepthStencil != nullptr && 
+		!enumHas(mDepthStencil->usage(), ResourceUsage::DepthStencil),
 		InvalidException<GpuTexture>({ "depth_stencil->usage()" })
 	);
 }
@@ -221,6 +221,7 @@ CodeRed::GpuBuffer::GpuBuffer(
 
 CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuRenderPass>& render_pass,
 	const std::shared_ptr<GpuResourceLayout>& resource_layout,
 	const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 	const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -235,6 +236,7 @@ CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 	mPixelShaderState(pixel_shader_state),
 	mResourceLayout(resource_layout),
 	mBlendState(blend_state),
+	mRenderPass(render_pass),
 	mDevice(device)
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
@@ -246,6 +248,26 @@ CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 	CODE_RED_DEBUG_PTR_VALID(mPixelShaderState, "pixel_shader_state");
 	CODE_RED_DEBUG_PTR_VALID(mResourceLayout, "resource_layout");
 	CODE_RED_DEBUG_PTR_VALID(mBlendState, "blend_state");
+	CODE_RED_DEBUG_PTR_VALID(mRenderPass, "render_pass");
+}
+
+CodeRed::GpuRenderPass::GpuRenderPass(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::optional<Attachment>& color,
+	const std::optional<Attachment>& depth) :
+	mDevice(device),
+	mColorAttachments({ color }),
+	mDepthAttachment(depth)
+{
+	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
+}
+
+void CodeRed::GpuRenderPass::setClear(
+	const std::optional<ClearValue>& color,
+	const std::optional<ClearValue>& depth)
+{
+	if (color.has_value()) mColor[0] = color.value();
+	if (depth.has_value()) mDepth = depth.value();
 }
 
 void CodeRed::GpuResourceLayout::bindResource(

@@ -30,6 +30,9 @@ namespace CodeRed {
 		void setBlendState(
 			const std::shared_ptr<GpuBlendState>& state);
 
+		void setRenderPass(
+			const std::shared_ptr<GpuRenderPass>& render_pass);
+		
 		void updateState();
 		
 		auto graphicsPipeline() const noexcept -> std::shared_ptr<GpuGraphicsPipeline> { return mGraphicsPipeline; }
@@ -41,6 +44,7 @@ namespace CodeRed {
 		std::shared_ptr<GpuShaderState> mPixelShaderState;
 		std::shared_ptr<GpuResourceLayout> mResourceLayout;
 		std::shared_ptr<GpuBlendState> mBlendState;
+		std::shared_ptr<GpuRenderPass> mRenderPass;
 		
 		std::shared_ptr<GpuGraphicsPipeline> mGraphicsPipeline;
 		std::shared_ptr<GpuPipelineFactory> mPipelineFactory;

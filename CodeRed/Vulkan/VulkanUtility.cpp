@@ -5,7 +5,9 @@
 #include "../Shared/Enum/ShaderVisibility.hpp"
 #include "../Shared/Enum/CompareOperator.hpp"
 #include "../Shared/Enum/StencilOperator.hpp"
+#include "../Shared/Enum/AttachmentStore.hpp"
 #include "../Shared/Enum/ResourceLayout.hpp"
+#include "../Shared/Enum/AttachmentLoad.hpp"
 #include "../Shared/Enum/FilterOptions.hpp"
 #include "../Shared/Enum/ResourceUsage.hpp"
 #include "../Shared/Enum/BlendOperator.hpp"
@@ -334,6 +336,29 @@ auto CodeRed::enumConvert(const ShaderType type)
 	}
 }
 
+auto CodeRed::enumConvert(const AttachmentLoad load)
+	-> vk::AttachmentLoadOp
+{
+	switch (load) {
+	case AttachmentLoad::Clear: return vk::AttachmentLoadOp::eClear;
+	case AttachmentLoad::Load: return vk::AttachmentLoadOp::eLoad;
+	case AttachmentLoad::DontCare: return vk::AttachmentLoadOp::eDontCare;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::enumConvert(const AttachmentStore store)
+	-> vk::AttachmentStoreOp
+{
+	switch (store) {
+	case AttachmentStore::Store: return vk::AttachmentStoreOp::eStore;
+	case AttachmentStore::DontCare: return vk::AttachmentStoreOp::eDontCare;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
 auto CodeRed::enumConvert1(const Dimension dimension)
 -> vk::ImageViewType
 {
@@ -346,85 +371,30 @@ auto CodeRed::enumConvert1(const Dimension dimension)
 	}
 }
 
-auto CodeRed::createRenderPass(
-	const vk::Device device,
-	const vk::Format color,
-	const vk::Format depth)
-	-> vk::RenderPass
+auto CodeRed::enumConvert1(
+	const ResourceLayout layout,
+	const ResourceType type)
+	-> vk::AccessFlags
 {
-	//if the format is not undefined, we will add one attachment for render pass
-	std::vector<vk::AttachmentDescription> attachments;
-
-	if (color != vk::Format::eUndefined) {
-		vk::AttachmentDescription attachment = {};
-
-		attachment
-			.setFlags(vk::AttachmentDescriptionFlags(0))
-			.setFormat(color)
-			.setSamples(vk::SampleCountFlagBits::e1)
-			.setLoadOp(vk::AttachmentLoadOp::eClear)
-			.setStoreOp(vk::AttachmentStoreOp::eStore)
-			.setStencilLoadOp(vk::AttachmentLoadOp::eDontCare)
-			.setStencilStoreOp(vk::AttachmentStoreOp::eDontCare)
-			.setInitialLayout(vk::ImageLayout::eUndefined)
-			.setFinalLayout(vk::ImageLayout::ePresentSrcKHR);
-
-		attachments.push_back(attachment);
+	switch (layout) {
+	case ResourceLayout::GeneralRead:
+		switch (type) {
+		case ResourceType::Buffer:
+			return vk::AccessFlagBits::eUniformRead | vk::AccessFlagBits::eIndexRead | vk::AccessFlagBits::eVertexAttributeRead;
+		case ResourceType::Texture:
+			return vk::AccessFlagBits::eShaderRead;
+		default:
+			throw NotSupportException(NotSupportType::Enum);
+		}
+	case ResourceLayout::RenderTarget: return vk::AccessFlagBits::eColorAttachmentWrite;
+	case ResourceLayout::DepthStencil:
+		return vk::AccessFlagBits::eDepthStencilAttachmentRead | vk::AccessFlagBits::eDepthStencilAttachmentWrite;
+	case ResourceLayout::CopyDestination: return vk::AccessFlagBits::eTransferWrite;
+	case ResourceLayout::CopySource: return vk::AccessFlagBits::eTransferRead;
+	case ResourceLayout::Present: return vk::AccessFlagBits::eColorAttachmentRead;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
 	}
-
-	if (depth != vk::Format::eUndefined) {
-		vk::AttachmentDescription attachment = {};
-
-		attachment
-			.setFlags(vk::AttachmentDescriptionFlags(0))
-			.setFormat(depth)
-			.setSamples(vk::SampleCountFlagBits::e1)
-			.setLoadOp(vk::AttachmentLoadOp::eClear)
-			.setStoreOp(vk::AttachmentStoreOp::eStore)
-			.setStencilLoadOp(vk::AttachmentLoadOp::eClear)
-			.setStencilStoreOp(vk::AttachmentStoreOp::eStore)
-			.setInitialLayout(vk::ImageLayout::eUndefined)
-			.setFinalLayout(vk::ImageLayout::eDepthStencilAttachmentOptimal);
-
-		attachments.push_back(attachment);
-	}
-
-	vk::AttachmentReference colorReference = {};
-	vk::AttachmentReference depthReference = {};
-
-	colorReference.attachment = 0;
-	depthReference.layout = vk::ImageLayout::eColorAttachmentOptimal;
-
-	colorReference.attachment = 1;
-	depthReference.layout = vk::ImageLayout::eDepthStencilAttachmentOptimal;
-
-	vk::SubpassDescription subPassInfo = {};
-
-	subPassInfo
-		.setFlags(vk::SubpassDescriptionFlags(0))
-		.setPipelineBindPoint(vk::PipelineBindPoint::eGraphics)
-		.setInputAttachmentCount(0)
-		.setColorAttachmentCount(color == vk::Format::eUndefined ? 0 : 1)
-		.setPreserveAttachmentCount(0)
-		.setPInputAttachments(nullptr)
-		.setPColorAttachments(color == vk::Format::eUndefined ? nullptr : &colorReference)
-		.setPPreserveAttachments(nullptr)
-		.setPResolveAttachments(nullptr)
-		.setPDepthStencilAttachment(depth == vk::Format::eUndefined ? nullptr : &depthReference);
-
-	vk::RenderPassCreateInfo info = {};
-
-	info
-		.setPNext(nullptr)
-		.setFlags(vk::RenderPassCreateFlags(0))
-		.setAttachmentCount(static_cast<uint32_t>(attachments.size()))
-		.setPAttachments(attachments.empty() ? nullptr : attachments.data())
-		.setSubpassCount(1)
-		.setPSubpasses(&subPassInfo)
-		.setDependencyCount(0)
-		.setPDependencies(nullptr);
-
-	return device.createRenderPass(info);
 }
 
 #endif

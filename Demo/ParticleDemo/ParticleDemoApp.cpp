@@ -52,7 +52,6 @@ void ParticleDemoApp::render(float delta)
 	mCommandList->setGraphicsPipeline(mPipelineInfo->graphicsPipeline());
 	mCommandList->setResourceLayout(mPipelineInfo->graphicsPipeline()->layout());
 
-	mCommandList->setFrameBuffer(frameBuffer);
 	mCommandList->setViewPort(frameBuffer->fullViewPort());
 	mCommandList->setScissorRect(frameBuffer->fullScissorRect());
 
@@ -62,19 +61,17 @@ void ParticleDemoApp::render(float delta)
 	mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
 	mCommandList->setGraphicsTexture(2, mParticleTextureGenerator->texture());
 
-	mCommandList->layoutTransition(frameBuffer->renderTarget(), 
-		CodeRed::ResourceLayout::RenderTarget);
+	mCommandList->beginRenderPass(
+		mPipelineInfo->graphicsPipeline()->renderPass(),
+		frameBuffer);
 	
-	mCommandList->clearRenderTarget(frameBuffer, color);
-
 	for (size_t index = 0; index < particleTimes; index++) {
 		mCommandList->setGraphicsConstantBuffer(1, (*transformBuffers)[index]);
 		mCommandList->drawIndexed(6, particleCount);
 	}
-	
-	mCommandList->layoutTransition(frameBuffer->renderTarget(), 
-		CodeRed::ResourceLayout::Present);
-	
+
+	mCommandList->endRenderPass();
+		
 	mCommandList->endRecoding();
 
 	mCommandQueue->execute({ mCommandList });
@@ -368,14 +365,12 @@ void ParticleDemoApp::initializePipeline()
 	//disable depth test
 	mPipelineInfo->setDepthStencilState(
 		mPipelineFactory->createDetphStencilState(
-			CodeRed::PixelFormat::Unknown,
 			false
 		)
 	);
 
 	mPipelineInfo->setRasterizationState(
 		mPipelineFactory->createRasterizationState(
-			mSwapChain->format(),
 			CodeRed::FrontFace::Clockwise,
 			CodeRed::CullMode::None
 		)
@@ -400,6 +395,12 @@ void ParticleDemoApp::initializePipeline()
 				CodeRed::BlendFactor::SrcAlpha,
 				CodeRed::BlendFactor::SrcAlpha
 			}
+		)
+	);
+
+	mPipelineInfo->setRenderPass(
+		mDevice->createRenderPass(
+			CodeRed::Attachment::RenderTarget(mSwapChain->format())
 		)
 	);
 	

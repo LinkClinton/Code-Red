@@ -9,6 +9,7 @@
 #include "DirectX12ResourceLayout.hpp"
 #include "DirectX12LogicalDevice.hpp"
 #include "DirectX12FrameBuffer.hpp"
+#include "DirectX12RenderPass.hpp"
 
 #include "../Shared/DebugReport.hpp"
 
@@ -44,6 +45,75 @@ void CodeRed::DirectX12GraphicsCommandList::beginRecoding()
 void CodeRed::DirectX12GraphicsCommandList::endRecoding()
 {
 	mGraphicsCommandList->Close();
+}
+
+void CodeRed::DirectX12GraphicsCommandList::beginRenderPass(
+	const std::shared_ptr<GpuRenderPass>& render_pass,
+	const std::shared_ptr<GpuFrameBuffer>& frame_buffer)
+{
+	mFrameBuffer = std::static_pointer_cast<DirectX12FrameBuffer>(frame_buffer);
+	mRenderPass = std::static_pointer_cast<DirectX12RenderPass>(render_pass);
+
+	const auto clearValue = mRenderPass->getClear();
+	const auto colorAttachment = mRenderPass->color();
+	const auto depthAttachment = mRenderPass->depth();
+
+	const Real color[] = {
+		clearValue.first.Red,
+		clearValue.first.Green,
+		clearValue.first.Blue,
+		clearValue.first.Alpha };
+	
+	//we can set a frame buffer without rtv or dsv
+	//but we will send a warning if we do not have rtv and dsv
+	const auto has_rtv = mFrameBuffer->renderTarget() != nullptr && colorAttachment.has_value();
+	const auto has_dsv = mFrameBuffer->depthStencil() != nullptr && depthAttachment.has_value();
+	const auto rtvAddress = mFrameBuffer->rtvHeap()->GetCPUDescriptorHandleForHeapStart();
+	const auto dsvAddress = mFrameBuffer->dsvHeap()->GetCPUDescriptorHandleForHeapStart();
+	
+	//warning, when we set a frame buffer without rtv and dsv
+	//only output when we enable __EANBLE__CODE__RED__DEBUG__
+	CODE_RED_DEBUG_TRY_EXECUTE(
+		has_rtv == false && has_dsv == false,
+		DebugReport::warning(DebugType::Set, { "FrameBuffer", "there are no rtv and dsv" })
+	);
+
+	tryLayoutTransition(mFrameBuffer->renderTarget(), colorAttachment, false);
+	tryLayoutTransition(mFrameBuffer->depthStencil(), depthAttachment, false);
+
+	CODE_RED_TRY_EXECUTE(
+		has_rtv && colorAttachment->Load == AttachmentLoad::Clear,
+		mGraphicsCommandList->ClearRenderTargetView(rtvAddress, color, 0, nullptr)
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		has_dsv && (
+			depthAttachment->Load == AttachmentLoad::Clear ||
+			depthAttachment->StencilLoad == AttachmentLoad::Clear),
+		mGraphicsCommandList->ClearDepthStencilView(dsvAddress,
+			(depthAttachment->Load == AttachmentLoad::Clear ? D3D12_CLEAR_FLAG_DEPTH : D3D12_CLEAR_FLAGS(0)) |
+			(depthAttachment->StencilLoad == AttachmentLoad::Clear ? D3D12_CLEAR_FLAG_STENCIL : D3D12_CLEAR_FLAGS(0)),
+			clearValue.second.Depth,
+			clearValue.second.Stencil, 0, nullptr)
+	);
+	
+	mGraphicsCommandList->OMSetRenderTargets(
+		has_rtv ? 1 : 0,
+		has_rtv ? &rtvAddress : nullptr,
+		false,
+		has_dsv ? &dsvAddress : nullptr);
+}
+
+void CodeRed::DirectX12GraphicsCommandList::endRenderPass()
+{
+	const auto colorAttachment = mRenderPass->color();
+	const auto depthAttachment = mRenderPass->depth();
+
+	tryLayoutTransition(mFrameBuffer->renderTarget(), colorAttachment, true);
+	tryLayoutTransition(mFrameBuffer->depthStencil(), depthAttachment, true);
+
+	mFrameBuffer.reset();
+	mRenderPass.reset();
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setGraphicsPipeline(
@@ -109,7 +179,7 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsConstantBuffer(
 	
 	mGraphicsCommandList->SetGraphicsRootDescriptorTable(
 		static_cast<UINT>(index),
-		mResourceLayout->gpuHandle(buffer)
+		mResourceLayout->handle(buffer)
 	);
 }
 
@@ -126,34 +196,8 @@ void CodeRed::DirectX12GraphicsCommandList::setGraphicsTexture(
 	
 	mGraphicsCommandList->SetGraphicsRootDescriptorTable(
 		static_cast<UINT>(index),
-		mResourceLayout->gpuHandle(texture)
+		mResourceLayout->handle(texture)
 	);
-}
-
-void CodeRed::DirectX12GraphicsCommandList::setFrameBuffer(
-	const std::shared_ptr<GpuFrameBuffer>& buffer)
-{
-	//we can set a frame buffer without rtv or dsv
-	//but we will send a warning if we do not have rtv and dsv
-	const auto has_rtv = buffer->renderTarget() != nullptr;
-	const auto has_dsv = buffer->depthStencil() != nullptr;
-	const auto dxFrameBuffer = static_cast<DirectX12FrameBuffer*>(buffer.get());
-	const auto rtvAddress = dxFrameBuffer->rtvHeap()->GetCPUDescriptorHandleForHeapStart();
-	const auto dsvAddress = dxFrameBuffer->dsvHeap()->GetCPUDescriptorHandleForHeapStart();
-
-#ifdef __ENABLE__CODE__RED__DEBUG__
-	//warning, when we set a frame buffer without rtv and dsv
-	//only output when we enable __EANBLE__CODE__RED__DEBUG__
-	if (has_rtv == false && has_dsv == false) {
-		DebugReport::warning(DebugType::Set, { "FrameBuffer", "there are no rtv and dsv" });
-	}
-#endif
-	
-	mGraphicsCommandList->OMSetRenderTargets(
-		has_rtv ? 1 : 0, 
-		has_rtv ? &rtvAddress : nullptr,
-		false, 
-		has_dsv ? &dsvAddress : nullptr);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setViewPort(const ViewPort& view_port)
@@ -180,37 +224,6 @@ void CodeRed::DirectX12GraphicsCommandList::setScissorRect(const ScissorRect& re
 	};
 	
 	mGraphicsCommandList->RSSetScissorRects(1, &scissorRect);
-}
-
-void CodeRed::DirectX12GraphicsCommandList::clearRenderTarget(
-	const std::shared_ptr<GpuFrameBuffer>& buffer,
-	const Real color[4], 
-	const size_t index)
-{
-	CODE_RED_DEBUG_THROW_IF(
-		buffer->renderTarget() == nullptr,
-		ZeroException<GpuTexture>({ "buffer->renderTarget()" })
-	);
-	
-	const auto rtvAddress = static_cast<DirectX12FrameBuffer*>(buffer.get())->rtvHeap()->GetCPUDescriptorHandleForHeapStart();
-
-	mGraphicsCommandList->ClearRenderTargetView(rtvAddress, color, 0, nullptr);
-}
-
-void CodeRed::DirectX12GraphicsCommandList::clearDepthStencil(
-	const std::shared_ptr<GpuFrameBuffer>& buffer,
-	const Real depth, 
-	const UInt8 stencil)
-{
-	CODE_RED_DEBUG_THROW_IF(
-		buffer->depthStencil() == nullptr,
-		ZeroException<GpuTexture>({ "buffer->depthStencil()" })
-	);
-
-	const auto dsvAddress = static_cast<DirectX12FrameBuffer*>(buffer.get())->dsvHeap()->GetCPUDescriptorHandleForHeapStart();
-
-	mGraphicsCommandList->ClearDepthStencilView(dsvAddress,
-		D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, depth, stencil, 0, nullptr);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
@@ -360,5 +373,18 @@ D3D12_RESOURCE_BARRIER CodeRed::DirectX12GraphicsCommandList::resource_barrier(
 
 	return barrier;
 }
+
+void CodeRed::DirectX12GraphicsCommandList::tryLayoutTransition(
+	const std::shared_ptr<GpuTexture>& texture,
+	const std::optional<Attachment>& attachment, 
+	const bool final)
+{
+	CODE_RED_TRY_EXECUTE(
+		texture != nullptr && attachment.has_value(),
+		layoutTransition(texture,texture->layout(),
+			final ? attachment->FinalLayout : attachment->InitialLayout)
+	);
+}
+
 
 #endif

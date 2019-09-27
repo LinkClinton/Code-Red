@@ -11,7 +11,6 @@ namespace CodeRed {
 	public:
 		explicit VulkanDepthStencilState(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const PixelFormat format,
 			const bool depth_enable = true,
 			const bool depth_write_enable = true,
 			const bool stencil_enable = false,

@@ -14,6 +14,7 @@
 
 CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuRenderPass>& render_pass,
 	const std::shared_ptr<GpuResourceLayout>& resource_layout,
 	const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 	const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -23,6 +24,7 @@ CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	const std::shared_ptr<GpuRasterizationState>& rasterization_state) :
 	GpuGraphicsPipeline(
 		device,
+		render_pass,
 		resource_layout,
 		input_assembly_state,
 		vertex_shader_state,
@@ -45,11 +47,11 @@ CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	desc.BlendState = static_cast<DirectX12BlendState*>(mBlendState.get())->state();
 	desc.RasterizerState = static_cast<DirectX12RasterizationState*>(mRasterizationState.get())->state();
 	desc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	desc.DSVFormat = enumConvert(mDepthStencilState->depthStencilFormat());
+	desc.DSVFormat = enumConvert(mRenderPass->depth().has_value() ? mRenderPass->depth()->Format : PixelFormat::Unknown);
 	desc.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
 	desc.NodeMask = 0;
 	desc.NumRenderTargets = 1;
-	desc.RTVFormats[0] = enumConvert(mRasterizationState->renderTargetFormat());
+	desc.RTVFormats[0] = enumConvert(mRenderPass->color().has_value() ? mRenderPass->color()->Format : PixelFormat::Unknown);
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
 	desc.SampleMask = UINT_MAX;

@@ -42,11 +42,9 @@ namespace CodeRed {
 		auto rootSignature() const noexcept -> WRL::ComPtr<ID3D12RootSignature> { return mRootSignature; }
 
 		auto descriptorHeap() const noexcept -> WRL::ComPtr<ID3D12DescriptorHeap> { return mDescriptorHeap; }
-	private:
-		auto gpuHandle(const std::shared_ptr<GpuResource>& resource) ->
-			D3D12_GPU_DESCRIPTOR_HANDLE;
-		
-		friend class DirectX12GraphicsCommandList;
+
+		auto handle(const std::shared_ptr<GpuResource>& resource) 
+			-> D3D12_GPU_DESCRIPTOR_HANDLE;
 	private:
 		using Container = std::map<std::shared_ptr<GpuResource>, D3D12_GPU_DESCRIPTOR_HANDLE>;
 		

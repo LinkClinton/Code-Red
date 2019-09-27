@@ -10,6 +10,7 @@
 #include <Interface/GpuPipelineState/GpuBlendState.hpp>
 
 #include <Interface/GpuResourceLayout.hpp>
+#include <Interface/GpuRenderPass.hpp>
 #else
 #include "../Shared/Noncopyable.hpp"
 
@@ -20,6 +21,7 @@
 #include "GpuPipelineState/GpuBlendState.hpp"
 
 #include "GpuResourceLayout.hpp"
+#include "GpuRenderPass.hpp"
 #endif
 
 #include <memory>
@@ -32,6 +34,7 @@ namespace CodeRed {
 	protected:
 		explicit GpuGraphicsPipeline(
 			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuRenderPass>& render_pass,
 			const std::shared_ptr<GpuResourceLayout>& resource_layout,
 			const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 			const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -54,6 +57,8 @@ namespace CodeRed {
 
 		auto blend() const noexcept -> std::shared_ptr<GpuBlendState> { return mBlendState; }
 
+		auto renderPass() const noexcept -> std::shared_ptr<GpuRenderPass> { return mRenderPass; }
+
 		auto rasterization() const noexcept -> std::shared_ptr<GpuRasterizationState> { return mRasterizationState; }
 	protected:
 		std::shared_ptr<GpuRasterizationState> mRasterizationState;
@@ -63,7 +68,8 @@ namespace CodeRed {
 		std::shared_ptr<GpuShaderState> mPixelShaderState;
 		std::shared_ptr<GpuResourceLayout> mResourceLayout;
 		std::shared_ptr<GpuBlendState> mBlendState;
-
+		std::shared_ptr<GpuRenderPass> mRenderPass;
+		
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 	};
 	

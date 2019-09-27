@@ -22,7 +22,9 @@ namespace CodeRed {
 	enum class ShaderVisibility : UInt32;
 	enum class CompareOperator : UInt32;
 	enum class StencilOperator : UInt32;
+	enum class AttachmentStore : UInt32;
 	enum class ResourceLayout : UInt32;
+	enum class AttachmentLoad : UInt32;
 	enum class FilterOptions : UInt32;
 	enum class BlendOperator : UInt32;
 	enum class ResourceUsage : UInt32;
@@ -82,11 +84,14 @@ namespace CodeRed {
 	auto enumConvert(const FrontFace face) -> vk::FrontFace;
 
 	auto enumConvert(const ShaderType type) -> vk::ShaderStageFlagBits;
-	
-	auto enumConvert1(const Dimension dimension)->vk::ImageViewType;
 
-	auto createRenderPass(const vk::Device device, const vk::Format color, const vk::Format depth)
-		-> vk::RenderPass;
+	auto enumConvert(const AttachmentLoad load) -> vk::AttachmentLoadOp;
+
+	auto enumConvert(const AttachmentStore store) -> vk::AttachmentStoreOp;
+	
+	auto enumConvert1(const Dimension dimension) -> vk::ImageViewType;
+
+	auto enumConvert1(const ResourceLayout layout, const ResourceType type) -> vk::AccessFlags;
 }
 
 #endif

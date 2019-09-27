@@ -36,6 +36,9 @@ namespace CodeRed {
 		auto layout() const noexcept -> vk::PipelineLayout { return mPipelineLayout; }
 
 		auto pool() const noexcept -> vk::DescriptorPool { return mDescriptorPool; }
+
+		auto descriptor(const std::shared_ptr<GpuResource>& resource) 
+			-> vk::DescriptorSet;
 	private:
 		using BindDescriptor = std::pair<vk::DescriptorSet, size_t>;
 		

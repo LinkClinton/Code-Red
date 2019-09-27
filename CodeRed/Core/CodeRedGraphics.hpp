@@ -65,3 +65,6 @@
 
 #include "../DirectX12/DirectX12LogicalDevice.hpp"
 #include "../DirectX12/DirectX12SystemInfo.hpp"
+
+#include "../Vulkan/VulkanLogicalDevice.hpp"
+#include "../Vulkan/VulkanSystemInfo.hpp"

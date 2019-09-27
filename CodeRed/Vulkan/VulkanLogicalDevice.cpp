@@ -16,6 +16,7 @@
 #include "VulkanLogicalDevice.hpp"
 #include "VulkanCommandQueue.hpp"
 #include "VulkanFrameBuffer.hpp"
+#include "VulkanRenderPass.hpp"
 #include "VulkanSwapChain.hpp"
 #include "VulkanFence.hpp"
 
@@ -196,6 +197,7 @@ auto CodeRed::VulkanLogicalDevice::createCommandAllocator()
 }
 
 auto CodeRed::VulkanLogicalDevice::createGraphicsPipeline(
+	const std::shared_ptr<GpuRenderPass>& render_pass,
 	const std::shared_ptr<GpuResourceLayout>& resource_layout,
 	const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 	const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -207,6 +209,7 @@ auto CodeRed::VulkanLogicalDevice::createGraphicsPipeline(
 {
 	return std::make_shared<VulkanGraphicsPipeline>(
 		shared_from_this(),
+		render_pass,
 		resource_layout,
 		input_assembly_state,
 		vertex_shader_state,
@@ -227,6 +230,16 @@ auto CodeRed::VulkanLogicalDevice::createResourceLayout(
 		elements,
 		samplers,
 		maxBindResources);
+}
+
+auto CodeRed::VulkanLogicalDevice::createRenderPass(
+	const std::optional<Attachment>& color,
+	const std::optional<Attachment>& depth)
+	-> std::shared_ptr<GpuRenderPass>
+{
+	return std::make_shared<VulkanRenderPass>(
+		shared_from_this(),
+		color, depth);
 }
 
 auto CodeRed::VulkanLogicalDevice::createSampler(const SamplerInfo& info)

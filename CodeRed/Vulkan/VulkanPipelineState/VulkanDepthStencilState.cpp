@@ -4,7 +4,6 @@
 
 CodeRed::VulkanDepthStencilState::VulkanDepthStencilState(
 	const std::shared_ptr<GpuLogicalDevice>& device,
-	const PixelFormat format,
 	const bool depth_enable,
 	const bool depth_write_enable,
 	const bool stencil_enable,
@@ -13,7 +12,6 @@ CodeRed::VulkanDepthStencilState::VulkanDepthStencilState(
 	const StencilOperatorInfo& back) :
 	GpuDepthStencilState(
 		device,
-		format,
 		depth_enable,
 		depth_write_enable,
 		stencil_enable,

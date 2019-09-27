@@ -23,6 +23,7 @@ namespace CodeRed {
 	class GpuLogicalDevice;
 	class GpuResourceLayout;
 	class GpuFrameBuffer;
+	class GpuRenderPass;
 	class GpuSampler;
 	class GpuTexture;
 	class GpuBuffer;
@@ -39,6 +40,13 @@ namespace CodeRed {
 
 		virtual void endRecoding() = 0;
 
+		virtual void beginRenderPass(
+			const std::shared_ptr<GpuRenderPass> &render_pass,
+			const std::shared_ptr<GpuFrameBuffer> &frame_buffer
+			) = 0;
+
+		virtual void endRenderPass() = 0;
+		
 		virtual void setGraphicsPipeline(
 			const std::shared_ptr<GpuGraphicsPipeline>& pipeline) = 0;
 		
@@ -59,24 +67,11 @@ namespace CodeRed {
 			const size_t index,
 			const std::shared_ptr<GpuTexture> &texture) = 0;
 
-		virtual void setFrameBuffer(
-			const std::shared_ptr<GpuFrameBuffer>& buffer) = 0;
-
 		virtual void setViewPort(
 			const ViewPort& view_port) = 0;
 
 		virtual void setScissorRect(
 			const ScissorRect& rect) = 0;
-
-		virtual void clearRenderTarget(
-			const std::shared_ptr<GpuFrameBuffer>& buffer,
-			const Real color[4],
-			const size_t index = 0) = 0;
-
-		virtual void clearDepthStencil(
-			const std::shared_ptr<GpuFrameBuffer>& buffer,
-			const Real depth = 0,
-			const UInt8 stencil = 0) = 0;
 
 		virtual void layoutTransition(
 			const std::shared_ptr<GpuTexture>& texture,

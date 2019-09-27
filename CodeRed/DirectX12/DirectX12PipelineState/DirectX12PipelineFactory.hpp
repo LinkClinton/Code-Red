@@ -23,7 +23,6 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuInputAssemblyState> override;
 
 		auto createRasterizationState(
-			const PixelFormat format,
 			const FrontFace front_face = FrontFace::Clockwise,
 			const CullMode cull_mode = CullMode::Back,
 			const FillMode fill_mode = FillMode::Solid,
@@ -31,7 +30,6 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuRasterizationState> override;
 
 		auto createDetphStencilState(
-			const PixelFormat format,
 			const bool depth_enable = true,
 			const bool depth_write_enable = true,
 			const bool stencil_enable = false,

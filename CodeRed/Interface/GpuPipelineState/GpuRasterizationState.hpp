@@ -2,13 +2,11 @@
 
 #ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuPipelineState/GpuPipelineState.hpp>
-#include <Shared/Enum/PixelFormat.hpp>
 #include <Shared/Enum/FrontFace.hpp>
 #include <Shared/Enum/CullMode.hpp>
 #include <Shared/Enum/FillMode.hpp>
 #else
 #include "GpuPipelineState.hpp"
-#include "../../Shared/Enum/PixelFormat.hpp"
 #include "../../Shared/Enum/FrontFace.hpp"
 #include "../../Shared/Enum/CullMode.hpp"
 #include "../../Shared/Enum/FillMode.hpp"
@@ -22,13 +20,11 @@ namespace CodeRed {
 	protected:
 		explicit GpuRasterizationState(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const PixelFormat format,
 			const FrontFace front_face = FrontFace::Clockwise,
 			const CullMode cull_mode = CullMode::Back,
 			const FillMode fill_mode = FillMode::Solid,
 			const bool depth_clamp = true) :
 			GpuPipelineState(device),
-			mRenderTargetFormats({ format }),
 			mFrontFace(front_face),
 			mCullMode(cull_mode),
 			mFillMode(fill_mode),
@@ -36,8 +32,6 @@ namespace CodeRed {
 
 		~GpuRasterizationState() = default;
 	public:
-		auto renderTargetFormat(const size_t index = 0) const -> PixelFormat { return mRenderTargetFormats[index]; }
-		
 		auto frontFace() const noexcept -> FrontFace { return mFrontFace; }
 
 		auto cullMode() const noexcept -> CullMode { return mCullMode; }
@@ -46,8 +40,6 @@ namespace CodeRed {
 
 		bool depthClamp() const noexcept { return mDepthClamp; }
 	protected:
-		std::vector<PixelFormat> mRenderTargetFormats = { PixelFormat::Unknown };
-		
 		FrontFace mFrontFace = FrontFace::Clockwise;
 		CullMode mCullMode = CullMode::Back;
 		FillMode mFillMode = FillMode::Solid;

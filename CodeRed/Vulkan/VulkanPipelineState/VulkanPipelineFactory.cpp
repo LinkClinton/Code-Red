@@ -27,7 +27,6 @@ auto CodeRed::VulkanPipelineFactory::createInputAssemblyState(
 }
 
 auto CodeRed::VulkanPipelineFactory::createRasterizationState(
-	const PixelFormat format, 
 	const FrontFace front_face,
 	const CullMode cull_mode, 
 	const FillMode fill_mode,
@@ -36,7 +35,6 @@ auto CodeRed::VulkanPipelineFactory::createRasterizationState(
 {
 	return std::make_shared<VulkanRasterizationState>(
 		mDevice,
-		format,
 		front_face,
 		cull_mode,
 		fill_mode,
@@ -44,7 +42,6 @@ auto CodeRed::VulkanPipelineFactory::createRasterizationState(
 }
 
 auto CodeRed::VulkanPipelineFactory::createDetphStencilState(
-	const PixelFormat format, 
 	const bool depth_enable,
 	const bool depth_write_enable, 
 	const bool stencil_enable, 
@@ -55,7 +52,6 @@ auto CodeRed::VulkanPipelineFactory::createDetphStencilState(
 {
 	return std::make_shared<VulkanDepthStencilState>(
 		mDevice,
-		format,
 		depth_enable,
 		depth_write_enable,
 		stencil_enable,

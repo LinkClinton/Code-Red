@@ -246,11 +246,18 @@ void CodeRed::DirectX12ResourceLayout::unbindResource(const std::shared_ptr<GpuR
 	descriptors.erase(it);
 }
 
-auto CodeRed::DirectX12ResourceLayout::gpuHandle(
-	const std::shared_ptr<GpuResource>& resource)
+auto CodeRed::DirectX12ResourceLayout::handle(
+	const std::shared_ptr<GpuResource>& resource) 
 	-> D3D12_GPU_DESCRIPTOR_HANDLE
 {
-	return mIdentityAllocator.container()[resource];
+	auto& container = mIdentityAllocator.container();
+
+	CODE_RED_DEBUG_THROW_IF(
+		container.find(resource) == container.end(),
+		FailedException({ "Handle", "ResourceLayout" }, DebugType::Get)
+	);
+	
+	return container[resource];
 }
 
 #endif

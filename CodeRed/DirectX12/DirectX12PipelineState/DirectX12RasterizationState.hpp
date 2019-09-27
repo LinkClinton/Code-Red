@@ -16,7 +16,6 @@ namespace CodeRed {
 	public:
 		explicit DirectX12RasterizationState(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const PixelFormat format,
 			const FrontFace front_face = FrontFace::Clockwise,
 			const CullMode cull_mode = CullMode::Back,
 			const FillMode fill_mode = FillMode::Solid,

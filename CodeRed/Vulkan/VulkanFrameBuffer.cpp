@@ -4,6 +4,10 @@
 
 #include "VulkanLogicalDevice.hpp"
 #include "VulkanFrameBuffer.hpp"
+#include "VulkanRenderPass.hpp"
+
+#undef max
+#undef min
 
 #ifdef __ENABLE__VULKAN__
 
@@ -20,7 +24,6 @@ CodeRed::VulkanFrameBuffer::~VulkanFrameBuffer()
 {
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
 
-	vkDevice.destroyRenderPass(mRenderPass);
 	vkDevice.destroyFramebuffer(mFrameBuffer);
 }
 
@@ -28,48 +31,79 @@ void CodeRed::VulkanFrameBuffer::reset(
 	const std::shared_ptr<GpuTexture>& render_target,
 	const std::shared_ptr<GpuTexture>& depth_stencil)
 {
-	CODE_RED_DEBUG_THROW_IF(
-		render_target == nullptr,
-		ZeroException<GpuTexture>({ "render_target" })
-	);
-
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
 
-	//reset the render pass and frame buffer
 	if (mFrameBuffer) vkDevice.destroyFramebuffer(mFrameBuffer);
-	if (mRenderPass) vkDevice.destroyRenderPass(mRenderPass);
-	
-	//reset the render target and depth stencil
+
 	for (auto& rtv : mRenderTargets) rtv.reset();
 
 	mDepthStencil.reset();
+	mRenderPass.reset();
 
-	mRenderTargets[0] = render_target;
+	auto& renderTarget = mRenderTargets[0] = render_target;
+	auto& depthStencil = mDepthStencil = depth_stencil;
 
-	if (depth_stencil != nullptr) mDepthStencil = depth_stencil;
+	//warning, when we create a frame buffer without rtv and dsv
+	//only output when we enable __EANBLE__CODE__RED__DEBUG__
+	CODE_RED_DEBUG_TRY_EXECUTE(
+		renderTarget == nullptr &&
+		depthStencil == nullptr,
+		DebugReport::warning(DebugType::Create, { "FrameBuffer", "there are no rtv and dsv" })
+	);
+	
+	using OptAttachment = std::optional<Attachment>;
 
-	//create render pass
-	mRenderPass = createRenderPass(vkDevice,
-		enumConvert(mRenderTargets[0]->format()),
-		mDepthStencil == nullptr ? vk::Format::eUndefined : enumConvert(mDepthStencil->format()));
+	mRenderPass = std::make_shared<VulkanRenderPass>(
+		mDevice,
+		renderTarget != nullptr ? static_cast<OptAttachment>(Attachment::RenderTarget(renderTarget->format())) : std::nullopt,
+		depthStencil != nullptr ? static_cast<OptAttachment>(Attachment::DepthStencil(depthStencil->format())) : std::nullopt);
 
 	//create the frame buffer
 	vk::FramebufferCreateInfo info = {};
-	vk::ImageView views[2];
+	vk::ImageView views[2] = { nullptr, nullptr };
 
-	const uint32_t attachmentCount = mDepthStencil == nullptr ? 1 : 2;
+	uint32_t attachmentCount = 0;
+
+	CODE_RED_TRY_EXECUTE(
+		renderTarget != nullptr,
+		views[attachmentCount++] = std::static_pointer_cast<VulkanTexture>(renderTarget)->view();
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		depthStencil != nullptr,
+		views[attachmentCount++] = std::static_pointer_cast<VulkanTexture>(depthStencil)->view();
+	);
+
+	auto& width = mFrameBufferWidth = 1;
+	auto& height = mFrameBufferHeight = 1;
+
+	//get the widht and height of frame buffer
+	//if we have render target, the width and height is render target
+	//else if we have depth stencil, the width and height is depth stencil
+	//else width and height is 1
+	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, width = std::max(width, renderTarget->width()));
+	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, height = std::max(height, renderTarget->width()));
+
+	CODE_RED_TRY_EXECUTE(
+		renderTarget == nullptr &&
+		depthStencil != nullptr,
+		width = std::max(width, depthStencil->width()));
+
+
+	CODE_RED_TRY_EXECUTE(
+		renderTarget == nullptr &&
+		depthStencil != nullptr,
+		height = std::max(width, depthStencil->height()));
+
 	
-	views[0] = std::static_pointer_cast<VulkanTexture>(mRenderTargets[0])->view();
-	views[1] = mDepthStencil == nullptr ? nullptr : std::static_pointer_cast<VulkanTexture>(mDepthStencil)->view();
-
 	info
 		.setPNext(nullptr)
 		.setFlags(vk::FramebufferCreateFlags(0))
-		.setRenderPass(mRenderPass)
+		.setRenderPass(std::static_pointer_cast<VulkanRenderPass>(mRenderPass)->renderPass())
 		.setAttachmentCount(attachmentCount)
 		.setPAttachments(views)
-		.setWidth(static_cast<uint32_t>(mRenderTargets[0]->width()))
-		.setHeight(static_cast<uint32_t>(mRenderTargets[0]->height()))
+		.setWidth(static_cast<uint32_t>(width))
+		.setHeight(static_cast<uint32_t>(height))
 		.setLayers(1);
 
 	mFrameBuffer = vkDevice.createFramebuffer(info);

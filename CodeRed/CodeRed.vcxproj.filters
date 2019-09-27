@@ -360,6 +360,27 @@
     <ClInclude Include="Shared\IdentityAllocator.hpp">
       <Filter>Shared</Filter>
     </ClInclude>
+    <ClInclude Include="Interface\GpuRenderPass.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Attachment.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\AttachmentLoad.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\AttachmentStore.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\ClearValue.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12RenderPass.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanRenderPass.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -498,6 +519,12 @@
       <Filter>Vulkan\VulkanPipelineState</Filter>
     </ClCompile>
     <ClCompile Include="Vulkan\VulkanGraphicsPipeline.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12RenderPass.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanRenderPass.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
   </ItemGroup>

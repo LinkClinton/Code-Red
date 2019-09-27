@@ -6,14 +6,17 @@
 #include <Shared/Information/WindowInfo.hpp>
 #include <Shared/LayoutElement.hpp>
 #include <Shared/Noncopyable.hpp>
+#include <Shared/Attachment.hpp>
 #else
 #include "../Shared/Information/ResourceInfo.hpp"
 #include "../Shared/Information/SamplerInfo.hpp"
 #include "../Shared/Information/WindowInfo.hpp"
 #include "../Shared/LayoutElement.hpp"
 #include "../Shared/Noncopyable.hpp"
+#include "../Shared/Attachment.hpp"
 #endif
 
+#include <optional>
 #include <vector>
 #include <memory>
 
@@ -35,6 +38,7 @@ namespace CodeRed {
 	class GpuDisplayAdapter;
 
 	class GpuFrameBuffer;
+	class GpuRenderPass;
 	class GpuSwapChain;
 
 	class GpuSampler;
@@ -55,7 +59,7 @@ namespace CodeRed {
 
 		virtual auto createFrameBuffer(
 			const std::shared_ptr<GpuTexture>& render_target,
-			const std::shared_ptr<GpuTexture>& depth_stencil)
+			const std::shared_ptr<GpuTexture>& depth_stencil = nullptr)
 			-> std::shared_ptr<GpuFrameBuffer> = 0;
 
 		virtual auto createGraphicsCommandList(
@@ -69,6 +73,7 @@ namespace CodeRed {
 			->std::shared_ptr<GpuCommandAllocator> = 0;
 		
 		virtual auto createGraphicsPipeline(
+			const std::shared_ptr<GpuRenderPass>& render_pass,
 			const std::shared_ptr<GpuResourceLayout>& resource_layout,
 			const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 			const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -84,6 +89,11 @@ namespace CodeRed {
 			const size_t maxBindResources = 1 << 10)
 			-> std::shared_ptr<GpuResourceLayout> = 0;
 
+		virtual auto createRenderPass(
+			const std::optional<Attachment>& color,
+			const std::optional<Attachment>& depth = std::nullopt)
+			-> std::shared_ptr<GpuRenderPass> = 0;
+		
 		virtual auto createSampler(
 			const SamplerInfo& info)
 			-> std::shared_ptr<GpuSampler> = 0;

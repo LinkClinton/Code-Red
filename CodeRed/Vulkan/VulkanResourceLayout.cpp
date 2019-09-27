@@ -1,4 +1,5 @@
 #include "../Shared/Exception/InvalidException.hpp"
+#include "../Shared/Exception/FailedException.hpp"
 
 #include "VulkanResource/VulkanTexture.hpp"
 #include "VulkanResource/VulkanSampler.hpp"
@@ -271,6 +272,18 @@ void CodeRed::VulkanResourceLayout::unbindResource(const std::shared_ptr<GpuReso
 	vkDevice.freeDescriptorSets(mDescriptorPool, it->second.first);
 
 	mDescriptors.erase(it);
+}
+
+auto CodeRed::VulkanResourceLayout::descriptor(
+	const std::shared_ptr<GpuResource>& resource)
+	-> vk::DescriptorSet
+{
+	CODE_RED_DEBUG_THROW_IF(
+		mDescriptors.find(resource) == mDescriptors.end(),
+		FailedException({ "Descriptor", "ResourceLayout" }, DebugType::Get)
+	);
+	
+	return mDescriptors[resource].first;
 }
 
 #endif

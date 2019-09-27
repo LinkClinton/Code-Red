@@ -32,6 +32,7 @@ namespace CodeRed {
 			->std::shared_ptr<GpuCommandAllocator> override;
 
 		auto createGraphicsPipeline(
+			const std::shared_ptr<GpuRenderPass> &render_pass,
 			const std::shared_ptr<GpuResourceLayout>& resource_layout,
 			const std::shared_ptr<GpuInputAssemblyState>& input_assembly_state,
 			const std::shared_ptr<GpuShaderState>& vertex_shader_state,
@@ -47,6 +48,11 @@ namespace CodeRed {
 			const size_t maxBindResources = 1 << 10)
 			->std::shared_ptr<GpuResourceLayout> override;
 
+		auto createRenderPass(
+			const std::optional<Attachment>& color, 
+			const std::optional<Attachment>& depth = std::nullopt)
+			-> std::shared_ptr<GpuRenderPass> override;
+		
 		auto createSampler(const SamplerInfo& info)
 			->std::shared_ptr<GpuSampler> override;
 

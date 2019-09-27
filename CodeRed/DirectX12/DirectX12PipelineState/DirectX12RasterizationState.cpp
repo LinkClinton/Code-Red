@@ -4,14 +4,12 @@
 
 CodeRed::DirectX12RasterizationState::DirectX12RasterizationState(
 	const std::shared_ptr<GpuLogicalDevice>& device,
-	const PixelFormat format,
 	const FrontFace front_face, 
 	const CullMode cull_mode, 
 	const FillMode fill_mode, 
 	const bool depth_clamp) :
 	GpuRasterizationState(
 		device,
-		format,
 		front_face,
 		cull_mode,
 		fill_mode,

@@ -21,14 +21,16 @@ void ParticleTextureGenerator::run() const
 	//because we want to build a particle texture
 	//the pixel not in the circle is (0, 0, 0, 0)
 	//we will use blend or clip to ignore this pixel
-	const float color[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	auto renderPass = mPipelineInfo->graphicsPipeline()->renderPass();
 
+	renderPass->setClear(CodeRed::ClearValue(0.0f, 0.0f, 0.0f, 0.0f));
+	
 	mCommandList->beginRecoding();
 
 	//set graphics pipeline, resource layout and frame buffer
 	mCommandList->setGraphicsPipeline(mPipelineInfo->graphicsPipeline());
 	mCommandList->setResourceLayout(mPipelineInfo->graphicsPipeline()->layout());
-	mCommandList->setFrameBuffer(mFrameBuffer);
+	
 	mCommandList->setViewPort(mFrameBuffer->fullViewPort());
 	mCommandList->setScissorRect(mFrameBuffer->fullScissorRect());
 
@@ -37,16 +39,12 @@ void ParticleTextureGenerator::run() const
 	mCommandList->setIndexBuffer(mIndexBuffer);
 	mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
 
-	//translate the layout of texture for rendering
-	mCommandList->layoutTransition(mFrameBuffer->renderTarget(), CodeRed::ResourceLayout::RenderTarget);
-
-	mCommandList->clearRenderTarget(mFrameBuffer, color);
-
+	mCommandList->beginRenderPass(renderPass, mFrameBuffer);
+	
 	//draw particle to texture
 	mCommandList->drawIndexed(mIndexBuffer->count());
 
-	//translate the layout of texture for reading
-	mCommandList->layoutTransition(mFrameBuffer->renderTarget(), CodeRed::ResourceLayout::GeneralRead);
+	mCommandList->endRenderPass();
 	
 	mCommandList->endRecoding();
 
@@ -255,14 +253,12 @@ void ParticleTextureGenerator::initializePipeline()
 	//disable depth test
 	mPipelineInfo->setDepthStencilState(
 		mPipelineFactory->createDetphStencilState(
-			CodeRed::PixelFormat::Unknown,
 			false
 		)
 	);
 
 	mPipelineInfo->setRasterizationState(
 		mPipelineFactory->createRasterizationState(
-			mFrameBuffer->renderTarget()->format(),
 			CodeRed::FrontFace::Clockwise,
 			CodeRed::CullMode::None
 		)
@@ -273,6 +269,12 @@ void ParticleTextureGenerator::initializePipeline()
 			CodeRed::ShaderType::Pixel,
 			mPixelShaderCode,
 			"main"
+		)
+	);
+
+	mPipelineInfo->setRenderPass(
+		mDevice->createRenderPass(
+			CodeRed::Attachment::RenderTarget(mFrameBuffer->renderTarget()->format())
 		)
 	);
 	

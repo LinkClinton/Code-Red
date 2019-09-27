@@ -3,11 +3,9 @@
 #ifdef __CODE__RED__GLOBAL__INCLUDE__
 #include <Interface/GpuPipelineState/GpuPipelineState.hpp>
 #include <Shared/StencilOperatorInfo.hpp>
-#include <Shared/Enum/PixelFormat.hpp>
 #else
 #include "GpuPipelineState.hpp"
 #include "../../Shared/StencilOperatorInfo.hpp"
-#include "../../Shared/Enum/PixelFormat.hpp"
 #endif
 
 namespace CodeRed {
@@ -16,7 +14,6 @@ namespace CodeRed {
 	protected:
 		explicit GpuDepthStencilState(
 			const std::shared_ptr<GpuLogicalDevice> &device,
-			const PixelFormat format,
 			const bool depth_enable = true,
 			const bool depth_write_enable = true,
 			const bool stencil_enable = false,
@@ -28,7 +25,6 @@ namespace CodeRed {
 			mStencilEnable(stencil_enable),
 			mDepthEnable(depth_enable),
 			mDepthOperator(depth_operator),
-			mDepthStencilFormat(format),
 			mFrontFace(front),
 			mBackFace(back) {}
 
@@ -42,8 +38,6 @@ namespace CodeRed {
 
 		auto depthOperator() const noexcept -> CompareOperator { return mDepthOperator; }
 
-		auto depthStencilFormat() const noexcept -> PixelFormat { return mDepthStencilFormat; }
-		
 		auto frontFace() const noexcept { return mFrontFace; }
 
 		auto backFace() const noexcept { return mBackFace; }
@@ -54,8 +48,6 @@ namespace CodeRed {
 		
 		CompareOperator mDepthOperator = CompareOperator::LessEqual;
 
-		PixelFormat mDepthStencilFormat = PixelFormat::Unknown;
-		
 		StencilOperatorInfo mFrontFace = StencilOperatorInfo();
 		StencilOperatorInfo mBackFace = StencilOperatorInfo();
 	};
