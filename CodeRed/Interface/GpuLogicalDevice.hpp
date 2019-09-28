@@ -1,20 +1,11 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Information/ResourceInfo.hpp>
-#include <Shared/Information/SamplerInfo.hpp>
-#include <Shared/Information/WindowInfo.hpp>
-#include <Shared/LayoutElement.hpp>
-#include <Shared/Noncopyable.hpp>
-#include <Shared/Attachment.hpp>
-#else
 #include "../Shared/Information/ResourceInfo.hpp"
 #include "../Shared/Information/SamplerInfo.hpp"
 #include "../Shared/Information/WindowInfo.hpp"
 #include "../Shared/LayoutElement.hpp"
 #include "../Shared/Noncopyable.hpp"
 #include "../Shared/Attachment.hpp"
-#endif
 
 #include <optional>
 #include <vector>

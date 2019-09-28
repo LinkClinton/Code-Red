@@ -1,18 +1,10 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Enum/ResourceLayout.hpp>
-#include <Shared/Noncopyable.hpp>
-#include <Shared/ScissorRect.hpp>
-#include <Shared/ViewPort.hpp>
-#include <Shared/Extent.hpp>
-#else
 #include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Noncopyable.hpp"
 #include "../Shared/ScissorRect.hpp"
 #include "../Shared/ViewPort.hpp"
 #include "../Shared/Extent.hpp"
-#endif
 
 #include <memory>
 

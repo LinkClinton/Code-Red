@@ -3,6 +3,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 auto CodeRed::VulkanSystemInfo::selectDisplayAdapter() const
 	-> std::vector<std::shared_ptr<GpuDisplayAdapter>>
 {

@@ -21,6 +21,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 CodeRed::DirectX12LogicalDevice::DirectX12LogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter)
 	: GpuLogicalDevice(adapter)
 {

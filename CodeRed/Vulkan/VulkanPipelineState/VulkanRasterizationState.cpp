@@ -2,6 +2,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanRasterizationState::VulkanRasterizationState(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const FrontFace front_face,

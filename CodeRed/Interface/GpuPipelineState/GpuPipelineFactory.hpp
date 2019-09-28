@@ -1,17 +1,5 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/StencilOperatorInfo.hpp>
-#include <Shared/LayoutElement.hpp>
-#include <Shared/BlendProperty.hpp>
-#include <Shared/Noncopyable.hpp>
-
-#include <Shared/Enum/PrimitiveTopology.hpp>
-#include <Shared/Enum/ShaderType.hpp>
-#include <Shared/Enum/FrontFace.hpp>
-#include <Shared/Enum/CullMode.hpp>
-#include <Shared/Enum/FillMode.hpp>
-#else
 #include "../../Shared/StencilOperatorInfo.hpp"
 #include "../../Shared/LayoutElement.hpp"
 #include "../../Shared/BlendProperty.hpp"
@@ -22,7 +10,6 @@
 #include "../../Shared/Enum/FrontFace.hpp"
 #include "../../Shared/Enum/CullMode.hpp"
 #include "../../Shared/Enum/FillMode.hpp"
-#endif
 
 #include <vector>
 #include <memory>

@@ -1,3 +1,4 @@
+#include "../Shared/Exception/InvalidException.hpp"
 #include "../Shared/Exception/FailedException.hpp"
 
 #include "DirectX12Resource/DirectX12Texture.hpp"
@@ -11,6 +12,8 @@
 #undef max
 
 #ifdef __ENABLE__DIRECTX12__
+
+using namespace CodeRed::DirectX12;
 
 CodeRed::DirectX12ResourceLayout::DirectX12ResourceLayout(
 	const std::shared_ptr<GpuLogicalDevice> &device,

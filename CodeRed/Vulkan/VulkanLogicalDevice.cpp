@@ -22,6 +22,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 #pragma comment(lib, "vulkan-1.lib")
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallBack(

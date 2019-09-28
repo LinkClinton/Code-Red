@@ -1,14 +1,8 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Information/WindowInfo.hpp>
-#include <Shared/Enum/PixelFormat.hpp>
-#include <Shared/Noncopyable.hpp>
-#else
 #include "../Shared/Information/WindowInfo.hpp"
 #include "../Shared/Enum/PixelFormat.hpp"
 #include "../Shared/Noncopyable.hpp"
-#endif
 
 #include <memory>
 #include <vector>

@@ -1,9 +1,9 @@
 #include "../VulkanLogicalDevice.hpp"
 #include "VulkanShaderState.hpp"
 
-#include <spirv_cross/spirv_cross.hpp>
-
 #ifdef __ENABLE__VULKAN__
+
+using namespace CodeRed::Vulkan;
 
 CodeRed::VulkanShaderState::VulkanShaderState(
 	const std::shared_ptr<GpuLogicalDevice>& device,

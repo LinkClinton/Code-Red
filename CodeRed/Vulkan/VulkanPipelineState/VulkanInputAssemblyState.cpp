@@ -3,6 +3,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanInputAssemblyState::VulkanInputAssemblyState(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::vector<InputLayoutElement>& elements,

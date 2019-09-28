@@ -22,8 +22,7 @@ private:
 	{
 		//get current back buffer we can render
 		const auto index = mSwapChain->currentBufferIndex();
-		const float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
+		
 		//reset the command allocator and command list
 		//we can reuse the memory that we used in the previous frame
 		mCommandAllocator->reset();
@@ -36,28 +35,24 @@ private:
 		mCommandList->setResourceLayout(mPipelineInfo->graphicsPipeline()->layout());
 
 		//set frame buffer, viewport and scissor rect
-		mCommandList->setFrameBuffer(mFrameBuffers[index]);
 		mCommandList->setViewPort(mFrameBuffers[index]->fullViewPort());
 		mCommandList->setScissorRect(mFrameBuffers[index]->fullScissorRect());
 
 		//set vertex buffer and view buffer
 		mCommandList->setVertexBuffer(mVertexBuffer);
 		mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
+
+		mPipelineInfo->graphicsPipeline()->renderPass()->setClear(
+			CodeRed::ClearValue(1.0f, 1.0f, 1.0f, 1.0f)
+		);
 		
-		//translate the resource layout
-		//if we want to write to the back buffer
-		//we must translate its layout from present to render target
-		mCommandList->layoutTransition(mFrameBuffers[index]->renderTarget(), CodeRed::ResourceLayout::RenderTarget);
-
-		//clear render target with color
-		mCommandList->clearRenderTarget(mFrameBuffers[index], color);
-
+		mCommandList->beginRenderPass(mPipelineInfo->graphicsPipeline()->renderPass(),
+			mFrameBuffers[index]);
+		
 		mCommandList->draw(3);
-		
-		//if we wnat to present the back buffer
-		//we must translate its layout back to present
-		mCommandList->layoutTransition(mFrameBuffers[index]->renderTarget(), CodeRed::ResourceLayout::Present);
 
+		mCommandList->endRenderPass();
+		
 		//we finish the draw commands, so we need end recoding
 		mCommandList->endRecoding();
 
@@ -252,7 +247,7 @@ private:
 		//set depth stencil state, we disable the depth test
 		mPipelineInfo->setDepthStencilState(
 			mPipelineFactory->createDetphStencilState(
-				CodeRed::PixelFormat::Unknown, false
+				false
 			)
 		);
 
@@ -264,10 +259,9 @@ private:
 			)
 		);
 
-		//set the rtv format to back buffer format
-		mPipelineInfo->setRasterizationState(
-			mPipelineFactory->createRasterizationState(
-				mSwapChain->format()
+		mPipelineInfo->setRenderPass(
+			mDevice->createRenderPass(
+				CodeRed::Attachment::RenderTarget(mSwapChain->format())
 			)
 		);
 	}

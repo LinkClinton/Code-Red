@@ -1,16 +1,9 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Interface/GpuResource/GpuTexture.hpp>
-#include <Shared/Noncopyable.hpp>
-#include <Shared/ScissorRect.hpp>
-#include <Shared/ViewPort.hpp>
-#else
 #include "GpuResource/GpuTexture.hpp"
 #include "../Shared/Noncopyable.hpp"
 #include "../Shared/ScissorRect.hpp"
 #include "../Shared/ViewPort.hpp"
-#endif
 
 #include <memory>
 #include <vector>

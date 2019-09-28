@@ -11,6 +11,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::shared_ptr<GpuRenderPass>& render_pass,

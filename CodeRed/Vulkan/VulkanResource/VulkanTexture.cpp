@@ -3,6 +3,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanTexture::VulkanTexture(
 	const std::shared_ptr<GpuLogicalDevice>& device, 
 	const ResourceInfo& info) :

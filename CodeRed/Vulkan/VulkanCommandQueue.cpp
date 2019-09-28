@@ -4,6 +4,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanCommandQueue::VulkanCommandQueue(
 	const std::shared_ptr<GpuLogicalDevice>& device) :
 	GpuCommandQueue(device)

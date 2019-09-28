@@ -2,6 +2,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 CodeRed::DirectX12RasterizationState::DirectX12RasterizationState(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const FrontFace front_face, 

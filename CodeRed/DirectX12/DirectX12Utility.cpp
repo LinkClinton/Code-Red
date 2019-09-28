@@ -27,11 +27,13 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-auto CodeRed::wideStringToMultiString(const std::wstring& wstring) -> std::string
+auto CodeRed::DirectX12::wideStringToMultiString(const std::wstring& wstring) -> std::string
 {
 	const auto size = WideCharToMultiByte(
 		CP_ACP, 0, wstring.c_str(),
@@ -46,7 +48,7 @@ auto CodeRed::wideStringToMultiString(const std::wstring& wstring) -> std::strin
 	return res;
 }
 
-auto CodeRed::charArrayToString(void* str, const size_t length) -> std::string
+auto CodeRed::DirectX12::charArrayToString(void* str, const size_t length) -> std::string
 {
 	std::string res = "";
 
@@ -56,7 +58,7 @@ auto CodeRed::charArrayToString(void* str, const size_t length) -> std::string
 	return res;
 }
 
-auto CodeRed::enumConvert(const FilterOptions filter) -> D3D12_FILTER {
+auto CodeRed::DirectX12::enumConvert(const FilterOptions filter) -> D3D12_FILTER {
 	switch (filter) {
 	case FilterOptions::MinPointMagPointMipPoint:
 		return D3D12_FILTER_MIN_MAG_MIP_POINT;
@@ -81,7 +83,7 @@ auto CodeRed::enumConvert(const FilterOptions filter) -> D3D12_FILTER {
 	}
 }
 
-auto CodeRed::enumConvert(const AddressMode mode)
+auto CodeRed::DirectX12::enumConvert(const AddressMode mode)
 	-> D3D12_TEXTURE_ADDRESS_MODE
 {
 	switch (mode) {
@@ -94,7 +96,7 @@ auto CodeRed::enumConvert(const AddressMode mode)
 	}
 }
 
-auto CodeRed::enumConvert(const BorderColor color)
+auto CodeRed::DirectX12::enumConvert(const BorderColor color)
 	-> D3D12_STATIC_BORDER_COLOR
 {
 	switch (color) {
@@ -106,7 +108,7 @@ auto CodeRed::enumConvert(const BorderColor color)
 	}
 }
 
-auto CodeRed::enumConvert(const ResourceType type)
+auto CodeRed::DirectX12::enumConvert(const ResourceType type)
 	-> D3D12_DESCRIPTOR_RANGE_TYPE
 {
 	switch (type) {
@@ -117,7 +119,7 @@ auto CodeRed::enumConvert(const ResourceType type)
 	}
 }
 
-auto CodeRed::enumConvert(const ShaderVisibility visibility)
+auto CodeRed::DirectX12::enumConvert(const ShaderVisibility visibility)
 	-> D3D12_SHADER_VISIBILITY
 {
 	switch (visibility) {
@@ -129,7 +131,7 @@ auto CodeRed::enumConvert(const ShaderVisibility visibility)
 	}	
 }
 
-auto CodeRed::enumConvert(const ResourceLayout layout)
+auto CodeRed::DirectX12::enumConvert(const ResourceLayout layout)
 	-> D3D12_RESOURCE_STATES
 {
 	switch (layout) {
@@ -144,7 +146,7 @@ auto CodeRed::enumConvert(const ResourceLayout layout)
 	}
 }
 
-auto CodeRed::enumConvert(const ResourceUsage usage)
+auto CodeRed::DirectX12::enumConvert(const ResourceUsage usage)
 	-> D3D12_RESOURCE_FLAGS
 {
 	//only run with macro __ENABLE_CODE_RED_DEBUG__
@@ -197,7 +199,7 @@ auto CodeRed::enumConvert(const ResourceUsage usage)
 	return res;
 }
 
-auto CodeRed::enumConvert(const MemoryHeap heap)
+auto CodeRed::DirectX12::enumConvert(const MemoryHeap heap)
 	-> D3D12_HEAP_TYPE
 {
 	switch (heap) {
@@ -208,7 +210,7 @@ auto CodeRed::enumConvert(const MemoryHeap heap)
 	}
 }
 
-auto CodeRed::enumConvert(const PixelFormat format)
+auto CodeRed::DirectX12::enumConvert(const PixelFormat format)
 	-> DXGI_FORMAT
 {
 	switch (format) {
@@ -222,7 +224,7 @@ auto CodeRed::enumConvert(const PixelFormat format)
 	}	
 }
 
-auto CodeRed::enumConvert(const Dimension dimension)
+auto CodeRed::DirectX12::enumConvert(const Dimension dimension)
 	-> D3D12_RESOURCE_DIMENSION
 {
 	switch (dimension) {
@@ -234,7 +236,7 @@ auto CodeRed::enumConvert(const Dimension dimension)
 	}	
 }
 
-auto CodeRed::enumConvert(const CompareOperator op)
+auto CodeRed::DirectX12::enumConvert(const CompareOperator op)
 	-> D3D12_COMPARISON_FUNC
 {
 	switch (op) {
@@ -251,7 +253,7 @@ auto CodeRed::enumConvert(const CompareOperator op)
 	}
 }
 
-auto CodeRed::enumConvert(const StencilOperator op)
+auto CodeRed::DirectX12::enumConvert(const StencilOperator op)
 	-> D3D12_STENCIL_OP
 {
 	switch (op) {
@@ -268,7 +270,7 @@ auto CodeRed::enumConvert(const StencilOperator op)
 	}
 }
 
-auto CodeRed::enumConvert(const BlendOperator op)
+auto CodeRed::DirectX12::enumConvert(const BlendOperator op)
 	-> D3D12_BLEND_OP
 {
 	switch (op) {
@@ -282,7 +284,7 @@ auto CodeRed::enumConvert(const BlendOperator op)
 	}
 }
 
-auto CodeRed::enumConvert(const BlendFactor factor)
+auto CodeRed::DirectX12::enumConvert(const BlendFactor factor)
 	-> D3D12_BLEND
 {
 	switch (factor) {
@@ -303,7 +305,7 @@ auto CodeRed::enumConvert(const BlendFactor factor)
 	}
 }
 
-auto CodeRed::enumConvert(const ColorMask mask)
+auto CodeRed::DirectX12::enumConvert(const ColorMask mask)
 	-> D3D12_COLOR_WRITE_ENABLE
 {
 	//the enum is same as D3D12_COLOR_WRITE_ENABLE
@@ -311,7 +313,7 @@ auto CodeRed::enumConvert(const ColorMask mask)
 	return static_cast<D3D12_COLOR_WRITE_ENABLE>(mask);
 }
 
-auto CodeRed::enumConvert(const FillMode mode)
+auto CodeRed::DirectX12::enumConvert(const FillMode mode)
 	-> D3D12_FILL_MODE
 {
 	switch (mode) {
@@ -322,7 +324,7 @@ auto CodeRed::enumConvert(const FillMode mode)
 	}
 }
 
-auto CodeRed::enumConvert(const CullMode mode)
+auto CodeRed::DirectX12::enumConvert(const CullMode mode)
 	-> D3D12_CULL_MODE
 {
 	switch (mode) {
@@ -334,13 +336,13 @@ auto CodeRed::enumConvert(const CullMode mode)
 	}
 }
 
-auto CodeRed::enumConvert(const FrontFace face)
+auto CodeRed::DirectX12::enumConvert(const FrontFace face)
 	-> bool
 {
 	return face == FrontFace::CounterClockwise;
 }
 
-auto CodeRed::enumConvert(const PrimitiveTopology topology)
+auto CodeRed::DirectX12::enumConvert(const PrimitiveTopology topology)
 	-> D3D_PRIMITIVE_TOPOLOGY
 {
 	switch (topology) {
@@ -350,7 +352,7 @@ auto CodeRed::enumConvert(const PrimitiveTopology topology)
 	}
 }
 
-auto CodeRed::enumConvert1(const Dimension dimension)
+auto CodeRed::DirectX12::enumConvert1(const Dimension dimension)
 	-> D3D12_SRV_DIMENSION
 {
 	switch (dimension) {

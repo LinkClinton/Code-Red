@@ -15,7 +15,7 @@ namespace CodeRed {
 
 		~DirectX12BlendState() = default;
 
-		auto constexpr state() const noexcept -> D3D12_BLEND_DESC { return mBlendState; }
+		auto state() const noexcept -> D3D12_BLEND_DESC { return mBlendState; }
 	private:
 		D3D12_BLEND_DESC mBlendState = {};
 	};

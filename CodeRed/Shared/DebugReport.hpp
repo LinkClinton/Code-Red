@@ -1,10 +1,6 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Enum/DebugType.hpp>
-#else
 #include "Enum/DebugType.hpp"
-#endif
 
 #include <vector>
 #include <string>

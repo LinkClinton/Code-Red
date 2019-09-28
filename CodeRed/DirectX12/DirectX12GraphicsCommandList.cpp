@@ -15,6 +15,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 CodeRed::DirectX12GraphicsCommandList::DirectX12GraphicsCommandList(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::shared_ptr<GpuCommandAllocator>& allocator) :

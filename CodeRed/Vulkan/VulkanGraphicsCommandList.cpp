@@ -1,3 +1,5 @@
+#include "../Shared/Exception/InvalidException.hpp"
+
 #include "VulkanResource/VulkanTexture.hpp"
 #include "VulkanResource/VulkanBuffer.hpp"
 
@@ -10,6 +12,8 @@
 #include "VulkanRenderPass.hpp"
 
 #ifdef __ENABLE__VULKAN__
+
+using namespace CodeRed::Vulkan;
 
 CodeRed::VulkanGraphicsCommandList::VulkanGraphicsCommandList(
 	const std::shared_ptr<GpuLogicalDevice>& device,

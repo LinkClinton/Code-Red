@@ -1,12 +1,7 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Interface/GpuPipelineState/GpuRasterizationState.hpp>
-#include <DirectX12/DirectX12Utility.hpp>
-#else
 #include "../../Interface/GpuPipelineState/GpuRasterizationState.hpp"
 #include "../DirectX12Utility.hpp"
-#endif
 
 #ifdef __ENABLE__DIRECTX12__
 
@@ -23,7 +18,7 @@ namespace CodeRed {
 
 		~DirectX12RasterizationState() = default;
 
-		auto constexpr state() const noexcept -> D3D12_RASTERIZER_DESC { return mRasterizationState; }
+		auto state() const noexcept -> D3D12_RASTERIZER_DESC { return mRasterizationState; }
 	private:
 		D3D12_RASTERIZER_DESC mRasterizationState = {};
 	};

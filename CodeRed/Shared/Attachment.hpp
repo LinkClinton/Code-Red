@@ -1,16 +1,9 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Enum/AttachmentStore.hpp>
-#include <Shared/Enum/AttachmentLoad.hpp>
-#include <Shared/Enum/ResourceLayout.hpp>
-#include <Shared/Enum/PixelFormat.hpp>
-#else
 #include "Enum/AttachmentStore.hpp"
 #include "Enum/AttachmentLoad.hpp"
 #include "Enum/ResourceLayout.hpp"
 #include "Enum/PixelFormat.hpp"
-#endif
 
 namespace CodeRed {
 

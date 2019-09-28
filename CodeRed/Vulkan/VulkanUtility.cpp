@@ -29,7 +29,7 @@
 
 #pragma comment(lib, "vulkan-1.lib")
 
-auto CodeRed::enumConvert(const FilterOptions filter, const size_t index)
+auto CodeRed::Vulkan::enumConvert(const FilterOptions filter, const size_t index)
 	-> vk::Filter
 {
 	const UInt32 mask[] = {
@@ -41,7 +41,7 @@ auto CodeRed::enumConvert(const FilterOptions filter, const size_t index)
 	return (static_cast<UInt32>(filter) & mask[index]) != 0 ? vk::Filter::eLinear : vk::Filter::eNearest;
 }
 
-auto CodeRed::enumConvert(const FilterOptions filter)
+auto CodeRed::Vulkan::enumConvert(const FilterOptions filter)
 	-> vk::SamplerMipmapMode
 {
 	return (static_cast<UInt32>(filter) & 1) != 0 ?
@@ -49,7 +49,7 @@ auto CodeRed::enumConvert(const FilterOptions filter)
 		vk::SamplerMipmapMode::eNearest;
 }
 
-auto CodeRed::enumConvert(const AddressMode mode)
+auto CodeRed::Vulkan::enumConvert(const AddressMode mode)
 	-> vk::SamplerAddressMode
 {
 	switch (mode) {
@@ -62,7 +62,7 @@ auto CodeRed::enumConvert(const AddressMode mode)
 	}
 }
 
-auto CodeRed::enumConvert(const BorderColor color)
+auto CodeRed::Vulkan::enumConvert(const BorderColor color)
 	-> vk::BorderColor
 {
 	switch (color) {
@@ -74,7 +74,7 @@ auto CodeRed::enumConvert(const BorderColor color)
 	}
 }
 
-auto CodeRed::enumConvert(const ResourceType type)
+auto CodeRed::Vulkan::enumConvert(const ResourceType type)
 	-> vk::DescriptorType
 {
 	switch (type) {
@@ -85,7 +85,7 @@ auto CodeRed::enumConvert(const ResourceType type)
 	}
 }
 
-auto CodeRed::enumConvert(const ShaderVisibility visibility)
+auto CodeRed::Vulkan::enumConvert(const ShaderVisibility visibility)
 	-> vk::ShaderStageFlagBits
 {
 	switch (visibility) {
@@ -97,7 +97,7 @@ auto CodeRed::enumConvert(const ShaderVisibility visibility)
 	}
 }
 
-auto CodeRed::enumConvert(const ResourceLayout layout)
+auto CodeRed::Vulkan::enumConvert(const ResourceLayout layout)
 	-> vk::ImageLayout
 {
 	switch (layout) {
@@ -112,7 +112,7 @@ auto CodeRed::enumConvert(const ResourceLayout layout)
 	}
 }
 
-auto CodeRed::enumConvert(const ResourceUsage usage)
+auto CodeRed::Vulkan::enumConvert(const ResourceUsage usage)
 	-> VulkanResourceUsage
 {
 	//only run with macro __ENABLE_CODE_RED_DEBUG__
@@ -166,7 +166,7 @@ auto CodeRed::enumConvert(const ResourceUsage usage)
 	return res;
 }
 
-auto CodeRed::enumConvert(const MemoryHeap heap)
+auto CodeRed::Vulkan::enumConvert(const MemoryHeap heap)
 	-> vk::MemoryPropertyFlags
 {
 	switch (heap) {
@@ -178,7 +178,7 @@ auto CodeRed::enumConvert(const MemoryHeap heap)
 	}
 }
 
-auto CodeRed::enumConvert(const PixelFormat format)
+auto CodeRed::Vulkan::enumConvert(const PixelFormat format)
 	-> vk::Format
 {
 	switch (format) {
@@ -192,7 +192,7 @@ auto CodeRed::enumConvert(const PixelFormat format)
 	}
 }
 
-auto CodeRed::enumConvert(const Dimension dimension)
+auto CodeRed::Vulkan::enumConvert(const Dimension dimension)
 	-> vk::ImageType
 {
 	switch (dimension) {
@@ -204,7 +204,7 @@ auto CodeRed::enumConvert(const Dimension dimension)
 	}
 }
 
-auto CodeRed::enumConvert(const ColorMask mask)
+auto CodeRed::Vulkan::enumConvert(const ColorMask mask)
 	-> vk::ColorComponentFlags
 {
 	//the enum is same as vk::ColorComponentFlags
@@ -212,7 +212,7 @@ auto CodeRed::enumConvert(const ColorMask mask)
 	return vk::ColorComponentFlags(static_cast<uint32_t>(mask));
 }
 
-auto CodeRed::enumConvert(const BlendOperator op)
+auto CodeRed::Vulkan::enumConvert(const BlendOperator op)
 	-> vk::BlendOp
 {
 	switch (op) {
@@ -226,7 +226,7 @@ auto CodeRed::enumConvert(const BlendOperator op)
 	}
 }
 
-auto CodeRed::enumConvert(const BlendFactor factor)
+auto CodeRed::Vulkan::enumConvert(const BlendFactor factor)
 	-> vk::BlendFactor
 {
 	switch (factor) {
@@ -247,7 +247,7 @@ auto CodeRed::enumConvert(const BlendFactor factor)
 	}
 }
 
-auto CodeRed::enumConvert(const CompareOperator op)
+auto CodeRed::Vulkan::enumConvert(const CompareOperator op)
 	-> vk::CompareOp
 {
 	switch (op) {
@@ -264,7 +264,7 @@ auto CodeRed::enumConvert(const CompareOperator op)
 	}
 }
 
-auto CodeRed::enumConvert(const StencilOperator op)
+auto CodeRed::Vulkan::enumConvert(const StencilOperator op)
 	-> vk::StencilOp
 {
 	switch (op) {
@@ -281,7 +281,7 @@ auto CodeRed::enumConvert(const StencilOperator op)
 	}
 }
 
-auto CodeRed::enumConvert(const PrimitiveTopology topology)
+auto CodeRed::Vulkan::enumConvert(const PrimitiveTopology topology)
 	-> vk::PrimitiveTopology
 {
 	switch (topology) {
@@ -291,7 +291,7 @@ auto CodeRed::enumConvert(const PrimitiveTopology topology)
 	}
 }
 
-auto CodeRed::enumConvert(const FillMode mode)
+auto CodeRed::Vulkan::enumConvert(const FillMode mode)
 	-> vk::PolygonMode
 {
 	switch (mode) {
@@ -302,7 +302,7 @@ auto CodeRed::enumConvert(const FillMode mode)
 	}
 }
 
-auto CodeRed::enumConvert(const CullMode mode)
+auto CodeRed::Vulkan::enumConvert(const CullMode mode)
 	-> vk::CullModeFlags
 {
 	switch (mode) {
@@ -314,7 +314,7 @@ auto CodeRed::enumConvert(const CullMode mode)
 	}
 }
 
-auto CodeRed::enumConvert(const FrontFace face)
+auto CodeRed::Vulkan::enumConvert(const FrontFace face)
 	-> vk::FrontFace
 {
 	switch (face) {
@@ -325,7 +325,7 @@ auto CodeRed::enumConvert(const FrontFace face)
 	}
 }
 
-auto CodeRed::enumConvert(const ShaderType type)
+auto CodeRed::Vulkan::enumConvert(const ShaderType type)
 	-> vk::ShaderStageFlagBits
 {
 	switch (type) {
@@ -336,7 +336,7 @@ auto CodeRed::enumConvert(const ShaderType type)
 	}
 }
 
-auto CodeRed::enumConvert(const AttachmentLoad load)
+auto CodeRed::Vulkan::enumConvert(const AttachmentLoad load)
 	-> vk::AttachmentLoadOp
 {
 	switch (load) {
@@ -348,7 +348,7 @@ auto CodeRed::enumConvert(const AttachmentLoad load)
 	}
 }
 
-auto CodeRed::enumConvert(const AttachmentStore store)
+auto CodeRed::Vulkan::enumConvert(const AttachmentStore store)
 	-> vk::AttachmentStoreOp
 {
 	switch (store) {
@@ -359,7 +359,7 @@ auto CodeRed::enumConvert(const AttachmentStore store)
 	}
 }
 
-auto CodeRed::enumConvert1(const Dimension dimension)
+auto CodeRed::Vulkan::enumConvert1(const Dimension dimension)
 -> vk::ImageViewType
 {
 	switch (dimension) {
@@ -371,7 +371,7 @@ auto CodeRed::enumConvert1(const Dimension dimension)
 	}
 }
 
-auto CodeRed::enumConvert1(
+auto CodeRed::Vulkan::enumConvert1(
 	const ResourceLayout layout,
 	const ResourceType type)
 	-> vk::AccessFlags

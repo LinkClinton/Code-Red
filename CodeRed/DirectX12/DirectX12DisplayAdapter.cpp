@@ -2,6 +2,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 CodeRed::DirectX12DisplayAdapter::DirectX12DisplayAdapter(
 	const WRL::ComPtr<IDXGIAdapter1> &adapter,
 	const std::string &name,

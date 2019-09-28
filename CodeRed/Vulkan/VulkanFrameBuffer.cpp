@@ -11,6 +11,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanFrameBuffer::VulkanFrameBuffer(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::shared_ptr<GpuTexture>& render_target, 

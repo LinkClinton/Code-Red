@@ -2,6 +2,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanDepthStencilState::VulkanDepthStencilState(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const bool depth_enable,

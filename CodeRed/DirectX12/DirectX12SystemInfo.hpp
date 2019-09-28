@@ -1,10 +1,6 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Interface/GpuSystemInfo.hpp>
-#else
 #include "../Interface/GpuSystemInfo.hpp"
-#endif
 
 #ifdef __ENABLE__DIRECTX12__
 

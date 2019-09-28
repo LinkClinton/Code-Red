@@ -1,14 +1,8 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Interface/GpuPipelineState/GpuPipelineState.hpp>
-#include <Shared/Utility.hpp>
-#include <Shared/Enum/ShaderType.hpp>
-#else
 #include "GpuPipelineState.hpp"
 #include "../../Shared/Utility.hpp"
 #include "../../Shared/Enum/ShaderType.hpp"
-#endif
 
 #include <vector>
 #include <string>

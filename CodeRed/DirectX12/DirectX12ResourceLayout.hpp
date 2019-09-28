@@ -1,14 +1,8 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Interface/GpuResourceLayout.hpp>
-#include <Shared/IdentityAllocator.hpp>
-#include <DirectX12/DirectX12Utility.hpp>
-#else
 #include "../Interface/GpuResourceLayout.hpp"
 #include "../Shared/IdentityAllocator.hpp"
 #include "DirectX12Utility.hpp"
-#endif
 
 #include <map>
 

@@ -8,6 +8,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanPipelineFactory::VulkanPipelineFactory(
 	const std::shared_ptr<GpuLogicalDevice>& device) :
 	GpuPipelineFactory(device)

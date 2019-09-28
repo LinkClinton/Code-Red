@@ -8,8 +8,11 @@
 #include "VulkanResourceLayout.hpp"
 #include "VulkanLogicalDevice.hpp"
 
-#ifdef __ENABLE__VULKAN__
 #undef max
+
+#ifdef __ENABLE__VULKAN__
+
+using namespace CodeRed::Vulkan;
 
 CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 	const std::shared_ptr<GpuLogicalDevice>& device,

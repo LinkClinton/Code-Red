@@ -1,12 +1,7 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Exception/Exception.hpp>
-#include <Shared/Enum/DebugType.hpp>
-#else
 #include "Exception.hpp"
 #include "../Enum/DebugType.hpp"
-#endif
 
 #include <string>
 #include <vector>

@@ -1,10 +1,6 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Utility.hpp>
-#else
 #include "../Shared/Utility.hpp"
-#endif
 
 #ifdef __ENABLE__DIRECTX12__
 
@@ -43,51 +39,54 @@ namespace CodeRed {
 	enum class ColorMask : UInt32;
 	enum class FillMode : UInt32;
 	enum class CullMode : UInt32;
-	
-	auto wideStringToMultiString(const std::wstring& wstring)->std::string;
 
-	auto charArrayToString(void* str, const size_t length)->std::string;
-	
-	auto enumConvert(const FilterOptions filter) -> D3D12_FILTER;
+	namespace DirectX12 {
 
-	auto enumConvert(const AddressMode mode) -> D3D12_TEXTURE_ADDRESS_MODE;
+		auto wideStringToMultiString(const std::wstring& wstring)->std::string;
 
-	auto enumConvert(const BorderColor color) -> D3D12_STATIC_BORDER_COLOR;
+		auto charArrayToString(void* str, const size_t length)->std::string;
 
-	auto enumConvert(const ResourceType type) -> D3D12_DESCRIPTOR_RANGE_TYPE;
-	
-	auto enumConvert(const ShaderVisibility visibility) -> D3D12_SHADER_VISIBILITY;
+		auto enumConvert(const FilterOptions filter)->D3D12_FILTER;
 
-	auto enumConvert(const ResourceLayout layout) -> D3D12_RESOURCE_STATES;
+		auto enumConvert(const AddressMode mode)->D3D12_TEXTURE_ADDRESS_MODE;
 
-	auto enumConvert(const ResourceUsage usage) -> D3D12_RESOURCE_FLAGS;
+		auto enumConvert(const BorderColor color)->D3D12_STATIC_BORDER_COLOR;
 
-	auto enumConvert(const MemoryHeap heap) -> D3D12_HEAP_TYPE;
+		auto enumConvert(const ResourceType type)->D3D12_DESCRIPTOR_RANGE_TYPE;
 
-	auto enumConvert(const PixelFormat format) -> DXGI_FORMAT;
+		auto enumConvert(const ShaderVisibility visibility)->D3D12_SHADER_VISIBILITY;
 
-	auto enumConvert(const Dimension dimension) -> D3D12_RESOURCE_DIMENSION;
+		auto enumConvert(const ResourceLayout layout)->D3D12_RESOURCE_STATES;
 
-	auto enumConvert(const CompareOperator op) -> D3D12_COMPARISON_FUNC;
+		auto enumConvert(const ResourceUsage usage)->D3D12_RESOURCE_FLAGS;
 
-	auto enumConvert(const StencilOperator op) -> D3D12_STENCIL_OP;
+		auto enumConvert(const MemoryHeap heap)->D3D12_HEAP_TYPE;
 
-	auto enumConvert(const BlendOperator op) -> D3D12_BLEND_OP;
+		auto enumConvert(const PixelFormat format)->DXGI_FORMAT;
 
-	auto enumConvert(const BlendFactor factor) -> D3D12_BLEND;
+		auto enumConvert(const Dimension dimension)->D3D12_RESOURCE_DIMENSION;
 
-	auto enumConvert(const ColorMask mask) -> D3D12_COLOR_WRITE_ENABLE;
+		auto enumConvert(const CompareOperator op)->D3D12_COMPARISON_FUNC;
 
-	auto enumConvert(const FillMode mode) -> D3D12_FILL_MODE;
+		auto enumConvert(const StencilOperator op)->D3D12_STENCIL_OP;
 
-	auto enumConvert(const CullMode mode) -> D3D12_CULL_MODE;
+		auto enumConvert(const BlendOperator op)->D3D12_BLEND_OP;
 
-	auto enumConvert(const FrontFace face) -> bool;
+		auto enumConvert(const BlendFactor factor)->D3D12_BLEND;
 
-	auto enumConvert(const PrimitiveTopology topology) -> D3D_PRIMITIVE_TOPOLOGY;
+		auto enumConvert(const ColorMask mask)->D3D12_COLOR_WRITE_ENABLE;
 
-	auto enumConvert1(const Dimension dimension)->D3D12_SRV_DIMENSION;
+		auto enumConvert(const FillMode mode)->D3D12_FILL_MODE;
 
+		auto enumConvert(const CullMode mode)->D3D12_CULL_MODE;
+
+		auto enumConvert(const FrontFace face) -> bool;
+
+		auto enumConvert(const PrimitiveTopology topology)->D3D_PRIMITIVE_TOPOLOGY;
+
+		auto enumConvert1(const Dimension dimension)->D3D12_SRV_DIMENSION;
+		
+	}
 }
 
 #endif

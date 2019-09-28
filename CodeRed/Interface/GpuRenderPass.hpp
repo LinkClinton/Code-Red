@@ -1,14 +1,8 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Noncopyable.hpp>
-#include <Shared/Attachment.hpp>
-#include <Shared/ClearValue.hpp>
-#else
 #include "../Shared/Noncopyable.hpp"
 #include "../Shared/Attachment.hpp"
 #include "../Shared/ClearValue.hpp"
-#endif
 
 #include <optional>
 #include <vector>

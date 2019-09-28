@@ -7,6 +7,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 auto CodeRed::DirectX12SystemInfo::selectDisplayAdapter() const -> std::vector<std::shared_ptr<GpuDisplayAdapter>>
 {
 	WRL::ComPtr<IDXGIFactory4> factory;

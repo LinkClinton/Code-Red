@@ -2,6 +2,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 CodeRed::DirectX12DepthStencilState::DirectX12DepthStencilState(
 	const std::shared_ptr<GpuLogicalDevice> &device,
 	const bool depth_enable, 

@@ -2,6 +2,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 CodeRed::DirectX12BlendState::DirectX12BlendState(
 	const std::shared_ptr<GpuLogicalDevice> &device,
 	const BlendProperty& blend_property) :

@@ -2,6 +2,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanBlendState::VulkanBlendState(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const BlendProperty& blend_property) :

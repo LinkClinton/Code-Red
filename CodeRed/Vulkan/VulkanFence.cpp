@@ -3,6 +3,8 @@
 
 #ifdef __ENABLE__VULKAN__
 
+using namespace CodeRed::Vulkan;
+
 CodeRed::VulkanFence::VulkanFence(const std::shared_ptr<GpuLogicalDevice>& device) :
 	GpuFence(device)
 {

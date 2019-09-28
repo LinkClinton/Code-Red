@@ -1,11 +1,6 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/Noncopyable.hpp>
-#include <Shared/Utility.hpp>
-#else
 #include "../Shared/Noncopyable.hpp"
-#endif
 
 #include <string>
 

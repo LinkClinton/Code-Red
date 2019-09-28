@@ -4,8 +4,9 @@
 
 #include "DirectX12Buffer.hpp"
 
-
 #ifdef __ENABLE__DIRECTX12__
+
+using namespace CodeRed::DirectX12;
 
 CodeRed::DirectX12Buffer::DirectX12Buffer(
 	const std::shared_ptr<GpuLogicalDevice>& device, 

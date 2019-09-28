@@ -1,10 +1,7 @@
 #pragma once
 
-#ifdef __CODE__RED__GLOBAL__INCLUDE__
-#include <Shared/LayoutElement.hpp>
-#else
 #include "../Shared/LayoutElement.hpp"
-#endif
+#include "../Shared/Noncopyable.hpp"
 
 #include <memory>
 #include <vector>
@@ -16,7 +13,7 @@ namespace CodeRed {
 	class GpuTexture;
 	class GpuBuffer;
 	
-	class GpuResourceLayout {
+	class GpuResourceLayout : public Noncopyable {
 	protected:
 		explicit GpuResourceLayout(
 			const std::shared_ptr<GpuLogicalDevice>& device,

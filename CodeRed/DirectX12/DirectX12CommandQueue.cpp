@@ -7,6 +7,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 CodeRed::DirectX12CommandQueue::DirectX12CommandQueue(
 	const std::shared_ptr<GpuLogicalDevice>& device) :
 	GpuCommandQueue(device)

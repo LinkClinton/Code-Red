@@ -5,6 +5,8 @@
 
 #ifdef __ENABLE__DIRECTX12__
 
+using namespace CodeRed::DirectX12;
+
 CodeRed::DirectX12CommandAllocator::DirectX12CommandAllocator(
 	const std::shared_ptr<GpuLogicalDevice> device) :
 	GpuCommandAllocator(device)

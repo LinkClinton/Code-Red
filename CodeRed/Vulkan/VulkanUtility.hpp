@@ -41,57 +41,61 @@ namespace CodeRed {
 	enum class FillMode : UInt32;
 	enum class CullMode : UInt32;
 
-	using VulkanResourceUsage = std::pair<vk::BufferUsageFlags, vk::ImageUsageFlags>;
-	
-	auto enumConvert(const FilterOptions filter, const size_t index) -> vk::Filter;
+	namespace Vulkan {
 
-	auto enumConvert(const FilterOptions filter) -> vk::SamplerMipmapMode;
+		using VulkanResourceUsage = std::pair<vk::BufferUsageFlags, vk::ImageUsageFlags>;
 
-	auto enumConvert(const AddressMode mode) -> vk::SamplerAddressMode;
+		auto enumConvert(const FilterOptions filter, const size_t index)->vk::Filter;
 
-	auto enumConvert(const BorderColor color) -> vk::BorderColor;
-	
-	auto enumConvert(const ResourceType type) -> vk::DescriptorType;
+		auto enumConvert(const FilterOptions filter)->vk::SamplerMipmapMode;
 
-	auto enumConvert(const ShaderVisibility visibility) -> vk::ShaderStageFlagBits;
+		auto enumConvert(const AddressMode mode)->vk::SamplerAddressMode;
 
-	auto enumConvert(const ResourceLayout layout) -> vk::ImageLayout;
+		auto enumConvert(const BorderColor color)->vk::BorderColor;
 
-	auto enumConvert(const ResourceUsage usage) -> VulkanResourceUsage;
+		auto enumConvert(const ResourceType type)->vk::DescriptorType;
 
-	auto enumConvert(const MemoryHeap heap) -> vk::MemoryPropertyFlags;
+		auto enumConvert(const ShaderVisibility visibility)->vk::ShaderStageFlagBits;
 
-	auto enumConvert(const PixelFormat format) -> vk::Format;
-	
-	auto enumConvert(const Dimension dimension) -> vk::ImageType;
+		auto enumConvert(const ResourceLayout layout)->vk::ImageLayout;
 
-	auto enumConvert(const ColorMask mask) -> vk::ColorComponentFlags;
+		auto enumConvert(const ResourceUsage usage)->VulkanResourceUsage;
 
-	auto enumConvert(const BlendOperator op) -> vk::BlendOp;
+		auto enumConvert(const MemoryHeap heap)->vk::MemoryPropertyFlags;
 
-	auto enumConvert(const BlendFactor factor) -> vk::BlendFactor;
+		auto enumConvert(const PixelFormat format)->vk::Format;
 
-	auto enumConvert(const CompareOperator op) -> vk::CompareOp;
+		auto enumConvert(const Dimension dimension)->vk::ImageType;
 
-	auto enumConvert(const StencilOperator op) -> vk::StencilOp;
+		auto enumConvert(const ColorMask mask)->vk::ColorComponentFlags;
 
-	auto enumConvert(const PrimitiveTopology topology) -> vk::PrimitiveTopology;
+		auto enumConvert(const BlendOperator op)->vk::BlendOp;
 
-	auto enumConvert(const FillMode mode) -> vk::PolygonMode;
+		auto enumConvert(const BlendFactor factor)->vk::BlendFactor;
 
-	auto enumConvert(const CullMode mode) -> vk::CullModeFlags;
+		auto enumConvert(const CompareOperator op)->vk::CompareOp;
 
-	auto enumConvert(const FrontFace face) -> vk::FrontFace;
+		auto enumConvert(const StencilOperator op)->vk::StencilOp;
 
-	auto enumConvert(const ShaderType type) -> vk::ShaderStageFlagBits;
+		auto enumConvert(const PrimitiveTopology topology)->vk::PrimitiveTopology;
 
-	auto enumConvert(const AttachmentLoad load) -> vk::AttachmentLoadOp;
+		auto enumConvert(const FillMode mode)->vk::PolygonMode;
 
-	auto enumConvert(const AttachmentStore store) -> vk::AttachmentStoreOp;
-	
-	auto enumConvert1(const Dimension dimension) -> vk::ImageViewType;
+		auto enumConvert(const CullMode mode)->vk::CullModeFlags;
 
-	auto enumConvert1(const ResourceLayout layout, const ResourceType type) -> vk::AccessFlags;
+		auto enumConvert(const FrontFace face)->vk::FrontFace;
+
+		auto enumConvert(const ShaderType type)->vk::ShaderStageFlagBits;
+
+		auto enumConvert(const AttachmentLoad load)->vk::AttachmentLoadOp;
+
+		auto enumConvert(const AttachmentStore store)->vk::AttachmentStoreOp;
+
+		auto enumConvert1(const Dimension dimension)->vk::ImageViewType;
+
+		auto enumConvert1(const ResourceLayout layout, const ResourceType type)->vk::AccessFlags;
+
+	}
 }
 
 #endif
