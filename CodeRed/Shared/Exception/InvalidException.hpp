@@ -38,7 +38,7 @@ namespace CodeRed {
 			Exception(DebugReport::push(message, messages) + "\nDebug Message : " + debugMessage),
 			mValue(value) {}
 	private:
-		const std::string messageTemplate = std::string("The [0](type : ") + typeid(T).name() + ") is invalid.";
+		const inline static std::string messageTemplate = std::string("The [0](type : ") + typeid(T).name() + ") is invalid.";
 		
 		T* mValue;
 	};

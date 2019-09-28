@@ -78,6 +78,8 @@ void Demo::DemoApp::runLoop()
 
 			if (message.message == WM_QUIT) mExisted = false;
 		}
+
+		if (mExisted == false) break;
 		
 		auto duration = std::chrono::duration_cast<
 			std::chrono::duration<float>>(Time::now() - currentTime);

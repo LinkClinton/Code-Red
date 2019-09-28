@@ -24,8 +24,8 @@ CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 	size_t maxSpace = 0;
 	
 	//find the max space we use, then we will create layouts with maxSpace
-	for (auto element : elements) maxSpace = std::max(maxSpace, element.Space);
-	for (auto sampler : samplers) maxSpace = std::max(maxSpace, sampler.Space);
+	for (auto element : elements) maxSpace = std::max(maxSpace, element.Space + 1);
+	for (auto sampler : samplers) maxSpace = std::max(maxSpace, sampler.Space + 1);
 
 	std::vector<std::vector<vk::DescriptorSetLayoutBinding>> bindings(maxSpace);
 
@@ -44,7 +44,7 @@ CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 
 		mDescriptorBindings.push_back(bindings[element.Space].size() - 1);
 	}
-
+	
 	//generate the binding information of samplers
 	for (const auto sampler : mSamplers) {
 		vk::DescriptorSetLayoutBinding binding = {};
@@ -93,7 +93,7 @@ CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 
 	//create descriptor pool for this resource layout
 	vk::DescriptorPoolCreateInfo poolInfo = {};
-	vk::DescriptorPoolSize poolSizes[3];
+	vk::DescriptorPoolSize poolSizes[2];
 
 	poolSizes[0].descriptorCount = static_cast<uint32_t>(mMaxBindResources);
 	poolSizes[1].descriptorCount = static_cast<uint32_t>(mMaxBindResources);
@@ -185,7 +185,7 @@ void CodeRed::VulkanResourceLayout::bindTexture(
 	//the descriptor is existed, we need update it, so we free the old descriptor
 	if (it != mDescriptors.end()) vkDevice.freeDescriptorSets(mDescriptorPool, it->second.first);
 
-	const auto bindDescriptor = mDescriptors[it->first] = std::make_pair(vkDevice.allocateDescriptorSets(info)[0], index);
+	const auto bindDescriptor = mDescriptors[resource] = std::make_pair(vkDevice.allocateDescriptorSets(info)[0], index);
 
 	vk::DescriptorImageInfo imageInfo = {};
 
@@ -241,7 +241,7 @@ void CodeRed::VulkanResourceLayout::bindBuffer(
 	//the descriptor is existed, we need update it, so we free the old descriptor
 	if (it != mDescriptors.end()) vkDevice.freeDescriptorSets(mDescriptorPool, it->second.first);
 
-	const auto bindDescriptor = mDescriptors[it->first] = std::make_pair(vkDevice.allocateDescriptorSets(info)[0], index);
+	const auto bindDescriptor = mDescriptors[resource] = std::make_pair(vkDevice.allocateDescriptorSets(info)[0], index);
 
 	vk::DescriptorBufferInfo bufferInfo = {};
 

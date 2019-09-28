@@ -17,7 +17,7 @@ namespace CodeRed {
 			const std::vector<Byte>& code,
 			const std::string& name = "main") :
 			GpuPipelineState(device),
-			mCode(code), mType(type) {}
+			mCode(code), mName(name), mType(type) {}
 
 		~GpuShaderState() = default;
 	public:

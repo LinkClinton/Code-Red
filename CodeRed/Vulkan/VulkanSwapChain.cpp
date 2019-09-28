@@ -31,7 +31,12 @@ CodeRed::VulkanSwapChain::VulkanSwapChain(
 		.setHwnd(static_cast<HWND>(info.handle));
 
 	mSurface = vkDevice->mInstance.createWin32SurfaceKHR(surfaceInfo);
+
+	assert(vkDevice->mPhysicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(
+		vkDevice->mQueueFamilyIndex), mSurface));
 #endif
+	
+	initializeSwapChain();
 }
 
 CodeRed::VulkanSwapChain::~VulkanSwapChain()

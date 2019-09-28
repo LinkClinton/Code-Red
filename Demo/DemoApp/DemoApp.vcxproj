@@ -162,6 +162,7 @@
     <ClInclude Include="FrameResources.hpp" />
     <ClInclude Include="PipelineInfo.hpp" />
     <ClInclude Include="ResourceHelper.hpp" />
+    <ClInclude Include="ShaderCompiler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CodeRed\CodeRed.vcxproj">
@@ -173,6 +174,7 @@
     <ClCompile Include="FrameResources.cpp" />
     <ClCompile Include="PipelineInfo.cpp" />
     <ClCompile Include="ResourceHelper.cpp" />
+    <ClCompile Include="ShaderCompiler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

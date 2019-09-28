@@ -102,7 +102,7 @@ namespace CodeRed {
 		std::vector<const char*> mDeviceExtensions;
 		std::vector<const char*> mInstanceLayers;
 
-		vk::DebugReportCallbackEXT mDebugReportCallBack;
+		vk::DebugUtilsMessengerEXT mDebugUtilsMessenger;
 		vk::DispatchLoaderDynamic mDynamicLoader;
 		
 		vk::PhysicalDeviceMemoryProperties mMemoryProperties;

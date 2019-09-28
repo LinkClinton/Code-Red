@@ -18,7 +18,7 @@ namespace CodeRed {
 			T* value = nullptr) :
 			InvalidException<T>(messages, debugMessage, messageTemplate, value) {}
 	private:
-		const std::string messageTemplate = std::string("The [0](type : ") + typeid(T).name() + ") is zero/nullptr.";
+		const inline static std::string messageTemplate = std::string("The [0](type : ") + typeid(T).name() + ") is zero/nullptr.";
 	};
 	
 }

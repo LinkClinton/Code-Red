@@ -5,11 +5,13 @@
     <ClInclude Include="PipelineInfo.hpp" />
     <ClInclude Include="FrameResources.hpp" />
     <ClInclude Include="ResourceHelper.hpp" />
+    <ClInclude Include="ShaderCompiler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoApp.cpp" />
     <ClCompile Include="PipelineInfo.cpp" />
     <ClCompile Include="FrameResources.cpp" />
     <ClCompile Include="ResourceHelper.cpp" />
+    <ClCompile Include="ShaderCompiler.cpp" />
   </ItemGroup>
 </Project>

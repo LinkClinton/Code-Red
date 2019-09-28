@@ -84,7 +84,7 @@ void CodeRed::VulkanFrameBuffer::reset(
 	//else if we have depth stencil, the width and height is depth stencil
 	//else width and height is 1
 	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, width = std::max(width, renderTarget->width()));
-	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, height = std::max(height, renderTarget->width()));
+	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, height = std::max(height, renderTarget->height()));
 
 	CODE_RED_TRY_EXECUTE(
 		renderTarget == nullptr &&

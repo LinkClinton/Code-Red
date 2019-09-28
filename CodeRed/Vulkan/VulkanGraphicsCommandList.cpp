@@ -47,8 +47,10 @@ void CodeRed::VulkanGraphicsCommandList::beginRecoding()
 	mCommandBuffer.reset(vk::CommandBufferResetFlagBits::eReleaseResources);
 
 	mResourceLayout.reset();
+
+	const vk::CommandBufferBeginInfo info = {};
 	
-	mCommandBuffer.begin({});
+	mCommandBuffer.begin(info);
 }
 
 void CodeRed::VulkanGraphicsCommandList::endRecoding()

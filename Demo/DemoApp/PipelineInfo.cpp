@@ -7,13 +7,12 @@ CodeRed::PipelineInfo::PipelineInfo(const std::shared_ptr<GpuLogicalDevice>& dev
 
 	mRasterizationState = mPipelineFactory->createRasterizationState();
 	mInputAssemblyState = mPipelineFactory->createInputAssemblyState({});
-	mVertexShaderState = mPipelineFactory->createShaderState(ShaderType::Vertex, {});
+	//mVertexShaderState = mPipelineFactory->createShaderState(ShaderType::Vertex, {});
 	mDepthStencilState = mPipelineFactory->createDetphStencilState();
-	mPixelShaderState = mPipelineFactory->createShaderState(ShaderType::Pixel, {});
+	//mPixelShaderState = mPipelineFactory->createShaderState(ShaderType::Pixel, {});
 	mBlendState = mPipelineFactory->createBlendState();
 	mResourceLayout = mDevice->createResourceLayout({}, {});
-	mRenderPass = mDevice->createRenderPass(
-		Attachment::RenderTarget(PixelFormat::RedGreenBlueAlpha8BitUnknown));
+	mRenderPass = mDevice->createRenderPass(Attachment::RenderTarget(PixelFormat::RedGreenBlueAlpha8BitUnknown));
 }
 
 void CodeRed::PipelineInfo::setRasterizationState(const std::shared_ptr<GpuRasterizationState>& state)

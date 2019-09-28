@@ -19,7 +19,7 @@ CodeRed::VulkanShaderState::VulkanShaderState(
 	info
 		.setPNext(nullptr)
 		.setFlags(vk::ShaderModuleCreateFlags(0))
-		.setCodeSize(mCode.size() / (sizeof uint32_t / sizeof Byte))
+		.setCodeSize(mCode.size())
 		.setPCode(reinterpret_cast<uint32_t*>(mCode.data()));
 
 	mModule = vkDevice.createShaderModule(info);

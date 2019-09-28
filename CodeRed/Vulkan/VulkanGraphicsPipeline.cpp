@@ -37,7 +37,9 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 {
 	vk::PipelineDynamicStateCreateInfo stateInfo = {};
 	vk::GraphicsPipelineCreateInfo info = {};
-
+	vk::PipelineMultisampleStateCreateInfo sampleInfo = {};
+	vk::PipelineViewportStateCreateInfo viewInfo = {};
+	
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
 	
 	mDynamicStates = std::vector<vk::DynamicState>(3);
@@ -51,6 +53,25 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 		.setDynamicStateCount(static_cast<uint32_t>(mDynamicStates.size()))
 		.setPDynamicStates(mDynamicStates.data());
 
+	sampleInfo
+		.setPNext(nullptr)
+		.setFlags(vk::PipelineMultisampleStateCreateFlags(0))
+		.setPSampleMask(nullptr)
+		.setRasterizationSamples(vk::SampleCountFlagBits::e1)
+		.setSampleShadingEnable(false)
+		.setAlphaToCoverageEnable(false)
+		.setAlphaToOneEnable(false)
+		.setMinSampleShading(0.0f);
+
+	viewInfo
+		.setPNext(nullptr)
+		.setFlags(vk::PipelineViewportStateCreateFlags(0))
+		.setScissorCount(0)
+		.setViewportCount(0)
+		.setPScissors(nullptr)
+		.setPViewports(nullptr);
+
+	auto resourceLayout = std::static_pointer_cast<VulkanResourceLayout>(mResourceLayout)->layout();
 	auto vertexInputState = std::static_pointer_cast<VulkanInputAssemblyState>(mInputAssemblyState)->vertexInput();
 	auto inputAssemblyState = std::static_pointer_cast<VulkanInputAssemblyState>(mInputAssemblyState)->inputAssembly();
 	auto rasterizationState = std::static_pointer_cast<VulkanRasterizationState>(mRasterizationState)->state();
@@ -59,14 +80,14 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 	auto renderPass = std::static_pointer_cast<VulkanRenderPass>(mRenderPass)->renderPass();
 	
 	std::vector<vk::PipelineShaderStageCreateInfo> shaderStage;
-
+	
 	shaderStage.push_back(std::static_pointer_cast<VulkanShaderState>(mVertexShaderState)->stage());
 	shaderStage.push_back(std::static_pointer_cast<VulkanShaderState>(mPixelShaderState)->stage());
 	
 	info
 		.setPNext(nullptr)
 		.setFlags(vk::PipelineCreateFlags(0))
-		.setLayout(std::static_pointer_cast<VulkanResourceLayout>(mResourceLayout)->layout())
+		.setLayout(resourceLayout)
 		.setBasePipelineHandle(nullptr)
 		.setBasePipelineIndex(0)
 		.setPVertexInputState(&vertexInputState)
@@ -75,9 +96,9 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 		.setPDepthStencilState(&depthStencilState)
 		.setPColorBlendState(&colorBlendState)
 		.setPTessellationState(nullptr)
-		.setPMultisampleState(nullptr)
+		.setPMultisampleState(&sampleInfo)
 		.setPDynamicState(&stateInfo)
-		.setPViewportState(nullptr)
+		.setPViewportState(&viewInfo)
 		.setStageCount(static_cast<uint32_t>(shaderStage.size()))
 		.setPStages(shaderStage.data())
 		.setRenderPass(renderPass)

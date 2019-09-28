@@ -1,6 +1,6 @@
-#include "../Shared/DebugReport.hpp"
 #include "../Shared/Exception/InvalidException.hpp"
 #include "../Shared/Exception/FailedException.hpp"
+#include "../Shared/DebugReport.hpp"
 
 #include "VulkanPipelineState/VulkanPipelineFactory.hpp"
 
@@ -27,16 +27,12 @@ using namespace CodeRed::Vulkan;
 #pragma comment(lib, "vulkan-1.lib")
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallBack(
-	VkDebugReportFlagsEXT flags,
-	VkDebugReportObjectTypeEXT objectType,
-	uint64_t object,
-	size_t location,
-	int32_t messageCode,
-	const char* layerPrefix,
-	const char* message,
-	void* userData)
+	const VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
+	const VkDebugUtilsMessageTypeFlagsEXT message_type,
+	const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
+	void* user_data)
 {
-	CodeRed::DebugReport::message(std::string("vulkan validation layer : ") + message);
+	CodeRed::DebugReport::message(std::string("vulkan validation layer : ") + callback_data->pMessage);
 	
 	return VK_FALSE;
 }
@@ -71,7 +67,7 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 
 	initializeDynamicLoader();
 	initializeDebugReport();
-
+	
 	auto physicalDevices = mInstance.enumeratePhysicalDevices();
 	auto foundPhysicalDevice = false;
 	
@@ -153,7 +149,7 @@ CodeRed::VulkanLogicalDevice::~VulkanLogicalDevice()
 	mDevice.destroy();
 	
 	if (mEnableValidationLayer == true)
-		mInstance.destroyDebugReportCallbackEXT(mDebugReportCallBack, nullptr, mDynamicLoader);
+		mInstance.destroyDebugUtilsMessengerEXT(mDebugUtilsMessenger, nullptr, mDynamicLoader);
 
 	mInstance.destroy();
 }
@@ -298,10 +294,10 @@ void CodeRed::VulkanLogicalDevice::initializeExtensions()
 void CodeRed::VulkanLogicalDevice::initializeDynamicLoader()
 {
 	if (mEnableValidationLayer == true) {
-		mDynamicLoader.vkCreateDebugReportCallbackEXT = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(
-			vkGetInstanceProcAddr(mInstance, "vkCreateDebugReportCallbackEXT"));
-		mDynamicLoader.vkDestroyDebugReportCallbackEXT = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(
-			vkGetInstanceProcAddr(mInstance, "vkDestroyDebugReportCallbackEXT"));
+		mDynamicLoader.vkCreateDebugUtilsMessengerEXT = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(
+			mInstance.getProcAddr("vkCreateDebugUtilsMessengerEXT"));
+		mDynamicLoader.vkDestroyDebugUtilsMessengerEXT = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(
+			mInstance.getProcAddr("vkDestroyDebugUtilsMessengerEXT"));
 	}
 }
 
@@ -324,7 +320,7 @@ void CodeRed::VulkanLogicalDevice::initializeLayers()
 				if (std::strcmp(enableLayer, "VK_LAYER_LUNARG_standard_validation") == 0) {
 					mEnableValidationLayer = true;
 
-					mInstanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+					mInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 				}
 
 				mInstanceLayers.push_back(enableLayer);
@@ -342,17 +338,21 @@ void CodeRed::VulkanLogicalDevice::initializeDebugReport()
 {
 	if (mEnableValidationLayer == false) return;
 
-	vk::DebugReportCallbackCreateInfoEXT info = {};
+	vk::DebugUtilsMessengerCreateInfoEXT info = {};
 
-	info.setFlags(
-		vk::DebugReportFlagBitsEXT::ePerformanceWarning |
-		vk::DebugReportFlagBitsEXT::eInformation |
-		vk::DebugReportFlagBitsEXT::eWarning |
-		vk::DebugReportFlagBitsEXT::eDebug |
-		vk::DebugReportFlagBitsEXT::eError)
-		.setPfnCallback(debugReportCallBack);
-
-	mDebugReportCallBack = mInstance.createDebugReportCallbackEXT(info, nullptr, mDynamicLoader);
+	info
+		.setMessageSeverity(
+			vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning |
+			vk::DebugUtilsMessageSeverityFlagBitsEXT::eError |
+			vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo | 
+			vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose )
+		.setMessageType(
+			vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral |
+			vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance |
+			vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation)
+		.setPfnUserCallback(debugReportCallBack);
+	
+	mDebugUtilsMessenger = mInstance.createDebugUtilsMessengerEXT(info, nullptr, mDynamicLoader);
 }
 
 auto CodeRed::VulkanLogicalDevice::allocateQueue() -> size_t
