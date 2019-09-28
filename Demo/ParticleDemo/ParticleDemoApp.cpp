@@ -58,9 +58,9 @@ void ParticleDemoApp::render(float delta)
 	mCommandList->setVertexBuffer(mVertexBuffer);
 	mCommandList->setIndexBuffer(mIndexBuffer);
 
-	mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
 	mCommandList->setGraphicsTexture(2, mParticleTextureGenerator->texture());
-
+	mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
+	
 	mCommandList->beginRenderPass(
 		mPipelineInfo->graphicsPipeline()->renderPass(),
 		frameBuffer);
@@ -83,16 +83,29 @@ void ParticleDemoApp::render(float delta)
 
 void ParticleDemoApp::initialize()
 {
+
+#ifdef __DIRECTX12__MODE__
 	//find all adapters we can use
 	const auto systemInfo = std::make_shared<CodeRed::DirectX12SystemInfo>();
 	const auto adapters = systemInfo->selectDisplayAdapter();
 
 	//create device with adapter we choose
 	//for this demo, we choose the second adapter
-#ifdef __DIRECTX12__MODE__
 	mDevice = std::static_pointer_cast<CodeRed::GpuLogicalDevice>(
 		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[0])
 		);
+#else
+#ifdef __VULKAN__MODE
+	//find all adapters we can use
+	const auto systemInfo = std::make_shared<CodeRed::VulkanSystemInfo>();
+	const auto adapters = systemInfo->selectDisplayAdapter();
+
+	//create device with adapter we choose
+	//for this demo, we choose the second adapter
+	mDevice = std::static_pointer_cast<CodeRed::GpuLogicalDevice>(
+		std::make_shared<CodeRed::VulkanLogicalDevice>(adapters[0])
+		);
+#endif
 #endif
 	
 	initializeParticles();
@@ -234,7 +247,7 @@ void ParticleDemoApp::initializeShaders()
 		"}\n";
 
 	static const auto pixelShaderText =
-		"Texture2D particleTexture : register(t0);\n"
+		"Texture2D particleTexture : register(t2);\n"
 		"SamplerState particleSampler : register(s0);\n"
 		"float4 main(float4 position : SV_POSITION, float2 texcoord : TEXCOORD, uint id : SV_INSTANCEID) : SV_TARGET\n"
 		"{\n"
@@ -254,7 +267,7 @@ void ParticleDemoApp::initializeShaders()
 			"main", "vs_5_1", D3DCOMPILE_DEBUG, 0,
 			vertex.GetAddressOf(), error.GetAddressOf()),
 		CodeRed::FailedException({ "Vertex Shader of HLSL" }, 
-			CodeRed::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()), CodeRed::DebugType::Create)
+			CodeRed::DirectX12::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()), CodeRed::DebugType::Create)
 	);
 
 	CODE_RED_THROW_IF_FAILED(
@@ -264,7 +277,7 @@ void ParticleDemoApp::initializeShaders()
 			"main", "ps_5_1", D3DCOMPILE_DEBUG, 0,
 			pixel.GetAddressOf(), error.GetAddressOf()),
 		CodeRed::FailedException({ "Pixel Shader of HLSL" },
-			CodeRed::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()), CodeRed::DebugType::Create)
+			CodeRed::DirectX12::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()), CodeRed::DebugType::Create)
 	);
 
 	mVertexShaderCode = std::vector<CodeRed::Byte>(vertex->GetBufferSize());
@@ -272,6 +285,48 @@ void ParticleDemoApp::initializeShaders()
 
 	std::memcpy(mVertexShaderCode.data(), vertex->GetBufferPointer(), vertex->GetBufferSize());
 	std::memcpy(mPixelShaderCode.data(), pixel->GetBufferPointer(), pixel->GetBufferSize());
+#else
+#ifdef __VULKAN__MODE
+	static const auto vertShaderText =
+		"#version 450\n"
+		"#extension GL_ARB_separate_shader_objects : enable\n"
+		"layout (set = 0, binding = 0) uniform bufferVals {\n"
+		"   mat4 project;\n"
+		"} myBufferVals;\n"
+		"layout (set = 0, binding = 1) uniform transforms {\n"
+		"	mat4 world[1000];\n"
+		"} myTransforms;\n"
+		"layout (location = 0) in vec4 pos;\n"
+		"layout (location = 1) in vec2 tex;\n"
+		"layout (location = 1) out vec2 out_tex;\n"
+		"void main() {\n"
+		"	gl_Position = pos * transpose(myTransforms.world[gl_InstanceIndex]);\n"
+		"   gl_Position = gl_Position * transpose(myBufferVals.project);\n"
+		"	gl_Position.y = - gl_Position.y;\n"
+		"	out_tex = tex;\n"
+		"}\n";
+
+	static const auto pixelShaderText =
+		"#version 450\n"
+		"#extension GL_ARB_separate_shader_objects : enable\n"
+		"layout (location = 1) in vec2 tex;\n"
+		"layout (location = 0) out vec4 outColor;\n"
+		//"layout (binding = 2) uniform sampler2D texSampler;"
+		"void main() {\n"
+		//"	vec4 alpha = texture(texSampler, tex);\n"
+		"	outColor = vec4(1, 0, 0, 1);\n"
+		"}\n";
+
+
+	const auto vertex = CodeRed::ShaderCompiler::compileToSpv(CodeRed::ShaderType::Vertex, vertShaderText);
+	const auto pixel = CodeRed::ShaderCompiler::compileToSpv(CodeRed::ShaderType::Pixel, pixelShaderText);
+
+	mVertexShaderCode = std::vector<CodeRed::Byte>((vertex.end() - vertex.begin()) * sizeof(uint32_t));
+	mPixelShaderCode = std::vector<CodeRed::Byte>((pixel.end() - pixel.begin()) * sizeof(uint32_t));
+
+	std::memcpy(mVertexShaderCode.data(), &vertex.begin()[0], mVertexShaderCode.size());
+	std::memcpy(mPixelShaderCode.data(), &pixel.begin()[0], mPixelShaderCode.size());
+#endif
 #endif
 }
 
@@ -348,9 +403,9 @@ void ParticleDemoApp::initializePipeline()
 			{
 				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Buffer, 0, 0),
 				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Buffer, 1, 0),
-				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Texture, 0,0)
+				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Texture, 2,0)
 			},
-			{ CodeRed::SamplerLayoutElement(mSampler, 0, 0) }
+			{ CodeRed::SamplerLayoutElement(mSampler, 3, 0) }
 		)
 	);
 

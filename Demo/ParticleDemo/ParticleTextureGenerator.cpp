@@ -190,6 +190,41 @@ void ParticleTextureGenerator::initializeShaders()
 	
 	std::memcpy(mVertexShaderCode.data(), vertex->GetBufferPointer(), vertex->GetBufferSize());
 	std::memcpy(mPixelShaderCode.data(), pixel->GetBufferPointer(), pixel->GetBufferSize());
+#else
+#ifdef __VULKAN__MODE
+	static const auto vertShaderText =
+		"#version 450\n"
+		"#extension GL_ARB_separate_shader_objects : enable\n"
+		"layout (set = 0, binding = 0) uniform bufferVals {\n"
+		"    mat4 project;\n"
+		"} myBufferVals;\n"
+		"layout (location = 0) in vec4 pos;\n"
+		"layout (location = 1) in vec2 tex;\n"
+		"layout (location = 1) out vec2 out_tex;\n"
+		"void main() {\n"
+		"   gl_Position = pos * transpose(myBufferVals.project);\n"
+		"	gl_Position.y = - gl_Position.y;\n"
+		"	out_tex = tex;\n"
+		"}\n";
+
+	static const auto pixelShaderText =
+		"#version 450\n"
+		"#extension GL_ARB_separate_shader_objects : enable\n"
+		"layout (location = 1) in vec2 tex;\n"
+		"layout (location = 0) out vec4 outColor;\n"
+		"void main() {\n"
+		"   outColor = vec4(1.0f, 0.0f, 0.0f, 1.0f) * (1.01f - length(tex));\n"
+		"}\n";
+
+	const auto vertex = CodeRed::ShaderCompiler::compileToSpv(CodeRed::ShaderType::Vertex, vertShaderText);
+	const auto pixel = CodeRed::ShaderCompiler::compileToSpv(CodeRed::ShaderType::Pixel, pixelShaderText);
+
+	mVertexShaderCode = std::vector<CodeRed::Byte>((vertex.end() - vertex.begin()) * sizeof(uint32_t));
+	mPixelShaderCode = std::vector<CodeRed::Byte>((pixel.end() - pixel.begin()) * sizeof(uint32_t));
+
+	std::memcpy(mVertexShaderCode.data(), &vertex.begin()[0], mVertexShaderCode.size());
+	std::memcpy(mPixelShaderCode.data(), &pixel.begin()[0], mPixelShaderCode.size());
+#endif
 #endif
 }
 
@@ -274,7 +309,9 @@ void ParticleTextureGenerator::initializePipeline()
 
 	mPipelineInfo->setRenderPass(
 		mDevice->createRenderPass(
-			CodeRed::Attachment::RenderTarget(mFrameBuffer->renderTarget()->format())
+			CodeRed::Attachment::RenderTarget(mFrameBuffer->renderTarget()->format(),
+				CodeRed::ResourceLayout::RenderTarget,
+				CodeRed::ResourceLayout::GeneralRead)
 		)
 	);
 	

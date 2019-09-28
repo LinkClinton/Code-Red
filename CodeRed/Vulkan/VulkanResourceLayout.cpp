@@ -103,7 +103,7 @@ CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 	poolInfo
 		.setPNext(nullptr)
 		.setFlags(vk::DescriptorPoolCreateFlags(0))
-		.setMaxSets(static_cast<uint32_t>(maxSpace))
+		.setMaxSets(static_cast<uint32_t>(maxBindResources))
 		.setPoolSizeCount(2)
 		.setPPoolSizes(poolSizes);
 
