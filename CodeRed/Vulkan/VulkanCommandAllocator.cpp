@@ -12,10 +12,10 @@ CodeRed::VulkanCommandAllocator::VulkanCommandAllocator(
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice);
 
 	vk::CommandPoolCreateInfo info = {};
-
+	
 	info
 		.setPNext(nullptr)
-		.setFlags(vk::CommandPoolCreateFlags(0))
+		.setFlags(vk::CommandPoolCreateFlagBits::eResetCommandBuffer)
 		.setQueueFamilyIndex(static_cast<uint32_t>(vkDevice->queueFamilyIndex()));
 
 	mCommandPool = vkDevice->device().createCommandPool(info);

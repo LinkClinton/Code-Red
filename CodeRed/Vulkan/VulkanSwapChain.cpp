@@ -80,8 +80,8 @@ void CodeRed::VulkanSwapChain::present()
 		.setSwapchainCount(1)
 		.setPSwapchains(&mSwapChain)
 		.setPImageIndices(&mCurrentBufferIndex)
-		.setWaitSemaphoreCount(0)
-		.setPWaitSemaphores(nullptr)
+		.setWaitSemaphoreCount(1)
+		.setPWaitSemaphores(&mSemaphore)
 		.setPResults(nullptr);
 
 	const auto vkQueue = std::static_pointer_cast<VulkanCommandQueue>(mQueue)->queue();
@@ -90,6 +90,8 @@ void CodeRed::VulkanSwapChain::present()
 		vkQueue.presentKHR(info) != vk::Result::eSuccess,
 		Exception("Present failed.")
 	);
+
+	updateCurrentFrameIndex();
 }
 
 auto CodeRed::VulkanSwapChain::currentBufferIndex() const -> size_t

@@ -7,6 +7,7 @@
 #include "DirectX12GraphicsPipeline.hpp"
 #include "DirectX12CommandAllocator.hpp"
 #include "DirectX12ResourceLayout.hpp"
+#include "DirectX12DescriptorHeap.hpp"
 #include "DirectX12LogicalDevice.hpp"
 #include "DirectX12FrameBuffer.hpp"
 #include "DirectX12RenderPass.hpp"
@@ -137,12 +138,6 @@ void CodeRed::DirectX12GraphicsCommandList::setResourceLayout(const std::shared_
 		dxLayout->rootSignature().Get()
 	);
 
-	//set the descriptor heap the resource layout use
-	mGraphicsCommandList->SetDescriptorHeaps(1,
-		dxLayout->descriptorHeap().GetAddressOf());
-
-	const auto gpuHandle = dxLayout->descriptorHeap()->GetGPUDescriptorHandleForHeapStart();
-	
 	mResourceLayout = dxLayout;
 }
 
@@ -168,38 +163,21 @@ void CodeRed::DirectX12GraphicsCommandList::setIndexBuffer(const std::shared_ptr
 	mGraphicsCommandList->IASetIndexBuffer(&view);
 }
 
-void CodeRed::DirectX12GraphicsCommandList::setGraphicsConstantBuffer(
-	const size_t index,
-	const std::shared_ptr<GpuBuffer>& buffer)
+void CodeRed::DirectX12GraphicsCommandList::setDescriptorHeap(
+	const std::shared_ptr<GpuDescriptorHeap>& heap)
 {
 	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout == nullptr,
-		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
+		heap->layout() != mResourceLayout,
+		FailedException(
+			{ "GpuDescriptorHeap", "Graphics Pipeline" }, 
+			"current resource layout is not the one that create the heap.", DebugType::Set);
 	);
-	
-	mResourceLayout->bindBuffer(index, buffer);
-	
-	mGraphicsCommandList->SetGraphicsRootDescriptorTable(
-		static_cast<UINT>(index),
-		mResourceLayout->handle(buffer)
-	);
-}
 
-void CodeRed::DirectX12GraphicsCommandList::setGraphicsTexture(
-	const size_t index,
-	const std::shared_ptr<GpuTexture>& texture)
-{
-	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout == nullptr,
-		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
-	);
+	const auto dxHeap = std::static_pointer_cast<DirectX12DescriptorHeap>(heap)->heap();
 	
-	mResourceLayout->bindTexture(index, texture);
-	
-	mGraphicsCommandList->SetGraphicsRootDescriptorTable(
-		static_cast<UINT>(index),
-		mResourceLayout->handle(texture)
-	);
+	mGraphicsCommandList->SetDescriptorHeaps(1, dxHeap.GetAddressOf());
+
+	mGraphicsCommandList->SetGraphicsRootDescriptorTable(0, dxHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setViewPort(const ViewPort& view_port)

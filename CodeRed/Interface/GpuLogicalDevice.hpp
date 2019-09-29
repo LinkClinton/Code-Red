@@ -19,6 +19,7 @@ namespace CodeRed {
 	class GpuGraphicsPipeline;
 	class GpuPipelineFactory;
 	class GpuResourceLayout;
+	class GpuDescriptorHeap;
 	class GpuShaderState;
 	class GpuBlendState;
 	
@@ -76,10 +77,13 @@ namespace CodeRed {
 
 		virtual auto createResourceLayout(
 			const std::vector<ResourceLayoutElement>& elements,
-			const std::vector<SamplerLayoutElement>& samplers,
-			const size_t maxBindResources = 1 << 10)
+			const std::vector<SamplerLayoutElement>& samplers)
 			-> std::shared_ptr<GpuResourceLayout> = 0;
 
+		virtual auto createDescriptorHeap(
+			const std::shared_ptr<GpuResourceLayout>& resource_layout)
+			-> std::shared_ptr<GpuDescriptorHeap> = 0;
+		
 		virtual auto createRenderPass(
 			const std::optional<Attachment>& color,
 			const std::optional<Attachment>& depth = std::nullopt)

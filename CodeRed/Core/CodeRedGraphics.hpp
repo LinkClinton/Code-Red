@@ -43,6 +43,7 @@
 #include "../Interface/GpuSystemInfo.hpp"
 #include "../Interface/GpuSwapChain.hpp"
 #include "../Interface/GpuResourceLayout.hpp"
+#include "../Interface/GpuDescriptorHeap.hpp"
 #include "../Interface/GpuLogicalDevice.hpp"
 #include "../Interface/GpuGraphicsPipeline.hpp"
 #include "../Interface/GpuGraphicsCommandList.hpp"
@@ -51,6 +52,7 @@
 #include "../Interface/GpuDisplayAdapter.hpp"
 #include "../Interface/GpuCommandQueue.hpp"
 #include "../Interface/GpuCommandAllocator.hpp"
+#include "../Interface/GpuRenderPass.hpp"
 
 #include "../Interface/GpuResource/GpuSampler.hpp"
 #include "../Interface/GpuResource/GpuTexture.hpp"

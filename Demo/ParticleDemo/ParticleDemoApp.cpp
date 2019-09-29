@@ -41,8 +41,8 @@ void ParticleDemoApp::render(float delta)
 	const float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	const auto frameBuffer = 
 		mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuFrameBuffer>("FrameBuffer");
-	const auto transformBuffers =
-		mFrameResources[mCurrentFrameIndex].get<std::vector<std::shared_ptr<CodeRed::GpuBuffer>>>("Transform");
+	const auto descriptorHeaps =
+		mFrameResources[mCurrentFrameIndex].get<std::vector<std::shared_ptr<CodeRed::GpuDescriptorHeap>>>("DescriptorHeaps");
 
 	mCommandQueue->waitIdle();
 	mCommandAllocator->reset();
@@ -58,15 +58,12 @@ void ParticleDemoApp::render(float delta)
 	mCommandList->setVertexBuffer(mVertexBuffer);
 	mCommandList->setIndexBuffer(mIndexBuffer);
 
-	mCommandList->setGraphicsTexture(2, mParticleTextureGenerator->texture());
-	mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
-	
 	mCommandList->beginRenderPass(
 		mPipelineInfo->graphicsPipeline()->renderPass(),
 		frameBuffer);
 	
 	for (size_t index = 0; index < particleTimes; index++) {
-		mCommandList->setGraphicsConstantBuffer(1, (*transformBuffers)[index]);
+		mCommandList->setDescriptorHeap((*descriptorHeaps)[index]);
 		mCommandList->drawIndexed(6, particleCount);
 	}
 
@@ -99,7 +96,7 @@ void ParticleDemoApp::initialize()
 	//find all adapters we can use
 	const auto systemInfo = std::make_shared<CodeRed::VulkanSystemInfo>();
 	const auto adapters = systemInfo->selectDisplayAdapter();
-
+	
 	//create device with adapter we choose
 	//for this demo, we choose the second adapter
 	mDevice = std::static_pointer_cast<CodeRed::GpuLogicalDevice>(
@@ -116,6 +113,7 @@ void ParticleDemoApp::initialize()
 	initializeSamplers();
 	initializeTextures();
 	initializePipeline();
+	initializeDescriptorHeaps();
 }
 
 void ParticleDemoApp::initializeParticles()
@@ -248,7 +246,7 @@ void ParticleDemoApp::initializeShaders()
 
 	static const auto pixelShaderText =
 		"Texture2D particleTexture : register(t2);\n"
-		"SamplerState particleSampler : register(s0);\n"
+		"SamplerState particleSampler : register(s3);\n"
 		"float4 main(float4 position : SV_POSITION, float2 texcoord : TEXCOORD, uint id : SV_INSTANCEID) : SV_TARGET\n"
 		"{\n"
 		"	float alpha = particleTexture.Sample(particleSampler, texcoord).r;\n"
@@ -311,10 +309,11 @@ void ParticleDemoApp::initializeShaders()
 		"#extension GL_ARB_separate_shader_objects : enable\n"
 		"layout (location = 1) in vec2 tex;\n"
 		"layout (location = 0) out vec4 outColor;\n"
-		//"layout (binding = 2) uniform sampler2D texSampler;"
+		"layout (binding = 2) uniform texture2D texture0;\n"
+		"layout (binding = 3) uniform sampler sampler0;\n"
 		"void main() {\n"
-		//"	vec4 alpha = texture(texSampler, tex);\n"
-		"	outColor = vec4(1, 0, 0, 1);\n"
+		"	vec4 alpha = texture(sampler2D(texture0, sampler0), tex);\n"
+		"	outColor = vec4(1, 0, 0, alpha);\n"
 		"}\n";
 
 
@@ -461,4 +460,29 @@ void ParticleDemoApp::initializePipeline()
 	
 	//update state to graphics pipeline
 	mPipelineInfo->updateState();
+}
+
+void ParticleDemoApp::initializeDescriptorHeaps()
+{
+	for (auto& frameResource : mFrameResources) {
+		auto descriptorHeaps = std::make_shared<std::vector<std::shared_ptr<CodeRed::GpuDescriptorHeap>>>();
+		auto buffers = frameResource.get<std::vector<std::shared_ptr<CodeRed::GpuBuffer>>>("Transform");
+		
+		for (size_t index = 0; index < particleTimes; index++) {
+			auto descriptorHeap = mDevice->createDescriptorHeap(
+				mPipelineInfo->graphicsPipeline()->layout()
+			);
+
+			descriptorHeap->bindBuffer(0, mViewBuffer);
+			descriptorHeap->bindBuffer(1, (*buffers)[index]);
+			descriptorHeap->bindTexture(2, mParticleTextureGenerator->texture());
+
+			descriptorHeaps->push_back(descriptorHeap);
+		}
+
+		frameResource.set(
+			"DescriptorHeaps",
+			descriptorHeaps
+		);
+	}
 }

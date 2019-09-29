@@ -381,6 +381,15 @@
     <ClInclude Include="Vulkan\VulkanRenderPass.hpp">
       <Filter>Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Interface\GpuDescriptorHeap.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12DescriptorHeap.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanDescriptorHeap.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -525,6 +534,12 @@
       <Filter>DirectX12</Filter>
     </ClCompile>
     <ClCompile Include="Vulkan\VulkanRenderPass.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12DescriptorHeap.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanDescriptorHeap.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
   </ItemGroup>

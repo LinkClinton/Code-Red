@@ -45,6 +45,8 @@ private:
 	void initializeTextures();
 
 	void initializePipeline();
+
+	void initializeDescriptorHeaps();
 private:
 	size_t mDetailLevel = 0;
 	size_t mDetailSize = 0;
@@ -57,6 +59,8 @@ private:
 
 	std::shared_ptr<CodeRed::GpuPipelineFactory> mPipelineFactory;
 	std::shared_ptr<CodeRed::PipelineInfo> mPipelineInfo;
+
+	std::shared_ptr<CodeRed::GpuDescriptorHeap> mDescriptorHeap;
 
 	std::shared_ptr<CodeRed::GpuBuffer> mVertexBuffer;
 	std::shared_ptr<CodeRed::GpuBuffer> mIndexBuffer;

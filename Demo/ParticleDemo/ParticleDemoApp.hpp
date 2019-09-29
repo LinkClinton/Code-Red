@@ -70,6 +70,8 @@ private:
 	void initializeTextures();
 
 	void initializePipeline();
+
+	void initializeDescriptorHeaps();
 private:
 	const size_t maxFrameResources = 2;
 	const size_t maxParticleSize = 20;

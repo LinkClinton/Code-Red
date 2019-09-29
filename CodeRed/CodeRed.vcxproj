@@ -165,6 +165,7 @@
     <ClInclude Include="Core\CodeRedGraphics.hpp" />
     <ClInclude Include="DirectX12\DirectX12CommandAllocator.hpp" />
     <ClInclude Include="DirectX12\DirectX12CommandQueue.hpp" />
+    <ClInclude Include="DirectX12\DirectX12DescriptorHeap.hpp" />
     <ClInclude Include="DirectX12\DirectX12DisplayAdapter.hpp" />
     <ClInclude Include="DirectX12\DirectX12Fence.hpp" />
     <ClInclude Include="DirectX12\DirectX12FrameBuffer.hpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="DirectX12\DirectX12Utility.hpp" />
     <ClInclude Include="Interface\GpuCommandAllocator.hpp" />
     <ClInclude Include="Interface\GpuCommandQueue.hpp" />
+    <ClInclude Include="Interface\GpuDescriptorHeap.hpp" />
     <ClInclude Include="Interface\GpuFence.hpp" />
     <ClInclude Include="Interface\GpuGraphicsCommandList.hpp" />
     <ClInclude Include="Interface\GpuFrameBuffer.hpp" />
@@ -254,6 +256,7 @@
     <ClInclude Include="Shared\ViewPort.hpp" />
     <ClInclude Include="Vulkan\VulkanCommandAllocator.hpp" />
     <ClInclude Include="Vulkan\VulkanCommandQueue.hpp" />
+    <ClInclude Include="Vulkan\VulkanDescriptorHeap.hpp" />
     <ClInclude Include="Vulkan\VulkanDisplayAdapter.hpp" />
     <ClInclude Include="Vulkan\VulkanFence.hpp" />
     <ClInclude Include="Vulkan\VulkanFrameBuffer.hpp" />
@@ -278,6 +281,7 @@
   <ItemGroup>
     <ClCompile Include="DirectX12\DirectX12CommandAllocator.cpp" />
     <ClCompile Include="DirectX12\DirectX12CommandQueue.cpp" />
+    <ClCompile Include="DirectX12\DirectX12DescriptorHeap.cpp" />
     <ClCompile Include="DirectX12\DirectX12DisplayAdapter.cpp" />
     <ClCompile Include="DirectX12\DirectX12Fence.cpp" />
     <ClCompile Include="DirectX12\DirectX12FrameBuffer.cpp" />
@@ -304,6 +308,7 @@
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp" />
     <ClCompile Include="Vulkan\VulkanCommandAllocator.cpp" />
     <ClCompile Include="Vulkan\VulkanCommandQueue.cpp" />
+    <ClCompile Include="Vulkan\VulkanDescriptorHeap.cpp" />
     <ClCompile Include="Vulkan\VulkanDisplayAdapter.cpp" />
     <ClCompile Include="Vulkan\VulkanFence.cpp" />
     <ClCompile Include="Vulkan\VulkanFrameBuffer.cpp" />

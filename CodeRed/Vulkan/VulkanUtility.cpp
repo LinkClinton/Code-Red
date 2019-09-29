@@ -163,6 +163,10 @@ auto CodeRed::Vulkan::enumConvert(const ResourceUsage usage)
 			res.second = res.second | targetPool[index].second;
 	}
 
+	res.first = res.first | vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eTransferSrc;
+	res.second = res.second | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc;
+	res.second = res.second | vk::ImageUsageFlagBits::eSampled;
+	
 	return res;
 }
 

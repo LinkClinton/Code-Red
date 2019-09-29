@@ -66,8 +66,8 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 	viewInfo
 		.setPNext(nullptr)
 		.setFlags(vk::PipelineViewportStateCreateFlags(0))
-		.setScissorCount(0)
-		.setViewportCount(0)
+		.setScissorCount(1)
+		.setViewportCount(1)
 		.setPScissors(nullptr)
 		.setPViewports(nullptr);
 

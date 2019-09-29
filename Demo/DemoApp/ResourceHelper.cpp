@@ -29,8 +29,8 @@ void CodeRed::ResourceHelper::updateBuffer(
 
 	//copy upload buffer to buffer
 	//because the size of constant buffer may not equal stride * count(256bytes limit)
-	//so we use upload buffer size instead of buffer size
-	commandList->copyBuffer(uploadBuffer, buffer, uploadBuffer->size());
+	//so we use buffer size
+	commandList->copyBuffer(uploadBuffer, buffer, buffer->size());
 
 	//translate back the layout of buffer
 	commandList->layoutTransition(buffer, oldLayout);

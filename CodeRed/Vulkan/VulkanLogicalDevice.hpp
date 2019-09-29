@@ -44,10 +44,13 @@ namespace CodeRed {
 
 		auto createResourceLayout(
 			const std::vector<ResourceLayoutElement>& elements,
-			const std::vector<SamplerLayoutElement>& samplers,
-			const size_t maxBindResources = 1 << 10)
+			const std::vector<SamplerLayoutElement>& samplers)
 			->std::shared_ptr<GpuResourceLayout> override;
 
+		auto createDescriptorHeap(
+			const std::shared_ptr<GpuResourceLayout>& resource_layout)
+			-> std::shared_ptr<GpuDescriptorHeap> override;
+		
 		auto createRenderPass(
 			const std::optional<Attachment>& color, 
 			const std::optional<Attachment>& depth = std::nullopt)

@@ -24,7 +24,7 @@ CodeRed::VulkanRasterizationState::VulkanRasterizationState(
 		.setPolygonMode(enumConvert(mFillMode))
 		.setCullMode(enumConvert(mCullMode))
 		.setFrontFace(enumConvert(mFrontFace))
-		.setDepthClampEnable(mDepthClamp)
+		.setDepthClampEnable(false)
 		.setRasterizerDiscardEnable(false)
 		.setDepthBiasEnable(false)
 		.setDepthBiasConstantFactor(0)

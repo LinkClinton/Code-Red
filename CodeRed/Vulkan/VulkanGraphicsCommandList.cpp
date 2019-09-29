@@ -1,4 +1,5 @@
 #include "../Shared/Exception/InvalidException.hpp"
+#include "../Shared/Exception/FailedException.hpp"
 
 #include "VulkanResource/VulkanTexture.hpp"
 #include "VulkanResource/VulkanBuffer.hpp"
@@ -7,6 +8,7 @@
 #include "VulkanGraphicsPipeline.hpp"
 #include "VulkanCommandAllocator.hpp"
 #include "VulkanResourceLayout.hpp"
+#include "VulkanDescriptorHeap.hpp"
 #include "VulkanLogicalDevice.hpp"
 #include "VulkanFrameBuffer.hpp"
 #include "VulkanRenderPass.hpp"
@@ -136,42 +138,25 @@ void CodeRed::VulkanGraphicsCommandList::setIndexBuffer(
 	mCommandBuffer.bindIndexBuffer(vkBuffer->buffer(), 0, vk::IndexType::eUint32);
 }
 
-void CodeRed::VulkanGraphicsCommandList::setGraphicsConstantBuffer(
-	const size_t index,
-	const std::shared_ptr<GpuBuffer>& buffer)
+void CodeRed::VulkanGraphicsCommandList::setDescriptorHeap(
+	const std::shared_ptr<GpuDescriptorHeap>& heap)
 {
 	CODE_RED_DEBUG_THROW_IF(
 		mResourceLayout == nullptr,
-		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
+		InvalidException<GpuResourceLayout>({ "resource layout" })
 	);
-
-	mResourceLayout->bindBuffer(index, buffer);
-
-	mCommandBuffer.bindDescriptorSets(
-		vk::PipelineBindPoint::eGraphics,
-		mResourceLayout->layout(),
-		static_cast<uint32_t>(mResourceLayout->element(index).Space),
-		mResourceLayout->descriptor(buffer),
-		{});
-}
-
-void CodeRed::VulkanGraphicsCommandList::setGraphicsTexture(
-	const size_t index,
-	const std::shared_ptr<GpuTexture>& texture)
-{
+	
 	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout == nullptr,
-		InvalidException<GpuResourceLayout>({ "ResourceLayout" })
+		heap->layout() != mResourceLayout,
+		FailedException(
+			{ "GpuDescriptorHeap", "Graphics Pipeline" },
+			"current resource layout is not the one that create the heap.", DebugType::Set);
 	);
 
-	mResourceLayout->bindTexture(index, texture);
+	const auto vkHeap = std::static_pointer_cast<VulkanDescriptorHeap>(heap);
 
-	mCommandBuffer.bindDescriptorSets(
-		vk::PipelineBindPoint::eGraphics,
-		mResourceLayout->layout(),
-		static_cast<uint32_t>(mResourceLayout->element(index).Space),
-		mResourceLayout->descriptor(texture),
-		{});
+	mCommandBuffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics,
+		mResourceLayout->layout(), 0, vkHeap->descriptorSets(), {});
 }
 
 void CodeRed::VulkanGraphicsCommandList::setViewPort(const ViewPort& view_port)
@@ -217,7 +202,7 @@ void CodeRed::VulkanGraphicsCommandList::layoutTransition(
 		.setPNext(nullptr)
 		.setSrcAccessMask(enumConvert1(old_layout, ResourceType::Texture))
 		.setSrcQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
-		.setOldLayout(enumConvert(old_layout))
+		.setOldLayout(vk::ImageLayout::eUndefined)
 		.setDstAccessMask(enumConvert1(new_layout, ResourceType::Texture))
 		.setDstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
 		.setNewLayout(enumConvert(new_layout))
@@ -231,8 +216,8 @@ void CodeRed::VulkanGraphicsCommandList::layoutTransition(
 			));
 
 	mCommandBuffer.pipelineBarrier(
-		vk::PipelineStageFlagBits::eAllGraphics,
-		vk::PipelineStageFlagBits::eAllGraphics,
+		vk::PipelineStageFlagBits::eAllCommands,
+		vk::PipelineStageFlagBits::eAllCommands,
 		vk::DependencyFlags(0),
 		{}, {},
 		barrier);
@@ -260,11 +245,11 @@ void CodeRed::VulkanGraphicsCommandList::layoutTransition(
 		.setDstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
 		.setBuffer(std::static_pointer_cast<VulkanBuffer>(buffer)->buffer())
 		.setOffset(0)
-		.setSize(VK_WHOLE_SIZE);
+		.setSize(buffer->size());
 
 	mCommandBuffer.pipelineBarrier(
-		vk::PipelineStageFlagBits::eAllGraphics,
-		vk::PipelineStageFlagBits::eAllGraphics,
+		vk::PipelineStageFlagBits::eAllCommands,
+		vk::PipelineStageFlagBits::eAllCommands,
 		vk::DependencyFlags(0),
 		{}, barrier, {});
 

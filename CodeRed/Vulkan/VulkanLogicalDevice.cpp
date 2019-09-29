@@ -13,6 +13,7 @@
 #include "VulkanCommandAllocator.hpp"
 #include "VulkanDisplayAdapter.hpp"
 #include "VulkanResourceLayout.hpp"
+#include "VulkanDescriptorHeap.hpp"
 #include "VulkanLogicalDevice.hpp"
 #include "VulkanCommandQueue.hpp"
 #include "VulkanFrameBuffer.hpp"
@@ -33,6 +34,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallBack(
 	void* user_data)
 {
 	CodeRed::DebugReport::message(std::string("vulkan validation layer : ") + callback_data->pMessage);
+	CodeRed::DebugReport::message("");
 	
 	return VK_FALSE;
 }
@@ -49,10 +51,10 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 	appInfo
 		.setPNext(nullptr)
 		.setPApplicationName("CodeRed")
-		.setApplicationVersion(1)
+		.setApplicationVersion(VK_MAKE_VERSION(1, 0, 0))
 		.setPEngineName("CodeRed")
-		.setEngineVersion(1)
-		.setEngineVersion(VK_API_VERSION_1_1);
+		.setEngineVersion(VK_MAKE_VERSION(1, 0, 0))
+		.setEngineVersion(VK_API_VERSION_1_0);
 
 	instanceInfo
 		.setPNext(nullptr)
@@ -219,15 +221,22 @@ auto CodeRed::VulkanLogicalDevice::createGraphicsPipeline(
 
 auto CodeRed::VulkanLogicalDevice::createResourceLayout(
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers,
-	const size_t maxBindResources)
+	const std::vector<SamplerLayoutElement>& samplers)
 	-> std::shared_ptr<GpuResourceLayout>
 {
 	return std::make_shared<VulkanResourceLayout>(
 		shared_from_this(),
 		elements,
-		samplers,
-		maxBindResources);
+		samplers);
+}
+
+auto CodeRed::VulkanLogicalDevice::createDescriptorHeap(
+	const std::shared_ptr<GpuResourceLayout>& resource_layout)
+	-> std::shared_ptr<GpuDescriptorHeap>
+{
+	return std::make_shared<VulkanDescriptorHeap>(
+		shared_from_this(),
+		resource_layout);
 }
 
 auto CodeRed::VulkanLogicalDevice::createRenderPass(
@@ -343,9 +352,7 @@ void CodeRed::VulkanLogicalDevice::initializeDebugReport()
 	info
 		.setMessageSeverity(
 			vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning |
-			vk::DebugUtilsMessageSeverityFlagBitsEXT::eError |
-			vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo | 
-			vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose )
+			vk::DebugUtilsMessageSeverityFlagBitsEXT::eError)
 		.setMessageType(
 			vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral |
 			vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance |

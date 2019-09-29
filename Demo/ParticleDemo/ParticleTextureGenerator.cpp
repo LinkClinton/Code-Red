@@ -13,6 +13,7 @@ ParticleTextureGenerator::ParticleTextureGenerator(
 	initializeShaders();
 	initializeTextures();
 	initializePipeline();
+	initializeDescriptorHeaps();
 }
 
 void ParticleTextureGenerator::run() const
@@ -24,7 +25,7 @@ void ParticleTextureGenerator::run() const
 	auto renderPass = mPipelineInfo->graphicsPipeline()->renderPass();
 
 	renderPass->setClear(CodeRed::ClearValue(0.0f, 0.0f, 0.0f, 0.0f));
-	
+
 	mCommandList->beginRecoding();
 
 	//set graphics pipeline, resource layout and frame buffer
@@ -37,8 +38,8 @@ void ParticleTextureGenerator::run() const
 	//set vertex, index, view buffer
 	mCommandList->setVertexBuffer(mVertexBuffer);
 	mCommandList->setIndexBuffer(mIndexBuffer);
-	mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
-
+	mCommandList->setDescriptorHeap(mDescriptorHeap);
+	
 	mCommandList->beginRenderPass(renderPass, mFrameBuffer);
 	
 	//draw particle to texture
@@ -317,4 +318,13 @@ void ParticleTextureGenerator::initializePipeline()
 	
 	//update state to graphics pipeline
 	mPipelineInfo->updateState();
+}
+
+void ParticleTextureGenerator::initializeDescriptorHeaps()
+{
+	mDescriptorHeap = mDevice->createDescriptorHeap(
+		mPipelineInfo->graphicsPipeline()->layout()
+	);
+
+	mDescriptorHeap->bindBuffer(0, mViewBuffer);
 }

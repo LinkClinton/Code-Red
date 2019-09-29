@@ -50,8 +50,9 @@ private:
 
 		//set vertex buffer and view buffer
 		mCommandList->setVertexBuffer(mVertexBuffer);
-		mCommandList->setGraphicsConstantBuffer(0, mViewBuffer);
 
+		mCommandList->setDescriptorHeap(mDescriptorHeap);
+		
 		mPipelineInfo->graphicsPipeline()->renderPass()->setClear(
 			CodeRed::ClearValue(1.0f, 1.0f, 1.0f, 1.0f)
 		);
@@ -146,6 +147,12 @@ private:
 		initializeBuffer();
 
 		mPipelineInfo->updateState();
+
+		mDescriptorHeap = mDevice->createDescriptorHeap(
+			mPipelineInfo->graphicsPipeline()->layout()
+		);
+
+		mDescriptorHeap->bindBuffer(0, mViewBuffer);
 	}
 
 	void initializeBuffer() {
@@ -342,6 +349,7 @@ private:
 	std::shared_ptr<CodeRed::GpuBuffer> mViewBuffer;
 
 	std::shared_ptr<CodeRed::PipelineInfo> mPipelineInfo;
+	std::shared_ptr<CodeRed::GpuDescriptorHeap> mDescriptorHeap;
 	
 	std::vector<std::shared_ptr<CodeRed::GpuFrameBuffer>> mFrameBuffers;
 };

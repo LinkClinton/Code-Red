@@ -115,7 +115,7 @@ namespace CodeRed {
 			return ResourceInfo(
 				BufferProperty(stride, count),
 				ResourceLayout::GeneralRead,
-				ResourceUsage::None,
+				ResourceUsage::ConstantBuffer,
 				ResourceType::Buffer,
 				MemoryHeap::Upload
 			);

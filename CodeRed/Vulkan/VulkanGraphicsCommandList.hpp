@@ -44,13 +44,8 @@ namespace CodeRed {
 		void setIndexBuffer(
 			const std::shared_ptr<GpuBuffer>& buffer) override;
 
-		void setGraphicsConstantBuffer(
-			const size_t index,
-			const std::shared_ptr<GpuBuffer>& buffer) override;
-
-		void setGraphicsTexture(
-			const size_t index,
-			const std::shared_ptr<GpuTexture>& texture) override;
+		void setDescriptorHeap(
+			const std::shared_ptr<GpuDescriptorHeap>& heap) override;
 
 		void setViewPort(
 			const ViewPort& view_port) override;

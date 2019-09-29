@@ -9,6 +9,7 @@
 #include "GpuGraphicsPipeline.hpp"
 #include "GpuResourceLayout.hpp"
 #include "GpuDisplayAdapter.hpp"
+#include "GpuDescriptorHeap.hpp"
 #include "GpuLogicalDevice.hpp"
 #include "GpuCommandQueue.hpp"
 #include "GpuFrameBuffer.hpp"
@@ -60,19 +61,12 @@ CodeRed::GpuSwapChain::GpuSwapChain(
 CodeRed::GpuResourceLayout::GpuResourceLayout(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers,
-	const size_t maxBindResources) :
+	const std::vector<SamplerLayoutElement>& samplers) :
 	mDevice(device),
 	mElements(elements),
-	mSamplers(samplers),
-	mMaxBindResources(maxBindResources)
+	mSamplers(samplers)
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
-
-	CODE_RED_DEBUG_THROW_IF(
-		mMaxBindResources == 0,
-		ZeroException<size_t>({ "maxBindResources" })
-	);
 }
 
 CodeRed::GpuLogicalDevice::GpuLogicalDevice(
@@ -262,22 +256,32 @@ CodeRed::GpuRenderPass::GpuRenderPass(
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 }
 
+CodeRed::GpuDescriptorHeap::GpuDescriptorHeap(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuResourceLayout>& resource_layout) :
+	mResourceLayout(resource_layout), mDevice(device)
+{
+	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
+	
+	CODE_RED_DEBUG_PTR_VALID(mResourceLayout, "resource_layout");
+}
+
+void CodeRed::GpuDescriptorHeap::bindResource(
+	const size_t index, 
+	const std::shared_ptr<GpuResource>& resource)
+{
+	if (resource->type() == ResourceType::Texture)
+		bindTexture(index, std::static_pointer_cast<GpuTexture>(resource));
+	else
+		bindBuffer(index, std::static_pointer_cast<GpuBuffer>(resource));
+}
+
 void CodeRed::GpuRenderPass::setClear(
 	const std::optional<ClearValue>& color,
 	const std::optional<ClearValue>& depth)
 {
 	if (color.has_value()) mColor[0] = color.value();
 	if (depth.has_value()) mDepth = depth.value();
-}
-
-void CodeRed::GpuResourceLayout::bindResource(
-	const size_t index,
-	const std::shared_ptr<GpuResource>& resource)
-{
-	if (resource->type() == ResourceType::Buffer)
-		bindBuffer(index, std::static_pointer_cast<GpuBuffer>(resource));
-	else
-		bindTexture(index, std::static_pointer_cast<GpuTexture>(resource));
 }
 
 void CodeRed::GpuGraphicsCommandList::layoutTransition(

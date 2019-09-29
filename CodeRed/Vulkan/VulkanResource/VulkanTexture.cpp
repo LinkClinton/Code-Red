@@ -28,7 +28,7 @@ CodeRed::VulkanTexture::VulkanTexture(
 		.setMipLevels(1)
 		.setArrayLayers(1)
 		.setSamples(vk::SampleCountFlagBits::e1)
-		.setInitialLayout(enumConvert(mInfo.Layout))
+		.setInitialLayout(vk::ImageLayout::eUndefined)
 		.setUsage(enumConvert(mInfo.Usage).second)
 		.setQueueFamilyIndexCount(0)
 		.setPQueueFamilyIndices(nullptr)

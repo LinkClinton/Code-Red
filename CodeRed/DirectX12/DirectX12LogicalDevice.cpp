@@ -12,6 +12,7 @@
 #include "DirectX12CommandAllocator.hpp"
 #include "DirectX12DisplayAdapter.hpp"
 #include "DirectX12ResourceLayout.hpp"
+#include "DirectX12DescriptorHeap.hpp"
 #include "DirectX12LogicalDevice.hpp"
 #include "DirectX12CommandQueue.hpp"
 #include "DirectX12FrameBuffer.hpp"
@@ -112,16 +113,24 @@ auto CodeRed::DirectX12LogicalDevice::createGraphicsPipeline(
 
 auto CodeRed::DirectX12LogicalDevice::createResourceLayout(
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers,
-	const size_t maxBindResources)
+	const std::vector<SamplerLayoutElement>& samplers)
 	-> std::shared_ptr<GpuResourceLayout>
 {
 	return std::static_pointer_cast<GpuResourceLayout>(
 		std::make_shared<DirectX12ResourceLayout>(
 			shared_from_this(),
 			elements,
-			samplers,
-			maxBindResources));
+			samplers));
+}
+
+auto CodeRed::DirectX12LogicalDevice::createDescriptorHeap(
+	const std::shared_ptr<GpuResourceLayout>& resource_layout)
+	-> std::shared_ptr<GpuDescriptorHeap>
+{
+	return std::static_pointer_cast<GpuDescriptorHeap>(
+		std::make_shared<DirectX12DescriptorHeap>(
+			shared_from_this(),
+			resource_layout));
 }
 
 auto CodeRed::DirectX12LogicalDevice::createRenderPass(

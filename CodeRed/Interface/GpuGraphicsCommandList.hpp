@@ -12,8 +12,9 @@ namespace CodeRed {
 
 	class GpuCommandAllocator;
 	class GpuGraphicsPipeline;
-	class GpuLogicalDevice;
 	class GpuResourceLayout;
+	class GpuDescriptorHeap;
+	class GpuLogicalDevice;	
 	class GpuFrameBuffer;
 	class GpuRenderPass;
 	class GpuSampler;
@@ -34,8 +35,7 @@ namespace CodeRed {
 
 		virtual void beginRenderPass(
 			const std::shared_ptr<GpuRenderPass> &render_pass,
-			const std::shared_ptr<GpuFrameBuffer> &frame_buffer
-			) = 0;
+			const std::shared_ptr<GpuFrameBuffer> &frame_buffer) = 0;
 
 		virtual void endRenderPass() = 0;
 		
@@ -51,14 +51,9 @@ namespace CodeRed {
 		virtual void setIndexBuffer(
 			const std::shared_ptr<GpuBuffer>& buffer) = 0;
 
-		virtual void setGraphicsConstantBuffer(
-			const size_t index,
-			const std::shared_ptr<GpuBuffer>& buffer) = 0;
-
-		virtual void setGraphicsTexture(
-			const size_t index,
-			const std::shared_ptr<GpuTexture> &texture) = 0;
-
+		virtual void setDescriptorHeap(
+			const std::shared_ptr<GpuDescriptorHeap>& heap) = 0;
+		
 		virtual void setViewPort(
 			const ViewPort& view_port) = 0;
 
