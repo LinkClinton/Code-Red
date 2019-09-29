@@ -111,7 +111,7 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 			break;
 		}
 	}
-
+	
 	CODE_RED_THROW_IF(
 		mQueueFamilyIndex == SIZE_MAX,
 		FailedException({ "vk::Device" }, "no queue family supprted.", DebugType::Create)
@@ -124,6 +124,8 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 	
 	vk::DeviceQueueCreateInfo queueInfo = {};
 	vk::DeviceCreateInfo deviceInfo = {};
+
+	initializeFeatures();
 
 	queueInfo
 		.setPNext(nullptr)
@@ -141,8 +143,8 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 		.setEnabledExtensionCount(static_cast<uint32_t>(mDeviceExtensions.size()))
 		.setPpEnabledLayerNames(nullptr)
 		.setPpEnabledExtensionNames(mDeviceExtensions.data())
-		.setPEnabledFeatures(nullptr);
-
+		.setPEnabledFeatures(&mPhysicalFeatures);
+	
 	mDevice = mPhysicalDevice.createDevice(deviceInfo);
 }
 
@@ -360,6 +362,11 @@ void CodeRed::VulkanLogicalDevice::initializeDebugReport()
 		.setPfnUserCallback(debugReportCallBack);
 	
 	mDebugUtilsMessenger = mInstance.createDebugUtilsMessengerEXT(info, nullptr, mDynamicLoader);
+}
+
+void CodeRed::VulkanLogicalDevice::initializeFeatures()
+{
+	mPhysicalFeatures = mPhysicalDevice.getFeatures();
 }
 
 auto CodeRed::VulkanLogicalDevice::allocateQueue() -> size_t

@@ -87,6 +87,8 @@ namespace CodeRed {
 		
 		void initializeDebugReport();
 
+		void initializeFeatures();
+
 		auto allocateQueue() -> size_t;
 
 		void freeQueue(const size_t index);
@@ -109,6 +111,7 @@ namespace CodeRed {
 		vk::DispatchLoaderDynamic mDynamicLoader;
 		
 		vk::PhysicalDeviceMemoryProperties mMemoryProperties;
+		vk::PhysicalDeviceFeatures mPhysicalFeatures;
 		vk::PhysicalDevice mPhysicalDevice;
 		
 		vk::Instance mInstance;
