@@ -6,6 +6,7 @@ namespace CodeRed {
 
 	enum class ResourceLayout : UInt32
 	{
+		Undefined,
 		GeneralRead,
 		RenderTarget,
 		DepthStencil,

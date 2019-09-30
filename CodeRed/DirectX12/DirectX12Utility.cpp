@@ -135,6 +135,7 @@ auto CodeRed::DirectX12::enumConvert(const ResourceLayout layout)
 	-> D3D12_RESOURCE_STATES
 {
 	switch (layout) {
+	case ResourceLayout::Undefined: return D3D12_RESOURCE_STATE_COMMON;
 	case ResourceLayout::GeneralRead: return D3D12_RESOURCE_STATE_GENERIC_READ;
 	case ResourceLayout::RenderTarget: return D3D12_RESOURCE_STATE_RENDER_TARGET;
 	case ResourceLayout::DepthStencil: return D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_DEPTH_WRITE;
@@ -215,6 +216,7 @@ auto CodeRed::DirectX12::enumConvert(const PixelFormat format)
 {
 	switch (format) {
 	case PixelFormat::RedGreenBlueAlpha8BitUnknown: return DXGI_FORMAT_R8G8B8A8_UNORM;
+	case PixelFormat::BlueGreenRedAlpha8BitUnknown: return DXGI_FORMAT_B8G8R8A8_UNORM;
 	case PixelFormat::RedGreenBlueAlpha32BitFloat: return DXGI_FORMAT_R32G32B32A32_FLOAT;
 	case PixelFormat::RedGreenBlue32BitFloat: return DXGI_FORMAT_R32G32B32_FLOAT;
 	case PixelFormat::RedGreen32BitFloat: return DXGI_FORMAT_R32G32_FLOAT;

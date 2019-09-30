@@ -31,10 +31,11 @@ CodeRed::VulkanSwapChain::VulkanSwapChain(
 		.setHwnd(static_cast<HWND>(info.handle));
 
 	mSurface = vkDevice->mInstance.createWin32SurfaceKHR(surfaceInfo);
+#endif
+	auto formats = vkDevice->mPhysicalDevice.getSurfaceFormatsKHR(mSurface);
 
 	assert(vkDevice->mPhysicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(
 		vkDevice->mQueueFamilyIndex), mSurface));
-#endif
 	
 	initializeSwapChain();
 }
@@ -155,8 +156,7 @@ void CodeRed::VulkanSwapChain::initializeSwapChain()
 				mInfo.width,
 				mInfo.height,
 				mPixelFormat,
-				ResourceUsage::RenderTarget,
-				ResourceLayout::Present),
+				ResourceUsage::RenderTarget),
 			swapChainImages[index]);
 	}
 
@@ -177,7 +177,8 @@ void CodeRed::VulkanSwapChain::updateCurrentFrameIndex()
 	const auto nextImage = vkDevice->device().acquireNextImageKHR(mSwapChain, UINT64_MAX, mSemaphore, nullptr);
 
 	CODE_RED_THROW_IF(
-		nextImage.result != vk::Result::eSuccess,
+		nextImage.result != vk::Result::eSuccess &&
+		nextImage.result != vk::Result::eSuboptimalKHR,
 		FailedException({ "current frame index", "swap chain" }, DebugType::Get)
 	);
 

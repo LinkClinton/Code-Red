@@ -313,6 +313,7 @@ void ParticleDemoApp::initializeShaders()
 		"layout (binding = 3) uniform sampler sampler0;\n"
 		"void main() {\n"
 		"	vec4 alpha = texture(sampler2D(texture0, sampler0), tex);\n"
+		"	if (alpha.r <= 0.0f) discard;\n"
 		"	outColor = vec4(1, 0, 0, alpha);\n"
 		"}\n";
 
@@ -346,7 +347,7 @@ void ParticleDemoApp::initializeSwapChain()
 	mSwapChain = mDevice->createSwapChain(
 		mCommandQueue,
 		{ width(), height(), handle() },
-		CodeRed::PixelFormat::RedGreenBlueAlpha8BitUnknown,
+		CodeRed::PixelFormat::BlueGreenRedAlpha8BitUnknown,
 		maxFrameResources
 	);
 

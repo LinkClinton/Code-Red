@@ -239,8 +239,7 @@ void ParticleTextureGenerator::initializeTextures()
 			mDetailSize,
 			mDetailSize,
 			CodeRed::PixelFormat::RedGreenBlueAlpha8BitUnknown,
-			CodeRed::ResourceUsage::RenderTarget,
-			CodeRed::ResourceLayout::GeneralRead
+			CodeRed::ResourceUsage::RenderTarget
 		)
 	);
 

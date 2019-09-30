@@ -125,12 +125,11 @@ namespace CodeRed {
 			const size_t width, 
 			const PixelFormat format,
 			const ResourceUsage usage = ResourceUsage::None,
-			const ResourceLayout layout = ResourceLayout::GeneralRead,
 			const MemoryHeap heap = MemoryHeap::Default)
 		{
 			return ResourceInfo(
 				TextureProperty(width, 1, 1, format, Dimension::Dimension1D),
-				layout, usage, ResourceType::Texture, heap);
+				ResourceLayout::Undefined, usage, ResourceType::Texture, heap);
 		}
 
 		static auto Texture2D(
@@ -138,12 +137,11 @@ namespace CodeRed {
 			const size_t height,
 			const PixelFormat format,
 			const ResourceUsage usage = ResourceUsage::None,
-			const ResourceLayout layout = ResourceLayout::GeneralRead,
 			const MemoryHeap heap = MemoryHeap::Default)
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, 1, format, Dimension::Dimension2D),
-				layout, usage, ResourceType::Texture, heap);
+				ResourceLayout::Undefined, usage, ResourceType::Texture, heap);
 		}
 
 		static auto Texture3D(
@@ -152,12 +150,11 @@ namespace CodeRed {
 			const size_t depth,
 			const PixelFormat format,
 			const ResourceUsage usage = ResourceUsage::None,
-			const ResourceLayout layout = ResourceLayout::GeneralRead,
 			const MemoryHeap heap = MemoryHeap::Default)
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, depth, format, Dimension::Dimension3D),
-				layout, usage, ResourceType::Texture, heap);
+				ResourceLayout::Undefined, usage, ResourceType::Texture, heap);
 		}
 	};
 
