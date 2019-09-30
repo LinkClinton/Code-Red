@@ -105,15 +105,6 @@
     <ClInclude Include="Shared\Exception\Exception.hpp">
       <Filter>Shared\Exception</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Exception\NotSupportException.hpp">
-      <Filter>Shared\Exception</Filter>
-    </ClInclude>
-    <ClInclude Include="Shared\Exception\ZeroException.hpp">
-      <Filter>Shared\Exception</Filter>
-    </ClInclude>
-    <ClInclude Include="Shared\Exception\InvalidException.hpp">
-      <Filter>Shared\Exception</Filter>
-    </ClInclude>
     <ClInclude Include="Interface\GpuFence.hpp">
       <Filter>Interface</Filter>
     </ClInclude>
@@ -188,9 +179,6 @@
     </ClInclude>
     <ClInclude Include="DirectX12\DirectX12Utility.hpp">
       <Filter>DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Shared\Exception\FailedException.hpp">
-      <Filter>Shared\Exception</Filter>
     </ClInclude>
     <ClInclude Include="Shared\DebugReport.hpp">
       <Filter>Shared</Filter>
@@ -389,6 +377,18 @@
     </ClInclude>
     <ClInclude Include="Vulkan\VulkanDescriptorHeap.hpp">
       <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\FailedException.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\InvalidException.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\NotSupportException.hpp">
+      <Filter>Shared\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Exception\ZeroException.hpp">
+      <Filter>Shared\Exception</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

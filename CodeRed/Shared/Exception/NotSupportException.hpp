@@ -12,13 +12,12 @@ namespace CodeRed {
 		Enum
 	};
 	
-	class NotSupportException : public Exception {
+	class NotSupportException final : public Exception {
 	public:
-		using Type = NotSupportType;
-	public:
-		NotSupportException(const Type type = Type::Any);
+		explicit NotSupportException(
+			const NotSupportType type = NotSupportType::Any);
 	private:
-		static auto select(const Type type) -> const char*;
+		static auto select(const NotSupportType type) -> std::string;
 	};
 	
 }

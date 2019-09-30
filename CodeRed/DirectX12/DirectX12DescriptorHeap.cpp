@@ -30,7 +30,7 @@ CodeRed::DirectX12DescriptorHeap::DirectX12DescriptorHeap(
 		dxDevice->CreateDescriptorHeap(
 			&info,
 			IID_PPV_ARGS(&mDescriptorHeap)),
-		FailedException({ "ID3D12DescriptorHeap" }, DebugType::Create)
+		FailedException(DebugType::Create, { "ID3D12DescriptorHeap" })
 	);
 
 	mDescriptorSize = dxDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

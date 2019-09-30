@@ -9,7 +9,7 @@
 using namespace CodeRed::DirectX12;
 
 CodeRed::DirectX12Buffer::DirectX12Buffer(
-	const std::shared_ptr<GpuLogicalDevice>& device, 
+	const std::shared_ptr<GpuLogicalDevice>& device,
 	const ResourceInfo info) :
 	GpuBuffer(device, info)
 {
@@ -45,7 +45,8 @@ CodeRed::DirectX12Buffer::DirectX12Buffer(
 			nullptr,
 			IID_PPV_ARGS(&mBuffer)
 		),
-		FailedException({ "ID3D12Resource of Buffer" }, DebugType::Create));
+		FailedException(DebugType::Create, { "ID3D12Resource of Buffer" })
+	);
 }
 
 auto CodeRed::DirectX12Buffer::mapMemory() const -> void* 

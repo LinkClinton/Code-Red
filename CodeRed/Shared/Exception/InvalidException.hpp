@@ -10,36 +10,21 @@
 namespace CodeRed {
 
 	template<typename T>
-	class InvalidException : public Exception {
+	class InvalidException final : public Exception {
 	public:
 		explicit InvalidException(
-			const std::vector<std::string>& messages, T* value = nullptr) :
-			InvalidException(messages, value, messageTemplate) {}
+			const std::vector<std::string>& name) :
+			Exception(DebugReport::makeError(message_format,
+				{ name.empty() ? "unnamed obejct" : name[0] })) {}
 
 		explicit InvalidException(
-			const std::vector<std::string>& messages,
-			const std::string& debugMessage,
-			T* value = nullptr) :
-			InvalidException(messages, debugMessage, messageTemplate, value) {}
-		
-		auto value() const -> T* { return mValue; }
-	protected:
-		InvalidException(
-			const std::vector<std::string> &messages, T* value,
-			const std::string& message) :
-			Exception(DebugReport::push(message, messages)),
-			mValue(value) {}
-
-		InvalidException(
-			const std::vector<std::string>& messages,
-			const std::string& debugMessage,
-			const std::string& message,
-			T* value) :
-			Exception(DebugReport::push(message, messages) + "\nDebug Message : " + debugMessage),
-			mValue(value) {}
+			const std::vector<std::string>& name,
+			const std::vector<std::string>& debug_message) :
+			Exception(DebugReport::makeError(message_format, 
+				{ name.empty() ? "unnamed object" : name[0] },
+				debug_message)) {}
 	private:
-		const inline static std::string messageTemplate = std::string("The [0](type : ") + typeid(T).name() + ") is invalid.";
-		
-		T* mValue;
+		const inline static std::string message_format = 
+			std::string("The [0](type : ") + typeid(T).name() + ") is invalid.";
 	};
 }

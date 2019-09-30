@@ -16,8 +16,10 @@ auto CodeRed::DirectX12SystemInfo::selectDisplayAdapter() const -> std::vector<s
 
 	std::vector<std::shared_ptr<GpuDisplayAdapter>> display_adapters;
 	
-	CODE_RED_THROW_IF_FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&factory)),
-		FailedException( {"DXGIFactory"}, DebugType::Create));
+	CODE_RED_THROW_IF_FAILED(
+		CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&factory)),
+		FailedException( DebugType::Create, { "DXGIFactory" })
+	);
 
 	UINT index = 0;
 

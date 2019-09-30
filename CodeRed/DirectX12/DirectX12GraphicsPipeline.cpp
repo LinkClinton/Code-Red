@@ -60,7 +60,7 @@ CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	
 	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&mGraphicsPipeline)),
-		FailedException({ "ID3D12Pipeline of Graphics" }, DebugType::Create)
+		FailedException(DebugType::Create, { "ID3D12Pipeline of Graphics" })
 	);
 }
 

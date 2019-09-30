@@ -8,17 +8,15 @@
 
 namespace CodeRed {
 
-	class FailedException : public Exception {
-	public:
-		using Type = DebugType;
+	class FailedException final : public Exception {
 	public:
 		explicit FailedException(
-			const std::vector<std::string>& messages,
-			const Type type = Type::Create);
+			const DebugType type,
+			const std::vector<std::string>& messages);
 
 		explicit FailedException(
+			const DebugType type,
 			const std::vector<std::string>& messages,
-			const std::string& debugMessage,
-			const Type type = Type::Create);
+			const std::vector<std::string>& debug_message);
 	};
 }

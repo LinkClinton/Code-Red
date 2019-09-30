@@ -148,9 +148,9 @@ void CodeRed::VulkanGraphicsCommandList::setDescriptorHeap(
 	
 	CODE_RED_DEBUG_THROW_IF(
 		heap->layout() != mResourceLayout,
-		FailedException(
+		FailedException(DebugType::Set,
 			{ "GpuDescriptorHeap", "Graphics Pipeline" },
-			"current resource layout is not the one that create the heap.", DebugType::Set);
+			{ "current resource layout is not the one that create the heap." });
 	);
 
 	const auto vkHeap = std::static_pointer_cast<VulkanDescriptorHeap>(heap);

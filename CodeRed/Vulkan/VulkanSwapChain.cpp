@@ -179,7 +179,7 @@ void CodeRed::VulkanSwapChain::updateCurrentFrameIndex()
 	CODE_RED_THROW_IF(
 		nextImage.result != vk::Result::eSuccess &&
 		nextImage.result != vk::Result::eSuboptimalKHR,
-		FailedException({ "current frame index", "swap chain" }, DebugType::Get)
+		FailedException(DebugType::Get, { "current frame index", "swap chain" })
 	);
 
 	mCurrentBufferIndex = nextImage.value;

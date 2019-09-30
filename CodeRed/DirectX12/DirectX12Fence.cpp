@@ -17,7 +17,8 @@ CodeRed::DirectX12Fence::DirectX12Fence(
 
 	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateFence(mFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence)),
-		FailedException({ "ID3D12Fence" }, DebugType::Create));
+		FailedException(DebugType::Create, { "ID3D12Fence" })
+	);
 }
 
 void CodeRed::DirectX12Fence::wait(const WRL::ComPtr<ID3D12CommandQueue>& queue)

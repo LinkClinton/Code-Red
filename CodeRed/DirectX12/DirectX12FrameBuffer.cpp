@@ -33,12 +33,12 @@ CodeRed::DirectX12FrameBuffer::DirectX12FrameBuffer(
 
 	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateDescriptorHeap(&rtvHeapInfo, IID_PPV_ARGS(&mRenderTargetHeap)),
-		FailedException({ "ID3D12DescriptorHeap of Render Target" }, DebugType::Create)
+		FailedException(DebugType::Create, { "ID3D12DescriptorHeap of Render Target" })
 	);
 
 	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateDescriptorHeap(&dsvHeapInfo, IID_PPV_ARGS(&mDepthStencilHeap)),
-		FailedException({ "ID3D12DescriptorHeap of Depth Stencil" }, DebugType::Create)
+		FailedException(DebugType::Create, { "ID3D12DescriptorHeap of Depth Stencil" })
 	);
 	
 	DirectX12FrameBuffer::reset(render_target, depth_stencil);
@@ -63,7 +63,9 @@ void CodeRed::DirectX12FrameBuffer::reset(
 	CODE_RED_DEBUG_TRY_EXECUTE(
 		mRenderTargets[0] == nullptr &&
 		mDepthStencil == nullptr,
-		DebugReport::warning(DebugType::Create, { "FrameBuffer", "there are no rtv and dsv" })
+		DebugReport::warning(DebugType::Create, 
+			{ "FrameBuffer" },
+			{ "there are no rtv and dsv." })
 	);
 	
 	//create rtv on render target heap

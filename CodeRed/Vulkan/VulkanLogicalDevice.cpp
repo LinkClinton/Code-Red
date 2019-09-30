@@ -114,7 +114,9 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 	
 	CODE_RED_THROW_IF(
 		mQueueFamilyIndex == SIZE_MAX,
-		FailedException({ "vk::Device" }, "no queue family supprted.", DebugType::Create)
+		FailedException(DebugType::Create, 
+			{ "vk::Device" },
+			{ "no queue family supprted." })
 	);
 	
 	for (size_t index = 0; index < mFreeQueues.size(); index++) 
@@ -373,7 +375,9 @@ auto CodeRed::VulkanLogicalDevice::allocateQueue() -> size_t
 {
 	CODE_RED_THROW_IF(
 		mFreeQueues.empty(),
-		FailedException({ "vk::Queue", "vk::Device" }, "too many queues were allocated.", DebugType::Get)
+		FailedException(DebugType::Get,
+			{ "vk::Queue", "vk::Device" }, 
+			{ "too many queues were allocated." })
 	);
 
 	const auto index = mFreeQueues.back();
@@ -389,7 +393,9 @@ void CodeRed::VulkanLogicalDevice::freeQueue(const size_t index)
 	
 	CODE_RED_THROW_IF(
 		it != mFreeQueues.end(),
-		InvalidException<size_t>({ "index" }, "the queue has freed.")
+		InvalidException<size_t>(
+			{ "index" },
+			{ "the queue has freed." })
 	);
 
 	mFreeQueues.push_back(index);
@@ -401,14 +407,14 @@ auto CodeRed::VulkanLogicalDevice::getMemoryTypeIndex(
 {
 	for (size_t index = 0; index < mMemoryProperties.memoryTypeCount; index++) {
 		if ((type_bits & 1) == 1) {
-			if ((mMemoryProperties.memoryTypes[index].propertyFlags & flags) == flags) 
+			if ((mMemoryProperties.memoryTypes[index].propertyFlags & flags) == flags)
 				return static_cast<uint32_t>(index);
 		}
 
 		type_bits >>= 1;
 	}
 
-	throw FailedException({ "memory type index", "memory properties" }, DebugType::Get);
+	throw FailedException(DebugType::Get, { "memory type index", "memory properties" });
 }
 
 #endif

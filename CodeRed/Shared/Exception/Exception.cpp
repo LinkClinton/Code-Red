@@ -1,14 +1,14 @@
-#include "NotSupportException.hpp"
-#include "FailedException.hpp"
 #include "Exception.hpp"
 
 #include "../DebugReport.hpp"
+#include "FailedException.hpp"
+#include "NotSupportException.hpp"
 
 CodeRed::Exception::Exception(const std::string& message)
-	: exception(message.c_str()), mMesaage(message)
+	: exception(), mMesaage(message)
 {
 #ifdef __ENABLE__CODE__RED__DEBUG__
-	DebugReport::error(mMesaage);
+	DebugReport::output(message);
 #endif
 }
 
@@ -18,33 +18,34 @@ char const* CodeRed::Exception::what() const
 }
 
 CodeRed::FailedException::FailedException(
-	const std::vector<std::string>& messages, 
-	const Type type) :
-	Exception(
-		DebugReport::push(DebugReport::select(type), messages)) {}
-
-CodeRed::FailedException::FailedException(
-	const std::vector<std::string>& messages, 
-	const std::string& debugMessage,
-	const Type type) :
-	Exception(
-		DebugReport::push(DebugReport::select(type), messages) 
-		+ "\nDebug Message : " + debugMessage)
+	const DebugType type, 
+	const std::vector<std::string>& messages) :
+	Exception(DebugReport::makeError(type, messages))
 {
 	
 }
 
-CodeRed::NotSupportException::NotSupportException(const Type type) :
-	Exception(select(type)) {}
+CodeRed::FailedException::FailedException(
+	const DebugType type, 
+	const std::vector<std::string>& messages,
+	const std::vector<std::string>& debug_message) :
+	Exception(DebugReport::makeError(type, messages, debug_message))
+{
+}
 
-auto CodeRed::NotSupportException::select(const Type type) -> const char* 
+CodeRed::NotSupportException::NotSupportException(const NotSupportType type) :
+	Exception(DebugReport::makeError(select(type)))
+{
+}
+
+auto CodeRed::NotSupportException::select(const NotSupportType type)
+	-> std::string
 {
 	switch (type) {
-	case Type::Any: return "We do not support this.";
-	case Type::Method: return "We do not support this method.";
-	case Type::Object: return "We do not support this object";
-	case Type::Enum: return "We do not support this enum.";
-	default:
-		throw NotSupportException(Type::Enum);
+	case NotSupportType::Any: return "we do not support it.";
+	case NotSupportType::Enum: return "we do not support this enum.";
+	case NotSupportType::Method: return "we do not support this method.";
+	case NotSupportType::Object: return "we do not support this object.";
+	default: return "the type is invalid.";
 	}
 }

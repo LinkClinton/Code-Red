@@ -47,17 +47,17 @@ CodeRed::DirectX12SwapChain::DirectX12SwapChain(
 
 	CODE_RED_THROW_IF_FAILED(
 		CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&factory)),
-		FailedException({ "IDXGIFactory4" }, DebugType::Create)
+		FailedException(DebugType::Create, { "IDXGIFactory4" })
 	);
 
 	CODE_RED_THROW_IF_FAILED(
 		factory->CreateSwapChain(dxQueue.Get(), &swapInfo, temp_swap_chain.GetAddressOf()),
-		FailedException({ "IDXGISwapChain" }, DebugType::Create)
+		FailedException(DebugType::Create, { "IDXGISwapChain" })
 	);
 
 	CODE_RED_THROW_IF_FAILED(
 		temp_swap_chain->QueryInterface(IID_PPV_ARGS(&mSwapChain)),
-		FailedException({ "IDXGISwapChain3", "IDXGISwapChain" }, DebugType::Get)
+		FailedException(DebugType::Get, { "IDXGISwapChain3", "IDXGISwapChain" })
 	);
 
 	//we use resize to create the texture of back buffer
@@ -92,7 +92,7 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 			static_cast<UINT>(mInfo.width),
 			static_cast<UINT>(mInfo.height),
 			enumConvert(mPixelFormat), DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH),
-		FailedException({ "Resize of IDXGISwapChain" }, DebugType::Create)
+		FailedException(DebugType::Create, { "Resize of IDXGISwapChain" })
 	);
 	
 	for (size_t index = 0; index < mBuffers.size(); index++) {
@@ -100,7 +100,7 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 
 		CODE_RED_THROW_IF_FAILED(
 			mSwapChain->GetBuffer(static_cast<UINT>(index), IID_PPV_ARGS(&backBuffer)),
-			FailedException({ "ID3D12Resource of Back Buffer", "IDXGISwapChain" }, DebugType::Get)
+			FailedException(DebugType::Get, { "ID3D12Resource of Back Buffer", "IDXGISwapChain" })
 		);
 
 		mBuffers[index] = std::make_shared<DirectX12Texture>(mDevice, backBuffer,

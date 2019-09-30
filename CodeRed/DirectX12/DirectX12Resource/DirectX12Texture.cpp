@@ -14,7 +14,7 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	GpuTexture(device, info)
 {
 	const auto property = std::get<TextureProperty>(mInfo.Property);
-	
+
 	D3D12_RESOURCE_DESC desc = {};
 
 	desc.Dimension = enumConvert(property.Dimension);
@@ -43,7 +43,7 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	clearValue.Color[1] = 0.0f;
 	clearValue.Color[2] = 0.0f;
 	clearValue.Color[3] = 0.0f;
-	
+
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 
 	CODE_RED_THROW_IF_FAILED(
@@ -54,7 +54,7 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 			enumConvert(mInfo.Layout),
 			&clearValue,
 			IID_PPV_ARGS(&mTexture)),
-		FailedException({ "ID3D12Resource of Texture" }, DebugType::Create));
+		FailedException(DebugType::Create, { "ID3D12Resource of Texture" }));
 }
 
 CodeRed::DirectX12Texture::DirectX12Texture(

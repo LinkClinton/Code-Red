@@ -29,7 +29,8 @@ CodeRed::DirectX12GraphicsCommandList::DirectX12GraphicsCommandList(
 	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
 			dxAllocator.Get(), nullptr, IID_PPV_ARGS(&mGraphicsCommandList)),
-		FailedException({ "ID3D12GraphicsCommandList" }, DebugType::Create));
+		FailedException(DebugType::Create, { "ID3D12GraphicsCommandList" })
+	);
 
 	mGraphicsCommandList->Close();
 }
@@ -78,7 +79,9 @@ void CodeRed::DirectX12GraphicsCommandList::beginRenderPass(
 	//only output when we enable __EANBLE__CODE__RED__DEBUG__
 	CODE_RED_DEBUG_TRY_EXECUTE(
 		has_rtv == false && has_dsv == false,
-		DebugReport::warning(DebugType::Set, { "FrameBuffer", "there are no rtv and dsv" })
+		DebugReport::warning(DebugType::Set, 
+			{ "FrameBuffer", "Graphics Pipeline" }, 
+			{ "there are no rtv and dsv" })
 	);
 
 	tryLayoutTransition(mFrameBuffer->renderTarget(), colorAttachment, false);
@@ -168,9 +171,9 @@ void CodeRed::DirectX12GraphicsCommandList::setDescriptorHeap(
 {
 	CODE_RED_DEBUG_THROW_IF(
 		heap->layout() != mResourceLayout,
-		FailedException(
+		FailedException(DebugType::Set,
 			{ "GpuDescriptorHeap", "Graphics Pipeline" }, 
-			"current resource layout is not the one that create the heap.", DebugType::Set);
+			{ "current resource layout is not the one that create the heap." });
 	);
 
 	const auto dxHeap = std::static_pointer_cast<DirectX12DescriptorHeap>(heap)->heap();
