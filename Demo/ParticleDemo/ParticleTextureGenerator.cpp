@@ -174,7 +174,7 @@ void ParticleTextureGenerator::initializeShaders()
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main", "vs_5_0", D3DCOMPILE_DEBUG, 0,
 			vertex.GetAddressOf(), error.GetAddressOf()),
-		CodeRed::FailedException({ "Vertex Shader of HLSL" }, CodeRed::DebugType::Create)
+		CodeRed::FailedException(CodeRed::DebugType::Create, { "Vertex Shader of HLSL" })
 	);
 
 	CODE_RED_THROW_IF_FAILED(
@@ -183,7 +183,7 @@ void ParticleTextureGenerator::initializeShaders()
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main", "ps_5_0", D3DCOMPILE_DEBUG, 0,
 			pixel.GetAddressOf(), error.GetAddressOf()),
-		CodeRed::FailedException({ "Pixel Shader of HLSL" }, CodeRed::DebugType::Create)
+		CodeRed::FailedException(CodeRed::DebugType::Create, { "Pixel Shader of HLSL" })
 	);
 
 	mVertexShaderCode = std::vector<CodeRed::Byte>(vertex->GetBufferSize());

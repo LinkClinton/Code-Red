@@ -264,8 +264,8 @@ void ParticleDemoApp::initializeShaders()
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main", "vs_5_1", D3DCOMPILE_DEBUG, 0,
 			vertex.GetAddressOf(), error.GetAddressOf()),
-		CodeRed::FailedException({ "Vertex Shader of HLSL" }, 
-			CodeRed::DirectX12::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()), CodeRed::DebugType::Create)
+		CodeRed::FailedException(CodeRed::DebugType::Create, { "Vertex Shader of HLSL" },
+			{ CodeRed::DirectX12::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()) })
 	);
 
 	CODE_RED_THROW_IF_FAILED(
@@ -274,8 +274,8 @@ void ParticleDemoApp::initializeShaders()
 			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main", "ps_5_1", D3DCOMPILE_DEBUG, 0,
 			pixel.GetAddressOf(), error.GetAddressOf()),
-		CodeRed::FailedException({ "Pixel Shader of HLSL" },
-			CodeRed::DirectX12::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()), CodeRed::DebugType::Create)
+		CodeRed::FailedException(CodeRed::DebugType::Create, { "Pixel Shader of HLSL" },
+			{ CodeRed::DirectX12::charArrayToString(error->GetBufferPointer(), error->GetBufferSize()) })
 	);
 
 	mVertexShaderCode = std::vector<CodeRed::Byte>(vertex->GetBufferSize());

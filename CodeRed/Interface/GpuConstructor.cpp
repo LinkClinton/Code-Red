@@ -43,6 +43,9 @@ CodeRed::GpuSwapChain::GpuSwapChain(
 	mInfo(info),
 	mPixelFormat(format)
 {
+	//check the device, queue, info and buffer count
+	//the device, queue, info.handle must be a valid value
+	//and the info.width, info.height and buffer count can not be zero.
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 
 	CODE_RED_DEBUG_PTR_VALID(queue, "queue");
@@ -66,6 +69,8 @@ CodeRed::GpuResourceLayout::GpuResourceLayout(
 	mElements(elements),
 	mSamplers(samplers)
 {
+	//the device must be a valid device
+	//the size of elements and samplers can be zero
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 }
 
@@ -73,6 +78,8 @@ CodeRed::GpuLogicalDevice::GpuLogicalDevice(
 	const std::shared_ptr<GpuDisplayAdapter>& adapter) :
 	mDisplayAdapter(adapter)
 {
+	//the display adapter must be valid
+	//it must be create from GpuSystemInfo
 	CODE_RED_DEBUG_THROW_IF(
 		mDisplayAdapter == nullptr,
 		ZeroException<GpuDisplayAdapter>({ "adapter" })
@@ -85,6 +92,7 @@ CodeRed::GpuGraphicsCommandList::GpuGraphicsCommandList(
 	mDevice(device),
 	mAllocator(allocator)
 {
+	//the device and allocator must be valid.
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 
 	CODE_RED_DEBUG_THROW_IF(
@@ -101,6 +109,12 @@ CodeRed::GpuFrameBuffer::GpuFrameBuffer(
 	mRenderTargets({ render_target }),
 	mDepthStencil(depth_stencil)
 {
+	//the device must be valid
+	//but we can ignore the render target and depth stencil
+	//if we create frame buffer without both, we will warning
+	//the dimension of render target and depth stencil must be Dimension::2D
+	//and the usage of render target must have ResourceUsage::RenderTarget
+	//and the usage of depth stencil must have ResourceUsage::DepthStencil
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 	
 	CODE_RED_DEBUG_THROW_IF(
@@ -126,6 +140,14 @@ CodeRed::GpuFrameBuffer::GpuFrameBuffer(
 		!enumHas(mDepthStencil->usage(), ResourceUsage::DepthStencil),
 		InvalidException<GpuTexture>({ "depth_stencil->usage()" })
 	);
+
+	CODE_RED_DEBUG_TRY_EXECUTE(
+		mRenderTargets[0] == nullptr &&
+		mDepthStencil == nullptr,
+		DebugReport::warning(DebugType::Create,
+			{ "FrameBuffer" },
+			{ "there are no rtv and dsv." })
+	);
 }
 
 CodeRed::GpuFence::GpuFence(
@@ -150,15 +172,37 @@ CodeRed::GpuCommandAllocator::GpuCommandAllocator(
 }
 
 CodeRed::GpuTexture::GpuTexture(
-	const std::shared_ptr<GpuLogicalDevice>& device, 
+	const std::shared_ptr<GpuLogicalDevice>& device,
 	const ResourceInfo& info) :
 	GpuResource(device, info)
 {
+	//the device must be a valid device.
+	//and the size of texture must greater zero
+	//and the info.Type must be ResourceType::Texture
+	//and the info.Usage only support RT and DS(warning)
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 
 	CODE_RED_DEBUG_THROW_IF(
 		std::get<TextureProperty>(mInfo.Property).Size == 0,
 		ZeroException<size_t>({ "info.Property.Size" })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mInfo.Type != ResourceType::Texture,
+		InvalidException<ResourceInfo>({ "info.Type" })
+	);
+
+	CODE_RED_DEBUG_WARNING_IF(
+		enumHas(mInfo.Usage, ResourceUsage::ConstantBuffer) ||
+		enumHas(mInfo.Usage, ResourceUsage::IndexBuffer) ||
+		enumHas(mInfo.Usage, ResourceUsage::VertexBuffer),
+		DebugReport::make(
+			"the usage of texture only support [0] and [1].",
+			{
+				CODE_RED_TO_STRING(ResourceUsage::RenderTarget),
+				CODE_RED_TO_STRING(ResourceUsage::DepthStencil)
+			}
+		)
 	);
 }
 
@@ -176,6 +220,11 @@ CodeRed::GpuBuffer::GpuBuffer(
 	const ResourceInfo& info) :
 	GpuResource(device, info)
 {
+	//the device must be a valid device.
+	//and the info.Type must be ResourceType::Buffer
+	//and the info.Property.Size must greater than 0
+	//if the buffer is constant buffer, the size must greater than 256bytes
+	//and the usage of buffer only support Vertex, Index, Constant Buffer.
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 
 	CODE_RED_DEBUG_THROW_IF(
@@ -193,11 +242,11 @@ CodeRed::GpuBuffer::GpuBuffer(
 	//so we will check, warning and modify the size
 	if (mInfo.Usage == ResourceUsage::ConstantBuffer) {
 		
-#ifdef __ENABLE__CODE__RED__DEBUG__
-		if (std::get<BufferProperty>(mInfo.Property).Size < 256)
-			DebugReport::warning("The size of constant buffer is less than 256bytes,"
-				" we will create it with 256bytes.");
-#endif
+		CODE_RED_DEBUG_WARNING_IF(
+			std::get<BufferProperty>(mInfo.Property).Size < 256,
+			"The size of constant buffer is less than 256bytes,"
+			" we will create it with 256bytes."
+		);
 
 		//modify the size if it less than 256bytes
 		std::get<BufferProperty>(mInfo.Property).Size = std::max(
@@ -206,10 +255,17 @@ CodeRed::GpuBuffer::GpuBuffer(
 		);
 	}
 	
-	CODE_RED_DEBUG_THROW_IF(
+	CODE_RED_DEBUG_WARNING_IF(
 		enumHas(mInfo.Usage, ResourceUsage::RenderTarget) ||
 		enumHas(mInfo.Usage, ResourceUsage::DepthStencil),
-		InvalidException<ResourceUsage>({ "info.Usage" })
+		DebugReport::make(
+			"the usage of buffer only support [0], [1] and [2].",
+			{
+				CODE_RED_TO_STRING(ResourceUsage::VertexBuffer),
+				CODE_RED_TO_STRING(ResourceUsage::IndexBuffer),
+				CODE_RED_TO_STRING(ResourceUsage::ConstantBuffer)
+			}
+		)
 	);
 }
 
@@ -233,6 +289,7 @@ CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 	mRenderPass(render_pass),
 	mDevice(device)
 {
+	//all of them must be valid value.
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 
 	CODE_RED_DEBUG_PTR_VALID(mRasterizationState, "rasterization_state");

@@ -23,6 +23,10 @@ auto CodeRed::DirectX12SystemInfo::selectDisplayAdapter() const -> std::vector<s
 
 	UINT index = 0;
 
+	CODE_RED_DEBUG_LOG("");
+	CODE_RED_DEBUG_LOG("enum the adapters.");
+	CODE_RED_DEBUG_LOG("");
+	
 	while (factory->EnumAdapters1(index++, &adapter) != DXGI_ERROR_NOT_FOUND) {
 		DXGI_ADAPTER_DESC1 desc;
 
@@ -32,11 +36,20 @@ auto CodeRed::DirectX12SystemInfo::selectDisplayAdapter() const -> std::vector<s
 
 			continue;
 		}
-		
+
+		CODE_RED_DEBUG_LOG(DebugReport::make("adapter [0] --------", { std::to_string(index - 1) }));
+		CODE_RED_DEBUG_LOG("device name  : " + wideStringToMultiString(desc.Description));
+		CODE_RED_DEBUG_LOG("device id    : " + std::to_string(desc.DeviceId));
+		CODE_RED_DEBUG_LOG("vendor id    : " + std::to_string(desc.VendorId));
+		CODE_RED_DEBUG_LOG("video memory : " + std::to_string(desc.DedicatedVideoMemory));
+		CODE_RED_DEBUG_LOG("revision     : " + std::to_string(desc.Revision));
+		CODE_RED_DEBUG_LOG("");
+
 		display_adapters.push_back(
 			std::make_shared<DirectX12DisplayAdapter>(
 				adapter,
 				wideStringToMultiString(desc.Description), desc.DeviceId, desc.VendorId));
+
 	}
 
 	return display_adapters;

@@ -55,6 +55,12 @@ void CodeRed::DirectX12GraphicsCommandList::beginRenderPass(
 	const std::shared_ptr<GpuRenderPass>& render_pass,
 	const std::shared_ptr<GpuFrameBuffer>& frame_buffer)
 {
+	CODE_RED_DEBUG_THROW_IF(
+		mFrameBuffer != nullptr ||
+		mRenderPass != nullptr,
+		Exception("please end old render pass before you begin a new render pass.")
+	)
+	
 	mFrameBuffer = std::static_pointer_cast<DirectX12FrameBuffer>(frame_buffer);
 	mRenderPass = std::static_pointer_cast<DirectX12RenderPass>(render_pass);
 
@@ -74,14 +80,14 @@ void CodeRed::DirectX12GraphicsCommandList::beginRenderPass(
 	const auto has_dsv = mFrameBuffer->depthStencil() != nullptr && depthAttachment.has_value();
 	const auto rtvAddress = mFrameBuffer->rtvHeap()->GetCPUDescriptorHandleForHeapStart();
 	const auto dsvAddress = mFrameBuffer->dsvHeap()->GetCPUDescriptorHandleForHeapStart();
-	
-	//warning, when we set a frame buffer without rtv and dsv
-	//only output when we enable __EANBLE__CODE__RED__DEBUG__
-	CODE_RED_DEBUG_TRY_EXECUTE(
+		
+	CODE_RED_DEBUG_WARNING_IF(
 		has_rtv == false && has_dsv == false,
-		DebugReport::warning(DebugType::Set, 
-			{ "FrameBuffer", "Graphics Pipeline" }, 
-			{ "there are no rtv and dsv" })
+		DebugReport::make(
+			DebugType::Set,
+			{ "FrameBuffer", "Graphics Pipeline" },
+			{ "there are no rtv and dsv." }
+		)
 	);
 
 	tryLayoutTransition(mFrameBuffer->renderTarget(), colorAttachment, false);
@@ -112,6 +118,12 @@ void CodeRed::DirectX12GraphicsCommandList::beginRenderPass(
 
 void CodeRed::DirectX12GraphicsCommandList::endRenderPass()
 {
+	CODE_RED_DEBUG_THROW_IF(
+		mFrameBuffer == nullptr ||
+		mRenderPass == nullptr,
+		Exception("please begin a render pass before end a render pass.")
+	)
+	
 	const auto colorAttachment = mRenderPass->color();
 	const auto depthAttachment = mRenderPass->depth();
 

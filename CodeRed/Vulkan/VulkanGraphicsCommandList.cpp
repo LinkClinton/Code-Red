@@ -64,6 +64,12 @@ void CodeRed::VulkanGraphicsCommandList::beginRenderPass(
 	const std::shared_ptr<GpuRenderPass>& render_pass,
 	const std::shared_ptr<GpuFrameBuffer>& frame_buffer)
 {
+	CODE_RED_DEBUG_THROW_IF(
+		mFrameBuffer != nullptr ||
+		mRenderPass != nullptr,
+		Exception("please end old render pass before you begin a new render pass.")
+	)
+	
 	mRenderPass = std::static_pointer_cast<VulkanRenderPass>(render_pass);
 	mFrameBuffer = std::static_pointer_cast<VulkanFrameBuffer>(frame_buffer);
 
@@ -103,10 +109,19 @@ void CodeRed::VulkanGraphicsCommandList::beginRenderPass(
 
 void CodeRed::VulkanGraphicsCommandList::endRenderPass()
 {
+	CODE_RED_DEBUG_THROW_IF(
+		mFrameBuffer == nullptr ||
+		mRenderPass == nullptr,
+		Exception("please begin a render pass before end a render pass.")
+	)
+	
 	mCommandBuffer.endRenderPass();
 
 	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), true);
 	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), true);
+
+	mFrameBuffer.reset();
+	mRenderPass.reset();
 }
 
 void CodeRed::VulkanGraphicsCommandList::setGraphicsPipeline(

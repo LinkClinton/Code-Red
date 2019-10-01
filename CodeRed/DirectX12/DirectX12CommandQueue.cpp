@@ -1,4 +1,5 @@
 #include "../Shared/Exception/FailedException.hpp"
+#include "../Shared/DebugReport.hpp"
 
 #include "DirectX12GraphicsCommandList.hpp"
 #include "DirectX12LogicalDevice.hpp"
@@ -32,6 +33,11 @@ CodeRed::DirectX12CommandQueue::DirectX12CommandQueue(
 void CodeRed::DirectX12CommandQueue::execute(
 	const std::vector<std::shared_ptr<GpuGraphicsCommandList>>& lists)
 {
+	CODE_RED_DEBUG_WARNING_IF(
+		lists.empty(),
+		"the lists we commit to queue is empty."
+	);
+	
 	std::vector<ID3D12CommandList*> dxLists;
 
 	for (auto &list : lists) {

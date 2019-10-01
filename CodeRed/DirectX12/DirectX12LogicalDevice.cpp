@@ -1,7 +1,7 @@
-
 #include "DirectX12PipelineState/DirectX12PipelineFactory.hpp"
 
 #include "../Shared/Exception/FailedException.hpp"
+#include "../Shared/DebugReport.hpp"
 
 #include "DirectX12Resource/DirectX12Sampler.hpp"
 #include "DirectX12Resource/DirectX12Texture.hpp"
@@ -32,11 +32,15 @@ CodeRed::DirectX12LogicalDevice::DirectX12LogicalDevice(const std::shared_ptr<Gp
 	WRL::ComPtr<ID3D12Debug3> debugLayer;
 	D3D12GetDebugInterface(IID_PPV_ARGS(&debugLayer));
 	debugLayer->EnableDebugLayer();
+
+	CODE_RED_DEBUG_LOG("enabled DirectX12 Debug Layer.");
 #endif
 
 	//get the adapter we used to create device
 	const auto dxgiAdapter = static_cast<DirectX12DisplayAdapter*>(adapter.get());
 
+	CODE_RED_DEBUG_LOG(DebugReport::make("create device with [0]", { mDisplayAdapter->name() }));
+	
 	//create Direct3D 12 Device.
 	CODE_RED_THROW_IF_FAILED(
 		D3D12CreateDevice(dxgiAdapter->adapter().Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mDevice)),

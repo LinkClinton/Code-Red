@@ -116,17 +116,35 @@ auto CodeRed::DebugReport::makeError(
 	return makeError(select(type), messages);
 }
 
-void CodeRed::DebugReport::output(const std::string& text)
+auto CodeRed::DebugReport::make(
+	const std::string& format, 
+	const std::vector<std::string>& messages)
+	-> std::string
 {
-	std::cout << text << std::endl << std::endl;
+	return push(format, messages);
 }
 
-auto CodeRed::DebugReport::select(const Type type) -> std::string
+auto CodeRed::DebugReport::make(
+	const DebugType& type, 
+	const std::vector<std::string> messages,
+	const std::vector<std::string> debug_message)
+	-> std::string
+{
+	return push(select(type), messages) +
+		"\ncr-debug message : " + merge(debug_message);
+}
+
+void CodeRed::DebugReport::output(const std::string& text)
+{
+	std::cout << text << std::endl;
+}
+
+auto CodeRed::DebugReport::select(const DebugType type) -> std::string
 {
 	switch (type) {
-	case Type::Create: return "create [0] failed.";
-	case Type::Get: return "get [0] from [1] failed.";
-	case Type::Set: return "set [0] to [1] failed.";
+	case DebugType::Create: return "create [0] failed.";
+	case DebugType::Get: return "get [0] from [1] failed.";
+	case DebugType::Set: return "set [0] to [1] failed.";
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

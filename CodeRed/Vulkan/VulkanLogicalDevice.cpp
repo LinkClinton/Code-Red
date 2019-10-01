@@ -67,6 +67,10 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 	
 	mInstance = vk::createInstance(instanceInfo);
 
+	for (const auto extension : mInstanceExtensions) {
+		CODE_RED_DEBUG_LOG("enabled vulkan instance extension : " + std::string(extension));
+	}
+		
 	initializeDynamicLoader();
 	initializeDebugReport();
 	
@@ -92,6 +96,8 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 		InvalidException<GpuDisplayAdapter>({ "adapter" })
 	);
 
+	CODE_RED_DEBUG_LOG(DebugReport::make("create device with [0]", { mDisplayAdapter->name() }));
+	
 	mMemoryProperties = mPhysicalDevice.getMemoryProperties();
 
 	auto queueFamilyProperties = mPhysicalDevice.getQueueFamilyProperties();
@@ -108,6 +114,17 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 			
 			mFreeQueues.resize(queueFamilyProperties[index].queueCount);
 
+			CODE_RED_DEBUG_LOG(
+				DebugReport::make(
+					"create queues with queue family [0], "
+					"max number of queues is [1].",
+					{
+						std::to_string(mQueueFamilyIndex),
+						std::to_string(mFreeQueues.size())
+					}
+				)
+			);
+			
 			break;
 		}
 	}
@@ -148,6 +165,10 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 		.setPEnabledFeatures(&mPhysicalFeatures);
 	
 	mDevice = mPhysicalDevice.createDevice(deviceInfo);
+
+	for (const auto extension : mDeviceExtensions) {
+		CODE_RED_DEBUG_LOG("enabled vulkan device extension : " + std::string(extension));
+	}
 }
 
 CodeRed::VulkanLogicalDevice::~VulkanLogicalDevice()
@@ -336,6 +357,8 @@ void CodeRed::VulkanLogicalDevice::initializeLayers()
 					mInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 				}
 
+				CODE_RED_DEBUG_LOG("enabled vulkan layer : " + std::string(enableLayer));
+				
 				mInstanceLayers.push_back(enableLayer);
 				available = true;
 				break;

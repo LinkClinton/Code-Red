@@ -32,10 +32,30 @@ CodeRed::VulkanSwapChain::VulkanSwapChain(
 
 	mSurface = vkDevice->mInstance.createWin32SurfaceKHR(surfaceInfo);
 #endif
+	
 	auto formats = vkDevice->mPhysicalDevice.getSurfaceFormatsKHR(mSurface);
 
-	assert(vkDevice->mPhysicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(
-		vkDevice->mQueueFamilyIndex), mSurface));
+	auto supportFormat = false;
+	
+	for (const auto vkFormat : formats) {
+		if (enumConvert(mPixelFormat) == vkFormat.format &&
+			vkFormat.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear) {
+
+			supportFormat = true;
+			break;
+		}
+	}
+	
+	CODE_RED_DEBUG_WARNING_IF(
+		supportFormat == false,
+		"the format of swapchain is not supported."
+	);
+
+	CODE_RED_DEBUG_WARNING_IF(
+		vkDevice->mPhysicalDevice.getSurfaceSupportKHR(static_cast<uint32_t>(
+			vkDevice->mQueueFamilyIndex), mSurface) == false,
+		"the queue family is not supported this surface."
+	);
 	
 	initializeSwapChain();
 }
@@ -89,7 +109,7 @@ void CodeRed::VulkanSwapChain::present()
 
 	CODE_RED_THROW_IF(
 		vkQueue.presentKHR(info) != vk::Result::eSuccess,
-		Exception("Present failed.")
+		Exception("present failed.")
 	);
 
 	updateCurrentFrameIndex();

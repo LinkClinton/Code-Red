@@ -2,6 +2,8 @@
 #include "VulkanLogicalDevice.hpp"
 #include "VulkanCommandQueue.hpp"
 
+#include "../Shared/DebugReport.hpp"
+
 #ifdef __ENABLE__VULKAN__
 
 using namespace CodeRed::Vulkan;
@@ -27,6 +29,11 @@ CodeRed::VulkanCommandQueue::~VulkanCommandQueue()
 void CodeRed::VulkanCommandQueue::execute(
 	const std::vector<std::shared_ptr<GpuGraphicsCommandList>>& lists)
 {
+	CODE_RED_DEBUG_WARNING_IF(
+		lists.empty(),
+		"the lists we commit to queue is empty."
+	);
+	
 	std::vector<vk::CommandBuffer> vkLists;
 
 	for (auto& list : lists) {

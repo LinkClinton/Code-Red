@@ -12,8 +12,10 @@ namespace CodeRed {
 #undef CODE_RED_DEBUG_THROW_IF
 #undef CODE_RED_TRY_EXECUTE
 #undef CODE_RED_DEBUG_TRY_EXECUTE
+#undef CODE_RED_DEBUG_TO_STRING
 	
 #define CODE_RED_TRY_EXECUTE(condition, expression) if (condition) expression;
+#define CODE_RED_TO_STRING(value) #value
 	
 #ifdef __ENABLE__CODE__RED__DEBUG__
 #define CODE_RED_DEBUG_THROW_IF(condition, exception) if ((condition)) throw exception;
