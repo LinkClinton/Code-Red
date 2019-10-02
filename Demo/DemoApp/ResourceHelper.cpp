@@ -6,9 +6,24 @@ void CodeRed::ResourceHelper::updateBuffer(
 	const std::shared_ptr<GpuBuffer>& buffer, 
 	const void* data)
 {
+	updateBuffer(
+		device,
+		allocator,
+		device->createCommandQueue(),
+		buffer,
+		data);
+}
+
+void CodeRed::ResourceHelper::updateBuffer(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuCommandAllocator>& allocator, 
+	const std::shared_ptr<GpuCommandQueue>& queue,
+	const std::shared_ptr<GpuBuffer>& buffer, 
+	const void* data)
+{
 	//first, we create the command list and command queue for copy resource
 	auto commandList = device->createGraphicsCommandList(allocator);
-	auto commandQueue = device->createCommandQueue();
+	auto commandQueue = queue;
 
 	//create the upload buffer
 	const auto uploadBuffer = device->createBuffer(

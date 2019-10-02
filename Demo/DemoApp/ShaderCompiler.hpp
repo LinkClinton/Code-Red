@@ -12,8 +12,10 @@ namespace CodeRed {
 
 	class ShaderCompiler {
 	public:
-#ifdef __ENABLE__VULKAN__
+		static auto readShader(const std::string& fileName) -> std::string;
 		
+#ifdef __ENABLE__VULKAN__
+
 		static auto compileToSpv(const ShaderType& shaderType, const std::string& shader)
 			->	shaderc::SpvCompilationResult;
 #endif

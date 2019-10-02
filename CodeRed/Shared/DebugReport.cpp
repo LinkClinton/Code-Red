@@ -78,7 +78,7 @@ auto CodeRed::DebugReport::makeError(
 	const std::string& message)
 	-> std::string
 {
-	return "cr-error : " + message;
+	return "cr-error   : " + message;
 }
 
 auto CodeRed::DebugReport::makeError(

@@ -1,6 +1,27 @@
 #include "ShaderCompiler.hpp"
 
+#include <fstream>
+#include <string>
+
 #ifdef __ENABLE__VULKAN__
+
+auto CodeRed::ShaderCompiler::readShader(const std::string& fileName)
+	-> std::string
+{
+	std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+
+	assert(file.is_open());
+
+	const auto size = static_cast<size_t>(file.tellg());
+
+	std::string code; code.resize(size);
+
+	file.seekg(0, std::ios::beg);
+	file.read(static_cast<char*>(code.data()), size);
+	file.close();
+
+	return code;
+}
 
 auto CodeRed::ShaderCompiler::compileToSpv(
 	const ShaderType& shaderType, 

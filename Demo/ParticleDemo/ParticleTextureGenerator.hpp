@@ -5,7 +5,7 @@
 #include <PipelineInfo.hpp>
 
 //#define __DIRECTX12__MODE__
-#define __VULKAN__MODE
+#define __VULKAN__MODE__
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>

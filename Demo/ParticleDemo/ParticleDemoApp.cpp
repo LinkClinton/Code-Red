@@ -86,7 +86,7 @@ void ParticleDemoApp::initialize()
 		std::make_shared<CodeRed::DirectX12LogicalDevice>(adapters[0])
 		);
 #else
-#ifdef __VULKAN__MODE
+#ifdef __VULKAN__MODE__
 	//find all adapters we can use
 	const auto systemInfo = std::make_shared<CodeRed::VulkanSystemInfo>();
 	const auto adapters = systemInfo->selectDisplayAdapter();
@@ -276,7 +276,7 @@ void ParticleDemoApp::initializeShaders()
 	std::memcpy(mVertexShaderCode.data(), vertex->GetBufferPointer(), vertex->GetBufferSize());
 	std::memcpy(mPixelShaderCode.data(), pixel->GetBufferPointer(), pixel->GetBufferSize());
 #else
-#ifdef __VULKAN__MODE
+#ifdef __VULKAN__MODE__
 	static const auto vertShaderText =
 		"#version 450\n"
 		"#extension GL_ARB_separate_shader_objects : enable\n"

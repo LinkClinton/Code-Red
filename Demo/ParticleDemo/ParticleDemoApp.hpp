@@ -75,7 +75,7 @@ private:
 private:
 	const size_t maxFrameResources = 2;
 	const size_t maxParticleSize = 20;
-	const size_t particleCount = 200000;
+	const size_t particleCount = 2000;
 	
 	size_t mCurrentFrameIndex = 0;
 

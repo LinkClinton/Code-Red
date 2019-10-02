@@ -192,7 +192,7 @@ void ParticleTextureGenerator::initializeShaders()
 	std::memcpy(mVertexShaderCode.data(), vertex->GetBufferPointer(), vertex->GetBufferSize());
 	std::memcpy(mPixelShaderCode.data(), pixel->GetBufferPointer(), pixel->GetBufferSize());
 #else
-#ifdef __VULKAN__MODE
+#ifdef __VULKAN__MODE__
 	static const auto vertShaderText =
 		"#version 450\n"
 		"#extension GL_ARB_separate_shader_objects : enable\n"
