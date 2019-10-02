@@ -80,6 +80,7 @@ auto CodeRed::Vulkan::enumConvert(const ResourceType type)
 	switch (type) {
 	case ResourceType::Buffer: return vk::DescriptorType::eUniformBuffer;
 	case ResourceType::Texture: return vk::DescriptorType::eSampledImage;
+	case ResourceType::GroupBuffer: return vk::DescriptorType::eStorageBuffer;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
@@ -151,7 +152,7 @@ auto CodeRed::Vulkan::enumConvert(const ResourceUsage usage)
 		VulkanResourceUsage(0, 0) ,
 		VulkanResourceUsage(vk::BufferUsageFlagBits::eVertexBuffer, 0),
 		VulkanResourceUsage(vk::BufferUsageFlagBits::eIndexBuffer, 0),
-		VulkanResourceUsage(vk::BufferUsageFlagBits::eUniformBuffer, 0),
+		VulkanResourceUsage(vk::BufferUsageFlagBits::eUniformBuffer | vk::BufferUsageFlagBits::eStorageBuffer, 0),
 		VulkanResourceUsage(0, vk::ImageUsageFlagBits::eColorAttachment),
 		VulkanResourceUsage(0, vk::ImageUsageFlagBits::eDepthStencilAttachment)
 	};
@@ -390,6 +391,8 @@ auto CodeRed::Vulkan::enumConvert1(
 			return vk::AccessFlagBits::eUniformRead | vk::AccessFlagBits::eIndexRead | vk::AccessFlagBits::eVertexAttributeRead;
 		case ResourceType::Texture:
 			return vk::AccessFlagBits::eShaderRead;
+		case ResourceType::GroupBuffer:
+			return vk::AccessFlagBits::eUniformRead;
 		default:
 			throw NotSupportException(NotSupportType::Enum);
 		}

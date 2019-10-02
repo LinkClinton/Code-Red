@@ -121,6 +121,21 @@ namespace CodeRed {
 			);
 		}
 
+		static auto GroupBuffer(
+			const size_t stride,
+			const size_t count,
+			const MemoryHeap heap = MemoryHeap::Upload,
+			const ResourceLayout layout = ResourceLayout::GeneralRead) -> ResourceInfo
+		{
+			return ResourceInfo(
+				BufferProperty(stride, count),
+				layout,
+				ResourceUsage::ConstantBuffer,
+				ResourceType::GroupBuffer,
+				heap
+			);
+		}
+		
 		static auto Texture1D(
 			const size_t width, 
 			const PixelFormat format,

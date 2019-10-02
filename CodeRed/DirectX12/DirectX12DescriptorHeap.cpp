@@ -37,8 +37,8 @@ CodeRed::DirectX12DescriptorHeap::DirectX12DescriptorHeap(
 }
 
 void CodeRed::DirectX12DescriptorHeap::bindTexture(
-	const size_t index, 
-	const std::shared_ptr<GpuTexture>& texture)
+	const std::shared_ptr<GpuTexture>& texture,
+	const size_t index)
 {
 	CODE_RED_DEBUG_THROW_IF(
 		index >= mResourceLayout->mElements.size(),
@@ -93,8 +93,8 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 }
 
 void CodeRed::DirectX12DescriptorHeap::bindBuffer(
-	const size_t index, 
-	const std::shared_ptr<GpuBuffer>& buffer)
+	const std::shared_ptr<GpuBuffer>& buffer,
+	const size_t index)
 {
 	CODE_RED_DEBUG_THROW_IF(
 		index >= mResourceLayout->mElements.size(),
@@ -102,7 +102,8 @@ void CodeRed::DirectX12DescriptorHeap::bindBuffer(
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout->mElements[index].Type != ResourceType::Buffer,
+		mResourceLayout->mElements[index].Type != buffer->type() ||
+		mResourceLayout->mElements[index].Type == ResourceType::Texture,
 		InvalidException<ResourceType>({ "element(index).Type" })
 	);
 
@@ -114,12 +115,39 @@ void CodeRed::DirectX12DescriptorHeap::bindBuffer(
 			static_cast<SIZE_T>(index)* mDescriptorSize
 	};
 
-	D3D12_CONSTANT_BUFFER_VIEW_DESC view = {
-		dxBuffer->buffer()->GetGPUVirtualAddress(),
-		static_cast<UINT>(dxBuffer->size())
-	};
+	
+	switch (dxBuffer->type()) {
+	case ResourceType::Buffer:
+		{
+			D3D12_CONSTANT_BUFFER_VIEW_DESC bufferView = {
+				dxBuffer->buffer()->GetGPUVirtualAddress(),
+				static_cast<UINT>(dxBuffer->size())
+			};
 
-	dxDevice->CreateConstantBufferView(&view, cpuHandle);
+			dxDevice->CreateConstantBufferView(&bufferView, cpuHandle);
+
+			break;
+		}
+	case ResourceType::GroupBuffer:
+		{
+			D3D12_SHADER_RESOURCE_VIEW_DESC resourceView = {};
+
+			resourceView.Format = DXGI_FORMAT_UNKNOWN;
+			resourceView.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+			resourceView.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+			resourceView.Buffer.FirstElement = 0;
+			resourceView.Buffer.NumElements = static_cast<UINT>(dxBuffer->count());
+			resourceView.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+			resourceView.Buffer.StructureByteStride = static_cast<UINT>(dxBuffer->stride());
+
+			dxDevice->CreateShaderResourceView(dxBuffer->buffer().Get(), &resourceView, cpuHandle);
+
+			break;
+		}
+	case ResourceType::Texture:
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+	
 }
-
 #endif

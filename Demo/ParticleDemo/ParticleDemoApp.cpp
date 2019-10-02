@@ -19,20 +19,15 @@ void ParticleDemoApp::update(float delta)
 		auto offset = particle.Forward * length;
 
 		particle.reverseIfOut(offset, width(), height());
-		
+
 		transform = glm::translate(glm::mat4x4(1), glm::vec3(offset, 0.0f)) * transform;
 	}
 
-	const auto buffers = mFrameResources[mCurrentFrameIndex].
-		get<std::vector<std::shared_ptr<CodeRed::GpuBuffer>>>("Transform");
+	const auto buffer = mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuBuffer>("Transform");
 
-	for (size_t index = 0; index < buffers->size(); index++) {
-		const auto buffer = (*buffers)[index];
-
-		const auto memory = buffer->mapMemory();
-		std::memcpy(memory, mTransform.data() + index * particleCount, buffer->size());
-		buffer->unmapMemory();
-	}
+	const auto memory = buffer->mapMemory();
+	std::memcpy(memory, mTransform.data(), buffer->size());
+	buffer->unmapMemory();
 }
 
 
@@ -41,8 +36,8 @@ void ParticleDemoApp::render(float delta)
 	const float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	const auto frameBuffer = 
 		mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuFrameBuffer>("FrameBuffer");
-	const auto descriptorHeaps =
-		mFrameResources[mCurrentFrameIndex].get<std::vector<std::shared_ptr<CodeRed::GpuDescriptorHeap>>>("DescriptorHeaps");
+	const auto descriptorHeap =
+		mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuDescriptorHeap>("DescriptorHeap");
 
 	mCommandQueue->waitIdle();
 	mCommandAllocator->reset();
@@ -58,15 +53,14 @@ void ParticleDemoApp::render(float delta)
 	mCommandList->setVertexBuffer(mVertexBuffer);
 	mCommandList->setIndexBuffer(mIndexBuffer);
 
+	mCommandList->setDescriptorHeap(descriptorHeap);
+	
 	mCommandList->beginRenderPass(
 		mPipelineInfo->graphicsPipeline()->renderPass(),
 		frameBuffer);
 	
-	for (size_t index = 0; index < particleTimes; index++) {
-		mCommandList->setDescriptorHeap((*descriptorHeaps)[index]);
-		mCommandList->drawIndexed(6, particleCount);
-	}
-
+	mCommandList->drawIndexed(6, particleCount);
+	
 	mCommandList->endRenderPass();
 		
 	mCommandList->endRecoding();
@@ -176,18 +170,16 @@ void ParticleDemoApp::initializeBuffers()
 	);
 
 	for (auto& frameResource : mFrameResources) {
-		auto buffers = std::make_shared<std::vector<std::shared_ptr<CodeRed::GpuBuffer>>>();
-
-		for (size_t index = 0; index < particleTimes; index++)
-			buffers->push_back(mDevice->createBuffer(
-				CodeRed::ResourceInfo::ConstantBuffer(
-					sizeof(glm::mat4x4) * particleCount,
-					CodeRed::MemoryHeap::Upload
-				)));
+		auto buffer = mDevice->createBuffer(
+			CodeRed::ResourceInfo::GroupBuffer(
+				sizeof(glm::mat4x4),
+				particleCount
+			)
+		);
 		
 		frameResource.set(
 			"Transform",
-			buffers
+			buffer
 		);
 	}
 
@@ -220,7 +212,7 @@ void ParticleDemoApp::initializeShaders()
 		"#pragma pack_matrix(row_major)\n"
 		"struct Transform\n"
 		"{\n"
-		"	matrix world[1000];\n"
+		"	matrix world;\n"
 		"};\n"
 		"struct output\n"
 		"{\n"
@@ -233,11 +225,11 @@ void ParticleDemoApp::initializeShaders()
 		"	matrix project;\n"
 		"};\n"
 		"ConstantBuffer<Project> project : register(b0);\n"
-		"ConstantBuffer<Transform> transforms : register(b1);\n"
+		"StructuredBuffer<Transform> transforms : register(t1);\n"
 		"output main(float2 position : POSITION, float2 texcoord : TEXCOORD, uint id : SV_INSTANCEID)\n"
 		"{\n"
 		"	output res;\n"
-		"	res.position = mul(float4(position, 0, 1), transforms.world[id]);\n"
+		"	res.position = mul(float4(position, 0, 1), transforms[id].world);\n"
 		"	res.position = mul(res.position, project.project);\n"
 		"	res.texcoord = texcoord;\n"
 		"	res.id = id;\n"
@@ -291,8 +283,8 @@ void ParticleDemoApp::initializeShaders()
 		"layout (set = 0, binding = 0) uniform bufferVals {\n"
 		"   mat4 project;\n"
 		"} myBufferVals;\n"
-		"layout (set = 0, binding = 1) uniform transforms {\n"
-		"	mat4 world[1000];\n"
+		"layout (set = 0, binding = 1) buffer transforms {\n"
+		"	mat4 world[];\n"
 		"} myTransforms;\n"
 		"layout (location = 0) in vec4 pos;\n"
 		"layout (location = 1) in vec2 tex;\n"
@@ -402,7 +394,7 @@ void ParticleDemoApp::initializePipeline()
 		mDevice->createResourceLayout(
 			{
 				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Buffer, 0, 0),
-				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Buffer, 1, 0),
+				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::GroupBuffer, 1, 0),
 				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Texture, 2,0)
 			},
 			{ CodeRed::SamplerLayoutElement(mSampler, 3, 0) }
@@ -466,24 +458,19 @@ void ParticleDemoApp::initializePipeline()
 void ParticleDemoApp::initializeDescriptorHeaps()
 {
 	for (auto& frameResource : mFrameResources) {
-		auto descriptorHeaps = std::make_shared<std::vector<std::shared_ptr<CodeRed::GpuDescriptorHeap>>>();
-		auto buffers = frameResource.get<std::vector<std::shared_ptr<CodeRed::GpuBuffer>>>("Transform");
-		
-		for (size_t index = 0; index < particleTimes; index++) {
-			auto descriptorHeap = mDevice->createDescriptorHeap(
-				mPipelineInfo->graphicsPipeline()->layout()
-			);
+		auto descriptorHeap = mDevice->createDescriptorHeap(
+			mPipelineInfo->graphicsPipeline()->layout()
+		);
 
-			descriptorHeap->bindBuffer(0, mViewBuffer);
-			descriptorHeap->bindBuffer(1, (*buffers)[index]);
-			descriptorHeap->bindTexture(2, mParticleTextureGenerator->texture());
+		auto buffer = frameResource.get<CodeRed::GpuBuffer>("Transform");
 
-			descriptorHeaps->push_back(descriptorHeap);
-		}
+		descriptorHeap->bindBuffer(mViewBuffer, 0);
+		descriptorHeap->bindBuffer(buffer, 1);
+		descriptorHeap->bindTexture(mParticleTextureGenerator->texture(), 2);
 
 		frameResource.set(
-			"DescriptorHeaps",
-			descriptorHeaps
+			"DescriptorHeap",
+			descriptorHeap
 		);
 	}
 }

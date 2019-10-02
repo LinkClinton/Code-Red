@@ -75,9 +75,8 @@ private:
 private:
 	const size_t maxFrameResources = 2;
 	const size_t maxParticleSize = 20;
-	const size_t particleCount = 1000;
-	const size_t particleTimes = 2;
-
+	const size_t particleCount = 200000;
+	
 	size_t mCurrentFrameIndex = 0;
 
 	std::shared_ptr<CodeRed::GpuLogicalDevice> mDevice;
@@ -104,6 +103,6 @@ private:
 	std::vector<CodeRed::Byte> mVertexShaderCode;
 	std::vector<CodeRed::Byte> mPixelShaderCode;
 
-	std::vector<Particle> mParticles = std::vector<Particle>(particleCount * particleTimes);
-	std::vector<glm::mat4x4> mTransform = std::vector<glm::mat4x4>(particleCount * particleTimes);
+	std::vector<Particle> mParticles = std::vector<Particle>(particleCount);
+	std::vector<glm::mat4x4> mTransform = std::vector<glm::mat4x4>(particleCount);
 };

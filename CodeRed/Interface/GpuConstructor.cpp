@@ -228,7 +228,8 @@ CodeRed::GpuBuffer::GpuBuffer(
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mInfo.Type != ResourceType::Buffer,
+		mInfo.Type != ResourceType::Buffer &&
+		mInfo.Type != ResourceType::GroupBuffer,
 		InvalidException<ResourceInfo>({ "info.Type" })
 	);
 	
@@ -324,13 +325,16 @@ CodeRed::GpuDescriptorHeap::GpuDescriptorHeap(
 }
 
 void CodeRed::GpuDescriptorHeap::bindResource(
-	const size_t index, 
-	const std::shared_ptr<GpuResource>& resource)
+	const std::shared_ptr<GpuResource>& resource,
+	const size_t index)
 {
-	if (resource->type() == ResourceType::Texture)
-		bindTexture(index, std::static_pointer_cast<GpuTexture>(resource));
-	else
-		bindBuffer(index, std::static_pointer_cast<GpuBuffer>(resource));
+	switch (resource->type()) {
+	case ResourceType::Buffer: bindBuffer(std::static_pointer_cast<GpuBuffer>(resource), index);
+	case ResourceType::Texture: bindTexture(std::static_pointer_cast<GpuTexture>(resource), index);
+	case ResourceType::GroupBuffer: bindBuffer(std::static_pointer_cast<GpuBuffer>(resource), index);
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
 }
 
 void CodeRed::GpuRenderPass::setClear(

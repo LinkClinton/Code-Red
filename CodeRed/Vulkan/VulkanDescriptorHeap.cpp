@@ -21,10 +21,12 @@ CodeRed::VulkanDescriptorHeap::VulkanDescriptorHeap(
 	
 	uint32_t bufferCount = 0;
 	uint32_t textureCount = 0;
+	uint32_t groupBufferCount = 0;
 
 	for (const auto element : vkLayout->mElements) {
 		bufferCount += element.Type == ResourceType::Buffer ? 1 : 0;
 		textureCount += element.Type == ResourceType::Texture ? 1 : 0;
+		groupBufferCount += element.Type == ResourceType::GroupBuffer ? 1 : 0;
 	}
 
 	std::vector<vk::DescriptorPoolSize> poolSize;
@@ -37,6 +39,11 @@ CodeRed::VulkanDescriptorHeap::VulkanDescriptorHeap(
 	CODE_RED_TRY_EXECUTE(
 		textureCount > 0,
 		poolSize.push_back({ vk::DescriptorType::eSampledImage, textureCount })
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		groupBufferCount > 0,
+		poolSize.push_back({ vk::DescriptorType::eStorageBuffer, groupBufferCount })
 	);
 
 	CODE_RED_TRY_EXECUTE(
@@ -77,8 +84,8 @@ CodeRed::VulkanDescriptorHeap::~VulkanDescriptorHeap()
 }
 
 void CodeRed::VulkanDescriptorHeap::bindTexture(
-	const size_t index, 
-	const std::shared_ptr<GpuTexture>& texture)
+	const std::shared_ptr<GpuTexture>& texture,
+	const size_t index)
 {
 	CODE_RED_DEBUG_THROW_IF(
 		index >= mResourceLayout->mElements.size(),
@@ -113,8 +120,8 @@ void CodeRed::VulkanDescriptorHeap::bindTexture(
 }
 
 void CodeRed::VulkanDescriptorHeap::bindBuffer(
-	const size_t index, 
-	const std::shared_ptr<GpuBuffer>& buffer)
+	const std::shared_ptr<GpuBuffer>& buffer,
+	const size_t index)
 {
 	CODE_RED_DEBUG_THROW_IF(
 		index >= mResourceLayout->mElements.size(),
@@ -122,7 +129,8 @@ void CodeRed::VulkanDescriptorHeap::bindBuffer(
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mResourceLayout->mElements[index].Type != ResourceType::Buffer,
+		mResourceLayout->mElements[index].Type != buffer->type() || 
+		mResourceLayout->mElements[index].Type == ResourceType::Texture,
 		InvalidException<ResourceType>({ "element(index).Type" })
 	);
 

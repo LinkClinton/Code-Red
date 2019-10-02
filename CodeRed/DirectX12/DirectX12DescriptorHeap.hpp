@@ -16,12 +16,12 @@ namespace CodeRed {
 		~DirectX12DescriptorHeap() = default;
 
 		void bindTexture(
-			const size_t index, 
-			const std::shared_ptr<GpuTexture>& texture) override;
+			const std::shared_ptr<GpuTexture>& texture,
+			const size_t index) override;
 
 		void bindBuffer(
-			const size_t index, 
-			const std::shared_ptr<GpuBuffer>& buffer) override;
+			const std::shared_ptr<GpuBuffer>& buffer, 
+			const size_t index) override;
 
 		auto heap() const noexcept -> WRL::ComPtr<ID3D12DescriptorHeap> { return mDescriptorHeap; }
 	private:

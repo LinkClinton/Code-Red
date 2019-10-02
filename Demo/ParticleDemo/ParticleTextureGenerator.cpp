@@ -325,5 +325,5 @@ void ParticleTextureGenerator::initializeDescriptorHeaps()
 		mPipelineInfo->graphicsPipeline()->layout()
 	);
 
-	mDescriptorHeap->bindBuffer(0, mViewBuffer);
+	mDescriptorHeap->bindBuffer(mViewBuffer, 0);
 }

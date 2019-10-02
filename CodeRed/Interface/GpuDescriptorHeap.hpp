@@ -22,17 +22,17 @@ namespace CodeRed {
 		~GpuDescriptorHeap() = default;
 	public:
 		void bindResource(
-			const size_t index,
-			const std::shared_ptr<GpuResource>& resource);
+			const std::shared_ptr<GpuResource>& resource,
+			const size_t index);
 
 		virtual void bindTexture(
-			const size_t index,
-			const std::shared_ptr<GpuTexture>& texture) = 0;
+			const std::shared_ptr<GpuTexture>& texture,
+			const size_t index) = 0;
 
 		virtual void bindBuffer(
-			const size_t index,
-			const std::shared_ptr<GpuBuffer>& buffer) = 0;
-	
+			const std::shared_ptr<GpuBuffer>& buffer,
+			const size_t index) = 0;
+
 		auto layout() const noexcept -> std::shared_ptr<GpuResourceLayout> { return mResourceLayout; }
 	protected:
 		std::shared_ptr<GpuResourceLayout> mResourceLayout;
