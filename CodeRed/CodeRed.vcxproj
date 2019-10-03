@@ -100,7 +100,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;__ENABLE__CODE__RED__DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;__CODE__RED__ENABLE__DIRECTX12__;__CODE__RED__ENABLE__VULKAN__;__ENABLE__CODE__RED__DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -115,7 +115,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;__ENABLE__CODE__RED__DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;__CODE__RED__ENABLE__DIRECTX12__;__CODE__RED__ENABLE__VULKAN__;__ENABLE__CODE__RED__DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -132,7 +132,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;__CODE__RED__ENABLE__DIRECTX12__;__CODE__RED__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -151,7 +151,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__ENABLE__DIRECTX12__;__ENABLE__VULKAN__;__CODE__RED__ENABLE__DIRECTX12__;__CODE__RED__ENABLE__VULKAN__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
