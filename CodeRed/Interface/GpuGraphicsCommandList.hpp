@@ -29,9 +29,9 @@ namespace CodeRed {
 		
 		~GpuGraphicsCommandList() = default;
 	public:
-		virtual void beginRecoding() = 0;
+		virtual void beginRecording() = 0;
 
-		virtual void endRecoding() = 0;
+		virtual void endRecording() = 0;
 
 		virtual void beginRenderPass(
 			const std::shared_ptr<GpuRenderPass> &render_pass,

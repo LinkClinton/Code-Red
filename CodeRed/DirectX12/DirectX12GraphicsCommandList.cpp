@@ -35,7 +35,7 @@ CodeRed::DirectX12GraphicsCommandList::DirectX12GraphicsCommandList(
 	mGraphicsCommandList->Close();
 }
 
-void CodeRed::DirectX12GraphicsCommandList::beginRecoding()
+void CodeRed::DirectX12GraphicsCommandList::beginRecording()
 {
 	mGraphicsCommandList->Reset(
 		static_cast<DirectX12CommandAllocator*>(mAllocator.get())->allocator().Get(),
@@ -46,7 +46,7 @@ void CodeRed::DirectX12GraphicsCommandList::beginRecoding()
 	mResourceLayout.reset();
 }
 
-void CodeRed::DirectX12GraphicsCommandList::endRecoding()
+void CodeRed::DirectX12GraphicsCommandList::endRecording()
 {
 	mGraphicsCommandList->Close();
 }
@@ -192,7 +192,10 @@ void CodeRed::DirectX12GraphicsCommandList::setDescriptorHeap(
 	
 	mGraphicsCommandList->SetDescriptorHeaps(1, dxHeap.GetAddressOf());
 
-	mGraphicsCommandList->SetGraphicsRootDescriptorTable(0, dxHeap->GetGPUDescriptorHandleForHeapStart());
+	CODE_RED_TRY_EXECUTE(
+		heap->count() != 0,
+		mGraphicsCommandList->SetGraphicsRootDescriptorTable(0, dxHeap->GetGPUDescriptorHandleForHeapStart()))
+	;
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setViewPort(const ViewPort& view_port)

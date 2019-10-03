@@ -22,34 +22,30 @@ void ParticleTextureGenerator::run() const
 	//because we want to build a particle texture
 	//the pixel not in the circle is (0, 0, 0, 0)
 	//we will use blend or clip to ignore this pixel
-	auto renderPass = mPipelineInfo->graphicsPipeline()->renderPass();
+	auto renderPass = mPipelineInfo->renderPass();
 
 	renderPass->setClear(CodeRed::ClearValue(0.0f, 0.0f, 0.0f, 0.0f));
 
-	mCommandList->beginRecoding();
+	mCommandList->beginRecording();
 
-	//set graphics pipeline, resource layout and frame buffer
 	mCommandList->setGraphicsPipeline(mPipelineInfo->graphicsPipeline());
-	mCommandList->setResourceLayout(mPipelineInfo->graphicsPipeline()->layout());
+	mCommandList->setResourceLayout(mPipelineInfo->resourceLayout());
 	
 	mCommandList->setViewPort(mFrameBuffer->fullViewPort());
 	mCommandList->setScissorRect(mFrameBuffer->fullScissorRect());
 
-	//set vertex, index, view buffer
 	mCommandList->setVertexBuffer(mVertexBuffer);
 	mCommandList->setIndexBuffer(mIndexBuffer);
 	mCommandList->setDescriptorHeap(mDescriptorHeap);
 	
 	mCommandList->beginRenderPass(renderPass, mFrameBuffer);
 	
-	//draw particle to texture
 	mCommandList->drawIndexed(mIndexBuffer->count());
 
 	mCommandList->endRenderPass();
 	
-	mCommandList->endRecoding();
+	mCommandList->endRecording();
 
-	//execute commands
 	mCommandQueue->execute({ mCommandList });
 }
 
@@ -60,7 +56,6 @@ void ParticleTextureGenerator::waitFinish() const
 
 void ParticleTextureGenerator::initializeCommands()
 {
-	//create the graphics command list and command queue
 	mCommandList = mDevice->createGraphicsCommandList(mCommandAllocator);
 	mCommandQueue = mDevice->createCommandQueue();
 }
@@ -138,93 +133,18 @@ void ParticleTextureGenerator::initializeBuffers()
 void ParticleTextureGenerator::initializeShaders()
 {
 #ifdef __DIRECTX12__MODE__
-	//in DirectX 12 mode, we use HLSL and compile them with D3DCompile
-	static const auto vertexShaderText =
-		"#pragma pack_matrix(row_major)\n"
-		"cbuffer transform : register(b0)\n"
-		"{\n"
-		"    float4x4 project;\n"
-		"}\n"
-		"struct output\n"
-		"{\n"
-		"	float4 position : SV_POSITION;\n"
-		"	float2 texcoord : TEXCOORD;\n"
-		"};\n"
-		"output main(float2 position : POSITION, float2 texcoord : TEXCOORD)\n"
-		"{\n"
-		"	output res;\n"
-		"	res.position = mul(float4(position, 0, 1), project);\n"
-		"   res.texcoord = texcoord;\n"
-		"	return res;"
-		"}\n";
+	const auto vertexShaderText = CodeRed::ShaderCompiler::readShader("./Shaders/DirectX12TextureVertex.hlsl");
+	const auto pixelShaderText = CodeRed::ShaderCompiler::readShader("./Shaders/DirectX12TexturePixel.hlsl");
 
-	static const auto pixelShaderText =
-		"float4 main(float4 position : SV_POSITION, float2 texcoord : TEXCOORD) : SV_TARGET\n"
-		"{\n"
-		"    return float4(1.0f, 1.0f, 1.0f, 1.0f) * (1.01f - length(texcoord));\n"
-		"}\n";
-
-	WRL::ComPtr<ID3DBlob> error;
-	WRL::ComPtr<ID3DBlob> vertex;
-	WRL::ComPtr<ID3DBlob> pixel;
-
-	CODE_RED_THROW_IF_FAILED(
-		D3DCompile(vertexShaderText,
-			std::strlen(vertexShaderText),
-			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-			"main", "vs_5_0", D3DCOMPILE_DEBUG, 0,
-			vertex.GetAddressOf(), error.GetAddressOf()),
-		CodeRed::FailedException(CodeRed::DebugType::Create, { "Vertex Shader of HLSL" })
-	);
-
-	CODE_RED_THROW_IF_FAILED(
-		D3DCompile(pixelShaderText,
-			std::strlen(pixelShaderText),
-			nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-			"main", "ps_5_0", D3DCOMPILE_DEBUG, 0,
-			pixel.GetAddressOf(), error.GetAddressOf()),
-		CodeRed::FailedException(CodeRed::DebugType::Create, { "Pixel Shader of HLSL" })
-	);
-
-	mVertexShaderCode = std::vector<CodeRed::Byte>(vertex->GetBufferSize());
-	mPixelShaderCode = std::vector<CodeRed::Byte>(pixel->GetBufferSize());
-	
-	std::memcpy(mVertexShaderCode.data(), vertex->GetBufferPointer(), vertex->GetBufferSize());
-	std::memcpy(mPixelShaderCode.data(), pixel->GetBufferPointer(), pixel->GetBufferSize());
+	mVertexShaderCode = CodeRed::ShaderCompiler::compileToCso(CodeRed::ShaderType::Vertex, vertexShaderText);
+	mPixelShaderCode = CodeRed::ShaderCompiler::compileToCso(CodeRed::ShaderType::Pixel, pixelShaderText);
 #else
 #ifdef __VULKAN__MODE__
-	static const auto vertShaderText =
-		"#version 450\n"
-		"#extension GL_ARB_separate_shader_objects : enable\n"
-		"layout (set = 0, binding = 0) uniform bufferVals {\n"
-		"    mat4 project;\n"
-		"} myBufferVals;\n"
-		"layout (location = 0) in vec4 pos;\n"
-		"layout (location = 1) in vec2 tex;\n"
-		"layout (location = 1) out vec2 out_tex;\n"
-		"void main() {\n"
-		"   gl_Position = pos * transpose(myBufferVals.project);\n"
-		"	gl_Position.y = - gl_Position.y;\n"
-		"	out_tex = tex;\n"
-		"}\n";
+	const auto vertexShaderText = CodeRed::ShaderCompiler::readShader("./Shaders/VulkanTextureVertex.vert");
+	const auto pixelShaderText = CodeRed::ShaderCompiler::readShader("./Shaders/VulkanTextureFragment.frag");
 
-	static const auto pixelShaderText =
-		"#version 450\n"
-		"#extension GL_ARB_separate_shader_objects : enable\n"
-		"layout (location = 1) in vec2 tex;\n"
-		"layout (location = 0) out vec4 outColor;\n"
-		"void main() {\n"
-		"   outColor = vec4(1.0f, 0.0f, 0.0f, 1.0f) * (1.01f - length(tex));\n"
-		"}\n";
-
-	const auto vertex = CodeRed::ShaderCompiler::compileToSpv(CodeRed::ShaderType::Vertex, vertShaderText);
-	const auto pixel = CodeRed::ShaderCompiler::compileToSpv(CodeRed::ShaderType::Pixel, pixelShaderText);
-
-	mVertexShaderCode = std::vector<CodeRed::Byte>((vertex.end() - vertex.begin()) * sizeof(uint32_t));
-	mPixelShaderCode = std::vector<CodeRed::Byte>((pixel.end() - pixel.begin()) * sizeof(uint32_t));
-
-	std::memcpy(mVertexShaderCode.data(), &vertex.begin()[0], mVertexShaderCode.size());
-	std::memcpy(mPixelShaderCode.data(), &pixel.begin()[0], mPixelShaderCode.size());
+	mVertexShaderCode = CodeRed::ShaderCompiler::compileToSpv(CodeRed::ShaderType::Vertex, vertexShaderText);
+	mPixelShaderCode = CodeRed::ShaderCompiler::compileToSpv(CodeRed::ShaderType::Pixel, pixelShaderText);
 #endif
 #endif
 }
@@ -251,13 +171,9 @@ void ParticleTextureGenerator::initializeTextures()
 
 void ParticleTextureGenerator::initializePipeline()
 {
-	//create pipeline info and pipeline factory
 	mPipelineInfo = std::make_shared<CodeRed::PipelineInfo>(mDevice);
 	mPipelineFactory = mDevice->createPipelineFactory();
 
-	//we use the ParticleVertex as input format
-	//so the layout is "POSITION"(0), "TEXCOORD"(1), "COLOR"(2)
-	//and the format of vertex buffer is triangle list
 	mPipelineInfo->setInputAssemblyState(
 		mPipelineFactory->createInputAssemblyState(
 			{
@@ -268,8 +184,6 @@ void ParticleTextureGenerator::initializePipeline()
 		)
 	);
 
-	//we only use view buffer
-	//so we the layout of resource only have one element
 	mPipelineInfo->setResourceLayout(
 		mDevice->createResourceLayout(
 			{ CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Buffer, 0, 0) },
@@ -285,7 +199,6 @@ void ParticleTextureGenerator::initializePipeline()
 		)
 	);
 
-	//disable depth test
 	mPipelineInfo->setDepthStencilState(
 		mPipelineFactory->createDetphStencilState(
 			false
@@ -315,14 +228,13 @@ void ParticleTextureGenerator::initializePipeline()
 		)
 	);
 	
-	//update state to graphics pipeline
 	mPipelineInfo->updateState();
 }
 
 void ParticleTextureGenerator::initializeDescriptorHeaps()
 {
 	mDescriptorHeap = mDevice->createDescriptorHeap(
-		mPipelineInfo->graphicsPipeline()->layout()
+		mPipelineInfo->resourceLayout()
 	);
 
 	mDescriptorHeap->bindBuffer(mViewBuffer, 0);

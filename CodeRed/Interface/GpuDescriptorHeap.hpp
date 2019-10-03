@@ -33,10 +33,14 @@ namespace CodeRed {
 			const std::shared_ptr<GpuBuffer>& buffer,
 			const size_t index) = 0;
 
+		auto count() const noexcept -> size_t { return mCount; }
+		
 		auto layout() const noexcept -> std::shared_ptr<GpuResourceLayout> { return mResourceLayout; }
 	protected:
 		std::shared_ptr<GpuResourceLayout> mResourceLayout;
 		std::shared_ptr<GpuLogicalDevice> mDevice;
+
+		size_t mCount = 0;
 	};
 	
 }

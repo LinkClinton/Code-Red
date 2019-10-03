@@ -322,6 +322,8 @@ CodeRed::GpuDescriptorHeap::GpuDescriptorHeap(
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 	
 	CODE_RED_DEBUG_PTR_VALID(mResourceLayout, "resource_layout");
+
+	mCount = mResourceLayout->elements().size();
 }
 
 void CodeRed::GpuDescriptorHeap::bindResource(

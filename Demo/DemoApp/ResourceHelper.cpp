@@ -37,7 +37,7 @@ void CodeRed::ResourceHelper::updateBuffer(
 	const auto oldLayout = buffer->layout();
 
 	//start recoding the copy commands
-	commandList->beginRecoding();
+	commandList->beginRecording();
 
 	//we need translate the buffer layout to copy-destination
 	commandList->layoutTransition(buffer, ResourceLayout::CopyDestination);
@@ -51,7 +51,7 @@ void CodeRed::ResourceHelper::updateBuffer(
 	commandList->layoutTransition(buffer, oldLayout);
 
 	//end recoding, execute and wait finish
-	commandList->endRecoding();
+	commandList->endRecording();
 	commandQueue->execute({ commandList });
 	commandQueue->waitIdle();
 }

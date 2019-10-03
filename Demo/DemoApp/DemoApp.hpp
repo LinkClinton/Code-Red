@@ -18,7 +18,7 @@ namespace Demo {
 			const size_t width,
 			const size_t height);
 
-		~DemoApp() = default;
+		virtual ~DemoApp() = default;
 		
 		void show() const;
 
@@ -36,7 +36,6 @@ namespace Demo {
 	protected:
 		virtual void update(float delta) {}
 		virtual void render(float delta) {}
-		virtual void initialize() {}
 	private:
 		std::string mName;
 

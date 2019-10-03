@@ -20,40 +20,21 @@ struct Particle {
 	void reverseIfOut(
 		glm::vec2& offset,
 		const size_t width,
-		const size_t height)
-	{
-		const auto target = Position + offset;
-		
-		if (target.x - Size.x < 0 || target.x + Size.x > width) {
-			offset.x = -offset.x;
-			Forward.x = -Forward.x;
-		}
-		
-		if (target.y - Size.y < 0 || target.y + Size.y > height) {
-			offset.y = -offset.y;
-			Forward.y = -Forward.y;
-		}
-
-		Position = Position + offset;
-	}
+		const size_t height);
 };
 
-class ParticleDemoApp final : public Demo::DemoApp {
+class ParticlesDemoApp final : public Demo::DemoApp {
 public:
-	ParticleDemoApp(
+	ParticlesDemoApp(
 		const std::string& name,
 		const size_t width,
-		const size_t height) :
-		Demo::DemoApp(name, width, height)
-	{
-		initialize();
-	}
+		const size_t height);
 
-	~ParticleDemoApp();
+	~ParticlesDemoApp();
 private:
 	void update(float delta) override;
 	void render(float delta) override;
-	void initialize() override;
+	void initialize();
 	
 	void initializeParticles();
 	

@@ -34,6 +34,7 @@ private:
 	size_t mCount;
 
 	std::vector<glm::mat4x4> mTransforms;
+	std::vector<float> mSpeeds;
 	
 	std::vector<LeafPosition2> mTransformedPositions;
 	std::vector<LeafPosition2> mPositions;

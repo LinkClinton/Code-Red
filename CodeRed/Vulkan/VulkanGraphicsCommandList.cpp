@@ -44,7 +44,7 @@ CodeRed::VulkanGraphicsCommandList::~VulkanGraphicsCommandList()
 	vkDevice.freeCommandBuffers(vkAllocator, mCommandBuffer);
 }
 
-void CodeRed::VulkanGraphicsCommandList::beginRecoding()
+void CodeRed::VulkanGraphicsCommandList::beginRecording()
 {
 	mCommandBuffer.reset(vk::CommandBufferResetFlagBits::eReleaseResources);
 
@@ -55,7 +55,7 @@ void CodeRed::VulkanGraphicsCommandList::beginRecoding()
 	mCommandBuffer.begin(info);
 }
 
-void CodeRed::VulkanGraphicsCommandList::endRecoding()
+void CodeRed::VulkanGraphicsCommandList::endRecording()
 {
 	mCommandBuffer.end();
 }
@@ -170,8 +170,11 @@ void CodeRed::VulkanGraphicsCommandList::setDescriptorHeap(
 
 	const auto vkHeap = std::static_pointer_cast<VulkanDescriptorHeap>(heap);
 
-	mCommandBuffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics,
-		mResourceLayout->layout(), 0, vkHeap->descriptorSets(), {});
+	CODE_RED_TRY_EXECUTE(
+		heap->count() != 0,
+		mCommandBuffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics,
+			mResourceLayout->layout(), 0, vkHeap->descriptorSets(), {})
+	);
 }
 
 void CodeRed::VulkanGraphicsCommandList::setViewPort(const ViewPort& view_port)

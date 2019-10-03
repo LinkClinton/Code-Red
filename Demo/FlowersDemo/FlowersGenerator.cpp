@@ -21,15 +21,16 @@ FlowersGenerator::FlowersGenerator(
 	mColors.resize(mCount * 8);
 
 	mTransforms.resize(mCount);
-
+	mSpeeds.resize(mCount);
+	
 	std::default_random_engine random(0);
 
-	const std::uniform_real_distribution<float> xRange(0.0f, static_cast<float>(mWidth));
-	const std::uniform_real_distribution<float> yRange(0.0f, static_cast<float>(mHeight));
-	const std::uniform_real_distribution<float> rRange(minRadius, maxRadius);
+	std::uniform_real_distribution<float> xRange(0.0f, static_cast<float>(mWidth));
+	std::uniform_real_distribution<float> yRange(0.0f, static_cast<float>(mHeight));
+	std::uniform_real_distribution<float> rRange(minRadius, maxRadius);
 	std::uniform_real_distribution<float> cRange(0.0f, 1.0f);
+	std::uniform_real_distribution<float> sRange(-0.3f * glm::two_pi<float>(), 0.3f * glm::two_pi<float>());
 	
-	//build each flwoer
 	for (size_t index = 0; index < mCount; index++) {
 		const auto position = glm::vec2(xRange(random), yRange(random));
 		const auto radius = rRange(random);
@@ -79,16 +80,18 @@ FlowersGenerator::FlowersGenerator(
 		}
 
 		mTransforms[index] = glm::translate(glm::mat4(1), glm::vec3(position, 0.0f));
+		mSpeeds[index] = sRange(random);
 	}
 }
 
 void FlowersGenerator::update(float delta)
-{
-	const auto speed = glm::two_pi<float>() * 0.25f;
-	const auto angle = delta * speed;
+{	
+	for (size_t index = 0; index < mTransforms.size(); index++) {
+		const auto speed = mSpeeds[index];
+		const auto angle = delta * speed;
 
-	for (auto& transform : mTransforms)
-		transform = glm::rotate(transform, angle, glm::vec3(0, 0, 1));
+		mTransforms[index] = glm::rotate(mTransforms[index], angle, glm::vec3(0, 0, 1));
+	}
 
 	for (size_t index = 0; index < mPositions.size(); index++) {
 		auto& transform = mTransforms[index / 8];

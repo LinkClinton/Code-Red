@@ -23,9 +23,9 @@ CodeRed::DirectX12DescriptorHeap::DirectX12DescriptorHeap(
 	
 	info.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	info.NodeMask = 0;
-	info.NumDescriptors = static_cast<UINT>(mResourceLayout->mElements.size());
+	info.NumDescriptors = mResourceLayout->mElements.empty() ? 1 : static_cast<UINT>(mResourceLayout->mElements.size());
 	info.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-
+	
 	CODE_RED_THROW_IF_FAILED(
 		dxDevice->CreateDescriptorHeap(
 			&info,

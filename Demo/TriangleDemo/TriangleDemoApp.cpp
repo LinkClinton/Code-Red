@@ -1,6 +1,6 @@
-#include "FlowersDemoApp.hpp"
+#include "TriangleDemoApp.hpp"
 
-FlowersDemoApp::FlowersDemoApp(
+TriangleDemoApp::TriangleDemoApp(
 	const std::string& name,
 	const size_t width,
 	const size_t height) :
@@ -17,25 +17,19 @@ FlowersDemoApp::FlowersDemoApp(
 	initialize();
 }
 
-FlowersDemoApp::~FlowersDemoApp()
+TriangleDemoApp::~TriangleDemoApp()
 {
 	//if we want to destroy the demo app, device and so on
 	//we need wait for command queue to idle
 	mCommandQueue->waitIdle();
 }
 
-void FlowersDemoApp::update(float delta)
+void TriangleDemoApp::update(float delta)
 {
-	mFlowersGenerator->update(delta);
-
-	const auto buffer = mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuBuffer>("TransformedPositions");
-
-	const auto memory = buffer->mapMemory();
-	std::memcpy(memory, mFlowersGenerator->positions(), buffer->size());
-	buffer->unmapMemory();
+	
 }
 
-void FlowersDemoApp::render(float delta)
+void TriangleDemoApp::render(float delta)
 {
 	const auto frameBuffer =
 		mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuFrameBuffer>("FrameBuffer");
@@ -54,15 +48,14 @@ void FlowersDemoApp::render(float delta)
 	mCommandList->setScissorRect(frameBuffer->fullScissorRect());
 
 	mCommandList->setVertexBuffer(mVertexBuffer);
-	mCommandList->setIndexBuffer(mIndexBuffer);
-
+	
 	mCommandList->setDescriptorHeap(descriptorHeap);
 
 	mCommandList->beginRenderPass(
 		mPipelineInfo->renderPass(),
 		frameBuffer);
 
-	mCommandList->drawIndexed(3, flowersCount * 8);
+	mCommandList->draw(3);
 
 	mCommandList->endRenderPass();
 
@@ -75,7 +68,7 @@ void FlowersDemoApp::render(float delta)
 	mCurrentFrameIndex = (mCurrentFrameIndex + 1) % maxFrameResources;
 }
 
-void FlowersDemoApp::initialize()
+void TriangleDemoApp::initialize()
 {
 #ifdef __DIRECTX12__MODE__
 	const auto systemInfo = std::make_shared<CodeRed::DirectX12SystemInfo>();
@@ -95,7 +88,6 @@ void FlowersDemoApp::initialize()
 #endif
 #endif
 
-	initializeFlowers();
 	initializeCommands();
 	initializeSwapChain();
 	initializeBuffers();
@@ -106,20 +98,14 @@ void FlowersDemoApp::initialize()
 	initializeDescriptorHeaps();
 }
 
-void FlowersDemoApp::initializeFlowers()
-{
-	mFlowersGenerator = std::make_shared<FlowersGenerator>(
-		width(), height(), flowersCount);
-}
-
-void FlowersDemoApp::initializeCommands()
+void TriangleDemoApp::initializeCommands()
 {
 	mCommandAllocator = mDevice->createCommandAllocator();
 	mCommandQueue = mDevice->createCommandQueue();
 	mCommandList = mDevice->createGraphicsCommandList(mCommandAllocator);
 }
 
-void FlowersDemoApp::initializeSwapChain()
+void TriangleDemoApp::initializeSwapChain()
 {
 	//create the swap chain
 	//if we want to write the back buffer(to window)
@@ -142,77 +128,46 @@ void FlowersDemoApp::initializeSwapChain()
 	}
 }
 
-void FlowersDemoApp::initializeBuffers()
+void TriangleDemoApp::initializeBuffers()
 {
 	mVertexBuffer = mDevice->createBuffer(
 		CodeRed::ResourceInfo::VertexBuffer(
-			sizeof(glm::vec2),
+			sizeof(glm::vec3),
 			3,
-			CodeRed::MemoryHeap::Default
-		)
-	);
-
-	mIndexBuffer = mDevice->createBuffer(
-		CodeRed::ResourceInfo::IndexBuffer(
-			sizeof(unsigned),
-			3,
-			CodeRed::MemoryHeap::Default
+			CodeRed::MemoryHeap::Upload
 		)
 	);
 
 	mViewBuffer = mDevice->createBuffer(
 		CodeRed::ResourceInfo::ConstantBuffer(
-			sizeof(glm::mat4x4),
-			CodeRed::MemoryHeap::Default
+			sizeof(glm::mat4x4)
 		)
 	);
 
-	for (auto& frameResource : mFrameResources) {
-		frameResource.set(
-			"TransformedPositions",
-			mDevice->createBuffer(
-				CodeRed::ResourceInfo::GroupBuffer(
-					sizeof(glm::vec2) * 3,
-					flowersCount * 8
-				)
-			)
-		);
-
-		frameResource.set(
-			"Colors",
-			mDevice->createBuffer(
-				CodeRed::ResourceInfo::GroupBuffer(
-					sizeof(glm::vec4) * 3,
-					flowersCount * 8,
-					CodeRed::MemoryHeap::Default
-				)
-			)
-		);
-
-		auto colors = frameResource.get<CodeRed::GpuBuffer>("Colors");
-
-		CodeRed::ResourceHelper::updateBuffer(mDevice, mCommandAllocator, mCommandQueue, colors, mFlowersGenerator->colors());
-	}
-
-	std::vector<glm::vec2> vertices = {
-		glm::vec2(0, 0),
-		glm::vec2(0.5f, 0),
-		glm::vec2(1, 1)
+	glm::vec3 triangleVertices[] = {
+		glm::vec3(0.5f, 0.25f, 0.0f),
+		glm::vec3(0.70f, 0.5f, 0.0f),
+		glm::vec3(0.30f,0.5f,0.0f)
 	};
 
-	std::vector<unsigned> indices = { 0, 1, 2 };
+	for (auto& vertex : triangleVertices)
+		vertex = vertex * glm::vec3(width(), height(), 1.0f);
 
-	const auto view = glm::orthoLH_ZO(0.0f,
+	auto viewMatrix = glm::orthoLH_ZO(0.0f,
 		static_cast<float>(width()),
-		static_cast<float>(height()),
-		0.0f, 0.0f, 1.0f);
-	
-	CodeRed::ResourceHelper::updateBuffer(mDevice, mCommandAllocator, mCommandQueue, mVertexBuffer, vertices.data());
-	CodeRed::ResourceHelper::updateBuffer(mDevice, mCommandAllocator, mCommandQueue, mIndexBuffer, indices.data());
-	CodeRed::ResourceHelper::updateBuffer(mDevice, mCommandAllocator, mCommandQueue, mViewBuffer, &view);
+		static_cast<float>(height()), 0.0f, 0.0f, 1.0f);
+
+	const auto triangleMemory = mVertexBuffer->mapMemory();
+	const auto viewMemory = mViewBuffer->mapMemory();
+
+	std::memcpy(triangleMemory, triangleVertices, sizeof(triangleVertices));
+	std::memcpy(viewMemory, &viewMatrix, sizeof(viewMatrix));
+
+	mVertexBuffer->unmapMemory();
+	mViewBuffer->unmapMemory();
 }
 
-void FlowersDemoApp::initializeShaders()
+void TriangleDemoApp::initializeShaders()
 {
 #ifdef __DIRECTX12__MODE__
 	const auto vertexShaderText = CodeRed::ShaderCompiler::readShader("./Shaders/DirectX12Vertex.hlsl");
@@ -231,17 +186,17 @@ void FlowersDemoApp::initializeShaders()
 #endif
 }
 
-void FlowersDemoApp::initializeSamplers()
+void TriangleDemoApp::initializeSamplers()
 {
 	
 }
 
-void FlowersDemoApp::initializeTextures()
+void TriangleDemoApp::initializeTextures()
 {
 	
 }
 
-void FlowersDemoApp::initializePipeline()
+void TriangleDemoApp::initializePipeline()
 {
 	mPipelineInfo = std::make_shared<CodeRed::PipelineInfo>(mDevice);
 	mPipelineFactory = mDevice->createPipelineFactory();
@@ -249,7 +204,7 @@ void FlowersDemoApp::initializePipeline()
 	mPipelineInfo->setInputAssemblyState(
 		mPipelineFactory->createInputAssemblyState(
 			{
-				CodeRed::InputLayoutElement("POSITION", CodeRed::PixelFormat::RedGreen32BitFloat)
+				CodeRed::InputLayoutElement("POSITION", CodeRed::PixelFormat::RedGreenBlue32BitFloat)
 			},
 			CodeRed::PrimitiveTopology::TriangleList
 		)
@@ -258,9 +213,7 @@ void FlowersDemoApp::initializePipeline()
 	mPipelineInfo->setResourceLayout(
 		mDevice->createResourceLayout(
 			{
-				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::GroupBuffer, 0),
-				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::GroupBuffer, 1),
-				CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Buffer, 2)
+				 CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Buffer, 0, 0)
 			},
 			{ }
 		)
@@ -302,17 +255,7 @@ void FlowersDemoApp::initializePipeline()
 	);
 
 	mPipelineInfo->setBlendState(
-		mPipelineFactory->createBlendState(
-			{
-				true,
-				CodeRed::BlendOperator::Add,
-				CodeRed::BlendOperator::Add,
-				CodeRed::BlendFactor::InvSrcAlpha,
-				CodeRed::BlendFactor::InvSrcAlpha,
-				CodeRed::BlendFactor::SrcAlpha,
-				CodeRed::BlendFactor::SrcAlpha
-			}
-		)
+		mPipelineFactory->createBlendState()
 	);
 
 	mPipelineInfo->setRenderPass(
@@ -324,23 +267,19 @@ void FlowersDemoApp::initializePipeline()
 	mPipelineInfo->updateState();
 }
 
-void FlowersDemoApp::initializeDescriptorHeaps()
+void TriangleDemoApp::initializeDescriptorHeaps()
 {
 	for (auto& frameResource : mFrameResources) {
 		auto descriptorHeap = mDevice->createDescriptorHeap(
 			mPipelineInfo->resourceLayout()
 		);
 
-		auto transformedPositions = frameResource.get<CodeRed::GpuBuffer>("TransformedPositions");
-		auto colors = frameResource.get<CodeRed::GpuBuffer>("Colors");
+		descriptorHeap->bindBuffer(mViewBuffer, 0);
 
-		descriptorHeap->bindBuffer(transformedPositions, 0);
-		descriptorHeap->bindBuffer(colors, 1);
-		descriptorHeap->bindBuffer(mViewBuffer, 2);
-		
 		frameResource.set(
 			"DescriptorHeap",
 			descriptorHeap
 		);
 	}
 }
+

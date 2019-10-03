@@ -22,9 +22,9 @@ namespace CodeRed {
 
 		~DirectX12GraphicsCommandList() = default;
 
-		void beginRecoding() override;
+		void beginRecording() override;
 
-		void endRecoding() override;
+		void endRecording() override;
 
 		void beginRenderPass(
 			const std::shared_ptr<GpuRenderPass>& render_pass, 
