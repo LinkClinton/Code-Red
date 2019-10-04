@@ -28,7 +28,7 @@
 ```
 
 - `property` : the property of resource. It is a std::variant class that hold two different properties(buffer and texture). We will introduce it soon.
-- `layout` : layout is the current state of resource. See more in [ResourceLayout]().
+- `layout` : layout is the current state of resource. See more in [ResourceLayout](./ResourceLayout.md).
 - `usage` : the usage of resource, such as vertex buffer, render target and so on.
 - `type` : resource type, such as buffer, texture and so on.
 - `heap` : default or upload. Deafult means we can not mapped the memory to CPU(but we can copy data from resource to them). Upload means we can mapped memory to CPU and copy data from CPU to them.
