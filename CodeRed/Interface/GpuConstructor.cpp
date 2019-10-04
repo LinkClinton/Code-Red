@@ -301,6 +301,16 @@ CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 	CODE_RED_DEBUG_PTR_VALID(mResourceLayout, "resource_layout");
 	CODE_RED_DEBUG_PTR_VALID(mBlendState, "blend_state");
 	CODE_RED_DEBUG_PTR_VALID(mRenderPass, "render_pass");
+
+	CODE_RED_DEBUG_THROW_IF(
+		mVertexShaderState->type() != ShaderType::Vertex,
+		InvalidException<GpuShaderState>({ "vertex_shader_state" }, { "the shader type is not vertex." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mPixelShaderState->type() != ShaderType::Pixel,
+		InvalidException<GpuShaderState>({ "pixel_shader_state" }, { "the shader type is not pixel." })
+	);
 }
 
 CodeRed::GpuRenderPass::GpuRenderPass(

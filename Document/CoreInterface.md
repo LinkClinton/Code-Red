@@ -1,6 +1,6 @@
 # Core Interface
 
-- All Interface is `Noncopyable`. The copy constructer is disabled.
+- All Interfaces are `Noncopyable`. The copy constructer is disabled.
 - We need to indicate which API version we want to create for all interfaces.
 - We also can use device or factory to avoid the explicit API verison.
 
@@ -308,7 +308,9 @@ We recommend to use device to create render pass.
 
 ## GpuResourceLayout
 
-Resource layout is used to describe the layout of resource we want to bind to shader. See more in [Resource Binding]().
+Resource layout is used to describe the layout of resource we want to bind to shader. 
+
+See more in [Resource Binding]().
 
 ### Constructer
 
