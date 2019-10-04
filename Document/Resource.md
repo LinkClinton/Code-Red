@@ -134,6 +134,8 @@ The size of texture is equal width * height * depth * pixel size.
 For `Texture1D` the height and depth must be one.
 For `Texture2D` the depth must be one.
 
+**Notice : the layout of texture must be `ResourceLayout::Undefined` when we create a texture.**
+
 ### Member Functions
 
 All member functions is used to get informations of texture or mapped memory.

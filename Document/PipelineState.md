@@ -13,7 +13,7 @@
 - [GpuDepthStencilState](#GpuDepthStencilState)
 - [GpuShaderState](#GpuShaderState)
 - [GpuBlendState](#GpuBlendState)
-- [GpuPipelineFactory](GpuPipelineFactory)
+- [GpuPipelineFactory](#GpuPipelineFactory)
 
 ## GpuInputAssemblyState
 
