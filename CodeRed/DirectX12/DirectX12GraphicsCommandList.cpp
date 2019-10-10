@@ -14,6 +14,8 @@
 
 #include "../Shared/DebugReport.hpp"
 
+#undef min
+
 #ifdef __ENABLE__DIRECTX12__
 
 using namespace CodeRed::DirectX12;
@@ -194,8 +196,45 @@ void CodeRed::DirectX12GraphicsCommandList::setDescriptorHeap(
 
 	CODE_RED_TRY_EXECUTE(
 		heap->count() != 0,
-		mGraphicsCommandList->SetGraphicsRootDescriptorTable(0, dxHeap->GetGPUDescriptorHandleForHeapStart()))
-	;
+		mGraphicsCommandList->SetGraphicsRootDescriptorTable(
+			static_cast<UINT>(mResourceLayout->elementsIndex()),
+			dxHeap->GetGPUDescriptorHandleForHeapStart())
+	);
+}
+
+void CodeRed::DirectX12GraphicsCommandList::setConstant32Bits(
+	const std::vector<Value32Bit>& values)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		mResourceLayout == nullptr,
+		FailedException(DebugType::Set,
+			{ "Constant32Bits", "Graphics Pipeline" },
+			{ "please set the resource layout, before set constant32Bits." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mResourceLayout->constant32Bits().has_value() == false,
+		FailedException(DebugType::Set,
+			{ "Constant32Bits", "Graphics Pipeline" },
+			{ "please enable the Constant32Bits in GpuResourceLayout." })
+	)
+	
+	CODE_RED_DEBUG_WARNING_IF(
+		mResourceLayout->constant32Bits()->Count < values.size(),
+		DebugReport::make(DebugType::Set,
+			{ "Constant32Bits", "Graphics Pipeline"},
+			{
+				"the size of values is greater than the count of Constant32Bits."
+				"We will only set values[0] to values[count - 1]."
+			})
+	);
+
+	mGraphicsCommandList->SetGraphicsRoot32BitConstants(
+		static_cast<UINT>(mResourceLayout->constant32BitsIndex()),
+		static_cast<UINT>(std::min(values.size(), mResourceLayout->constant32Bits()->Count)),
+		values.data(),
+		0
+	);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::setViewPort(const ViewPort& view_port)

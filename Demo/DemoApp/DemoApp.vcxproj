@@ -159,10 +159,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DemoApp.hpp" />
-    <ClInclude Include="FrameResources.hpp" />
-    <ClInclude Include="PipelineInfo.hpp" />
-    <ClInclude Include="ResourceHelper.hpp" />
-    <ClInclude Include="ShaderCompiler.hpp" />
+    <ClInclude Include="Effects\EffectLight.hpp" />
+    <ClInclude Include="Effects\EffectPass.hpp" />
+    <ClInclude Include="Pipelines\PipelineInfo.hpp" />
+    <ClInclude Include="Resources\FrameResources.hpp" />
+    <ClInclude Include="Resources\ResourceHelper.hpp" />
+    <ClInclude Include="Shaders\ShaderCompiler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CodeRed\CodeRed.vcxproj">
@@ -171,10 +173,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoApp.cpp" />
-    <ClCompile Include="FrameResources.cpp" />
-    <ClCompile Include="PipelineInfo.cpp" />
-    <ClCompile Include="ResourceHelper.cpp" />
-    <ClCompile Include="ShaderCompiler.cpp" />
+    <ClCompile Include="Pipelines\PipelineInfo.cpp" />
+    <ClCompile Include="Resources\FrameResources.cpp" />
+    <ClCompile Include="Resources\ResourceHelper.cpp" />
+    <ClCompile Include="Shaders\ShaderCompiler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

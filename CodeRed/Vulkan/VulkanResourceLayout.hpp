@@ -14,8 +14,9 @@ namespace CodeRed {
 	public:
 		explicit VulkanResourceLayout(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const std::vector<ResourceLayoutElement>& elements,
-			const std::vector<SamplerLayoutElement>& samplers);
+			const std::vector<ResourceLayoutElement>& elements = {},
+			const std::vector<SamplerLayoutElement>& samplers = {},
+			const std::optional<Constant32Bits>& constant32Bits = std::nullopt);
 
 		~VulkanResourceLayout();
 

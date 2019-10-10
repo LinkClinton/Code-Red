@@ -17,11 +17,12 @@ using namespace CodeRed::Vulkan;
 CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers) :
-	GpuResourceLayout(device, elements, samplers)
+	const std::vector<SamplerLayoutElement>& samplers,
+	const std::optional<Constant32Bits>& constant32Bits) :
+	GpuResourceLayout(device, elements, samplers, constant32Bits)
 {
 	size_t maxSpace = 0;
-	
+
 	//find the max space we use, then we will create layouts with maxSpace
 	for (const auto element : elements) maxSpace = std::max(maxSpace, element.Space + 1);
 	for (const auto sampler : samplers) maxSpace = std::max(maxSpace, sampler.Space + 1);
@@ -42,7 +43,7 @@ CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 
 		bindings[element.Space].push_back(binding);
 	}
-	
+
 	//generate the binding information of samplers
 	for (const auto sampler : mSamplers) {
 		vk::DescriptorSetLayoutBinding binding = {};
@@ -74,6 +75,14 @@ CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 		mDescriptorSetLayouts[index] = vkDevice.createDescriptorSetLayout(info);
 	}
 
+	vk::PushConstantRange range = {};
+
+	if (mConstant32Bits.has_value()) {
+		range.offset = 0;
+		range.size = static_cast<uint32_t>(mConstant32Bits->Count * sizeof(UInt32));
+		range.stageFlags = enumConvert(mConstant32Bits->Visibility);
+	}
+	
 	//create pipeline layout
 	vk::PipelineLayoutCreateInfo layoutInfo = {};
 
@@ -81,9 +90,9 @@ CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 		.setPNext(nullptr)
 		.setFlags(vk::PipelineLayoutCreateFlags(0))
 		.setSetLayoutCount(static_cast<uint32_t>(mDescriptorSetLayouts.size()))
-		.setPushConstantRangeCount(0)
+		.setPushConstantRangeCount(mConstant32Bits.has_value() ? 1 : 0)
 		.setPSetLayouts(mDescriptorSetLayouts.data())
-		.setPPushConstantRanges(nullptr);
+		.setPPushConstantRanges(&range);
 
 	mPipelineLayout = vkDevice.createPipelineLayout(layoutInfo);
 }

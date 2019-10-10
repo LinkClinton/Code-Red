@@ -390,6 +390,9 @@
     <ClInclude Include="Shared\Exception\ZeroException.hpp">
       <Filter>Shared\Exception</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Constant32Bits.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">

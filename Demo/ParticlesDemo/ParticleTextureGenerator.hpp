@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ShaderCompiler.hpp>
-#include <FrameResources.hpp>
-#include <PipelineInfo.hpp>
+#include <Shaders/ShaderCompiler.hpp>
+#include <Resources/FrameResources.hpp>
+#include <Pipelines/PipelineInfo.hpp>
 
 #define __DIRECTX12__MODE__
 #define __VULKAN__MODE__

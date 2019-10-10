@@ -1,9 +1,9 @@
 #pragma once
 
-#include <ShaderCompiler.hpp>
-#include <FrameResources.hpp>
-#include <ResourceHelper.hpp>
-#include <PipelineInfo.hpp>
+#include <Shaders/ShaderCompiler.hpp>
+#include <Resources/FrameResources.hpp>
+#include <Resources/ResourceHelper.hpp>
+#include <Pipelines/PipelineInfo.hpp>
 #include <DemoApp.hpp>
 
 #define __DIRECTX12__MODE__

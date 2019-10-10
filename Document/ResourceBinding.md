@@ -109,3 +109,53 @@ Descriptor heap is a set of descriptor. We need to bind the resource to heap. An
 
 Index that describe we want to bind the resource to which resource in shader. For example(see example in Resource Layout), if we bind a resource to with index 1, means we bind a resource as `GroupBuffer` with binding 1, space 2. If we bind a resource to with index 2, means we bind a resource as `Texture` with binding 10, space 3.
 
+## Constant32Bits
+
+We also can set some values of 32Bits to shader without descriptor heap. But we need set the `constant32Bits` at constructer of `GpuResourceLayout`.
+
+```C++
+struct Constant32Bits {
+    ShaderVisibility Visibility;
+    size_t Binding;
+    size_t Space;
+    size_t Count;
+}
+```
+- `Visibility` : which shader can see the resource. 
+- `Binding` : the binding.
+- `Space` : the space.
+- `Count` : the number of 32Bit-values.
+
+We can use `GpuGraphicsCommandList::setConstant32Bits` to set some 32Bit-values to shader. 
+
+```C++
+    commandList->setConstant32Bits({ 0.0f, 1.0f, 0 });
+```
+
+**Notice : if you want to set constant 32Bit-values, you need a resource layout that `std::optional<Constant32Bits>` is not `std::nullopt` at construction stage.**
+
+### Shader Code
+
+In HLSL, the code is :
+
+```HLSL
+struct Structure_Name
+{
+    float value0;
+    float value1;
+    int value2;
+};
+
+ConstantBuffer<Structure_Name> Value_Name : register(binding, space);
+```
+
+In GLSL, the code is :
+
+```GLSL
+layout(push_constant) uniform Structure_Name
+{
+    float value0;
+    float value1;
+    int value2;
+} Value_Name;
+```

@@ -1,12 +1,14 @@
 #pragma once
 
 #include "../Shared/Enum/ResourceLayout.hpp"
+#include "../Shared/Constant32Bits.hpp"
 #include "../Shared/Noncopyable.hpp"
 #include "../Shared/ScissorRect.hpp"
 #include "../Shared/ViewPort.hpp"
 #include "../Shared/Extent.hpp"
 
 #include <memory>
+#include <vector>
 
 namespace CodeRed {
 
@@ -53,6 +55,9 @@ namespace CodeRed {
 
 		virtual void setDescriptorHeap(
 			const std::shared_ptr<GpuDescriptorHeap>& heap) = 0;
+
+		virtual void setConstant32Bits(
+			const std::vector<Value32Bit>& values) = 0;
 		
 		virtual void setViewPort(
 			const ViewPort& view_port) = 0;

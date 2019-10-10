@@ -3,6 +3,7 @@
 #include "../Shared/Information/ResourceInfo.hpp"
 #include "../Shared/Information/SamplerInfo.hpp"
 #include "../Shared/Information/WindowInfo.hpp"
+#include "../Shared/Constant32Bits.hpp"
 #include "../Shared/LayoutElement.hpp"
 #include "../Shared/Noncopyable.hpp"
 #include "../Shared/Attachment.hpp"
@@ -76,8 +77,9 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuGraphicsPipeline> = 0;
 
 		virtual auto createResourceLayout(
-			const std::vector<ResourceLayoutElement>& elements,
-			const std::vector<SamplerLayoutElement>& samplers)
+			const std::vector<ResourceLayoutElement>& elements = {},
+			const std::vector<SamplerLayoutElement>& samplers = {},
+			const std::optional<Constant32Bits> &constant32Bits = std::nullopt)
 			-> std::shared_ptr<GpuResourceLayout> = 0;
 
 		virtual auto createDescriptorHeap(

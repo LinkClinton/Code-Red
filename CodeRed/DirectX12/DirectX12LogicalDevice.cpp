@@ -118,14 +118,16 @@ auto CodeRed::DirectX12LogicalDevice::createGraphicsPipeline(
 
 auto CodeRed::DirectX12LogicalDevice::createResourceLayout(
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers)
+	const std::vector<SamplerLayoutElement>& samplers,
+	const std::optional<Constant32Bits>& constant32Bits)
 	-> std::shared_ptr<GpuResourceLayout>
 {
 	return std::static_pointer_cast<GpuResourceLayout>(
 		std::make_shared<DirectX12ResourceLayout>(
 			shared_from_this(),
 			elements,
-			samplers));
+			samplers,
+			constant32Bits));
 }
 
 auto CodeRed::DirectX12LogicalDevice::createDescriptorHeap(

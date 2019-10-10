@@ -246,13 +246,15 @@ auto CodeRed::VulkanLogicalDevice::createGraphicsPipeline(
 
 auto CodeRed::VulkanLogicalDevice::createResourceLayout(
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers)
+	const std::vector<SamplerLayoutElement>& samplers,
+	const std::optional<Constant32Bits>& constant32Bits)
 	-> std::shared_ptr<GpuResourceLayout>
 {
 	return std::make_shared<VulkanResourceLayout>(
 		shared_from_this(),
 		elements,
-		samplers);
+		samplers,
+		constant32Bits);
 }
 
 auto CodeRed::VulkanLogicalDevice::createDescriptorHeap(

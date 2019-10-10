@@ -1,7 +1,7 @@
 #pragma once
 #include "ParticleTextureGenerator.hpp"
 
-#include <ResourceHelper.hpp>
+#include <Resources/ResourceHelper.hpp>
 #include <DemoApp.hpp>
 
 struct Particle {

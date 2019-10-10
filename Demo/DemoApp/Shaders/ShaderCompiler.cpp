@@ -11,8 +11,6 @@
 #include <fstream>
 #include <string>
 
-#ifdef __ENABLE__VULKAN__
-
 auto CodeRed::ShaderCompiler::readShader(const std::string& fileName)
 	-> std::string
 {
@@ -30,6 +28,8 @@ auto CodeRed::ShaderCompiler::readShader(const std::string& fileName)
 
 	return code;
 }
+
+#ifdef __ENABLE__VULKAN__
 
 auto CodeRed::ShaderCompiler::compileToSpv(
 	const ShaderType& shaderType, 
@@ -64,6 +64,10 @@ auto CodeRed::ShaderCompiler::compileToSpv(
 
 	return code;
 }
+
+#endif
+
+#ifdef __ENABLE__DIRECTX12__
 
 auto CodeRed::ShaderCompiler::compileToCso(
 	const ShaderType& type, 
@@ -107,4 +111,5 @@ auto CodeRed::ShaderCompiler::compileToCso(
 
 	return code;
 }
+
 #endif

@@ -154,6 +154,7 @@ Most member functions are same usage as DirectX12 and Vulkan. And some functions
 - `setVertexBuffer()` : set the vertex buffer.
 - `setIndexBuffer()` : set the index buffer.
 - `setDescriptorHeap()` : set the descriptor heap.
+- `setConstant32Bits()` : set the values of 32Bits.
 - `setViewPort()` : set the view port.
 - `setScissorRect()` : set the scissor rect.
 - `layoutTransition()` : tranlate the layout of resource.
@@ -318,18 +319,20 @@ See more in [Resource Binding](./ResourceBinding.md).
 explicit GpuResourceLayout(
     const std::shared_ptr<GpuLogicalDevice>& device,
     const std::vector<ResourceLayoutElement>& elements,
-    const std::vector<SamplerLayoutElement>& samplers);
+    const std::vector<SamplerLayoutElement>& samplers,
+    const std::optional<Constant32Bits> &constant32Bits);
 ```
 
 - `device` : the device.
 - `elements` : the layout elements.
 - `samplers` : the layout elements of sampler.
+- `constant32Bits` : the property of constant32Bits.
 
 We recommend to use device to create resource layout.
 
 ```C++
     //with empty resource layout.
-    auto resourceLayout = device->createResourceLayout({}, {});
+    auto resourceLayout = device->createResourceLayout({}, {}, std::nullopt);
 ```
 
 ### Member Functions
@@ -338,6 +341,7 @@ We recommend to use device to create resource layout.
 - `sampler()` : get the layout element of sampler by index.
 - `elements()` : get the layout elements.
 - `samplers()` : get the layout elements of sampler.
+- `constant32Bits()` : get the property of constant32Bits.
 
 ## GpuDescriptorHeap
 

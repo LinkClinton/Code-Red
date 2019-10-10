@@ -64,10 +64,12 @@ CodeRed::GpuSwapChain::GpuSwapChain(
 CodeRed::GpuResourceLayout::GpuResourceLayout(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::vector<ResourceLayoutElement>& elements,
-	const std::vector<SamplerLayoutElement>& samplers) :
+	const std::vector<SamplerLayoutElement>& samplers,
+	const std::optional<Constant32Bits>& constant32Bits) :
 	mDevice(device),
 	mElements(elements),
-	mSamplers(samplers)
+	mSamplers(samplers),
+	mConstant32Bits(constant32Bits)
 {
 	//the device must be a valid device
 	//the size of elements and samplers can be zero

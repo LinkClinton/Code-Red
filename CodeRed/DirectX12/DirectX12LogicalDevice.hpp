@@ -43,8 +43,9 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuGraphicsPipeline> override;
 
 		auto createResourceLayout(
-			const std::vector<ResourceLayoutElement>& elements, 
-			const std::vector<SamplerLayoutElement>& samplers)
+			const std::vector<ResourceLayoutElement>& elements = {},
+			const std::vector<SamplerLayoutElement>& samplers = {},
+			const std::optional<Constant32Bits>& constant32Bits = std::nullopt)
 			-> std::shared_ptr<GpuResourceLayout> override;
 
 		auto createDescriptorHeap(

@@ -2,16 +2,52 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="DemoApp.hpp" />
-    <ClInclude Include="PipelineInfo.hpp" />
-    <ClInclude Include="FrameResources.hpp" />
-    <ClInclude Include="ResourceHelper.hpp" />
-    <ClInclude Include="ShaderCompiler.hpp" />
+    <ClInclude Include="Resources\FrameResources.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\ResourceHelper.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipelines\PipelineInfo.hpp">
+      <Filter>Pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\ShaderCompiler.hpp">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\EffectPass.hpp">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\EffectLight.hpp">
+      <Filter>Effects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoApp.cpp" />
-    <ClCompile Include="PipelineInfo.cpp" />
-    <ClCompile Include="FrameResources.cpp" />
-    <ClCompile Include="ResourceHelper.cpp" />
-    <ClCompile Include="ShaderCompiler.cpp" />
+    <ClCompile Include="Resources\FrameResources.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\ResourceHelper.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipelines\PipelineInfo.cpp">
+      <Filter>Pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\ShaderCompiler.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{16b8bd73-b185-4cb9-a4e0-c3d4940186b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{6dea1e4a-3358-4059-974a-a230632d8a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipelines">
+      <UniqueIdentifier>{90c1e92d-f17f-4466-87ca-eb44f093829b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{6d1f1b7e-c679-40da-ae90-90ba67818ae4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

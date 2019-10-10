@@ -13,6 +13,8 @@
 #include "VulkanFrameBuffer.hpp"
 #include "VulkanRenderPass.hpp"
 
+#undef min
+
 #ifdef __ENABLE__VULKAN__
 
 using namespace CodeRed::Vulkan;
@@ -174,6 +176,44 @@ void CodeRed::VulkanGraphicsCommandList::setDescriptorHeap(
 		heap->count() != 0,
 		mCommandBuffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics,
 			mResourceLayout->layout(), 0, vkHeap->descriptorSets(), {})
+	);
+}
+
+void CodeRed::VulkanGraphicsCommandList::setConstant32Bits(
+	const std::vector<Value32Bit>& values)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		mResourceLayout == nullptr,
+		FailedException(DebugType::Set,
+			{ "Constant32Bits", "Graphics Pipeline" },
+			{ "please set the resource layout, before set constant32Bits." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mResourceLayout->constant32Bits().has_value() == false,
+		FailedException(DebugType::Set,
+			{ "Constant32Bits", "Graphics Pipeline" },
+			{ "please enable the Constant32Bits in GpuResourceLayout." })
+	)
+
+		CODE_RED_DEBUG_WARNING_IF(
+			mResourceLayout->constant32Bits()->Count < values.size(),
+			DebugReport::make(DebugType::Set,
+				{ "Constant32Bits", "Graphics Pipeline" },
+			{
+				"the size of values is greater than the count of Constant32Bits."
+				"We will only set values[0] to values[count - 1]."
+			})
+		);
+
+	const auto constnat32Bits = mResourceLayout->constant32Bits();
+
+	mCommandBuffer.pushConstants(
+		mResourceLayout->layout(),
+		enumConvert(constnat32Bits->Visibility),
+		0,
+		static_cast<uint32_t>(std::min(values.size(), constnat32Bits->Count) * sizeof(UInt32)),
+		values.data()
 	);
 }
 

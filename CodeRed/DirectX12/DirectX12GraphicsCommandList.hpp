@@ -46,6 +46,9 @@ namespace CodeRed {
 
 		void setDescriptorHeap(
 			const std::shared_ptr<GpuDescriptorHeap>& heap) override;
+
+		void setConstant32Bits(
+			const std::vector<Value32Bit>& values) override;
 		
 		void setViewPort(
 			const ViewPort& view_port) override;
