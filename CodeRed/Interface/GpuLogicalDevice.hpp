@@ -3,6 +3,7 @@
 #include "../Shared/Information/ResourceInfo.hpp"
 #include "../Shared/Information/SamplerInfo.hpp"
 #include "../Shared/Information/WindowInfo.hpp"
+#include "../Shared/Enum/APIVersion.hpp"
 #include "../Shared/Constant32Bits.hpp"
 #include "../Shared/LayoutElement.hpp"
 #include "../Shared/Noncopyable.hpp"
@@ -44,7 +45,9 @@ namespace CodeRed {
 		public std::enable_shared_from_this<GpuLogicalDevice>,
 		public Noncopyable {
 	protected:
-		explicit GpuLogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter);
+		explicit GpuLogicalDevice(
+			const std::shared_ptr<GpuDisplayAdapter>& adapter,
+			const APIVersion version = APIVersion::Unknown);
 			
 		~GpuLogicalDevice() = default;
 	public:
@@ -112,9 +115,12 @@ namespace CodeRed {
 
 		virtual auto createPipelineFactory()
 			-> std::shared_ptr<GpuPipelineFactory> = 0;
+
+		auto apiVersion() const noexcept -> APIVersion { return mAPIVersion; }
 	protected:
-		
 		std::shared_ptr<GpuDisplayAdapter> mDisplayAdapter;
+
+		APIVersion mAPIVersion = APIVersion::Unknown;
 	};
 	
 }

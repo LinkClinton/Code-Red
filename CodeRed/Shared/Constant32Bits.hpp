@@ -30,8 +30,8 @@ namespace CodeRed {
 		Constant32Bits() = default;
 
 		explicit Constant32Bits(
-			const size_t binding,
-			const size_t count = 1,
+			const size_t count,
+			const size_t binding = 0,
 			const size_t space = 0,
 			const ShaderVisibility visibility = ShaderVisibility::All) :
 			Visibility(visibility),

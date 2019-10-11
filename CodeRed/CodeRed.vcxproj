@@ -216,6 +216,7 @@
     <ClInclude Include="Shared\Constant32Bits.hpp" />
     <ClInclude Include="Shared\DebugReport.hpp" />
     <ClInclude Include="Shared\Enum\AddressMode.hpp" />
+    <ClInclude Include="Shared\Enum\APIVersion.hpp" />
     <ClInclude Include="Shared\Enum\AttachmentLoad.hpp" />
     <ClInclude Include="Shared\Enum\AttachmentStore.hpp" />
     <ClInclude Include="Shared\Enum\BlendFactor.hpp" />

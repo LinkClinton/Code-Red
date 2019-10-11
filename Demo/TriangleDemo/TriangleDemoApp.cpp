@@ -55,6 +55,8 @@ void TriangleDemoApp::render(float delta)
 		mPipelineInfo->renderPass(),
 		frameBuffer);
 
+	mCommandList->setConstant32Bits({ 1.0f, 0.0f, 0.0f, 1.0f });
+
 	mCommandList->draw(3);
 
 	mCommandList->endRenderPass();
@@ -215,7 +217,8 @@ void TriangleDemoApp::initializePipeline()
 			{
 				 CodeRed::ResourceLayoutElement(CodeRed::ResourceType::Buffer, 0, 0)
 			},
-			{ }
+			{ },
+			CodeRed::Constant32Bits(4, 1, 0)
 		)
 	);
 

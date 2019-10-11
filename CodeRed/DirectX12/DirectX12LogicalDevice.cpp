@@ -25,7 +25,7 @@
 using namespace CodeRed::DirectX12;
 
 CodeRed::DirectX12LogicalDevice::DirectX12LogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter)
-	: GpuLogicalDevice(adapter)
+	: GpuLogicalDevice(adapter, APIVersion::DirectX12)
 {
 #ifdef _DEBUG
 	//get the debug layer and enable debug

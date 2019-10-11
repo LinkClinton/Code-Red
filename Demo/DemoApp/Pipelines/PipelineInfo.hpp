@@ -52,6 +52,8 @@ namespace CodeRed {
 		auto renderPass() const noexcept -> std::shared_ptr<GpuRenderPass>;
 		
 		auto graphicsPipeline() const noexcept -> std::shared_ptr<GpuGraphicsPipeline> { return mGraphicsPipeline; }
+
+		auto pipelineFactory() const noexcept -> std::shared_ptr<GpuPipelineFactory> { return mPipelineFactory; }
 	private:
 		std::shared_ptr<GpuRasterizationState> mRasterizationState;
 		std::shared_ptr<GpuInputAssemblyState> mInputAssemblyState;

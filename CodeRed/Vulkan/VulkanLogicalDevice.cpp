@@ -40,7 +40,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallBack(
 }
 
 CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter)
-	: GpuLogicalDevice(adapter)
+	: GpuLogicalDevice(adapter, APIVersion::Vulkan)
 {
 	initializeLayers();
 	initializeExtensions();

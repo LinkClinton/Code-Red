@@ -1,12 +1,23 @@
 #pragma once
 
+#include <Core/CodeRedGraphics.hpp>
+
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
-#define MAX_LIGHTS 16
-#define MAX_MATERIALS MAX_LIGHTS
+#define MAX_LIGHTS_PER_TYPE 16
+#define MAX_ALL_LIGHTS MAX_LIGHTS_PER_TYPE * 3
+#define MAX_MATERIALS MAX_LIGHTS_PER_TYPE
+#define MAX_TRANSFORMS MAX_LIGHTS_PER_TYPE
 
 namespace CodeRed {
 
+	enum class LightType : UInt32 {
+		Directional = 0,
+		Point = 1,
+		Spot = 2
+	};
+	
 	struct Material {
 		glm::vec4 DiffuseAlbedo = glm::vec4(1.0f);
 		glm::vec3 FreshelR0 = glm::vec3(0.01f);
@@ -83,4 +94,21 @@ namespace CodeRed {
 		}
 	};
 
+	struct Transform3D {
+		glm::mat4x4 NormalTransform = glm::mat4x4(1);
+		glm::mat4x4 Projection = glm::mat4x4(1);
+		glm::mat4x4 Transform = glm::mat4x4(1);
+		glm::mat4x4 View = glm::mat4x4(1);
+
+		Transform3D() = default;
+
+		Transform3D(
+			const glm::mat4x4& projection,
+			const glm::mat4x4& transform,
+			const glm::mat4x4& view) :
+			NormalTransform(glm::transpose(glm::inverse(transform))),
+			Projection(projection),
+			Transform(transform),
+			View(view) {}
+	};
 }

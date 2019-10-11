@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlowersDemo", "Demo\Flowers
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParticlesDemo", "Demo\ParticlesDemo\ParticlesDemo.vcxproj", "{FD6BC2EF-D2D5-4E71-8E50-0739D672BDE6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectPassDemo", "Demo\EffectPassDemo\EffectPassDemo.vcxproj", "{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -63,6 +65,14 @@ Global
 		{FD6BC2EF-D2D5-4E71-8E50-0739D672BDE6}.Release|x64.Build.0 = Release|x64
 		{FD6BC2EF-D2D5-4E71-8E50-0739D672BDE6}.Release|x86.ActiveCfg = Release|Win32
 		{FD6BC2EF-D2D5-4E71-8E50-0739D672BDE6}.Release|x86.Build.0 = Release|Win32
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}.Debug|x64.ActiveCfg = Debug|x64
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}.Debug|x64.Build.0 = Debug|x64
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}.Debug|x86.ActiveCfg = Debug|Win32
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}.Debug|x86.Build.0 = Debug|Win32
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}.Release|x64.ActiveCfg = Release|x64
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}.Release|x64.Build.0 = Release|x64
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}.Release|x86.ActiveCfg = Release|Win32
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +82,7 @@ Global
 		{F6FAA542-0C41-486F-8193-50C21F19FDC6} = {AC756F56-F615-4EEC-8C06-7B981A6BB0EA}
 		{B41BC2D2-535A-4DDD-8A4D-9ACEF02279EA} = {AC756F56-F615-4EEC-8C06-7B981A6BB0EA}
 		{FD6BC2EF-D2D5-4E71-8E50-0739D672BDE6} = {AC756F56-F615-4EEC-8C06-7B981A6BB0EA}
+		{1D544C41-21BC-41B8-9A40-A51CAF1E3B51} = {AC756F56-F615-4EEC-8C06-7B981A6BB0EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A427E749-EEF2-4348-842A-BA049D2FFAF6}

@@ -17,8 +17,11 @@
     <ClInclude Include="Effects\EffectPass.hpp">
       <Filter>Effects</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\EffectLight.hpp">
+    <ClInclude Include="Effects\EffectProperties.hpp">
       <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\ShaderResources.hpp">
+      <Filter>Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +38,9 @@
     <ClCompile Include="Shaders\ShaderCompiler.cpp">
       <Filter>Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\EffectPass.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
@@ -49,5 +55,27 @@
     <Filter Include="Effects">
       <UniqueIdentifier>{6d1f1b7e-c679-40da-ae90-90ba67818ae4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effects\Shaders">
+      <UniqueIdentifier>{533376ac-8417-460f-a7b3-8e97b2ea63df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\ShaderToString.py">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Effects\Shaders\VkEffectPassPixel.frag">
+      <Filter>Effects\Shaders</Filter>
+    </None>
+    <None Include="Effects\Shaders\VkEffectPassVertex.vert">
+      <Filter>Effects\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Effects\Shaders\DxEffectPassPixel.hlsl">
+      <Filter>Effects\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Effects\Shaders\DxEffectPassVertex.hlsl">
+      <Filter>Effects\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

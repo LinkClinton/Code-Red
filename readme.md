@@ -27,6 +27,7 @@ git clone https://github.com/LinkClinton/Code-Red.git
 - [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk)
 - [Vulkan SDK](https://vulkan.lunarg.com/sdk/home)
 - C++ 17
+- [Python 3](https://www.python.org/)(demo only)
 
 The Windows SDK you can install with Visual Studio.
 

@@ -77,14 +77,20 @@ CodeRed::GpuResourceLayout::GpuResourceLayout(
 }
 
 CodeRed::GpuLogicalDevice::GpuLogicalDevice(
-	const std::shared_ptr<GpuDisplayAdapter>& adapter) :
-	mDisplayAdapter(adapter)
+	const std::shared_ptr<GpuDisplayAdapter>& adapter,
+	const APIVersion version) :
+	mDisplayAdapter(adapter), mAPIVersion(version)
 {
 	//the display adapter must be valid
 	//it must be create from GpuSystemInfo
 	CODE_RED_DEBUG_THROW_IF(
 		mDisplayAdapter == nullptr,
 		ZeroException<GpuDisplayAdapter>({ "adapter" })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		version == APIVersion::Unknown,
+		InvalidException<APIVersion>({ "version" })
 	);
 }
 
