@@ -56,8 +56,8 @@ namespace CodeRed {
 		static Attachment DepthStencil(
 			const PixelFormat format,
 			const ResourceLayout initial_layout = ResourceLayout::DepthStencil,
-			const ResourceLayout final_layout = ResourceLayout::DepthStencil,
-			const AttachmentLoad load = AttachmentLoad::DontCare,
+			const ResourceLayout final_layout = ResourceLayout::GeneralRead,
+			const AttachmentLoad load = AttachmentLoad::Clear,
 			const AttachmentStore store = AttachmentStore::Store,
 			const AttachmentLoad stencil_load = AttachmentLoad::DontCare,
 			const AttachmentStore stencil_store = AttachmentStore::DontCare)

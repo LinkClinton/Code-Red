@@ -53,7 +53,7 @@ namespace CodeRed {
 			const glm::vec1& spotPower) :
 			Strength(strength),
 			FalloffStart(falloffStart),
-			Direction(direction),
+			Direction(glm::normalize(direction)),
 			FalloffEnd(falloffEnd),
 			Position(position),
 			SpotPower(spotPower) {}
@@ -82,13 +82,14 @@ namespace CodeRed {
 
 		static auto SpotLight(
 			const glm::vec3& strength,
+			const glm::vec3& position,
 			const glm::vec3& direction,
 			const glm::vec1& falloffStart,
 			const glm::vec1& falloffEnd,
 			const glm::vec1& spotPower) -> Light
 		{
 			return Light(
-				strength, glm::vec3(0), direction,
+				strength, position, direction,
 				falloffStart, falloffEnd, spotPower
 			);
 		}

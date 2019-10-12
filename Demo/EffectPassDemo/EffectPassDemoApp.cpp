@@ -29,7 +29,6 @@ void EffectPassDemoApp::update(float delta)
 	//user can update some resource or state in this function
 	//such as, update buffer, copy texture and so on
 	//the function call is before render()
-	//todo
 }
 
 void EffectPassDemoApp::render(float delta)
@@ -54,7 +53,8 @@ void EffectPassDemoApp::render(float delta)
 	mCommandList->setScissorRect(frameBuffer->fullScissorRect());
 
 	//set vertex buffer and index buffer
-	//todo
+	mCommandList->setVertexBuffer(mVertexBuffer);
+	mCommandList->setIndexBuffer(mIndexBuffer);
 
 	effectPass->beginEffect(mCommandList);
 	
@@ -65,7 +65,9 @@ void EffectPassDemoApp::render(float delta)
 
 	//add some draw commands
 	//the draw commands must between the render pass
-	//todo
+	for (size_t index = 0; index < sphereCount; index++) {	
+		effectPass->drawIndexed(mIndexBuffer->count(), 0, index);
+	}
 	
 	mCommandList->endRenderPass();
 
@@ -134,12 +136,20 @@ void EffectPassDemoApp::initializeSwapChain()
 		maxFrameResources
 	);
 
+	mDepthBuffer = mDevice->createTexture(
+		CodeRed::ResourceInfo::Texture2D(
+			mSwapChain->width(), mSwapChain->height(),
+			CodeRed::PixelFormat::Depth32BitFloat,
+			CodeRed::ResourceUsage::DepthStencil
+		)
+	);
+	
 	for (size_t index = 0; index < maxFrameResources; index++) {
 		mFrameResources[index].set(
 			"FrameBuffer",
 			mDevice->createFrameBuffer(
 				mSwapChain->buffer(index),
-				nullptr
+				mDepthBuffer
 			)
 		);
 	}
@@ -150,6 +160,94 @@ void EffectPassDemoApp::initializeBuffers()
 	//we initialize buffers in this
 	//such as vertex buffer, index buffer, constant buffer
 	//the buffers in the frame resource are created in this, too.
+
+	const float radius = 30;
+	const size_t sliceCount = 50;
+	const size_t stackCount = 50;
+
+	struct Vertex {
+		glm::vec3 Position;
+		glm::vec3 Normal;
+	};
+
+	std::vector<Vertex> vertices;
+	std::vector<unsigned> indices;
+
+	const Vertex topVertex = { {0.0f, +radius, 0.0f},{0.0f, +1.0f, 0.0f} };
+	const Vertex bottomVertex = { {0.0f, -radius, 0.0f},{0.0f, -1.0f, 0.0f} };
+
+	vertices.push_back(topVertex);
+
+	const auto phiStep = glm::pi<float>() / stackCount;
+	const auto thetaStep = glm::two_pi<float>() / sliceCount;
+
+	for (size_t index0 = 1; index0 < stackCount; index0++) {
+		const auto phi = index0 * phiStep;
+
+		for (size_t index1 = 0; index1 <= sliceCount; index1++) {
+			const auto theta = index1 * thetaStep;
+
+			Vertex vertex;
+
+			vertex.Position.x = radius * glm::sin(phi) * glm::cos(theta);
+			vertex.Position.y = radius * glm::cos(phi);
+			vertex.Position.z = radius * glm::sin(phi) * glm::sin(theta);
+
+			vertex.Normal = glm::normalize(vertex.Position);
+
+			vertices.push_back(vertex);
+		}
+	}
+
+	vertices.push_back(bottomVertex);
+
+	for (size_t index = 1; index <= sliceCount; index++) {
+		indices.push_back(0);
+		indices.push_back(static_cast<unsigned>(index + 1));
+		indices.push_back(static_cast<unsigned>(index));
+	}
+
+	size_t baseIndex = 1;
+	size_t ringVertexCount = sliceCount + 1;
+
+	for (size_t index0 = 0; index0 < stackCount - 2; index0++) {
+		for (size_t index1 = 0; index1 < sliceCount; index1++) {
+			indices.push_back(static_cast<unsigned>(baseIndex + index0 * ringVertexCount + index1));
+			indices.push_back(static_cast<unsigned>(baseIndex + index0 * ringVertexCount + index1 + 1));
+			indices.push_back(static_cast<unsigned>(baseIndex + (index0 + 1) * ringVertexCount + index1));
+
+			indices.push_back(static_cast<unsigned>(baseIndex + (index0 + 1) * ringVertexCount + index1));
+			indices.push_back(static_cast<unsigned>(baseIndex + index0 * ringVertexCount + index1 + 1));
+			indices.push_back(static_cast<unsigned>(baseIndex + (index0 + 1) * ringVertexCount + index1 + 1));
+		}
+	}
+
+	size_t southPoleIndex = vertices.size() - 1;
+
+	baseIndex = southPoleIndex - ringVertexCount;
+
+	for (size_t index = 0; index < sliceCount; index++) {
+		indices.push_back(static_cast<unsigned>(southPoleIndex));
+		indices.push_back(static_cast<unsigned>(baseIndex + index));
+		indices.push_back(static_cast<unsigned>(baseIndex + index + 1));
+	}
+
+	mVertexBuffer = mDevice->createBuffer(
+		CodeRed::ResourceInfo::VertexBuffer(
+			sizeof(Vertex),
+			vertices.size()
+		)
+	);
+
+	mIndexBuffer = mDevice->createBuffer(
+		CodeRed::ResourceInfo::IndexBuffer(
+			sizeof(unsigned),
+			indices.size()
+		)
+	);
+
+	CodeRed::ResourceHelper::updateBuffer(mDevice, mCommandAllocator, mCommandQueue, mVertexBuffer, vertices.data());
+	CodeRed::ResourceHelper::updateBuffer(mDevice, mCommandAllocator, mCommandQueue, mIndexBuffer, indices.data());
 }
 
 void EffectPassDemoApp::initializeShaders()
@@ -181,15 +279,84 @@ void EffectPassDemoApp::initializePipeline()
 	//you can use setXXX to set the graphics pipeline state
 	//but you should use "updateState()" to create graphics pipeline
 	mRenderPass = mDevice->createRenderPass(
-		CodeRed::Attachment::RenderTarget(mSwapChain->format())
+		CodeRed::Attachment::RenderTarget(mSwapChain->format()),
+		CodeRed::Attachment::DepthStencil(mDepthBuffer->format())
 	);
 
+	mRenderPass->setClear(CodeRed::ClearValue(0.0f, 0.0f, 0.0f, 0.0f));
+
+	auto pipelineFactory = mDevice->createPipelineFactory();
+	
 	for (auto& frameResource : mFrameResources) {
 		frameResource.set("EffectPass",
 			std::make_shared<CodeRed::EffectPass>(
 				mDevice,
-				mRenderPass)
+				mRenderPass,
+				std::nullopt,
+				std::nullopt,
+				pipelineFactory->createDetphStencilState(
+					false,
+					true,
+					false))
 		);
+
+		auto effectPass = frameResource.get<CodeRed::EffectPass>("EffectPass");
+
+		for (size_t index = 0; index < sphereCount; index++) {
+			const auto deltaArc = glm::two_pi<float>() / sphereCount;
+			
+			mTransforms[index].Transform = glm::mat4x4(1);
+			mTransforms[index].Transform = glm::rotate(mTransforms[index].Transform, deltaArc * index, glm::vec3(0, 1, 0));
+			mTransforms[index].Transform = glm::translate(mTransforms[index].Transform, glm::vec3(0, 0, 100));
+
+			mTransforms[index].NormalTransform = glm::transpose(glm::inverse(mTransforms[index].Transform));
+
+			mTransforms[index].Projection = glm::perspectiveFovLH(
+				glm::pi<float>() * 0.5f,
+				static_cast<float>(width()),
+				static_cast<float>(height()),
+				1.0f, 100.0f);
+
+			mTransforms[index].View = glm::lookAtLH(
+				glm::vec3(0, 0, 0),
+				glm::vec3(0, 0, 100),
+				glm::vec3(0, 1, 0));
+			
+			effectPass->setTransform(index, mTransforms[index]);
+		}
+
+		effectPass->setMaterial(0,
+			{
+				glm::vec4(0.75f,0.2f,0.2f,1.0f),
+				glm::vec3(0.0005f),
+				glm::vec1(0.3f)
+			});
+		
+		effectPass->setLights(CodeRed::LightType::Directional, 0,
+			CodeRed::Light::DirectionalLight(
+				glm::vec3(0.3f),
+				glm::vec3(0.f, -0.5f, 1.f)
+			));
+
+		effectPass->setLights(CodeRed::LightType::Directional, 1,
+			CodeRed::Light::DirectionalLight(
+				glm::vec3(0.3f),
+				glm::vec3(0.f, +0.5f, 1.f)
+			));
+	
+		effectPass->setLights(CodeRed::LightType::Spot, 0,
+			CodeRed::Light::SpotLight(
+				glm::vec3(0.5f),
+				glm::vec3(0.0f, 0.0f, 0.0f),
+				glm::vec3(0.0f, 0.0f, 1.0f),
+				glm::vec1(80.0f),
+				glm::vec1(120.0f),
+				glm::vec1(1.f)
+			));
+		
+		effectPass->setAmbientLight(glm::vec4(0.3f));
+		
+		effectPass->updateToGpu(mCommandAllocator, mCommandQueue);
 	}
 }
 

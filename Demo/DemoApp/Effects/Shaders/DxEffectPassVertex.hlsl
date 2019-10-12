@@ -20,8 +20,12 @@ struct Transforms
 
 struct Index
 {
-    uint materialIndex;
-    uint transformIndex;
+	uint materialIndex;
+	uint transformIndex;
+	float ambientLightRed;
+	float ambientLightGreen;
+	float ambientLightBlue;
+	float ambientLightAlpha;
 };
 
 struct Output
@@ -46,7 +50,7 @@ Output main(
     result.Position = mul(float4(position, 1.0f), transforms.instance[transformIndex].Transform).xyz;
     result.ViewPosition = mul(float4(result.Position, 1.0f), transforms.instance[transformIndex].View).xyz;
     result.SVPosition = mul(float4(result.ViewPosition, 1.0f), transforms.instance[transformIndex].Projection);
-    result.Normal = mul(float4(normal, 1.0f), transforms.instance[transformIndex].NormalTransform);
+    result.Normal = mul(float4(normal, 1.0f), transforms.instance[transformIndex].NormalTransform).xyz;
     
     return result;
 }

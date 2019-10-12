@@ -43,6 +43,8 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	clearValue.Color[1] = 0.0f;
 	clearValue.Color[2] = 0.0f;
 	clearValue.Color[3] = 0.0f;
+	clearValue.DepthStencil.Depth = 1.0f;
+	clearValue.DepthStencil.Stencil = 0;
 
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 

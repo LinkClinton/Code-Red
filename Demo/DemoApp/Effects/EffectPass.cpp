@@ -60,7 +60,7 @@ CodeRed::EffectPass::EffectPass(
 				ResourceLayoutElement(ResourceType::Buffer, 2, 0)
 			},
 			{},
-			Constant32Bits(2, 3, 0)
+			Constant32Bits(6, 3, 0)
 		)
 	);
 
@@ -138,6 +138,11 @@ void CodeRed::EffectPass::setTransform(const size_t index, const Transform3D& tr
 	mTransforms[index] = transform;
 }
 
+void CodeRed::EffectPass::setAmbientLight(const glm::vec4& light)
+{
+	mAmbientLight = light;
+}
+
 void CodeRed::EffectPass::updateToGpu(
 	const std::shared_ptr<GpuCommandAllocator>& allocator,
 	const std::shared_ptr<GpuCommandQueue>& queue)
@@ -169,14 +174,18 @@ void CodeRed::EffectPass::drawIndexed(
 	const size_t baseVertexLocation)
 {
 	CODE_RED_DEBUG_THROW_IF(
-		mCommandList != nullptr,
+		mCommandList == nullptr,
 		Exception(DebugReport::makeError("please begin effect before drawing."))
 	);
 
 	mCommandList->setConstant32Bits(
 		{
 			static_cast<UInt32>(materialIndex),
-			static_cast<UInt32>(transformIndex)
+			static_cast<UInt32>(transformIndex),
+			mAmbientLight.r,
+			mAmbientLight.g,
+			mAmbientLight.b,
+			mAmbientLight.a
 		});
 
 	mCommandList->drawIndexed(
@@ -185,6 +194,11 @@ void CodeRed::EffectPass::drawIndexed(
 		startIndexLocation, 
 		baseVertexLocation,
 		0);
+}
+
+auto CodeRed::EffectPass::transform(const size_t index) const -> Transform3D
+{
+	return mTransforms[index];
 }
 
 auto CodeRed::EffectPass::material(const size_t index) const -> Material

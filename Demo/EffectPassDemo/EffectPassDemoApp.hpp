@@ -41,6 +41,7 @@ private:
 	void initializeDescriptorHeaps();
 private:
 	const size_t maxFrameResources = 2;
+	const size_t sphereCount = 1;
 
 	size_t mCurrentFrameIndex = 0;
 
@@ -54,8 +55,12 @@ private:
 	std::vector<CodeRed::FrameResources> mFrameResources =
 		std::vector<CodeRed::FrameResources>(maxFrameResources);
 
+	std::shared_ptr<CodeRed::GpuTexture> mDepthBuffer;
+	
 	std::shared_ptr<CodeRed::GpuBuffer> mVertexBuffer;
 	std::shared_ptr<CodeRed::GpuBuffer> mIndexBuffer;
 
 	std::shared_ptr<CodeRed::GpuRenderPass> mRenderPass;
+
+	std::vector<CodeRed::Transform3D> mTransforms = std::vector<CodeRed::Transform3D>(sphereCount);
 };

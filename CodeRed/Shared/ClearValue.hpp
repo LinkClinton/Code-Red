@@ -9,7 +9,7 @@ namespace CodeRed {
 		Real Green = 1.0f;
 		Real Blue = 1.0f;
 		Real Alpha = 1.0f;
-		Real Depth = 0.0f;
+		Real Depth = 1.0f;
 		
 		UInt8 Stencil = 0;
 

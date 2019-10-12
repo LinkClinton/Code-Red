@@ -25,6 +25,8 @@ namespace CodeRed {
 
 		virtual void setTransform(const size_t index, const Transform3D& transform);
 
+		virtual void setAmbientLight(const glm::vec4& light);
+		
 		virtual void updateToGpu(
 			const std::shared_ptr<GpuCommandAllocator>& allocator,
 			const std::shared_ptr<GpuCommandQueue>& queue);
@@ -41,7 +43,9 @@ namespace CodeRed {
 			const size_t startIndexLocation = 0,
 			const size_t baseVertexLocation = 0);
 
-		auto material(const size_t index) const->Material;
+		auto transform(const size_t index) const -> Transform3D;
+
+		auto material(const size_t index) const -> Material;
 
 		auto light(const LightType type, const size_t index) const->Light;
 	protected:
@@ -53,7 +57,7 @@ namespace CodeRed {
 		std::shared_ptr<GpuBuffer> mLightsBuffer;
 		std::shared_ptr<GpuBuffer> mMaterialsBuffer;
 		std::shared_ptr<GpuBuffer> mTransformsBuffer;
-
+		
 		std::shared_ptr<PipelineInfo> mPipelineInfo;
 
 		std::vector<Light> mLights = std::vector<Light>(MAX_ALL_LIGHTS);
@@ -62,6 +66,8 @@ namespace CodeRed {
 
 		std::vector<Byte> mEffectVertexShaderCode;
 		std::vector<Byte> mEffectPixelShaderCode;
+
+		glm::vec4 mAmbientLight = glm::vec4(0);
 	};
 
 }

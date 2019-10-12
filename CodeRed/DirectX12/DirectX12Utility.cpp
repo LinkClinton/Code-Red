@@ -139,7 +139,7 @@ auto CodeRed::DirectX12::enumConvert(const ResourceLayout layout)
 	case ResourceLayout::Undefined: return D3D12_RESOURCE_STATE_COMMON;
 	case ResourceLayout::GeneralRead: return D3D12_RESOURCE_STATE_GENERIC_READ;
 	case ResourceLayout::RenderTarget: return D3D12_RESOURCE_STATE_RENDER_TARGET;
-	case ResourceLayout::DepthStencil: return D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	case ResourceLayout::DepthStencil: return D3D12_RESOURCE_STATE_DEPTH_WRITE;
 	case ResourceLayout::CopyDestination: return D3D12_RESOURCE_STATE_COPY_DEST;
 	case ResourceLayout::CopySource: return D3D12_RESOURCE_STATE_COPY_SOURCE;
 	case ResourceLayout::Present: return D3D12_RESOURCE_STATE_PRESENT;
@@ -221,6 +221,7 @@ auto CodeRed::DirectX12::enumConvert(const PixelFormat format)
 	case PixelFormat::RedGreenBlueAlpha32BitFloat: return DXGI_FORMAT_R32G32B32A32_FLOAT;
 	case PixelFormat::RedGreenBlue32BitFloat: return DXGI_FORMAT_R32G32B32_FLOAT;
 	case PixelFormat::RedGreen32BitFloat: return DXGI_FORMAT_R32G32_FLOAT;
+	case PixelFormat::Depth32BitFloat: return DXGI_FORMAT_D32_FLOAT;
 	case PixelFormat::Unknown: return DXGI_FORMAT_UNKNOWN;
 	default:
 		throw NotSupportException(NotSupportType::Enum);

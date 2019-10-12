@@ -136,6 +136,10 @@ struct Index
 {
     uint materialIndex;
     uint transformIndex;
+	float ambientLightRed;
+	float ambientLightGreen;
+	float ambientLightBlue;
+	float ambientLightAlpha;
 };
 
 ConstantBuffer<Lights> lights : register(b0, space0);
@@ -152,6 +156,14 @@ float4 main(
     
     float3 toEye = float3(0.0f, 0.0f, 0.0f) - viewPosition;
     
-    return ComputeLighting(lights.instance, materials.instance[materialIndex],
-        position, normal, toEye);
+	float4 ambient = float4(
+		index.ambientLightRed, 
+		index.ambientLightGreen, 
+		index.ambientLightBlue, 
+		index.ambientLightAlpha) * materials.instance[materialIndex].DiffuseAlbedo;
+
+    float4 color = ComputeLighting(lights.instance, materials.instance[materialIndex],
+        position, normal, toEye) + ambient;
+
+	return float4(color.xyz, materials.instance[materialIndex].DiffuseAlbedo.a);
 }
