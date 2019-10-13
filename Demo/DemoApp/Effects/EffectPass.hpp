@@ -13,19 +13,28 @@ namespace CodeRed {
 		explicit EffectPass(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const std::shared_ptr<GpuRenderPass>& renderPass,
-			const std::optional<std::shared_ptr<GpuBlendState>>& blend = std::nullopt,
-			const std::optional<std::shared_ptr<GpuRasterizationState>>& rasterization = std::nullopt,
-			const std::optional<std::shared_ptr<GpuDepthStencilState>>& depthStencil = std::nullopt);
+			const size_t maxInstance = 16);
 
 		virtual ~EffectPass() = default;
 
-		virtual void setLights(const LightType type, const size_t index, const Light& light);
+		virtual void setLight(const LightType type, const size_t index, const Light& light);
 
+		virtual void setLights(const LightType type, std::vector<Light>& lights);
+		
 		virtual void setMaterial(const size_t index, const Material& material);
 
+		virtual void setMaterials(const std::vector<Material>& materials);
+		
 		virtual void setTransform(const size_t index, const Transform3D& transform);
 
+		virtual void setTransforms(const std::vector<Transform3D>& transforms);
+
 		virtual void setAmbientLight(const glm::vec4& light);
+
+		virtual void updateState(
+			const std::optional<std::shared_ptr<GpuBlendState>>& blend,
+			const std::optional<std::shared_ptr<GpuDepthStencilState>>& depthStencil,
+			const std::optional<std::shared_ptr<GpuRasterizationState>>& rasterization);
 		
 		virtual void updateToGpu(
 			const std::shared_ptr<GpuCommandAllocator>& allocator,
@@ -38,10 +47,10 @@ namespace CodeRed {
 
 		virtual void drawIndexed(
 			const size_t indexCount,
-			const size_t materialIndex,
-			const size_t transformIndex,
+			const size_t instanceCount,
 			const size_t startIndexLocation = 0,
-			const size_t baseVertexLocation = 0);
+			const size_t baseVertexLocation = 0,
+			const size_t startInstanceLocation = 0);
 
 		auto transform(const size_t index) const -> Transform3D;
 
@@ -60,9 +69,9 @@ namespace CodeRed {
 		
 		std::shared_ptr<PipelineInfo> mPipelineInfo;
 
-		std::vector<Light> mLights = std::vector<Light>(MAX_ALL_LIGHTS);
-		std::vector<Material> mMaterials = std::vector<Material>(MAX_MATERIALS);
-		std::vector<Transform3D> mTransforms = std::vector<Transform3D>(MAX_TRANSFORMS);
+		std::vector<Light> mLights;
+		std::vector<Material> mMaterials;
+		std::vector<Transform3D> mTransforms;
 
 		std::vector<Byte> mEffectVertexShaderCode;
 		std::vector<Byte> mEffectPixelShaderCode;

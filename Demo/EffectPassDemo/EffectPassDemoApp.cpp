@@ -1,5 +1,37 @@
 #include "EffectPassDemoApp.hpp"
 
+#include <random>
+
+auto Sphere::update(float length, const glm::vec3& limitBound) -> glm::vec3
+{
+	reverse(Forward.x, Position.x, limitBound.x);
+	reverse(Forward.y, Position.y, limitBound.y);
+	reverse(Forward.z, Position.z, limitBound.z);
+
+	const auto offset = Forward * length;
+
+	Position = Position + offset;
+	
+	return offset;
+}
+
+void Sphere::reverse(float& forward, float position, float limit)
+{
+	CODE_RED_TRY_EXECUTE(
+		position >= limit || position <= -limit,
+		forward = -forward
+	);
+}
+
+bool Sphere::intersect(const Sphere& sphere0, const Sphere& sphere1)
+{
+	const auto distance = glm::distance(sphere0.Position, sphere1.Position);
+	const auto radius = sphere0.Radius.x + sphere1.Radius.x;
+
+	if (distance <= radius) return true;
+	return false;
+}
+
 EffectPassDemoApp::EffectPassDemoApp(
 	const std::string& name,
 	const size_t width,
@@ -26,9 +58,40 @@ EffectPassDemoApp::~EffectPassDemoApp()
 
 void EffectPassDemoApp::update(float delta)
 {
+	static std::default_random_engine random(0);
+	static const std::uniform_real_distribution<float> dRange(0.2f, 0.75f);
+	static const std::uniform_real_distribution<float> fRange(0.0005f, 0.1f);
+	
 	//user can update some resource or state in this function
 	//such as, update buffer, copy texture and so on
 	//the function call is before render()
+	const auto speed = 30.0f;
+	const auto length = speed * delta;
+	
+	auto effectPass = mFrameResources[mCurrentFrameIndex].get<CodeRed::EffectPass>("EffectPass");
+
+	for (size_t index = 0; index < mSpheres.size(); index++) {
+		auto& transform = mTransforms[index];
+		auto& sphere = mSpheres[index];
+
+		for (auto index1 = index + 1; index1 < mSpheres.size(); index1++) {
+			if (Sphere::intersect(sphere, mSpheres[index1]) == true) {
+				sphere.Forward = glm::normalize(sphere.Position - mSpheres[index1].Position);
+
+				break;
+			}
+		}
+		
+		const auto offset = sphere.update(length, limitBound);
+
+		transform.Transform = glm::translate(glm::mat4x4(1), glm::vec3(offset)) * transform.Transform;
+		transform.NormalTransform = glm::transpose(glm::inverse(transform.Transform));
+	}
+	
+	effectPass->setTransforms(mTransforms);
+	effectPass->setMaterials(mMaterials);
+
+	effectPass->updateToGpu(mCommandAllocator, mCommandQueue);
 }
 
 void EffectPassDemoApp::render(float delta)
@@ -65,9 +128,7 @@ void EffectPassDemoApp::render(float delta)
 
 	//add some draw commands
 	//the draw commands must between the render pass
-	for (size_t index = 0; index < sphereCount; index++) {	
-		effectPass->drawIndexed(mIndexBuffer->count(), 0, index);
-	}
+	effectPass->drawIndexed(mIndexBuffer->count(), sphereCount);
 	
 	mCommandList->endRenderPass();
 
@@ -103,6 +164,7 @@ void EffectPassDemoApp::initialize()
 #endif
 #endif
 
+	initializeSpheres();
 	initializeCommands();
 	initializeSwapChain();
 	initializeBuffers();
@@ -111,6 +173,63 @@ void EffectPassDemoApp::initialize()
 	initializeTextures();
 	initializePipeline();
 	initializeDescriptorHeaps();
+}
+
+void EffectPassDemoApp::initializeSpheres()
+{
+	const auto projection = glm::perspectiveFovLH(
+		glm::pi<float>() * 0.25f,
+		static_cast<float>(width()),
+		static_cast<float>(height()),
+		1.0f, 1000.0f);
+
+	const auto view = glm::lookAtLH(
+		glm::vec3(0, 0, -200),
+		glm::vec3(0, 0, 0),
+		glm::vec3(0, 1, 0));
+
+	const auto limitRadius = 5.0f;
+
+	std::default_random_engine random(0);
+	const std::uniform_real_distribution<float> pxRange(-limitBound.x, limitBound.x);
+	const std::uniform_real_distribution<float> pyRange(-limitBound.y, limitBound.y);
+	const std::uniform_real_distribution<float> pzRange(-limitBound.z, limitBound.z);
+	const std::uniform_real_distribution<float> dRange(0.2f, 0.75f);
+	const std::uniform_real_distribution<float> fRange(0.0005f, 0.1f);
+	
+	for (size_t index = 0; index < sphereCount; index++) {
+		auto& transform = mTransforms[index];
+		auto& material = mMaterials[index];
+		auto& sphere = mSpheres[index];
+
+		sphere.Forward = glm::normalize(
+			glm::vec3(
+				pxRange(random),
+				pyRange(random),
+				pzRange(random)
+			)
+		);
+
+		sphere.Position = glm::vec3(
+			pxRange(random),
+			pyRange(random),
+			pzRange(random)
+		);
+
+		sphere.Radius = glm::vec1(limitRadius);
+		
+		transform.Projection = projection;
+		transform.View = view;
+
+		transform.Transform = glm::translate(transform.Transform, sphere.Position);
+		transform.Transform = glm::scale(transform.Transform, glm::vec3(sphere.Radius));
+
+		transform.NormalTransform = glm::transpose(glm::inverse(transform.Transform));
+
+		material.DiffuseAlbedo = glm::vec4(dRange(random), dRange(random), dRange(random), 1.0f);
+		material.FreshelR0 = glm::vec3(fRange(random), fRange(random), fRange(random));
+		material.Roughness = glm::vec1(0.3f);
+	}
 }
 
 void EffectPassDemoApp::initializeCommands()
@@ -161,9 +280,9 @@ void EffectPassDemoApp::initializeBuffers()
 	//such as vertex buffer, index buffer, constant buffer
 	//the buffers in the frame resource are created in this, too.
 
-	const float radius = 30;
-	const size_t sliceCount = 50;
-	const size_t stackCount = 50;
+	const float radius = 1.0f;
+	const size_t sliceCount = 30;
+	const size_t stackCount = 30;
 
 	struct Vertex {
 		glm::vec3 Position;
@@ -292,66 +411,39 @@ void EffectPassDemoApp::initializePipeline()
 			std::make_shared<CodeRed::EffectPass>(
 				mDevice,
 				mRenderPass,
-				std::nullopt,
-				std::nullopt,
-				pipelineFactory->createDetphStencilState(
-					false,
-					true,
-					false))
+				sphereCount)
 		);
 
 		auto effectPass = frameResource.get<CodeRed::EffectPass>("EffectPass");
-
-		for (size_t index = 0; index < sphereCount; index++) {
-			const auto deltaArc = glm::two_pi<float>() / sphereCount;
-			
-			mTransforms[index].Transform = glm::mat4x4(1);
-			mTransforms[index].Transform = glm::rotate(mTransforms[index].Transform, deltaArc * index, glm::vec3(0, 1, 0));
-			mTransforms[index].Transform = glm::translate(mTransforms[index].Transform, glm::vec3(0, 0, 100));
-
-			mTransforms[index].NormalTransform = glm::transpose(glm::inverse(mTransforms[index].Transform));
-
-			mTransforms[index].Projection = glm::perspectiveFovLH(
-				glm::pi<float>() * 0.5f,
-				static_cast<float>(width()),
-				static_cast<float>(height()),
-				1.0f, 100.0f);
-
-			mTransforms[index].View = glm::lookAtLH(
-				glm::vec3(0, 0, 0),
-				glm::vec3(0, 0, 100),
-				glm::vec3(0, 1, 0));
-			
-			effectPass->setTransform(index, mTransforms[index]);
-		}
-
-		effectPass->setMaterial(0,
-			{
-				glm::vec4(0.75f,0.2f,0.2f,1.0f),
-				glm::vec3(0.0005f),
-				glm::vec1(0.3f)
-			});
 		
-		effectPass->setLights(CodeRed::LightType::Directional, 0,
+		effectPass->setLight(CodeRed::LightType::Directional, 0,
 			CodeRed::Light::DirectionalLight(
-				glm::vec3(0.3f),
+				glm::vec3(0.15f),
 				glm::vec3(0.f, -0.5f, 1.f)
 			));
 
-		effectPass->setLights(CodeRed::LightType::Directional, 1,
+		effectPass->setLight(CodeRed::LightType::Directional, 1,
 			CodeRed::Light::DirectionalLight(
-				glm::vec3(0.3f),
+				glm::vec3(0.15f),
 				glm::vec3(0.f, +0.5f, 1.f)
 			));
-	
-		effectPass->setLights(CodeRed::LightType::Spot, 0,
+
+		effectPass->setLight(CodeRed::LightType::Spot, 0,
 			CodeRed::Light::SpotLight(
 				glm::vec3(0.5f),
-				glm::vec3(0.0f, 0.0f, 0.0f),
-				glm::vec3(0.0f, 0.0f, 1.0f),
-				glm::vec1(80.0f),
-				glm::vec1(120.0f),
-				glm::vec1(1.f)
+				glm::vec3(0, 0, -200),
+				glm::vec3(0, 0, 1),
+				glm::vec1(190),
+				glm::vec1(250),
+				glm::vec1(10.f)
+			));
+
+		effectPass->setLight(CodeRed::LightType::Point, 0,
+			CodeRed::Light::PointLight(
+				glm::vec3(0.5f),
+				glm::vec3(0, 0, 0),
+				glm::vec1(50.0f),
+				glm::vec1(100.0f)
 			));
 		
 		effectPass->setAmbientLight(glm::vec4(0.3f));

@@ -55,3 +55,15 @@ void CodeRed::ResourceHelper::updateBuffer(
 	commandQueue->execute({ commandList });
 	commandQueue->waitIdle();
 }
+
+void CodeRed::ResourceHelper::updateBuffer(
+	const std::shared_ptr<GpuBuffer>& buffer, 
+	const void* data, 
+	const size_t size)
+{
+	const auto memory = buffer->mapMemory();
+
+	std::memcpy(memory, data, size == 0 ? buffer->size() : size);
+
+	buffer->unmapMemory();
+}

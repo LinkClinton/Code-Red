@@ -2,8 +2,6 @@
 
 #define MAX_LIGHTS_PER_TYPE 16
 #define MAX_ALL_LIGHTS MAX_LIGHTS_PER_TYPE * 3
-#define MAX_MATERIALS MAX_LIGHTS_PER_TYPE
-#define MAX_TRANSFORMS MAX_LIGHTS_PER_TYPE
 
 struct Material
 {
@@ -127,43 +125,36 @@ struct Lights
     Light instance[MAX_ALL_LIGHTS];
 };
 
-struct Materials
-{
-    Material instance[MAX_MATERIALS];
-};
-
 struct Index
 {
-    uint materialIndex;
-    uint transformIndex;
 	float ambientLightRed;
 	float ambientLightGreen;
 	float ambientLightBlue;
 	float ambientLightAlpha;
 };
 
+StructuredBuffer<Material> materials : register(t1, space0);
+
 ConstantBuffer<Lights> lights : register(b0, space0);
-ConstantBuffer<Materials> materials : register(b1, space0);
 ConstantBuffer<Index> index : register(b3, space0);
 
 float4 main(
     float3 viewPosition : POSITION0,
     float4 sVPosition : SV_POSITION,
     float3 position : POSITION1,
-    float3 normal : NORMAL) : SV_TARGET
+    float3 normal : NORMAL,
+	uint   instanceId : SV_INSTANCEID) : SV_TARGET
 {
-    uint materialIndex = index.materialIndex;
-    
-    float3 toEye = float3(0.0f, 0.0f, 0.0f) - viewPosition;
+    float3 toEye = normalize(float3(0.0f, 0.0f, 0.0f) - viewPosition);
     
 	float4 ambient = float4(
 		index.ambientLightRed, 
 		index.ambientLightGreen, 
 		index.ambientLightBlue, 
-		index.ambientLightAlpha) * materials.instance[materialIndex].DiffuseAlbedo;
+		index.ambientLightAlpha) * materials[instanceId].DiffuseAlbedo;
 
-    float4 color = ComputeLighting(lights.instance, materials.instance[materialIndex],
+    float4 color = ComputeLighting(lights.instance, materials[instanceId],
         position, normal, toEye) + ambient;
 
-	return float4(color.xyz, materials.instance[materialIndex].DiffuseAlbedo.a);
+	return float4(color.xyz, materials[instanceId].DiffuseAlbedo.a);
 }

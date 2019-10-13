@@ -7,10 +7,8 @@
 CodeRed::EffectPass::EffectPass(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::shared_ptr<GpuRenderPass>& renderPass,
-	const std::optional<std::shared_ptr<GpuBlendState>>& blend,
-	const std::optional<std::shared_ptr<GpuRasterizationState>>& rasterization,
-	const std::optional<std::shared_ptr<GpuDepthStencilState>>& depthStencil) :
-	mDevice(device)
+	const size_t maxInstance) :
+	mDevice(device), mLights(MAX_ALL_LIGHTS), mMaterials(maxInstance), mTransforms(maxInstance)
 {
 	CODE_RED_DEBUG_THROW_IF(
 		device == nullptr,
@@ -24,21 +22,6 @@ CodeRed::EffectPass::EffectPass(
 	
 	mPipelineInfo = std::make_shared<PipelineInfo>(mDevice);
 	
-	CODE_RED_TRY_EXECUTE(
-		blend.has_value(),
-		mPipelineInfo->setBlendState(blend.value())
-	);
-	
-	CODE_RED_TRY_EXECUTE(
-		rasterization.has_value(),
-		mPipelineInfo->setRasterizationState(rasterization.value())
-	);
-
-	CODE_RED_TRY_EXECUTE(
-		depthStencil.has_value(),
-		mPipelineInfo->setDepthStencilState(depthStencil.value())
-	);
-
 	auto pipelineFactory = mPipelineInfo->pipelineFactory();
 	
 	mPipelineInfo->setRenderPass(renderPass);
@@ -56,11 +39,11 @@ CodeRed::EffectPass::EffectPass(
 		mDevice->createResourceLayout(
 			{
 				ResourceLayoutElement(ResourceType::Buffer, 0, 0),
-				ResourceLayoutElement(ResourceType::Buffer, 1, 0),
-				ResourceLayoutElement(ResourceType::Buffer, 2, 0)
+				ResourceLayoutElement(ResourceType::GroupBuffer, 1, 0),
+				ResourceLayoutElement(ResourceType::GroupBuffer, 2, 0)
 			},
 			{},
-			Constant32Bits(6, 3, 0)
+			Constant32Bits(4, 3, 0)
 		)
 	);
 
@@ -96,21 +79,23 @@ CodeRed::EffectPass::EffectPass(
 	mLightsBuffer = mDevice->createBuffer(
 		ResourceInfo::ConstantBuffer(
 			sizeof(Light) * MAX_ALL_LIGHTS,
-			MemoryHeap::Default
+			MemoryHeap::Upload
 		)
 	);
 
 	mMaterialsBuffer = mDevice->createBuffer(
-		ResourceInfo::ConstantBuffer(
-			sizeof(Material) * MAX_MATERIALS,
-			MemoryHeap::Default
+		ResourceInfo::GroupBuffer(
+			sizeof(Material),
+			mMaterials.size(),
+			MemoryHeap::Upload
 		)
 	);
 
 	mTransformsBuffer = mDevice->createBuffer(
-		ResourceInfo::ConstantBuffer(
-			sizeof(Transform3D) * MAX_TRANSFORMS,
-			MemoryHeap::Default
+		ResourceInfo::GroupBuffer(
+			sizeof(Transform3D),
+			mTransforms.size(),
+			MemoryHeap::Upload
 		)
 	);
 
@@ -123,9 +108,19 @@ CodeRed::EffectPass::EffectPass(
 	mDescriptorHeap->bindBuffer(mTransformsBuffer, 2);
 }
 
-void CodeRed::EffectPass::setLights(const LightType type, const size_t index, const Light& light)
+void CodeRed::EffectPass::setLight(const LightType type, const size_t index, const Light& light)
 {
 	mLights[static_cast<size_t>(type) * MAX_LIGHTS_PER_TYPE + index] = light;
+}
+
+void CodeRed::EffectPass::setLights(const LightType type, std::vector<Light>& lights)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		lights.size() > 16,
+		InvalidException<size_t>({ "size of lights" })
+	);
+	
+	std::copy(lights.begin(), lights.end(), mLights.begin() + static_cast<size_t>(type) * MAX_LIGHTS_PER_TYPE);
 }
 
 void CodeRed::EffectPass::setMaterial(const size_t index, const Material& material)
@@ -133,9 +128,29 @@ void CodeRed::EffectPass::setMaterial(const size_t index, const Material& materi
 	mMaterials[index] = material;
 }
 
+void CodeRed::EffectPass::setMaterials(const std::vector<Material>& materials)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		materials.size() > mMaterials.size(),
+		InvalidException<size_t>({ "size of materials" })
+	);
+	
+	std::copy(materials.begin(), materials.end(), mMaterials.begin());
+}
+
 void CodeRed::EffectPass::setTransform(const size_t index, const Transform3D& transform)
 {
 	mTransforms[index] = transform;
+}
+
+void CodeRed::EffectPass::setTransforms(const std::vector<Transform3D>& transforms)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		transforms.size() > mTransforms.size(),
+		InvalidException<size_t>({ "size of transforms" })
+	);
+
+	std::copy(transforms.begin(), transforms.end(), mTransforms.begin());
 }
 
 void CodeRed::EffectPass::setAmbientLight(const glm::vec4& light)
@@ -143,13 +158,39 @@ void CodeRed::EffectPass::setAmbientLight(const glm::vec4& light)
 	mAmbientLight = light;
 }
 
+void CodeRed::EffectPass::updateState(
+	const std::optional<std::shared_ptr<GpuBlendState>>& blend,
+	const std::optional<std::shared_ptr<GpuDepthStencilState>>& depthStencil,
+	const std::optional<std::shared_ptr<GpuRasterizationState>>& rasterization)
+{
+	CODE_RED_TRY_EXECUTE(
+		blend.has_value(),
+		mPipelineInfo->setBlendState(blend.value())
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		depthStencil.has_value(),
+		mPipelineInfo->setDepthStencilState(depthStencil.value())
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		rasterization.has_value(),
+		mPipelineInfo->setRasterizationState(rasterization.value())
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		blend.has_value() || depthStencil.has_value() || rasterization.has_value(),
+		mPipelineInfo->updateState()
+	);
+}
+
 void CodeRed::EffectPass::updateToGpu(
 	const std::shared_ptr<GpuCommandAllocator>& allocator,
 	const std::shared_ptr<GpuCommandQueue>& queue)
 {
-	ResourceHelper::updateBuffer(mDevice, allocator, queue, mLightsBuffer, mLights.data());
-	ResourceHelper::updateBuffer(mDevice, allocator, queue, mMaterialsBuffer, mMaterials.data());
-	ResourceHelper::updateBuffer(mDevice, allocator, queue, mTransformsBuffer, mTransforms.data());
+	ResourceHelper::updateBuffer(mLightsBuffer, mLights.data(), sizeof(Light) * mLights.size());
+	ResourceHelper::updateBuffer(mMaterialsBuffer, mMaterials.data(), sizeof(Material) * mMaterials.size());
+	ResourceHelper::updateBuffer(mTransformsBuffer, mTransforms.data(), sizeof(Transform3D) * mTransforms.size());
 }
 
 void CodeRed::EffectPass::beginEffect(std::shared_ptr<GpuGraphicsCommandList>& commandList)
@@ -167,11 +208,11 @@ void CodeRed::EffectPass::endEffect()
 }
 
 void CodeRed::EffectPass::drawIndexed(
-	const size_t indexCount, 
-	const size_t materialIndex,
-	const size_t transformIndex,
+	const size_t indexCount,
+	const size_t instanceCount,
 	const size_t startIndexLocation,
-	const size_t baseVertexLocation)
+	const size_t baseVertexLocation,
+	const size_t startInstanceLocation)
 {
 	CODE_RED_DEBUG_THROW_IF(
 		mCommandList == nullptr,
@@ -180,8 +221,6 @@ void CodeRed::EffectPass::drawIndexed(
 
 	mCommandList->setConstant32Bits(
 		{
-			static_cast<UInt32>(materialIndex),
-			static_cast<UInt32>(transformIndex),
 			mAmbientLight.r,
 			mAmbientLight.g,
 			mAmbientLight.b,
@@ -190,10 +229,10 @@ void CodeRed::EffectPass::drawIndexed(
 
 	mCommandList->drawIndexed(
 		indexCount, 
-		1, 
+		instanceCount, 
 		startIndexLocation, 
 		baseVertexLocation,
-		0);
+		startInstanceLocation);
 }
 
 auto CodeRed::EffectPass::transform(const size_t index) const -> Transform3D

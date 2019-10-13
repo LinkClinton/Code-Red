@@ -10,6 +10,20 @@
 #define __DIRECTX12__MODE__
 #define __VULKAN__MODE__
 
+struct Sphere {
+	glm::vec3 Position = glm::vec3(0);
+	glm::vec3 Forward = glm::vec3(0, 0, 1);
+	glm::vec1 Radius = glm::vec1(1);
+
+	Sphere() = default;
+	
+	auto update(float length, const glm::vec3& limitBound) -> glm::vec3;
+
+	static void reverse(float& forward, float position, float limit);
+
+	static bool intersect(const Sphere& sphere0, const Sphere& sphere1);
+};
+
 class EffectPassDemoApp final : public Demo::DemoApp {
 public:
 	EffectPassDemoApp(
@@ -24,6 +38,8 @@ private:
 
 	void initialize();
 
+	void initializeSpheres();
+	
 	void initializeCommands();
 
 	void initializeSwapChain();
@@ -41,8 +57,10 @@ private:
 	void initializeDescriptorHeaps();
 private:
 	const size_t maxFrameResources = 2;
-	const size_t sphereCount = 1;
+	const size_t sphereCount = 300;
 
+	const glm::vec3 limitBound = glm::vec3(110, 60, 30);
+	
 	size_t mCurrentFrameIndex = 0;
 
 	std::shared_ptr<CodeRed::GpuLogicalDevice> mDevice;
@@ -63,4 +81,6 @@ private:
 	std::shared_ptr<CodeRed::GpuRenderPass> mRenderPass;
 
 	std::vector<CodeRed::Transform3D> mTransforms = std::vector<CodeRed::Transform3D>(sphereCount);
+	std::vector<CodeRed::Material> mMaterials = std::vector<CodeRed::Material>(sphereCount);
+	std::vector<Sphere> mSpheres = std::vector<Sphere>(sphereCount);
 };
