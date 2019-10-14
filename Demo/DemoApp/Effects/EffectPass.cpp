@@ -48,16 +48,32 @@ CodeRed::EffectPass::EffectPass(
 	);
 
 	if (mDevice->apiVersion() == APIVersion::DirectX12) {
-		
+#ifdef __ENABLE__DIRECTX12__
 		mEffectVertexShaderCode = ShaderCompiler::compileToCso(
 			ShaderType::Vertex, DxEffectPassVertexShaderCode, "main");
 		mEffectPixelShaderCode = ShaderCompiler::compileToCso(
 			ShaderType::Pixel, DxEffectPassPixelShaderCode, "main");
+#endif
 		
 	}else if (mDevice->apiVersion() == APIVersion::Vulkan) {
-		
+#ifdef __ENABLE__VULKAN__
+		mEffectVertexShaderCode = ShaderCompiler::compileToSpv(
+			ShaderType::Vertex, VkEffectPassVertexShaderCode);
+
+		mEffectPixelShaderCode = ShaderCompiler::compileToSpv(
+			ShaderType::Pixel, VkEffectPassPixelShaderCode
+		);
+#endif
 	}
 
+	CODE_RED_DEBUG_THROW_IF(
+		mEffectVertexShaderCode.empty() ||
+		mEffectPixelShaderCode.empty(),
+		FailedException(DebugType::Create, 
+			{ "effect pass" },
+			{ "compile effect pass shader failed."})
+	);
+	
 	mPipelineInfo->setVertexShaderState(
 		pipelineFactory->createShaderState(
 			ShaderType::Vertex,

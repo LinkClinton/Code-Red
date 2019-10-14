@@ -23,7 +23,9 @@ result = "#pragma once\n\n"
 result += "namespace CodeRed {\n"
 
 result += "\t" + CreateCharArray("Effects/Shaders/", "DxEffectPassVertex", ".hlsl") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/", "VkEffectPassVertex", ".vert") + "\n"
 result += "\t" + CreateCharArray("Effects/Shaders/", "DxEffectPassPixel", ".hlsl") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/", "VkEffectPassPixel", ".frag") + "\n"
 
 result += "\n}"
 

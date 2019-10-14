@@ -23,6 +23,8 @@
 #include "../Shared/Enum/FillMode.hpp"
 #include "../Shared/Enum/CullMode.hpp"
 
+#include "../Shared/PixelFormatSizeOf.hpp"
+
 #include "VulkanUtility.hpp"
 
 #ifdef __ENABLE__VULKAN__
@@ -365,6 +367,18 @@ auto CodeRed::Vulkan::enumConvert(const AttachmentStore store)
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
+}
+
+auto CodeRed::Vulkan::enumConvert(const PixelFormat format, const ResourceUsage usage)
+	-> vk::ImageAspectFlags
+{
+	if (enumHas(usage, ResourceUsage::DepthStencil)) {
+		if (PixelFormatSizeOf::isDepthOnly(format)) return vk::ImageAspectFlagBits::eDepth;
+
+		return vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil;
+	}
+
+	return vk::ImageAspectFlagBits::eColor;
 }
 
 auto CodeRed::Vulkan::enumConvert1(const Dimension dimension)

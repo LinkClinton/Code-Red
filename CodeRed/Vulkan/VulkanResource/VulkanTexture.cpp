@@ -1,5 +1,7 @@
+#include "../../Shared/PixelFormatSizeOf.hpp"
 #include "../VulkanLogicalDevice.hpp"
 #include "VulkanTexture.hpp"
+
 
 #ifdef __ENABLE__VULKAN__
 
@@ -51,12 +53,6 @@ CodeRed::VulkanTexture::VulkanTexture(
 
 	vkDevice->device().bindImageMemory(mImage, mMemory, 0);
 
-	auto imageAspectFlags = vk::ImageAspectFlags(0);
-
-	if (enumHas(mInfo.Usage, ResourceUsage::DepthStencil))
-		imageAspectFlags = vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil;
-	else imageAspectFlags = vk::ImageAspectFlagBits::eColor;
-	
 	viewInfo
 		.setPNext(nullptr)
 		.setFlags(vk::ImageViewCreateFlags(0))
@@ -68,7 +64,7 @@ CodeRed::VulkanTexture::VulkanTexture(
 			vk::ComponentSwizzle::eB,
 			vk::ComponentSwizzle::eA))
 		.setSubresourceRange(vk::ImageSubresourceRange(
-			imageAspectFlags,
+			enumConvert(property.PixelFormat, mInfo.Usage),
 			0, 1, 0, 1))
 		.setViewType(enumConvert1(property.Dimension));
 

@@ -21,3 +21,11 @@ auto CodeRed::PixelFormatSizeOf::get(const PixelFormat pixel_format) -> size_t {
 		throw NotSupportException(NotSupportType::Enum);
 	}
 }
+
+bool CodeRed::PixelFormatSizeOf::isDepthOnly(const PixelFormat pixelFormat)
+{
+	switch (pixelFormat) {
+	case PixelFormat::Depth32BitFloat: return true;
+	default: return false;
+	}
+}

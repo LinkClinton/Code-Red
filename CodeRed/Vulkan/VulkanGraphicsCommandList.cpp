@@ -267,9 +267,7 @@ void CodeRed::VulkanGraphicsCommandList::layoutTransition(
 		.setImage(std::static_pointer_cast<VulkanTexture>(texture)->image())
 		.setSubresourceRange(
 			vk::ImageSubresourceRange(
-				enumHas(texture->usage(), ResourceUsage::DepthStencil) ?
-				vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil :
-				vk::ImageAspectFlagBits::eColor,
+				enumConvert(texture->format(), texture->usage()),
 				0,1,0,1
 			));
 

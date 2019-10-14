@@ -91,6 +91,8 @@ namespace CodeRed {
 
 		auto enumConvert(const AttachmentStore store)->vk::AttachmentStoreOp;
 
+		auto enumConvert(const PixelFormat format, const ResourceUsage usage) -> vk::ImageAspectFlags;
+		
 		auto enumConvert1(const Dimension dimension)->vk::ImageViewType;
 
 		auto enumConvert1(const ResourceLayout layout, const ResourceType type)->vk::AccessFlags;
