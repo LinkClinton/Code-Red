@@ -23,6 +23,12 @@
     <ClInclude Include="Shaders\ShaderResources.hpp">
       <Filter>Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\GeneralEffectPass.hpp">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\PhysicallyBasedEffectPass.hpp">
+      <Filter>Effects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoApp.cpp" />
@@ -39,6 +45,12 @@
       <Filter>Shaders</Filter>
     </ClCompile>
     <ClCompile Include="Effects\EffectPass.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\GeneralEffectPass.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PhysicallyBasedEffectPass.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -58,24 +70,42 @@
     <Filter Include="Effects\Shaders">
       <UniqueIdentifier>{533376ac-8417-460f-a7b3-8e97b2ea63df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effects\Shaders\GeneralEffectPass">
+      <UniqueIdentifier>{b0e056b1-4e6e-4d17-9c08-a274f786ce28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\Shaders\PhysicallyBasedEffectPass">
+      <UniqueIdentifier>{3b223e89-f572-4cfe-896d-2e7d398c77d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\ShaderToString.py">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Effects\Shaders\VkEffectPassPixel.frag">
-      <Filter>Effects\Shaders</Filter>
-    </None>
-    <None Include="Effects\Shaders\VkEffectPassVertex.vert">
-      <Filter>Effects\Shaders</Filter>
-    </None>
+    <CopyFileToFolders Include="Shaders\ShaderToString.py" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Effects\Shaders\DxEffectPassPixel.hlsl">
-      <Filter>Effects\Shaders</Filter>
+    <FxCompile Include="Effects\Shaders\GeneralEffectPass\DxGeneralEffectPassPixel.hlsl">
+      <Filter>Effects\Shaders\GeneralEffectPass</Filter>
     </FxCompile>
-    <FxCompile Include="Effects\Shaders\DxEffectPassVertex.hlsl">
-      <Filter>Effects\Shaders</Filter>
+    <FxCompile Include="Effects\Shaders\GeneralEffectPass\DxGeneralEffectPassVertex.hlsl">
+      <Filter>Effects\Shaders\GeneralEffectPass</Filter>
     </FxCompile>
+    <FxCompile Include="Effects\Shaders\PhysicallyBasedEffectPass\DxPhysicallyBasedEffectPassPixel.hlsl">
+      <Filter>Effects\Shaders\PhysicallyBasedEffectPass</Filter>
+    </FxCompile>
+    <FxCompile Include="Effects\Shaders\PhysicallyBasedEffectPass\DxPhysicallyBasedEffectPassVertex.hlsl">
+      <Filter>Effects\Shaders\PhysicallyBasedEffectPass</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Effects\Shaders\GeneralEffectPass\VkGeneralEffectPassPixel.frag">
+      <Filter>Effects\Shaders\GeneralEffectPass</Filter>
+    </None>
+    <None Include="Effects\Shaders\GeneralEffectPass\VkGeneralEffectPassVertex.vert">
+      <Filter>Effects\Shaders\GeneralEffectPass</Filter>
+    </None>
+    <None Include="Effects\Shaders\PhysicallyBasedEffectPass\VkPhysicallyBasedEffectPassPixel.frag">
+      <Filter>Effects\Shaders\PhysicallyBasedEffectPass</Filter>
+    </None>
+    <None Include="Effects\Shaders\PhysicallyBasedEffectPass\VkPhysicallyBasedEffectPassVertex.vert">
+      <Filter>Effects\Shaders\PhysicallyBasedEffectPass</Filter>
+    </None>
   </ItemGroup>
 </Project>

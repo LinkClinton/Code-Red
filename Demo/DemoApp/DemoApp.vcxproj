@@ -205,6 +205,8 @@
     <ClInclude Include="DemoApp.hpp" />
     <ClInclude Include="Effects\EffectPass.hpp" />
     <ClInclude Include="Effects\EffectProperties.hpp" />
+    <ClInclude Include="Effects\GeneralEffectPass.hpp" />
+    <ClInclude Include="Effects\PhysicallyBasedEffectPass.hpp" />
     <ClInclude Include="Pipelines\PipelineInfo.hpp" />
     <ClInclude Include="Resources\FrameResources.hpp" />
     <ClInclude Include="Resources\ResourceHelper.hpp" />
@@ -219,6 +221,8 @@
   <ItemGroup>
     <ClCompile Include="DemoApp.cpp" />
     <ClCompile Include="Effects\EffectPass.cpp" />
+    <ClCompile Include="Effects\GeneralEffectPass.cpp" />
+    <ClCompile Include="Effects\PhysicallyBasedEffectPass.cpp" />
     <ClCompile Include="Pipelines\PipelineInfo.cpp" />
     <ClCompile Include="Resources\FrameResources.cpp" />
     <ClCompile Include="Resources\ResourceHelper.cpp" />
@@ -234,35 +238,67 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Effects\Shaders\DxEffectPassPixel.hlsl">
+    <CopyFileToFolders Include="Effects\Shaders\GeneralEffectPass\DxGeneralEffectPassPixel.hlsl">
       <FileType>Document</FileType>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="Effects\Shaders\DxEffectPassVertex.hlsl">
+    <CopyFileToFolders Include="Effects\Shaders\GeneralEffectPass\DxGeneralEffectPassVertex.hlsl">
       <FileType>Document</FileType>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Effects\Shaders\VkEffectPassPixel.frag">
+    <CopyFileToFolders Include="Effects\Shaders\GeneralEffectPass\VkGeneralEffectPassPixel.frag">
       <FileType>Document</FileType>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="Effects\Shaders\VkEffectPassVertex.vert">
+    <CopyFileToFolders Include="Effects\Shaders\GeneralEffectPass\VkGeneralEffectPassVertex.vert">
       <FileType>Document</FileType>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders/GeneralEffectPass</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Effects\Shaders\PhysicallyBasedEffectPass\DxPhysicallyBasedEffectPassPixel.hlsl">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\PhysicallyBasedEffectPass\DxPhysicallyBasedEffectPassVertex.hlsl">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Effects\Shaders\PhysicallyBasedEffectPass\VkPhysicallyBasedEffectPassPixel.frag">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\PhysicallyBasedEffectPass\VkPhysicallyBasedEffectPassVertex.vert">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/Shaders/PhysicallyBasedEffectPass</DestinationFolders>
     </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

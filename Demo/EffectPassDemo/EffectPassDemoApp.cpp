@@ -68,25 +68,7 @@ void EffectPassDemoApp::update(float delta)
 	const auto speed = 30.0f;
 	const auto length = speed * delta;
 	
-	auto effectPass = mFrameResources[mCurrentFrameIndex].get<CodeRed::EffectPass>("EffectPass");
-
-	for (size_t index = 0; index < mSpheres.size(); index++) {
-		auto& transform = mTransforms[index];
-		auto& sphere = mSpheres[index];
-
-		for (auto index1 = index + 1; index1 < mSpheres.size(); index1++) {
-			if (Sphere::intersect(sphere, mSpheres[index1]) == true) {
-				sphere.Forward = glm::normalize(sphere.Position - mSpheres[index1].Position);
-
-				break;
-			}
-		}
-		
-		const auto offset = sphere.update(length, limitBound);
-
-		transform.Transform = glm::translate(glm::mat4x4(1), glm::vec3(offset)) * transform.Transform;
-		transform.NormalTransform = glm::transpose(glm::inverse(transform.Transform));
-	}
+	auto effectPass = mFrameResources[mCurrentFrameIndex].get<EffectPass>("EffectPass");
 	
 	effectPass->setTransforms(mTransforms);
 	effectPass->setMaterials(mMaterials);
@@ -102,7 +84,7 @@ void EffectPassDemoApp::render(float delta)
 	const auto frameBuffer =
 		mFrameResources[mCurrentFrameIndex].get<CodeRed::GpuFrameBuffer>("FrameBuffer");
 	const auto effectPass =
-		mFrameResources[mCurrentFrameIndex].get<CodeRed::EffectPass>("EffectPass");
+		mFrameResources[mCurrentFrameIndex].get<EffectPass>("EffectPass");
 
 	//wait for GPU and reset the command allocator
 	mCommandQueue->waitIdle();
@@ -184,7 +166,7 @@ void EffectPassDemoApp::initializeSpheres()
 		1.0f, 1000.0f);
 
 	const auto view = glm::lookAtLH(
-		glm::vec3(0, 0, -200),
+		glm::vec3(0, 0, -100),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0));
 
@@ -196,26 +178,29 @@ void EffectPassDemoApp::initializeSpheres()
 	const std::uniform_real_distribution<float> pzRange(-limitBound.z, limitBound.z);
 	const std::uniform_real_distribution<float> dRange(0.2f, 0.75f);
 	const std::uniform_real_distribution<float> fRange(0.0005f, 0.1f);
+	const std::uniform_real_distribution<float> mRange(0.2f, 0.7f);
+	const std::uniform_real_distribution<float> rRange(0.05f, 0.3f);
+	const std::uniform_real_distribution<float> aRange(0.5f, 1.0f);
+
+	const float distance = 2.0f;
+
+	const auto startX = 0.0f - 0.5f * (columnCount * limitRadius * 2 + (columnCount - 1) * distance) + limitRadius;
+	const auto startY = 0.0f - 0.5f * (rowCount * limitRadius * 2 + (rowCount - 1) * distance) + limitRadius;
 	
 	for (size_t index = 0; index < sphereCount; index++) {
 		auto& transform = mTransforms[index];
 		auto& material = mMaterials[index];
 		auto& sphere = mSpheres[index];
 
-		sphere.Forward = glm::normalize(
-			glm::vec3(
-				pxRange(random),
-				pyRange(random),
-				pzRange(random)
-			)
-		);
-
+		const auto positionX = index % columnCount;
+		const auto positionY = index / columnCount;
+		
 		sphere.Position = glm::vec3(
-			pxRange(random),
-			pyRange(random),
-			pzRange(random)
+			startX + positionX * (limitRadius * 2 + distance),
+			startY + positionY * (limitRadius * 2 + distance),
+			0.0f
 		);
-
+	
 		sphere.Radius = glm::vec1(limitRadius);
 		
 		transform.Projection = projection;
@@ -226,9 +211,16 @@ void EffectPassDemoApp::initializeSpheres()
 
 		transform.NormalTransform = glm::transpose(glm::inverse(transform.Transform));
 
-		material.DiffuseAlbedo = glm::vec4(dRange(random), dRange(random), dRange(random), 1.0f);
-		material.FreshelR0 = glm::vec3(fRange(random), fRange(random), fRange(random));
-		material.Roughness = glm::vec1(0.3f);
+#ifdef __PBR__MODE__
+		material.DiffuseAlbedo = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
+		material.Metallic = glm::vec1(positionY * (1.0f / (rowCount - 1)));
+		material.Roughness = glm::vec1(0.1f + positionX * (0.9f / (columnCount - 1)));
+		material.AmbientOcclusion = glm::vec1(1.0f);
+#else
+		material.DiffuseAlbedo = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
+		material.FreshelR0 = glm::vec3(positionY * (1.0f / (rowCount - 1)));
+		material.Roughness = glm::vec1(0.1f + positionX * (0.9f / (columnCount - 1)));
+#endif	
 	}
 }
 
@@ -408,45 +400,43 @@ void EffectPassDemoApp::initializePipeline()
 	
 	for (auto& frameResource : mFrameResources) {
 		frameResource.set("EffectPass",
-			std::make_shared<CodeRed::EffectPass>(
+			std::make_shared<EffectPass>(
 				mDevice,
 				mRenderPass,
 				sphereCount)
 		);
 
-		auto effectPass = frameResource.get<CodeRed::EffectPass>("EffectPass");
+		auto effectPass = frameResource.get<EffectPass>("EffectPass");
+
+#ifdef __PBR__MODE__
+		const auto lightFactor = 7.0f;
+#else
+		const auto lightFactor = 2.0f;
+#endif
 		
 		effectPass->setLight(CodeRed::LightType::Directional, 0,
 			CodeRed::Light::DirectionalLight(
-				glm::vec3(0.15f),
+				glm::vec3(0.1f * lightFactor),
 				glm::vec3(0.f, -0.5f, 1.f)
 			));
 
 		effectPass->setLight(CodeRed::LightType::Directional, 1,
 			CodeRed::Light::DirectionalLight(
-				glm::vec3(0.15f),
+				glm::vec3(0.1f * lightFactor),
 				glm::vec3(0.f, +0.5f, 1.f)
 			));
-
+		
 		effectPass->setLight(CodeRed::LightType::Spot, 0,
 			CodeRed::Light::SpotLight(
-				glm::vec3(0.5f),
+				glm::vec3(0.5f * lightFactor),
 				glm::vec3(0, 0, -200),
 				glm::vec3(0, 0, 1),
 				glm::vec1(190),
 				glm::vec1(250),
 				glm::vec1(10.f)
 			));
-
-		effectPass->setLight(CodeRed::LightType::Point, 0,
-			CodeRed::Light::PointLight(
-				glm::vec3(0.5f),
-				glm::vec3(0, 0, 0),
-				glm::vec1(50.0f),
-				glm::vec1(100.0f)
-			));
 		
-		effectPass->setAmbientLight(glm::vec4(0.3f));
+		effectPass->setAmbientLight(glm::vec4(0.03f));
 		
 		effectPass->updateToGpu(mCommandAllocator, mCommandQueue);
 	}

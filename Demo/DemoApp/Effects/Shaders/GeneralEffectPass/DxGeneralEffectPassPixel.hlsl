@@ -35,6 +35,7 @@ float3 SchlickFresnel(float3 R0, float3 normal, float3 lightVector){
 
 float3 BlinnPhong(float3 lightStrength, float3 lightVector, float3 normal, float3 toEye, Material material)
 {
+	//see https://github.com/d3dcoder/d3d12book to learn more about Blinn Phong
     const float m = (1.0f - material.Roughness) * 256.0f;
     float3 halfVec = normalize(toEye + lightVector);
 

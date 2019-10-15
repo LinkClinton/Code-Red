@@ -21,10 +21,6 @@ namespace CodeRed {
 
 		virtual void setLights(const LightType type, std::vector<Light>& lights);
 		
-		virtual void setMaterial(const size_t index, const Material& material);
-
-		virtual void setMaterials(const std::vector<Material>& materials);
-		
 		virtual void setTransform(const size_t index, const Transform3D& transform);
 
 		virtual void setTransforms(const std::vector<Transform3D>& transforms);
@@ -36,10 +32,6 @@ namespace CodeRed {
 			const std::optional<std::shared_ptr<GpuDepthStencilState>>& depthStencil,
 			const std::optional<std::shared_ptr<GpuRasterizationState>>& rasterization);
 		
-		virtual void updateToGpu(
-			const std::shared_ptr<GpuCommandAllocator>& allocator,
-			const std::shared_ptr<GpuCommandQueue>& queue);
-
 		virtual void beginEffect(
 			std::shared_ptr<GpuGraphicsCommandList>& commandList);
 
@@ -52,11 +44,13 @@ namespace CodeRed {
 			const size_t baseVertexLocation = 0,
 			const size_t startInstanceLocation = 0);
 
+		virtual void updateToGpu(
+			const std::shared_ptr<GpuCommandAllocator>& allocator,
+			const std::shared_ptr<GpuCommandQueue>& queue) = 0;
+
 		auto transform(const size_t index) const -> Transform3D;
 
-		auto material(const size_t index) const -> Material;
-
-		auto light(const LightType type, const size_t index) const->Light;
+		auto light(const LightType type, const size_t index) const -> Light;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 		std::shared_ptr<GpuGraphicsCommandList> mCommandList;
@@ -64,13 +58,11 @@ namespace CodeRed {
 		std::shared_ptr<GpuDescriptorHeap> mDescriptorHeap;
 
 		std::shared_ptr<GpuBuffer> mLightsBuffer;
-		std::shared_ptr<GpuBuffer> mMaterialsBuffer;
 		std::shared_ptr<GpuBuffer> mTransformsBuffer;
 		
 		std::shared_ptr<PipelineInfo> mPipelineInfo;
 
 		std::vector<Light> mLights;
-		std::vector<Material> mMaterials;
 		std::vector<Transform3D> mTransforms;
 
 		std::vector<Byte> mEffectVertexShaderCode;

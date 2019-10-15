@@ -32,6 +32,27 @@ namespace CodeRed {
 			Roughness(roughness) {}
 	};
 
+	struct PhysicallyBasedMaterial {
+		glm::vec4 DiffuseAlbedo = glm::vec4(1.0f);
+		glm::vec1 Metallic = glm::vec1(0.0f);
+		glm::vec1 Roughness = glm::vec1(0.25f);
+		glm::vec1 AmbientOcclusion = glm::vec1(1.0f);
+
+		PhysicallyBasedMaterial() = default;
+
+		PhysicallyBasedMaterial(
+			const glm::vec4& diffuseAlbedo,
+			const glm::vec1& metallic,
+			const glm::vec1& roughness,
+			const glm::vec1& ambientOcclusion) :
+			DiffuseAlbedo(diffuseAlbedo),
+			Metallic(metallic),
+			Roughness(roughness),
+			AmbientOcclusion(ambientOcclusion) {}
+	};
+
+	using PBRMaterial = PhysicallyBasedMaterial;
+
 	struct Light {
 		glm::vec3 Strength = glm::vec3(0);
 		glm::vec1 FalloffStart = glm::vec1(0);

@@ -1,14 +1,17 @@
 #pragma once
 
-#include <Shaders/ShaderCompiler.hpp>
+#include <Effects/PhysicallyBasedEffectPass.hpp>
+#include <Effects/GeneralEffectPass.hpp>
 #include <Resources/FrameResources.hpp>
 #include <Resources/ResourceHelper.hpp>
 #include <Pipelines/PipelineInfo.hpp>
-#include <Effects/EffectPass.hpp>
+#include <Shaders/ShaderCompiler.hpp>
+
 #include <DemoApp.hpp>
 
 #define __DIRECTX12__MODE__
 #define __VULKAN__MODE__
+#define __PBR__MODE__
 
 struct Sphere {
 	glm::vec3 Position = glm::vec3(0);
@@ -56,8 +59,17 @@ private:
 
 	void initializeDescriptorHeaps();
 private:
+#ifdef __PBR__MODE__
+	using EffectPass = CodeRed::PhysicallyBasedEffectPass;
+	using Material = CodeRed::PhysicallyBasedMaterial;
+#else
+	using EffectPass = CodeRed::GeneralEffectPass;
+	using Material = CodeRed::Material;
+#endif
 	const size_t maxFrameResources = 2;
-	const size_t sphereCount = 300;
+	const size_t rowCount = 6;
+	const size_t columnCount = 10;
+	const size_t sphereCount = rowCount * columnCount;
 
 	const glm::vec3 limitBound = glm::vec3(110, 60, 30);
 	
@@ -81,6 +93,7 @@ private:
 	std::shared_ptr<CodeRed::GpuRenderPass> mRenderPass;
 
 	std::vector<CodeRed::Transform3D> mTransforms = std::vector<CodeRed::Transform3D>(sphereCount);
-	std::vector<CodeRed::Material> mMaterials = std::vector<CodeRed::Material>(sphereCount);
+
+	std::vector<Material> mMaterials = std::vector<Material>(sphereCount);
 	std::vector<Sphere> mSpheres = std::vector<Sphere>(sphereCount);
 };

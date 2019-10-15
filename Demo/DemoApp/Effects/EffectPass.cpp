@@ -1,14 +1,12 @@
 #include "EffectPass.hpp"
 
 #include "../Resources/ResourceHelper.hpp"
-#include "../Shaders/ShaderResources.hpp"
-#include "../Shaders/ShaderCompiler.hpp"
 
 CodeRed::EffectPass::EffectPass(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::shared_ptr<GpuRenderPass>& renderPass,
 	const size_t maxInstance) :
-	mDevice(device), mLights(MAX_ALL_LIGHTS), mMaterials(maxInstance), mTransforms(maxInstance)
+	mDevice(device), mLights(MAX_ALL_LIGHTS), mTransforms(maxInstance)
 {
 	CODE_RED_DEBUG_THROW_IF(
 		device == nullptr,
@@ -19,9 +17,9 @@ CodeRed::EffectPass::EffectPass(
 		renderPass == nullptr,
 		InvalidException<GpuRenderPass>({ "render pass" })
 	);
-	
+
 	mPipelineInfo = std::make_shared<PipelineInfo>(mDevice);
-	
+
 	auto pipelineFactory = mPipelineInfo->pipelineFactory();
 	
 	mPipelineInfo->setRenderPass(renderPass);
@@ -46,63 +44,10 @@ CodeRed::EffectPass::EffectPass(
 			Constant32Bits(4, 3, 0)
 		)
 	);
-
-	if (mDevice->apiVersion() == APIVersion::DirectX12) {
-#ifdef __ENABLE__DIRECTX12__
-		mEffectVertexShaderCode = ShaderCompiler::compileToCso(
-			ShaderType::Vertex, DxEffectPassVertexShaderCode, "main");
-		mEffectPixelShaderCode = ShaderCompiler::compileToCso(
-			ShaderType::Pixel, DxEffectPassPixelShaderCode, "main");
-#endif
-		
-	}else if (mDevice->apiVersion() == APIVersion::Vulkan) {
-#ifdef __ENABLE__VULKAN__
-		mEffectVertexShaderCode = ShaderCompiler::compileToSpv(
-			ShaderType::Vertex, VkEffectPassVertexShaderCode);
-
-		mEffectPixelShaderCode = ShaderCompiler::compileToSpv(
-			ShaderType::Pixel, VkEffectPassPixelShaderCode
-		);
-#endif
-	}
-
-	CODE_RED_DEBUG_THROW_IF(
-		mEffectVertexShaderCode.empty() ||
-		mEffectPixelShaderCode.empty(),
-		FailedException(DebugType::Create, 
-			{ "effect pass" },
-			{ "compile effect pass shader failed."})
-	);
 	
-	mPipelineInfo->setVertexShaderState(
-		pipelineFactory->createShaderState(
-			ShaderType::Vertex,
-			mEffectVertexShaderCode,
-			"main"
-		)
-	);
-
-	mPipelineInfo->setPixelShaderState(
-		pipelineFactory->createShaderState(
-			ShaderType::Pixel,
-			mEffectPixelShaderCode,
-			"main"
-		)
-	);
-	
-	mPipelineInfo->updateState();
-
 	mLightsBuffer = mDevice->createBuffer(
 		ResourceInfo::ConstantBuffer(
 			sizeof(Light) * MAX_ALL_LIGHTS,
-			MemoryHeap::Upload
-		)
-	);
-
-	mMaterialsBuffer = mDevice->createBuffer(
-		ResourceInfo::GroupBuffer(
-			sizeof(Material),
-			mMaterials.size(),
 			MemoryHeap::Upload
 		)
 	);
@@ -114,14 +59,6 @@ CodeRed::EffectPass::EffectPass(
 			MemoryHeap::Upload
 		)
 	);
-
-	mDescriptorHeap = mDevice->createDescriptorHeap(
-		mPipelineInfo->resourceLayout()
-	);
-
-	mDescriptorHeap->bindBuffer(mLightsBuffer, 0);
-	mDescriptorHeap->bindBuffer(mMaterialsBuffer, 1);
-	mDescriptorHeap->bindBuffer(mTransformsBuffer, 2);
 }
 
 void CodeRed::EffectPass::setLight(const LightType type, const size_t index, const Light& light)
@@ -137,21 +74,6 @@ void CodeRed::EffectPass::setLights(const LightType type, std::vector<Light>& li
 	);
 	
 	std::copy(lights.begin(), lights.end(), mLights.begin() + static_cast<size_t>(type) * MAX_LIGHTS_PER_TYPE);
-}
-
-void CodeRed::EffectPass::setMaterial(const size_t index, const Material& material)
-{
-	mMaterials[index] = material;
-}
-
-void CodeRed::EffectPass::setMaterials(const std::vector<Material>& materials)
-{
-	CODE_RED_DEBUG_THROW_IF(
-		materials.size() > mMaterials.size(),
-		InvalidException<size_t>({ "size of materials" })
-	);
-	
-	std::copy(materials.begin(), materials.end(), mMaterials.begin());
 }
 
 void CodeRed::EffectPass::setTransform(const size_t index, const Transform3D& transform)
@@ -200,15 +122,6 @@ void CodeRed::EffectPass::updateState(
 	);
 }
 
-void CodeRed::EffectPass::updateToGpu(
-	const std::shared_ptr<GpuCommandAllocator>& allocator,
-	const std::shared_ptr<GpuCommandQueue>& queue)
-{
-	ResourceHelper::updateBuffer(mLightsBuffer, mLights.data(), sizeof(Light) * mLights.size());
-	ResourceHelper::updateBuffer(mMaterialsBuffer, mMaterials.data(), sizeof(Material) * mMaterials.size());
-	ResourceHelper::updateBuffer(mTransformsBuffer, mTransforms.data(), sizeof(Transform3D) * mTransforms.size());
-}
-
 void CodeRed::EffectPass::beginEffect(std::shared_ptr<GpuGraphicsCommandList>& commandList)
 {
 	mCommandList = commandList;
@@ -224,10 +137,10 @@ void CodeRed::EffectPass::endEffect()
 }
 
 void CodeRed::EffectPass::drawIndexed(
-	const size_t indexCount,
+	const size_t indexCount, 
 	const size_t instanceCount,
-	const size_t startIndexLocation,
-	const size_t baseVertexLocation,
+	const size_t startIndexLocation, 
+	const size_t baseVertexLocation, 
 	const size_t startInstanceLocation)
 {
 	CODE_RED_DEBUG_THROW_IF(
@@ -244,9 +157,9 @@ void CodeRed::EffectPass::drawIndexed(
 		});
 
 	mCommandList->drawIndexed(
-		indexCount, 
-		instanceCount, 
-		startIndexLocation, 
+		indexCount,
+		instanceCount,
+		startIndexLocation,
 		baseVertexLocation,
 		startInstanceLocation);
 }
@@ -254,11 +167,6 @@ void CodeRed::EffectPass::drawIndexed(
 auto CodeRed::EffectPass::transform(const size_t index) const -> Transform3D
 {
 	return mTransforms[index];
-}
-
-auto CodeRed::EffectPass::material(const size_t index) const -> Material
-{
-	return mMaterials[index];
 }
 
 auto CodeRed::EffectPass::light(const LightType type, const size_t index) const -> Light

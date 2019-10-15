@@ -22,10 +22,15 @@ result = "#pragma once\n\n"
 
 result += "namespace CodeRed {\n"
 
-result += "\t" + CreateCharArray("Effects/Shaders/", "DxEffectPassVertex", ".hlsl") + "\n"
-result += "\t" + CreateCharArray("Effects/Shaders/", "VkEffectPassVertex", ".vert") + "\n"
-result += "\t" + CreateCharArray("Effects/Shaders/", "DxEffectPassPixel", ".hlsl") + "\n"
-result += "\t" + CreateCharArray("Effects/Shaders/", "VkEffectPassPixel", ".frag") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/GeneralEffectPass/", "DxGeneralEffectPassVertex", ".hlsl") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/GeneralEffectPass/", "VkGeneralEffectPassVertex", ".vert") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/GeneralEffectPass/", "DxGeneralEffectPassPixel", ".hlsl") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/GeneralEffectPass/", "VkGeneralEffectPassPixel", ".frag") + "\n"
+
+result += "\t" + CreateCharArray("Effects/Shaders/PhysicallyBasedEffectPass/", "DxPhysicallyBasedEffectPassVertex", ".hlsl") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/PhysicallyBasedEffectPass/", "VkPhysicallyBasedEffectPassVertex", ".vert") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/PhysicallyBasedEffectPass/", "DxPhysicallyBasedEffectPassPixel", ".hlsl") + "\n"
+result += "\t" + CreateCharArray("Effects/Shaders/PhysicallyBasedEffectPass/", "VkPhysicallyBasedEffectPassPixel", ".frag") + "\n"
 
 result += "\n}"
 
