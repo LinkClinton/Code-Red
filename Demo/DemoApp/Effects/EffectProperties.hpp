@@ -59,6 +59,7 @@ namespace CodeRed {
 	struct PhysicallyBasedTextureMaterial {
 		std::shared_ptr<GpuTexture> DiffuseAlbedo;
 		std::shared_ptr<GpuTexture> Metallic;
+		std::shared_ptr<GpuTexture> Normal;
 		std::shared_ptr<GpuTexture> Roughness;
 		std::shared_ptr<GpuTexture> AmbientOcclusion;
 
@@ -67,10 +68,12 @@ namespace CodeRed {
 		PhysicallyBasedTextureMaterial(
 			const std::shared_ptr<GpuTexture>& diffuseAlbedo,
 			const std::shared_ptr<GpuTexture>& metallic,
+			const std::shared_ptr<GpuTexture>& normal,
 			const std::shared_ptr<GpuTexture>& roughness,
 			const std::shared_ptr<GpuTexture>& ambientOcclusion) :
 			DiffuseAlbedo(diffuseAlbedo),
 			Metallic(metallic),
+			Normal(normal),
 			Roughness(roughness),
 			AmbientOcclusion(ambientOcclusion) {}
 	};
@@ -144,16 +147,19 @@ namespace CodeRed {
 		glm::mat4x4 Projection = glm::mat4x4(1);
 		glm::mat4x4 Transform = glm::mat4x4(1);
 		glm::mat4x4 View = glm::mat4x4(1);
+		glm::vec4 EyePosition = glm::vec4(1);
 
 		Transform3D() = default;
 
 		Transform3D(
 			const glm::mat4x4& projection,
 			const glm::mat4x4& transform,
-			const glm::mat4x4& view) :
+			const glm::mat4x4& view,
+			const glm::vec4& eyePosition) :
 			NormalTransform(glm::transpose(glm::inverse(transform))),
 			Projection(projection),
 			Transform(transform),
-			View(view) {}
+			View(view),
+			EyePosition(eyePosition) {}
 	};
 }

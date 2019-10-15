@@ -6,6 +6,7 @@ struct Transform3D
     matrix Projection;
     matrix Transform;
     matrix View;
+	float4 EyePosition;
 };
 
 struct Output

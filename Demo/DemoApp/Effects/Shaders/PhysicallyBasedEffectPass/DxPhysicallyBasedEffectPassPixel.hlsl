@@ -25,6 +25,16 @@ struct Light {
     float SpotPower; 
 };
 
+struct Transform3D
+{
+	matrix NormalTransform;
+	matrix Projection;
+	matrix Transform;
+	matrix View;
+	float4 EyePosition;
+};
+
+
 float3 mix(float3 x, float3 y, float3 a)
 {
     return x * (1.0 - a) + y * a;
@@ -186,17 +196,36 @@ struct Index
 	uint  materialType;
 };
 
+StructuredBuffer<Transform3D> transforms : register(t2, space0);
 StructuredBuffer<Material> materials : register(t1, space0);
 
 ConstantBuffer<Lights> lights : register(b0, space0);
-ConstantBuffer<Index> index : register(b8, space0);
+ConstantBuffer<Index> index : register(b9, space0);
 
 Texture2D diffuseAlbedoTexture : register(t3, space0);
 Texture2D metallicTexture : register(t4, space0);
-Texture2D roughnessTexture : register(t5, space0);
-Texture2D ambientOcclusionTexture : register(t6, space0);
+Texture2D normalTexture : register(t5, space0);
+Texture2D roughnessTexture : register(t6, space0);
+Texture2D ambientOcclusionTexture : register(t7, space0);
 
-SamplerState materialSampler : register(s7, space0);
+SamplerState materialSampler : register(s8, space0);
+
+float3 getNormalFromTexture(float3 normal, float2 texcoord, float3 position)
+{
+    float3 tangentNormal = normalTexture.Sample(materialSampler, texcoord).xyz * 2.0 - 1.0;
+    
+    float3 Q1 = ddx(position);
+    float3 Q2 = ddy(position);
+    float2 st1 = ddx(texcoord);
+    float2 st2 = ddy(texcoord);
+
+    float3 N = normalize(normal);
+    float3 T = normalize(Q1 * st2.y - Q2 * st1.y);
+    float3 B = -normalize(cross(N, T));
+    float3x3 TBN = transpose(float3x3(T, B, N));
+
+    return normalize(mul(TBN, tangentNormal));
+}
 
 float4 main(
     float3 viewPosition : POSITION0,
@@ -206,7 +235,7 @@ float4 main(
 	float2 texcoord : TEXCOORD,
 	uint   instanceId : SV_INSTANCEID) : SV_TARGET
 {
-    float3 toEye = normalize(float3(0.0f, 0.0f, 0.0f) - viewPosition);
+    float3 toEye = normalize(transforms[instanceId].EyePosition.xyz - position);
 	
 	Material material;
 	
@@ -228,7 +257,7 @@ float4 main(
 		index.ambientLightAlpha) * material.DiffuseAlbedo * material.AmbientOcclusion;
 
     float4 color = ComputeLighting(lights.instance, material,
-        position, normal, toEye) + ambient;
+        position, getNormalFromTexture(normal, texcoord, position), toEye) + ambient;
 
     color = color / (color + 1.0f);
     color = pow(color, 1.0 / 2.2);

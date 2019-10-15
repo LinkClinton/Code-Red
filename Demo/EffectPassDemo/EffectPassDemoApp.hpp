@@ -38,6 +38,15 @@ public:
 
 	~EffectPassDemoApp();
 private:
+#ifdef __PBR__MODE__
+	using TextureMaterial = CodeRed::PhysicallyBasedTextureMaterial;
+	using EffectPass = CodeRed::PhysicallyBasedEffectPass;
+	using Material = CodeRed::PhysicallyBasedMaterial;
+#else
+	using EffectPass = CodeRed::GeneralEffectPass;
+	using Material = CodeRed::Material;
+#endif
+private:
 	void update(float delta) override;
 	void render(float delta) override;
 
@@ -60,18 +69,12 @@ private:
 	void initializePipeline();
 
 	void initializeDescriptorHeaps();
+
+	auto getTextureMaterial(const std::string& name) -> TextureMaterial;
 private:
-#ifdef __PBR__MODE__
-	using TextureMaterial = CodeRed::PhysicallyBasedTextureMaterial;
-	using EffectPass = CodeRed::PhysicallyBasedEffectPass;
-	using Material = CodeRed::PhysicallyBasedMaterial;
-#else
-	using EffectPass = CodeRed::GeneralEffectPass;
-	using Material = CodeRed::Material;
-#endif
 	const size_t maxFrameResources = 2;
-	const size_t rowCount = 6;
-	const size_t columnCount = 10;
+	const size_t rowCount = 5;
+	const size_t columnCount = 9;
 	const size_t sphereCount = rowCount * columnCount;
 
 	const glm::vec3 limitBound = glm::vec3(110, 60, 30);

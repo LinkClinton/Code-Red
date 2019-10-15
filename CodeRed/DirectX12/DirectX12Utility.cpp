@@ -352,6 +352,7 @@ auto CodeRed::DirectX12::enumConvert(const PrimitiveTopology topology)
 {
 	switch (topology) {
 	case PrimitiveTopology::TriangleList: return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	case PrimitiveTopology::TriangleStrip: return D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

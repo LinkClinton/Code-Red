@@ -47,12 +47,13 @@ CodeRed::EffectPass::EffectPass(
 				ResourceLayoutElement(ResourceType::Texture, 3, 0),
 				ResourceLayoutElement(ResourceType::Texture, 4, 0),
 				ResourceLayoutElement(ResourceType::Texture, 5, 0),
-				ResourceLayoutElement(ResourceType::Texture, 6, 0)
+				ResourceLayoutElement(ResourceType::Texture, 6, 0),
+				ResourceLayoutElement(ResourceType::Texture, 7, 0)
 			},
 			{
-				SamplerLayoutElement(mSampler, 7, 0)
+				SamplerLayoutElement(mSampler, 8, 0)
 			},
-			Constant32Bits(5, 8, 0)
+			Constant32Bits(5, 9, 0)
 		)
 	);
 	

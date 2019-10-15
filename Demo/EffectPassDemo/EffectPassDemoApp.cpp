@@ -65,10 +65,19 @@ void EffectPassDemoApp::update(float delta)
 	//user can update some resource or state in this function
 	//such as, update buffer, copy texture and so on
 	//the function call is before render()
-	const auto speed = 30.0f;
-	const auto length = speed * delta;
-	
+
 	auto effectPass = mFrameResources[mCurrentFrameIndex].get<EffectPass>("EffectPass");
+
+	for (size_t index = 0; index < mTransforms.size(); index++) {
+		const auto speed = glm::two_pi<float>() * 0.10f;
+		const auto angle = delta * speed;
+
+		auto& transform = mTransforms[index];
+
+		transform.Transform = glm::rotate(transform.Transform, angle, glm::vec3(0, 1, 0));
+		transform.NormalTransform = glm::transpose(glm::inverse(transform.Transform));
+
+	}
 	
 	effectPass->setTransforms(mTransforms);
 	effectPass->setMaterials(mMaterials);
@@ -169,8 +178,10 @@ void EffectPassDemoApp::initializeSpheres()
 		static_cast<float>(height()),
 		1.0f, 1000.0f);
 
+	const auto eyePosition = glm::vec4(0, 0, -80, 0);
+	
 	const auto view = glm::lookAtLH(
-		glm::vec3(0, 0, -100),
+		glm::vec3(eyePosition),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0));
 
@@ -206,7 +217,8 @@ void EffectPassDemoApp::initializeSpheres()
 		);
 	
 		sphere.Radius = glm::vec1(limitRadius);
-		
+
+		transform.EyePosition = eyePosition;
 		transform.Projection = projection;
 		transform.View = view;
 
@@ -395,61 +407,6 @@ void EffectPassDemoApp::initializeSamplers()
 void EffectPassDemoApp::initializeTextures()
 {
 	//we initialize textures in this
-	TextureMaterial synthRubberMaterial;
-	TextureMaterial brokenDownConcrete2Material;
-	TextureMaterial plasticpattern1Material;
-
-	/*synthRubberMaterial.DiffuseAlbedo = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/synth-rubber/albedo.png"
-	);
-
-	synthRubberMaterial.Metallic = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/synth-rubber/metalness.png"
-	);
-
-	synthRubberMaterial.Roughness = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/synth-rubber/roughness.png"
-	);
-
-	synthRubberMaterial.AmbientOcclusion = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/synth-rubber/ao.png"
-	);*/
-
-	/*brokenDownConcrete2Material.DiffuseAlbedo = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/broken_down_concrete2/albedo.png"
-	);
-
-	brokenDownConcrete2Material.Metallic = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/broken_down_concrete2/metalness.png"
-	);
-
-	brokenDownConcrete2Material.Roughness = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/broken_down_concrete2/roughness.png"
-	);
-
-	brokenDownConcrete2Material.AmbientOcclusion = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/broken_down_concrete2/ao.png"
-	);*/
-
-	plasticpattern1Material.DiffuseAlbedo = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/plasticpattern1/albedo.png"
-	);
-
-	plasticpattern1Material.Metallic = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/plasticpattern1/metalness.png"
-	);
-
-	plasticpattern1Material.Roughness = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/plasticpattern1/roughness.png"
-	);
-
-	plasticpattern1Material.AmbientOcclusion = CodeRed::ResourceHelper::loadTexture(
-		mDevice, mCommandAllocator, mCommandQueue, "./Resources/plasticpattern1/ao.png"
-	);
-	
-	mTextureMaterials.insert({ "synth-rubber", synthRubberMaterial });
-	mTextureMaterials.insert({ "broken_down_concrete2", brokenDownConcrete2Material });
-	mTextureMaterials.insert({ "plasticpattern1", plasticpattern1Material });
 }
 
 void EffectPassDemoApp::initializePipeline()
@@ -483,31 +440,19 @@ void EffectPassDemoApp::initializePipeline()
 		const auto lightFactor = 2.0f;
 #endif
 		
-		effectPass->setLight(CodeRed::LightType::Directional, 0,
-			CodeRed::Light::DirectionalLight(
-				glm::vec3(0.1f * lightFactor),
-				glm::vec3(0.f, -0.5f, 1.f)
-			));
-
-		effectPass->setLight(CodeRed::LightType::Directional, 1,
-			CodeRed::Light::DirectionalLight(
-				glm::vec3(0.1f * lightFactor),
-				glm::vec3(0.f, +0.5f, 1.f)
-			));
-		
 		effectPass->setLight(CodeRed::LightType::Spot, 0,
 			CodeRed::Light::SpotLight(
 				glm::vec3(0.5f * lightFactor),
 				glm::vec3(0, 0, -200),
 				glm::vec3(0, 0, 1),
-				glm::vec1(190),
+				glm::vec1(150),
 				glm::vec1(250),
 				glm::vec1(10.f)
 			));
 		
 		effectPass->setAmbientLight(glm::vec4(0.03f));
 
-		effectPass->setTextureMaterial(mTextureMaterials["plasticpattern1"]);
+		effectPass->setTextureMaterial(getTextureMaterial("plasticpattern1"));
 		
 		effectPass->updateToGpu(mCommandAllocator, mCommandQueue);
 	}
@@ -517,5 +462,35 @@ void EffectPassDemoApp::initializeDescriptorHeaps()
 {
 	//we initialize descriptor heap in this
 	
+}
+
+auto EffectPassDemoApp::getTextureMaterial(const std::string& name) -> TextureMaterial
+{
+	if (mTextureMaterials.find(name) != mTextureMaterials.end()) return mTextureMaterials[name];
+
+	TextureMaterial material;
+
+	material.DiffuseAlbedo = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/" + name + "/albedo.png"
+	);
+
+	material.Metallic = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/" + name + "/metalness.png"
+	);
+
+	material.Normal = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/" + name + "/normal.png");
+
+	material.Roughness = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/" + name + "/roughness.png"
+	);
+
+	material.AmbientOcclusion = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/" + name + "/ao.png"
+	);
+
+	mTextureMaterials.insert({ name, material });
+
+	return material;
 }
 

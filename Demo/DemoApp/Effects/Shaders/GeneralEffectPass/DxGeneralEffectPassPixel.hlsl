@@ -137,7 +137,7 @@ struct Index
 StructuredBuffer<Material> materials : register(t1, space0);
 
 ConstantBuffer<Lights> lights : register(b0, space0);
-ConstantBuffer<Index> index : register(b8, space0);
+ConstantBuffer<Index> index : register(b9, space0);
 
 float4 main(
     float3 viewPosition : POSITION0,

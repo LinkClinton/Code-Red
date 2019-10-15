@@ -86,8 +86,9 @@ void CodeRed::PhysicallyBasedEffectPass::setTextureMaterial(const PhysicallyBase
 
 	mDescriptorHeap->bindTexture(material.DiffuseAlbedo, 3);
 	mDescriptorHeap->bindTexture(material.Metallic, 4);
-	mDescriptorHeap->bindTexture(material.Roughness, 5);
-	mDescriptorHeap->bindTexture(material.AmbientOcclusion, 6);
+	mDescriptorHeap->bindTexture(material.Normal, 5);
+	mDescriptorHeap->bindTexture(material.Roughness, 6);
+	mDescriptorHeap->bindTexture(material.AmbientOcclusion, 7);
 }
 
 void CodeRed::PhysicallyBasedEffectPass::setMaterials(const std::vector<PhysicallyBasedMaterial>& materials)

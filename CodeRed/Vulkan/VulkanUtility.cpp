@@ -297,6 +297,7 @@ auto CodeRed::Vulkan::enumConvert(const PrimitiveTopology topology)
 {
 	switch (topology) {
 	case PrimitiveTopology::TriangleList: return vk::PrimitiveTopology::eTriangleList;
+	case PrimitiveTopology::TriangleStrip: return vk::PrimitiveTopology::eTriangleStrip;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
