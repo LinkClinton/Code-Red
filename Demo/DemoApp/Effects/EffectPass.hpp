@@ -44,6 +44,13 @@ namespace CodeRed {
 			const size_t baseVertexLocation = 0,
 			const size_t startInstanceLocation = 0);
 
+		virtual void drawIndexedWithTextureMaterial(
+			const size_t indexCount,
+			const size_t instanceCount,
+			const size_t startIndexLocation = 0,
+			const size_t baseVertexLocation = 0,
+			const size_t startInstanceLocation = 0);
+		
 		virtual void updateToGpu(
 			const std::shared_ptr<GpuCommandAllocator>& allocator,
 			const std::shared_ptr<GpuCommandQueue>& queue) = 0;
@@ -59,6 +66,8 @@ namespace CodeRed {
 
 		std::shared_ptr<GpuBuffer> mLightsBuffer;
 		std::shared_ptr<GpuBuffer> mTransformsBuffer;
+
+		std::shared_ptr<GpuSampler> mSampler;
 		
 		std::shared_ptr<PipelineInfo> mPipelineInfo;
 

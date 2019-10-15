@@ -18,6 +18,10 @@ CodeRed::EffectPass::EffectPass(
 		InvalidException<GpuRenderPass>({ "render pass" })
 	);
 
+	mSampler = mDevice->createSampler(
+		SamplerInfo(16)
+	);
+	
 	mPipelineInfo = std::make_shared<PipelineInfo>(mDevice);
 
 	auto pipelineFactory = mPipelineInfo->pipelineFactory();
@@ -27,7 +31,8 @@ CodeRed::EffectPass::EffectPass(
 		pipelineFactory->createInputAssemblyState(
 			{
 				InputLayoutElement("POSITION", PixelFormat::RedGreenBlue32BitFloat),
-				InputLayoutElement("NORMAL", PixelFormat::RedGreenBlue32BitFloat)
+				InputLayoutElement("NORMAL", PixelFormat::RedGreenBlue32BitFloat),
+				InputLayoutElement("TEXCOORD", PixelFormat::RedGreen32BitFloat)
 			},
 			PrimitiveTopology::TriangleList
 		)
@@ -38,10 +43,16 @@ CodeRed::EffectPass::EffectPass(
 			{
 				ResourceLayoutElement(ResourceType::Buffer, 0, 0),
 				ResourceLayoutElement(ResourceType::GroupBuffer, 1, 0),
-				ResourceLayoutElement(ResourceType::GroupBuffer, 2, 0)
+				ResourceLayoutElement(ResourceType::GroupBuffer, 2, 0),
+				ResourceLayoutElement(ResourceType::Texture, 3, 0),
+				ResourceLayoutElement(ResourceType::Texture, 4, 0),
+				ResourceLayoutElement(ResourceType::Texture, 5, 0),
+				ResourceLayoutElement(ResourceType::Texture, 6, 0)
 			},
-			{},
-			Constant32Bits(4, 3, 0)
+			{
+				SamplerLayoutElement(mSampler, 7, 0)
+			},
+			Constant32Bits(5, 8, 0)
 		)
 	);
 	
@@ -153,7 +164,37 @@ void CodeRed::EffectPass::drawIndexed(
 			mAmbientLight.r,
 			mAmbientLight.g,
 			mAmbientLight.b,
-			mAmbientLight.a
+			mAmbientLight.a,
+			static_cast<UInt32>(MaterialType::Buffer)
+		});
+
+	mCommandList->drawIndexed(
+		indexCount,
+		instanceCount,
+		startIndexLocation,
+		baseVertexLocation,
+		startInstanceLocation);
+}
+
+void CodeRed::EffectPass::drawIndexedWithTextureMaterial(
+	const size_t indexCount, 
+	const size_t instanceCount,
+	const size_t startIndexLocation, 
+	const size_t baseVertexLocation, 
+	const size_t startInstanceLocation)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		mCommandList == nullptr,
+		Exception(DebugReport::makeError("please begin effect before drawing."))
+	);
+
+	mCommandList->setConstant32Bits(
+		{
+			mAmbientLight.r,
+			mAmbientLight.g,
+			mAmbientLight.b,
+			mAmbientLight.a,
+			static_cast<UInt32>(MaterialType::Texture)
 		});
 
 	mCommandList->drawIndexed(

@@ -2,6 +2,10 @@
 
 #define MAX_LIGHTS_PER_TYPE 16
 #define MAX_ALL_LIGHTS MAX_LIGHTS_PER_TYPE * 3
+
+#define MATERIAL_BUFFER 0
+#define MATERIAL_TEXTURE 1
+
 #define PI 3.14159265359
 
 struct Material
@@ -179,33 +183,55 @@ struct Index
 	float ambientLightGreen;
 	float ambientLightBlue;
 	float ambientLightAlpha;
+	uint  materialType;
 };
 
 StructuredBuffer<Material> materials : register(t1, space0);
 
 ConstantBuffer<Lights> lights : register(b0, space0);
-ConstantBuffer<Index> index : register(b3, space0);
+ConstantBuffer<Index> index : register(b8, space0);
+
+Texture2D diffuseAlbedoTexture : register(t3, space0);
+Texture2D metallicTexture : register(t4, space0);
+Texture2D roughnessTexture : register(t5, space0);
+Texture2D ambientOcclusionTexture : register(t6, space0);
+
+SamplerState materialSampler : register(s7, space0);
 
 float4 main(
     float3 viewPosition : POSITION0,
     float4 sVPosition : SV_POSITION,
     float3 position : POSITION1,
     float3 normal : NORMAL,
+	float2 texcoord : TEXCOORD,
 	uint   instanceId : SV_INSTANCEID) : SV_TARGET
 {
     float3 toEye = normalize(float3(0.0f, 0.0f, 0.0f) - viewPosition);
-    
+	
+	Material material;
+	
+	if (index.materialType == MATERIAL_BUFFER)
+		material = materials[instanceId];
+	else
+	{
+		material.DiffuseAlbedo = diffuseAlbedoTexture.Sample(materialSampler, texcoord);
+        material.Metallic = metallicTexture.Sample(materialSampler, texcoord).r;
+        material.Roughness = roughnessTexture.Sample(materialSampler, texcoord).r;
+        material.AmbientOcclusion = ambientOcclusionTexture.Sample(materialSampler, texcoord).r;
+	}
+
+
 	float4 ambient = float4(
 		index.ambientLightRed, 
 		index.ambientLightGreen, 
 		index.ambientLightBlue, 
-		index.ambientLightAlpha) * materials[instanceId].DiffuseAlbedo * materials[instanceId].AmbientOcclusion;
+		index.ambientLightAlpha) * material.DiffuseAlbedo * material.AmbientOcclusion;
 
-    float4 color = ComputeLighting(lights.instance, materials[instanceId],
+    float4 color = ComputeLighting(lights.instance, material,
         position, normal, toEye) + ambient;
 
     color = color / (color + 1.0f);
     color = pow(color, 1.0 / 2.2);
 
-	return float4(color.xyz, materials[instanceId].DiffuseAlbedo.a);
+	return float4(color.xyz, material.DiffuseAlbedo.a);
 }

@@ -54,7 +54,8 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
 			enumConvert(mInfo.Layout),
-			&clearValue,
+			enumHas(mInfo.Usage, ResourceUsage::RenderTarget) || 
+			enumHas(mInfo.Usage, ResourceUsage::DepthStencil) ? &clearValue : nullptr,
 			IID_PPV_ARGS(&mTexture)),
 		FailedException(DebugType::Create, { "ID3D12Resource of Texture" }));
 }

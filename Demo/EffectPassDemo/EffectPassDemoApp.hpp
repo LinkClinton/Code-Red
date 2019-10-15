@@ -11,6 +11,8 @@
 
 #define __DIRECTX12__MODE__
 #define __VULKAN__MODE__
+
+#define __TEXTURE__MATERIAL__MODE__
 #define __PBR__MODE__
 
 struct Sphere {
@@ -60,6 +62,7 @@ private:
 	void initializeDescriptorHeaps();
 private:
 #ifdef __PBR__MODE__
+	using TextureMaterial = CodeRed::PhysicallyBasedTextureMaterial;
 	using EffectPass = CodeRed::PhysicallyBasedEffectPass;
 	using Material = CodeRed::PhysicallyBasedMaterial;
 #else
@@ -93,7 +96,9 @@ private:
 	std::shared_ptr<CodeRed::GpuRenderPass> mRenderPass;
 
 	std::vector<CodeRed::Transform3D> mTransforms = std::vector<CodeRed::Transform3D>(sphereCount);
-
+	
 	std::vector<Material> mMaterials = std::vector<Material>(sphereCount);
 	std::vector<Sphere> mSpheres = std::vector<Sphere>(sphereCount);
+
+	std::unordered_map<std::string, TextureMaterial> mTextureMaterials;
 };

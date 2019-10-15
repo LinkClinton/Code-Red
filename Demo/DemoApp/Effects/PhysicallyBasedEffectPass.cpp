@@ -80,6 +80,16 @@ void CodeRed::PhysicallyBasedEffectPass::setMaterial(const size_t index, const P
 	mMaterials[index] = material;
 }
 
+void CodeRed::PhysicallyBasedEffectPass::setTextureMaterial(const PhysicallyBasedTextureMaterial& material)
+{
+	mTextureMaterial = material;
+
+	mDescriptorHeap->bindTexture(material.DiffuseAlbedo, 3);
+	mDescriptorHeap->bindTexture(material.Metallic, 4);
+	mDescriptorHeap->bindTexture(material.Roughness, 5);
+	mDescriptorHeap->bindTexture(material.AmbientOcclusion, 6);
+}
+
 void CodeRed::PhysicallyBasedEffectPass::setMaterials(const std::vector<PhysicallyBasedMaterial>& materials)
 {
 	CODE_RED_DEBUG_THROW_IF(

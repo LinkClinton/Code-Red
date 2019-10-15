@@ -110,8 +110,12 @@ void EffectPassDemoApp::render(float delta)
 
 	//add some draw commands
 	//the draw commands must between the render pass
+#ifdef __TEXTURE__MATERIAL__MODE__
+	effectPass->drawIndexedWithTextureMaterial(mIndexBuffer->count(), sphereCount);
+#else
 	effectPass->drawIndexed(mIndexBuffer->count(), sphereCount);
-	
+#endif
+
 	mCommandList->endRenderPass();
 
 	effectPass->endEffect();
@@ -279,13 +283,20 @@ void EffectPassDemoApp::initializeBuffers()
 	struct Vertex {
 		glm::vec3 Position;
 		glm::vec3 Normal;
+		glm::vec2 Texcoord;
 	};
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned> indices;
 
-	const Vertex topVertex = { {0.0f, +radius, 0.0f},{0.0f, +1.0f, 0.0f} };
-	const Vertex bottomVertex = { {0.0f, -radius, 0.0f},{0.0f, -1.0f, 0.0f} };
+	const Vertex topVertex = {
+		{0.0f, +radius, 0.0f},
+		{0.0f, +1.0f, 0.0f},
+		{0.0f,0.0f} };
+	const Vertex bottomVertex = {
+		{0.0f, -radius, 0.0f},
+		{0.0f, -1.0f, 0.0f},
+		{0.0f,1.0f} };
 
 	vertices.push_back(topVertex);
 
@@ -306,6 +317,9 @@ void EffectPassDemoApp::initializeBuffers()
 
 			vertex.Normal = glm::normalize(vertex.Position);
 
+			vertex.Texcoord.x = theta / glm::two_pi<float>();
+			vertex.Texcoord.y = phi / glm::pi<float>();
+			
 			vertices.push_back(vertex);
 		}
 	}
@@ -381,6 +395,61 @@ void EffectPassDemoApp::initializeSamplers()
 void EffectPassDemoApp::initializeTextures()
 {
 	//we initialize textures in this
+	TextureMaterial synthRubberMaterial;
+	TextureMaterial brokenDownConcrete2Material;
+	TextureMaterial plasticpattern1Material;
+
+	/*synthRubberMaterial.DiffuseAlbedo = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/synth-rubber/albedo.png"
+	);
+
+	synthRubberMaterial.Metallic = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/synth-rubber/metalness.png"
+	);
+
+	synthRubberMaterial.Roughness = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/synth-rubber/roughness.png"
+	);
+
+	synthRubberMaterial.AmbientOcclusion = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/synth-rubber/ao.png"
+	);*/
+
+	/*brokenDownConcrete2Material.DiffuseAlbedo = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/broken_down_concrete2/albedo.png"
+	);
+
+	brokenDownConcrete2Material.Metallic = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/broken_down_concrete2/metalness.png"
+	);
+
+	brokenDownConcrete2Material.Roughness = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/broken_down_concrete2/roughness.png"
+	);
+
+	brokenDownConcrete2Material.AmbientOcclusion = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/broken_down_concrete2/ao.png"
+	);*/
+
+	plasticpattern1Material.DiffuseAlbedo = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/plasticpattern1/albedo.png"
+	);
+
+	plasticpattern1Material.Metallic = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/plasticpattern1/metalness.png"
+	);
+
+	plasticpattern1Material.Roughness = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/plasticpattern1/roughness.png"
+	);
+
+	plasticpattern1Material.AmbientOcclusion = CodeRed::ResourceHelper::loadTexture(
+		mDevice, mCommandAllocator, mCommandQueue, "./Resources/plasticpattern1/ao.png"
+	);
+	
+	mTextureMaterials.insert({ "synth-rubber", synthRubberMaterial });
+	mTextureMaterials.insert({ "broken_down_concrete2", brokenDownConcrete2Material });
+	mTextureMaterials.insert({ "plasticpattern1", plasticpattern1Material });
 }
 
 void EffectPassDemoApp::initializePipeline()
@@ -409,7 +478,7 @@ void EffectPassDemoApp::initializePipeline()
 		auto effectPass = frameResource.get<EffectPass>("EffectPass");
 
 #ifdef __PBR__MODE__
-		const auto lightFactor = 7.0f;
+		const auto lightFactor = 6.0f;
 #else
 		const auto lightFactor = 2.0f;
 #endif
@@ -437,6 +506,8 @@ void EffectPassDemoApp::initializePipeline()
 			));
 		
 		effectPass->setAmbientLight(glm::vec4(0.03f));
+
+		effectPass->setTextureMaterial(mTextureMaterials["plasticpattern1"]);
 		
 		effectPass->updateToGpu(mCommandAllocator, mCommandQueue);
 	}

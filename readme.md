@@ -37,14 +37,17 @@ The Windows SDK you can install with Visual Studio.
 
 ```git
 ./vcpkg.exe install glm:x64-windows
-./vcpkg.exe install glm:x86-windows
 ```
 
 - [shaderc](https://github.com/google/shaderc) : A tool to compile glsl to spv(demo only).
 
 ```git
 ./vcpkg.exe install shaderc:x64-windows
-./vcpkg.exe install shaderc:x86-windows
+```
+- [stb](https://github.com/nothings/stb) : we use stb_image to load texture(demo only).
+
+```git
+./vcpkg.exe install stb:x64-windows
 ```
 
 ## Demo

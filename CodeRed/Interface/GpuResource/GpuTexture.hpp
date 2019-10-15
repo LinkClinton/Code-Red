@@ -22,23 +22,9 @@ namespace CodeRed {
 
 		auto width() const noexcept -> size_t { return std::get<TextureProperty>(mInfo.Property).Width; }
 
-		auto height() const -> size_t {
-			//only for texture2D or texture3D
-			CODE_RED_DEBUG_THROW_IF(
-				dimension() == Dimension::Dimension1D,
-				NotSupportException(NotSupportType::Method));
+		auto height() const -> size_t { return std::get<TextureProperty>(mInfo.Property).Height; }
 
-			return std::get<TextureProperty>(mInfo.Property).Height;
-		}
-
-		auto depth() const -> size_t {
-			//only for texture3D
-			CODE_RED_DEBUG_THROW_IF(
-				dimension() != Dimension::Dimension3D, 
-				NotSupportException(NotSupportType::Method));
-
-			return std::get<TextureProperty>(mInfo.Property).Depth;
-		}
+		auto depth() const -> size_t { return std::get<TextureProperty>(mInfo.Property).Depth; }
 	};
 
 }

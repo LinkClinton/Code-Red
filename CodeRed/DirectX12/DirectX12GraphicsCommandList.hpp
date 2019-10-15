@@ -76,11 +76,19 @@ namespace CodeRed {
 		void copyTexture(
 			const std::shared_ptr<GpuTexture>& source, 
 			const std::shared_ptr<GpuTexture>& destination, 
-			const Extent3D<UInt32>& region, 
+			const Extent3D<size_t>& region, 
 			const size_t x = 0, 
 			const size_t y = 0,
 			const size_t z = 0) override;
 
+		void copyMemoryToBuffer(
+			const std::shared_ptr<GpuBuffer>& destination, 
+			const void* data) override;
+
+		void copyMemoryToTexture(
+			const std::shared_ptr<GpuTexture>& destination,
+			const void* data) override;
+		
 		void draw(
 			const size_t vertex_count, 
 			const size_t instance_count = 1, 
@@ -96,7 +104,7 @@ namespace CodeRed {
 		
 		auto commandList() const noexcept -> WRL::ComPtr<ID3D12GraphicsCommandList> { return mGraphicsCommandList; }
 	private:
-		static D3D12_RESOURCE_BARRIER resource_barrier(
+		static D3D12_RESOURCE_BARRIER resourceBarrier(
 			ID3D12Resource* pResource,
 			const D3D12_RESOURCE_STATES before,
 			const D3D12_RESOURCE_STATES after);
@@ -105,9 +113,13 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& texture,
 			const std::optional<Attachment>& attachment,
 			const bool final = false);
+
+		auto allocateCopyCacheBuffer(const size_t size) -> WRL::ComPtr<ID3D12Resource>;
 	private:
 		WRL::ComPtr<ID3D12GraphicsCommandList> mGraphicsCommandList;
 
+		std::vector<WRL::ComPtr<ID3D12Resource>> mCopyCacheBuffers;
+		
 		std::shared_ptr<DirectX12ResourceLayout> mResourceLayout;
 		std::shared_ptr<DirectX12FrameBuffer> mFrameBuffer;
 		std::shared_ptr<DirectX12RenderPass> mRenderPass;

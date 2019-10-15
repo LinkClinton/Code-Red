@@ -15,17 +15,21 @@ namespace CodeRed {
 
 		void setMaterial(const size_t index, const PhysicallyBasedMaterial& material);
 
+		void setTextureMaterial(const PhysicallyBasedTextureMaterial& material);
+		
 		void setMaterials(const std::vector<PhysicallyBasedMaterial>& materials);
 
 		void updateToGpu(
 			const std::shared_ptr<GpuCommandAllocator>& allocator,
 			const std::shared_ptr<GpuCommandQueue>& queue) override;
-
+		
 		auto material(const size_t index) const -> PhysicallyBasedMaterial { return mMaterials[index]; }
 	private:
 		std::shared_ptr<GpuBuffer> mMaterialsBuffer;
 
 		std::vector<PhysicallyBasedMaterial> mMaterials;
+
+		PhysicallyBasedTextureMaterial mTextureMaterial;
 	};
 	
 }

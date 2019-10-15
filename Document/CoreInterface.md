@@ -160,6 +160,8 @@ Most member functions are same usage as DirectX12 and Vulkan. And some functions
 - `layoutTransition()` : tranlate the layout of resource.
 - `copyBuffer()` : copy buffer from source to destination.
 - `copyTexture()` : copy texture from source to destination.
+- `copyMemoryToBuffer()` : copy the memory to buffer.
+- `copyMemoryToTexture()` : copy the memory to texture.
 - `draw()` : draw current vertex buffer.
 - `draw()` : draw current vertex buffer with index buffer.
 

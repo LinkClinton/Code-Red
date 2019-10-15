@@ -332,7 +332,7 @@ void CodeRed::VulkanGraphicsCommandList::copyBuffer(
 void CodeRed::VulkanGraphicsCommandList::copyTexture(
 	const std::shared_ptr<GpuTexture>& source,
 	const std::shared_ptr<GpuTexture>& destination,
-	const Extent3D<UInt32>& region,
+	const Extent3D<size_t>& region,
 	const size_t x,
 	const size_t y,
 	const size_t z)
@@ -352,18 +352,14 @@ void CodeRed::VulkanGraphicsCommandList::copyTexture(
 			static_cast<int32_t>(region.Top),
 			static_cast<int32_t>(region.Front)))
 		.setSrcSubresource(vk::ImageSubresourceLayers(
-			enumHas(source->usage(), ResourceUsage::DepthStencil) ?
-			vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil :
-			vk::ImageAspectFlagBits::eColor,
+			enumConvert(destination->format(), destination->usage()),
 			0, 0, 1))
 		.setDstOffset(vk::Offset3D(
 			static_cast<int32_t>(x),
 			static_cast<int32_t>(y),
 			static_cast<int32_t>(z)))
 		.setDstSubresource(vk::ImageSubresourceLayers(
-			enumHas(destination->usage(), ResourceUsage::DepthStencil) ?
-			vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil :
-			vk::ImageAspectFlagBits::eColor,
+			enumConvert(destination->format(), destination->usage()),
 			0, 0, 1));
 
 	mCommandBuffer.copyImage(

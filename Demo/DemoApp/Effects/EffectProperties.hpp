@@ -15,6 +15,11 @@ namespace CodeRed {
 		Point = 1,
 		Spot = 2
 	};
+
+	enum class MaterialType : UInt32 {
+		Buffer = 0,
+		Texture = 1
+	};
 	
 	struct Material {
 		glm::vec4 DiffuseAlbedo = glm::vec4(1.0f);
@@ -51,7 +56,27 @@ namespace CodeRed {
 			AmbientOcclusion(ambientOcclusion) {}
 	};
 
+	struct PhysicallyBasedTextureMaterial {
+		std::shared_ptr<GpuTexture> DiffuseAlbedo;
+		std::shared_ptr<GpuTexture> Metallic;
+		std::shared_ptr<GpuTexture> Roughness;
+		std::shared_ptr<GpuTexture> AmbientOcclusion;
+
+		PhysicallyBasedTextureMaterial() = default;
+
+		PhysicallyBasedTextureMaterial(
+			const std::shared_ptr<GpuTexture>& diffuseAlbedo,
+			const std::shared_ptr<GpuTexture>& metallic,
+			const std::shared_ptr<GpuTexture>& roughness,
+			const std::shared_ptr<GpuTexture>& ambientOcclusion) :
+			DiffuseAlbedo(diffuseAlbedo),
+			Metallic(metallic),
+			Roughness(roughness),
+			AmbientOcclusion(ambientOcclusion) {}
+	};
+
 	using PBRMaterial = PhysicallyBasedMaterial;
+	using PBRTextureMaterial = PhysicallyBasedTextureMaterial;
 
 	struct Light {
 		glm::vec3 Strength = glm::vec3(0);

@@ -93,10 +93,18 @@ namespace CodeRed {
 		virtual void copyTexture(
 			const std::shared_ptr<GpuTexture>& source,
 			const std::shared_ptr<GpuTexture>& destination,
-			const Extent3D<UInt32> &region,
+			const Extent3D<size_t> &region,
 			const size_t x = 0,
 			const size_t y = 0,
 			const size_t z = 0) = 0;
+
+		virtual void copyMemoryToBuffer(
+			const std::shared_ptr<GpuBuffer>& destination,
+			const void* data) = 0;
+		
+		virtual void copyMemoryToTexture(
+			const std::shared_ptr<GpuTexture>& destination,
+			const void* data) = 0;
 		
 		virtual void draw(
 			const size_t vertex_count,
