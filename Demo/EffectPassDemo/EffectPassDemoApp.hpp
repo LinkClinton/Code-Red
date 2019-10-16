@@ -12,21 +12,17 @@
 #define __DIRECTX12__MODE__
 #define __VULKAN__MODE__
 
-#define __TEXTURE__MATERIAL__MODE__
 #define __PBR__MODE__
+
+#ifdef __PBR__MODE__
+#define __TEXTURE__MATERIAL__MODE__
+#endif
 
 struct Sphere {
 	glm::vec3 Position = glm::vec3(0);
-	glm::vec3 Forward = glm::vec3(0, 0, 1);
 	glm::vec1 Radius = glm::vec1(1);
 
 	Sphere() = default;
-	
-	auto update(float length, const glm::vec3& limitBound) -> glm::vec3;
-
-	static void reverse(float& forward, float position, float limit);
-
-	static bool intersect(const Sphere& sphere0, const Sphere& sphere1);
 };
 
 class EffectPassDemoApp final : public Demo::DemoApp {
@@ -38,8 +34,8 @@ public:
 
 	~EffectPassDemoApp();
 private:
-#ifdef __PBR__MODE__
 	using TextureMaterial = CodeRed::PhysicallyBasedTextureMaterial;
+#ifdef __PBR__MODE__
 	using EffectPass = CodeRed::PhysicallyBasedEffectPass;
 	using Material = CodeRed::PhysicallyBasedMaterial;
 #else
@@ -73,12 +69,15 @@ private:
 	auto getTextureMaterial(const std::string& name) -> TextureMaterial;
 private:
 	const size_t maxFrameResources = 2;
-	const size_t rowCount = 5;
+#ifdef __TEXTURE__MATERIAL__MODE__
+	const size_t rowCount = 1;
+	const size_t columnCount = 1;
+#else
+	const size_t rowCount = 6;
 	const size_t columnCount = 9;
+#endif
 	const size_t sphereCount = rowCount * columnCount;
 
-	const glm::vec3 limitBound = glm::vec3(110, 60, 30);
-	
 	size_t mCurrentFrameIndex = 0;
 
 	std::shared_ptr<CodeRed::GpuLogicalDevice> mDevice;

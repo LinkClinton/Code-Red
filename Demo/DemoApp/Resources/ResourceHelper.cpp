@@ -82,14 +82,19 @@ void CodeRed::ResourceHelper::updateTexture(
 	auto commandList = device->createGraphicsCommandList(allocator);
 	auto commandQueue = queue;
 
-	const auto oldLayout = texture->layout();
+	auto oldLayout = texture->layout();
 
+	CODE_RED_TRY_EXECUTE(
+		oldLayout == ResourceLayout::Undefined,
+		oldLayout = ResourceLayout::GeneralRead
+	);
+	
 	commandList->beginRecording();
 
 	commandList->layoutTransition(texture, ResourceLayout::CopyDestination);
 
 	commandList->copyMemoryToTexture(texture, data);
-	
+
 	commandList->layoutTransition(texture, oldLayout);
 
 	commandList->endRecording();

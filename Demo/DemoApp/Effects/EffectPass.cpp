@@ -19,7 +19,10 @@ CodeRed::EffectPass::EffectPass(
 	);
 
 	mSampler = mDevice->createSampler(
-		SamplerInfo(16)
+		SamplerInfo(16,
+			AddressMode::Repeat,
+			AddressMode::Repeat,
+			AddressMode::Repeat)
 	);
 	
 	mPipelineInfo = std::make_shared<PipelineInfo>(mDevice);
@@ -32,7 +35,8 @@ CodeRed::EffectPass::EffectPass(
 			{
 				InputLayoutElement("POSITION", PixelFormat::RedGreenBlue32BitFloat),
 				InputLayoutElement("NORMAL", PixelFormat::RedGreenBlue32BitFloat),
-				InputLayoutElement("TEXCOORD", PixelFormat::RedGreen32BitFloat)
+				InputLayoutElement("TEXCOORD", PixelFormat::RedGreen32BitFloat),
+				InputLayoutElement("TANGENT", PixelFormat::RedGreenBlue32BitFloat)
 			},
 			PrimitiveTopology::TriangleList
 		)

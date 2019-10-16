@@ -21,6 +21,15 @@ struct Light {
     float SpotPower; 
 };
 
+struct Transform3D
+{
+    mat4 NormalTransform;
+    mat4 Projection;
+    mat4 Transform;
+    mat4 View;
+    vec4 EyePosition;
+};
+
 float CalcAttenuation(float d, float falloffStart, float falloffEnd)
 {
     return clamp((falloffEnd - d) / (falloffEnd - falloffStart), 0, 1);
@@ -123,6 +132,7 @@ vec4 ComputeLighting(Light lights[MAX_ALL_LIGHTS], Material material, vec3 posit
     return vec4(result.xyz, material.DiffuseAlbedo.a);
 }
 
+
 layout (set = 0, binding = 0) uniform Lights
 {
     Light instance[MAX_ALL_LIGHTS];
@@ -132,6 +142,11 @@ layout (set = 0, binding = 1) buffer Materials
 {
     Material instance[];
 } materials;
+
+layout (set = 0, binding = 2) buffer Transform
+{
+    Transform3D instance[];
+} transforms;
 
 layout (push_constant) uniform Index
 {
@@ -144,13 +159,15 @@ layout (push_constant) uniform Index
 layout (location = 0) in vec3 viewPosition;
 layout (location = 1) in vec3 position;
 layout (location = 2) in vec3 normal;
-layout (location = 3) in flat uint instanceId;
+layout (location = 3) in vec2 texcoord;
+layout (location = 4) in vec3 tangent;
+layout (location = 5) in flat uint instanceId;
 
 layout (location = 0) out vec4 outColor;
 
 void main()
 {
-    vec3 toEye = normalize(vec3(0.0f, 0.0f, 0.0f) - viewPosition);
+    vec3 toEye = normalize(transforms.instance[instanceId].EyePosition.xyz - viewPosition);
     
 	vec4 ambient = vec4(
 		index.ambientLightRed, 

@@ -14,6 +14,7 @@ struct Material
 	float  Metallic;
 	float  Roughness;
 	float  AmbientOcclusion;
+    float  Unused;
 };
 
 struct Light {
@@ -101,9 +102,9 @@ float3 CookTorranceBRDF(Material material, float3 radiance, float3 lightVector, 
     kD = kD * (1.0 - material.Metallic);
 
     float3 numerator = NDF * G * F;
-    float denominator = 4.0 * max(dot(normal, toEye), 0.0) * max(dot(normal, lightVector), 0.0);
+    float denominator = 4.0 * max(dot(normal, toEye), 0.0) * max(dot(normal, lightVector), 0.0) + 0.001;
 
-    return (kD * material.DiffuseAlbedo.xyz / PI + numerator / max(denominator, 0.001)) * radiance;
+    return (kD * material.DiffuseAlbedo.xyz / PI + numerator / denominator) * radiance;
 }
 
 float3 ComputeDirectionalLight(Light light, Material material, float3 normal, float3 toEye, float3 F0)
@@ -210,21 +211,18 @@ Texture2D ambientOcclusionTexture : register(t7, space0);
 
 SamplerState materialSampler : register(s8, space0);
 
-float3 getNormalFromTexture(float3 normal, float2 texcoord, float3 position)
+float3 getNormalFromTexture(float3 normal, float2 texcoord, float3 tangent)
 {
+    if (index.materialType == MATERIAL_BUFFER) return normal;
+
     float3 tangentNormal = normalTexture.Sample(materialSampler, texcoord).xyz * 2.0 - 1.0;
     
-    float3 Q1 = ddx(position);
-    float3 Q2 = ddy(position);
-    float2 st1 = ddx(texcoord);
-    float2 st2 = ddy(texcoord);
-
     float3 N = normalize(normal);
-    float3 T = normalize(Q1 * st2.y - Q2 * st1.y);
-    float3 B = -normalize(cross(N, T));
-    float3x3 TBN = transpose(float3x3(T, B, N));
+    float3 T = normalize(tangent - dot(tangent, N) * N);
+    float3 B = cross(N, T);
+    float3x3 TBN = float3x3(T, B, N);
 
-    return normalize(mul(TBN, tangentNormal));
+    return normalize(mul(tangentNormal, TBN));
 }
 
 float4 main(
@@ -233,6 +231,7 @@ float4 main(
     float3 position : POSITION1,
     float3 normal : NORMAL,
 	float2 texcoord : TEXCOORD,
+    float3 tangent : TANGENT,
 	uint   instanceId : SV_INSTANCEID) : SV_TARGET
 {
     float3 toEye = normalize(transforms[instanceId].EyePosition.xyz - position);
@@ -243,7 +242,7 @@ float4 main(
 		material = materials[instanceId];
 	else
 	{
-		material.DiffuseAlbedo = diffuseAlbedoTexture.Sample(materialSampler, texcoord);
+		material.DiffuseAlbedo = pow(diffuseAlbedoTexture.Sample(materialSampler, texcoord), 2.2);
         material.Metallic = metallicTexture.Sample(materialSampler, texcoord).r;
         material.Roughness = roughnessTexture.Sample(materialSampler, texcoord).r;
         material.AmbientOcclusion = ambientOcclusionTexture.Sample(materialSampler, texcoord).r;
@@ -257,7 +256,7 @@ float4 main(
 		index.ambientLightAlpha) * material.DiffuseAlbedo * material.AmbientOcclusion;
 
     float4 color = ComputeLighting(lights.instance, material,
-        position, getNormalFromTexture(normal, texcoord, position), toEye) + ambient;
+        position, getNormalFromTexture(normal, texcoord, tangent), toEye) + ambient;
 
     color = color / (color + 1.0f);
     color = pow(color, 1.0 / 2.2);

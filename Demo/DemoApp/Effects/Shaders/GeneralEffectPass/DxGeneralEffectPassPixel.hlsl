@@ -19,6 +19,15 @@ struct Light {
     float SpotPower; 
 };
 
+struct Transform3D
+{
+	matrix NormalTransform;
+	matrix Projection;
+	matrix Transform;
+	matrix View;
+	float4 EyePosition;
+};
+
 float CalcAttenuation(float d, float falloffStart, float falloffEnd)
 {
     return saturate((falloffEnd - d) / (falloffEnd - falloffStart));
@@ -134,19 +143,24 @@ struct Index
 	float ambientLightAlpha;
 };
 
+StructuredBuffer<Transform3D> transforms : register(t2, space0);
 StructuredBuffer<Material> materials : register(t1, space0);
 
 ConstantBuffer<Lights> lights : register(b0, space0);
 ConstantBuffer<Index> index : register(b9, space0);
+
+SamplerState materialSampler : register(s8, space0);
 
 float4 main(
     float3 viewPosition : POSITION0,
     float4 sVPosition : SV_POSITION,
     float3 position : POSITION1,
     float3 normal : NORMAL,
+	float2 texcoord : TEXCOORD,
+    float3 tangent : TANGENT,
 	uint   instanceId : SV_INSTANCEID) : SV_TARGET
 {
-    float3 toEye = normalize(float3(0.0f, 0.0f, 0.0f) - viewPosition);
+    float3 toEye = normalize(transforms[instanceId].EyePosition.xyz - position);
     
 	float4 ambient = float4(
 		index.ambientLightRed, 

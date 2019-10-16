@@ -2,36 +2,6 @@
 
 #include <random>
 
-auto Sphere::update(float length, const glm::vec3& limitBound) -> glm::vec3
-{
-	reverse(Forward.x, Position.x, limitBound.x);
-	reverse(Forward.y, Position.y, limitBound.y);
-	reverse(Forward.z, Position.z, limitBound.z);
-
-	const auto offset = Forward * length;
-
-	Position = Position + offset;
-	
-	return offset;
-}
-
-void Sphere::reverse(float& forward, float position, float limit)
-{
-	CODE_RED_TRY_EXECUTE(
-		position >= limit || position <= -limit,
-		forward = -forward
-	);
-}
-
-bool Sphere::intersect(const Sphere& sphere0, const Sphere& sphere1)
-{
-	const auto distance = glm::distance(sphere0.Position, sphere1.Position);
-	const auto radius = sphere0.Radius.x + sphere1.Radius.x;
-
-	if (distance <= radius) return true;
-	return false;
-}
-
 EffectPassDemoApp::EffectPassDemoApp(
 	const std::string& name,
 	const size_t width,
@@ -69,7 +39,7 @@ void EffectPassDemoApp::update(float delta)
 	auto effectPass = mFrameResources[mCurrentFrameIndex].get<EffectPass>("EffectPass");
 
 	for (size_t index = 0; index < mTransforms.size(); index++) {
-		const auto speed = glm::two_pi<float>() * 0.10f;
+		const auto speed = glm::pi<float>() * 0.00f;
 		const auto angle = delta * speed;
 
 		auto& transform = mTransforms[index];
@@ -178,7 +148,11 @@ void EffectPassDemoApp::initializeSpheres()
 		static_cast<float>(height()),
 		1.0f, 1000.0f);
 
-	const auto eyePosition = glm::vec4(0, 0, -80, 0);
+#ifdef __TEXTURE__MATERIAL__MODE__
+	const auto eyePosition = glm::vec4(0, 0, -20, 0);
+#else
+	const auto eyePosition = glm::vec4(0, 0, -100, 0);
+#endif
 	
 	const auto view = glm::lookAtLH(
 		glm::vec3(eyePosition),
@@ -188,9 +162,6 @@ void EffectPassDemoApp::initializeSpheres()
 	const auto limitRadius = 5.0f;
 
 	std::default_random_engine random(0);
-	const std::uniform_real_distribution<float> pxRange(-limitBound.x, limitBound.x);
-	const std::uniform_real_distribution<float> pyRange(-limitBound.y, limitBound.y);
-	const std::uniform_real_distribution<float> pzRange(-limitBound.z, limitBound.z);
 	const std::uniform_real_distribution<float> dRange(0.2f, 0.75f);
 	const std::uniform_real_distribution<float> fRange(0.0005f, 0.1f);
 	const std::uniform_real_distribution<float> mRange(0.2f, 0.7f);
@@ -224,7 +195,7 @@ void EffectPassDemoApp::initializeSpheres()
 
 		transform.Transform = glm::translate(transform.Transform, sphere.Position);
 		transform.Transform = glm::scale(transform.Transform, glm::vec3(sphere.Radius));
-
+		
 		transform.NormalTransform = glm::transpose(glm::inverse(transform.Transform));
 
 #ifdef __PBR__MODE__
@@ -289,13 +260,14 @@ void EffectPassDemoApp::initializeBuffers()
 	//the buffers in the frame resource are created in this, too.
 
 	const float radius = 1.0f;
-	const size_t sliceCount = 30;
-	const size_t stackCount = 30;
+	const size_t sliceCount = 64;
+	const size_t stackCount = 64;
 
 	struct Vertex {
 		glm::vec3 Position;
 		glm::vec3 Normal;
 		glm::vec2 Texcoord;
+		glm::vec3 Tangent;
 	};
 
 	std::vector<Vertex> vertices;
@@ -327,10 +299,16 @@ void EffectPassDemoApp::initializeBuffers()
 			vertex.Position.y = radius * glm::cos(phi);
 			vertex.Position.z = radius * glm::sin(phi) * glm::sin(theta);
 
+			vertex.Tangent.x = -radius * glm::sin(phi) * glm::sin(theta);
+			vertex.Tangent.y = 0.0f;
+			vertex.Tangent.z = +radius * glm::sin(phi) * glm::cos(theta);
+
+			vertex.Tangent = glm::normalize(vertex.Tangent);
+			
 			vertex.Normal = glm::normalize(vertex.Position);
 
-			vertex.Texcoord.x = theta / glm::two_pi<float>();
-			vertex.Texcoord.y = phi / glm::pi<float>();
+			vertex.Texcoord.x = theta / glm::two_pi<float>() * 4;
+			vertex.Texcoord.y = phi / glm::pi<float>() * 2;
 			
 			vertices.push_back(vertex);
 		}
@@ -420,7 +398,7 @@ void EffectPassDemoApp::initializePipeline()
 		CodeRed::Attachment::DepthStencil(mDepthBuffer->format())
 	);
 
-	mRenderPass->setClear(CodeRed::ClearValue(0.0f, 0.0f, 0.0f, 0.0f));
+	mRenderPass->setClear(CodeRed::ClearValue(0.27f, 0.27f, 0.27f, 1.0f));
 
 	auto pipelineFactory = mDevice->createPipelineFactory();
 	
@@ -435,24 +413,24 @@ void EffectPassDemoApp::initializePipeline()
 		auto effectPass = frameResource.get<EffectPass>("EffectPass");
 
 #ifdef __PBR__MODE__
-		const auto lightFactor = 6.0f;
+		const auto lightFactor = 2.0f;
 #else
 		const auto lightFactor = 2.0f;
 #endif
-		
-		effectPass->setLight(CodeRed::LightType::Spot, 0,
-			CodeRed::Light::SpotLight(
-				glm::vec3(0.5f * lightFactor),
-				glm::vec3(0, 0, -200),
-				glm::vec3(0, 0, 1),
-				glm::vec1(150),
-				glm::vec1(250),
-				glm::vec1(10.f)
-			));
-		
-		effectPass->setAmbientLight(glm::vec4(0.03f));
 
-		effectPass->setTextureMaterial(getTextureMaterial("plasticpattern1"));
+		effectPass->setLight(CodeRed::LightType::Point, 0,
+			CodeRed::Light::PointLight(
+				glm::vec3(0.5f * lightFactor),
+				glm::vec3(0, 0, -150),
+				glm::vec1(200),
+				glm::vec1(300)
+			));
+
+		effectPass->setAmbientLight(glm::vec4(0.2f));
+
+#ifdef __TEXTURE__MATERIAL__MODE__
+		effectPass->setTextureMaterial(getTextureMaterial("wornpaintedcement"));
+#endif
 		
 		effectPass->updateToGpu(mCommandAllocator, mCommandQueue);
 	}

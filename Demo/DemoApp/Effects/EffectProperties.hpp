@@ -42,6 +42,7 @@ namespace CodeRed {
 		glm::vec1 Metallic = glm::vec1(0.0f);
 		glm::vec1 Roughness = glm::vec1(0.25f);
 		glm::vec1 AmbientOcclusion = glm::vec1(1.0f);
+		glm::vec1 Unused = glm::vec1(0.0f);
 
 		PhysicallyBasedMaterial() = default;
 
