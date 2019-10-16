@@ -45,8 +45,6 @@ void CodeRed::DirectX12GraphicsCommandList::beginRecording()
 	
 	mGraphicsCommandList->ClearState(nullptr);
 
-	mCopyCacheBuffers.clear();
-	
 	mResourceLayout.reset();
 }
 
@@ -369,76 +367,41 @@ void CodeRed::DirectX12GraphicsCommandList::copyMemoryToBuffer(
 	const std::shared_ptr<GpuBuffer>& destination,
 	const void* data)
 {
-	auto buffer = allocateCopyCacheBuffer(destination->size());
+	const auto dxAllocator = std::static_pointer_cast<DirectX12CommandAllocator>(mAllocator);
 
-	void* dstMemory = nullptr;
+	const auto buffer = dxAllocator->allocateCopyCacheBuffer(destination->size());
 
-	buffer->Map(0, nullptr, &dstMemory);
-	std::memcpy(dstMemory, data, destination->size());
-	buffer->Unmap(0, nullptr);
-
-	mGraphicsCommandList->CopyBufferRegion(
-		std::static_pointer_cast<DirectX12Buffer>(destination)->buffer().Get(),
-		0, buffer.Get(), 0,
-		static_cast<UINT64>(destination->size())
-	);
+	const auto memory = buffer->mapMemory();
+	std::memcpy(memory, data, destination->size());
+	buffer->unmapMemory();
+	
+	copyBuffer(buffer, destination, destination->size(), 0, 0);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
 	const std::shared_ptr<GpuTexture>& destination,
 	const void* data)
 {
-	D3D12_TEXTURE_COPY_LOCATION src;
-	D3D12_TEXTURE_COPY_LOCATION dst;
+	const auto dxAllocator = std::static_pointer_cast<DirectX12CommandAllocator>(mAllocator);
 
-	D3D12_SUBRESOURCE_FOOTPRINT footPrint = {};
+	const auto texture = dxAllocator->allocateCopyCacheTexture(
+		std::get<TextureProperty>(destination->info().Property));
+	const auto dxTexture = std::static_pointer_cast<DirectX12Texture>(texture);
 
-	footPrint.Format = enumConvert(destination->format());
-	footPrint.Width = static_cast<UINT>(destination->width());
-	footPrint.Height = static_cast<UINT>(destination->height());
-	footPrint.Depth = static_cast<UINT>(destination->depth());
-	footPrint.RowPitch = static_cast<UINT>(destination->width() * PixelFormatSizeOf::get(destination->format()));
-
-	if (footPrint.RowPitch % D3D12_TEXTURE_DATA_PITCH_ALIGNMENT != 0)
-		footPrint.RowPitch =
-		footPrint.RowPitch + D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - (footPrint.RowPitch % D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
-
-	auto buffer = allocateCopyCacheBuffer(static_cast<size_t>(footPrint.RowPitch)* footPrint.Height* footPrint.Depth);
-
-	void* mappedMemory = nullptr;
-
-	buffer->Map(0, nullptr, &mappedMemory);
-
-	const auto dstMemory = static_cast<Byte*>(mappedMemory);
-	const auto srcMemory = static_cast<const Byte*>(data);
+	const auto rowPitch = PixelFormatSizeOf::get(texture->format()) * texture->width();
+	const auto depthPitch = rowPitch * texture->height();
 	
-	const auto srcRowPitch = destination->width() * PixelFormatSizeOf::get(destination->format());
-	const auto srcDepthPitch = destination->height() * srcRowPitch;
+	dxTexture->texture()->WriteToSubresource(0, nullptr, data,
+		static_cast<UINT>(rowPitch),
+		static_cast<UINT>(depthPitch));
 
-	const auto dstRowPitch = static_cast<size_t>(footPrint.RowPitch);
-	const auto dstDepthPitch = destination->height() * dstRowPitch;
-
-	for (size_t y = 0; y < footPrint.Height; y++) {
-		for (size_t z = 0; z < footPrint.Depth; z++) {
-			std::memcpy(
-				dstMemory + z * dstDepthPitch + y * dstRowPitch,
-				srcMemory + z * srcDepthPitch + y * srcRowPitch,
-				srcRowPitch);
-		}
-	}
-
-	buffer->Unmap(0, nullptr);
-
-	src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-	src.pResource = buffer.Get();
-	src.PlacedFootprint.Footprint = footPrint;
-	src.PlacedFootprint.Offset = 0;
-
-	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-	dst.pResource = std::static_pointer_cast<DirectX12Texture>(destination)->texture().Get();
-	dst.SubresourceIndex = 0;
-
-	mGraphicsCommandList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+	copyTexture(texture, destination,
+		Extent3D<size_t>(
+			0, 0, 0,
+			texture->width(),
+			texture->height(),
+			texture->depth()
+			), 0, 0, 0);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::draw(
@@ -500,51 +463,5 @@ void CodeRed::DirectX12GraphicsCommandList::tryLayoutTransition(
 			final ? attachment->FinalLayout : attachment->InitialLayout)
 	);
 }
-
-auto CodeRed::DirectX12GraphicsCommandList::allocateCopyCacheBuffer(const size_t size)
-	-> WRL::ComPtr<ID3D12Resource>
-{
-	D3D12_RESOURCE_DESC desc = {};
-
-	desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	desc.Alignment = 0;
-	desc.Width = static_cast<UINT64>(size);
-	desc.Height = 1;
-	desc.DepthOrArraySize = 1;
-	desc.MipLevels = 1;
-	desc.Format = DXGI_FORMAT_UNKNOWN;
-	desc.SampleDesc.Count = 1;
-	desc.SampleDesc.Quality = 0;
-	desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	desc.Flags = D3D12_RESOURCE_FLAG_NONE;
-
-	D3D12_HEAP_PROPERTIES heapProperties = {
-		D3D12_HEAP_TYPE_UPLOAD,
-		D3D12_CPU_PAGE_PROPERTY_UNKNOWN,
-		D3D12_MEMORY_POOL_UNKNOWN,
-		1, 1
-	};
-
-	auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
-
-	WRL::ComPtr<ID3D12Resource> buffer;
-	
-	CODE_RED_THROW_IF_FAILED(
-		dxDevice->CreateCommittedResource(
-			&heapProperties,
-			D3D12_HEAP_FLAG_NONE,
-			&desc,
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&buffer)
-		),
-		FailedException(DebugType::Create, { "ID3D12Resource of Buffer" })
-	);
-
-	mCopyCacheBuffers.push_back(buffer);
-	
-	return buffer;
-}
-
 
 #endif

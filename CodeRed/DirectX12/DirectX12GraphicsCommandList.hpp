@@ -113,13 +113,9 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& texture,
 			const std::optional<Attachment>& attachment,
 			const bool final = false);
-
-		auto allocateCopyCacheBuffer(const size_t size) -> WRL::ComPtr<ID3D12Resource>;
 	private:
 		WRL::ComPtr<ID3D12GraphicsCommandList> mGraphicsCommandList;
 
-		std::vector<WRL::ComPtr<ID3D12Resource>> mCopyCacheBuffers;
-		
 		std::shared_ptr<DirectX12ResourceLayout> mResourceLayout;
 		std::shared_ptr<DirectX12FrameBuffer> mFrameBuffer;
 		std::shared_ptr<DirectX12RenderPass> mRenderPass;

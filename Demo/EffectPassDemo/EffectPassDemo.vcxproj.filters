@@ -34,47 +34,10 @@
     <ClInclude Include="EffectPassDemoApp.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Resources\synth-rubber\ao.png" />
-    <CopyFileToFolders Include="Resources\broken_down_concrete2\albedo.png" />
-    <CopyFileToFolders Include="Resources\broken_down_concrete2\ao.png" />
-    <CopyFileToFolders Include="Resources\broken_down_concrete2\roughness.png" />
-    <CopyFileToFolders Include="Resources\plasticpattern1\albedo.png" />
-    <CopyFileToFolders Include="Resources\plasticpattern1\ao.png" />
-    <CopyFileToFolders Include="Resources\plasticpattern1\metalness.png" />
-    <CopyFileToFolders Include="Resources\plasticpattern1\roughness.png" />
-    <CopyFileToFolders Include="Resources\broken_down_concrete2\metalness.png" />
-    <CopyFileToFolders Include="Resources\broken_down_concrete2\normal.png" />
-    <CopyFileToFolders Include="Resources\synth-rubber\albedo.png" />
-    <CopyFileToFolders Include="Resources\synth-rubber\metalness.png" />
-    <CopyFileToFolders Include="Resources\synth-rubber\normal.png" />
-    <CopyFileToFolders Include="Resources\synth-rubber\roughness.png" />
-    <CopyFileToFolders Include="Resources\plasticpattern1\normal.png" />
-    <CopyFileToFolders Include="Resources\grimy-metal\albedo.png" />
-    <CopyFileToFolders Include="Resources\grimy-metal\metalness.png" />
-    <CopyFileToFolders Include="Resources\grimy-metal\normal.png" />
-    <CopyFileToFolders Include="Resources\grimy-metal\roughness.png" />
-    <CopyFileToFolders Include="Resources\grimy-metal\ao.png" />
-    <CopyFileToFolders Include="Resources\metalgrid1\albedo.png" />
-    <CopyFileToFolders Include="Resources\metalgrid1\ao.png" />
-    <CopyFileToFolders Include="Resources\metalgrid1\metalness.png" />
-    <CopyFileToFolders Include="Resources\metalgrid1\normal.png" />
-    <CopyFileToFolders Include="Resources\metalgrid1\roughness.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\wornpaintedcement\albedo.png">
-      <Filter>Resources\wornpaintedcement</Filter>
-    </Image>
-    <Image Include="Resources\wornpaintedcement\ao.png">
-      <Filter>Resources\wornpaintedcement</Filter>
-    </Image>
-    <Image Include="Resources\wornpaintedcement\metalness.png">
-      <Filter>Resources\wornpaintedcement</Filter>
-    </Image>
-    <Image Include="Resources\wornpaintedcement\roughness.png">
-      <Filter>Resources\wornpaintedcement</Filter>
-    </Image>
-    <Image Include="Resources\wornpaintedcement\normal.png">
-      <Filter>Resources\wornpaintedcement</Filter>
-    </Image>
+    <CopyFileToFolders Include="Resources\wornpaintedcement\albedo.png" />
+    <CopyFileToFolders Include="Resources\wornpaintedcement\ao.png" />
+    <CopyFileToFolders Include="Resources\wornpaintedcement\metalness.png" />
+    <CopyFileToFolders Include="Resources\wornpaintedcement\roughness.png" />
+    <CopyFileToFolders Include="Resources\wornpaintedcement\normal.png" />
   </ItemGroup>
 </Project>

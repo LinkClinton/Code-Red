@@ -7,6 +7,8 @@
 
 namespace CodeRed {
 
+	class GpuBuffer;
+	
 	class VulkanCommandAllocator final : public GpuCommandAllocator {
 	public:
 		explicit VulkanCommandAllocator(
@@ -17,6 +19,10 @@ namespace CodeRed {
 		void reset() override;
 		
 		auto allocator() const noexcept -> vk::CommandPool {return mCommandPool; }
+	private:
+		friend class VulkanGraphicsCommandList;
+
+		auto allocateCopyCacheBuffer(const size_t size) -> std::shared_ptr<GpuBuffer>;
 	private:
 		vk::CommandPool mCommandPool;
 	};

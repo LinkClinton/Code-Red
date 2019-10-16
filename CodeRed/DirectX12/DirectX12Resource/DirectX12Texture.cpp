@@ -21,7 +21,7 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	desc.Alignment = 0;
 	desc.Width = property.Width;
 	desc.Height = static_cast<UINT>(property.Height);
-	desc.DepthOrArraySize = 1;
+	desc.DepthOrArraySize = static_cast<UINT16>(property.Depth);
 	desc.MipLevels = 1;
 	desc.Format = enumConvert(property.PixelFormat);
 	desc.SampleDesc.Count = 1;

@@ -108,12 +108,8 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& texture,
 			const std::optional<Attachment>& attachment,
 			const bool final = false);
-
-		auto allocateCopyCacheBuffer(const size_t size) -> std::shared_ptr<GpuBuffer>;
 	private:
 		vk::CommandBuffer mCommandBuffer;
-
-		std::vector<std::shared_ptr<GpuBuffer>> mCopyCacheBuffers;
 		
 		std::shared_ptr<VulkanResourceLayout> mResourceLayout;
 		std::shared_ptr<VulkanFrameBuffer> mFrameBuffer;

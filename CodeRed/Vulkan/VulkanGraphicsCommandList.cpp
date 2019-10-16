@@ -49,7 +49,6 @@ CodeRed::VulkanGraphicsCommandList::~VulkanGraphicsCommandList()
 void CodeRed::VulkanGraphicsCommandList::beginRecording()
 {
 	mCommandBuffer.reset(vk::CommandBufferResetFlagBits::eReleaseResources);
-	mCopyCacheBuffers.clear();
 	
 	mResourceLayout.reset();
 	
@@ -376,7 +375,8 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToBuffer(
 	const std::shared_ptr<GpuBuffer>& destination,
 	const void* data)
 {
-	const auto buffer = allocateCopyCacheBuffer(destination->size());
+	const auto vkAllocator = std::static_pointer_cast<VulkanCommandAllocator>(mAllocator);
+	const auto buffer = vkAllocator->allocateCopyCacheBuffer(destination->size());
 
 	const auto memory = buffer->mapMemory();
 	std::memcpy(memory, data, destination->size());
@@ -389,7 +389,8 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
 	const std::shared_ptr<GpuTexture>& destination,
 	const void* data)
 {
-	const auto buffer = allocateCopyCacheBuffer(destination->size());
+	const auto vkAllocator = std::static_pointer_cast<VulkanCommandAllocator>(mAllocator);
+	const auto buffer = vkAllocator->allocateCopyCacheBuffer(destination->size());
 
 	const auto memory = buffer->mapMemory();
 	std::memcpy(memory, data, destination->size());
@@ -459,18 +460,6 @@ void CodeRed::VulkanGraphicsCommandList::tryLayoutTransition(
 		layoutTransition(texture, texture->layout(),
 			final ? attachment->FinalLayout : attachment->InitialLayout)
 	);
-}
-
-auto CodeRed::VulkanGraphicsCommandList::allocateCopyCacheBuffer(const size_t size)
-	-> std::shared_ptr<GpuBuffer>
-{
-	const auto buffer = mDevice->createBuffer(
-		ResourceInfo::UploadBuffer(size, 1)
-	);
-
-	mCopyCacheBuffers.push_back(buffer);
-
-	return buffer;
 }
 
 #endif

@@ -8,6 +8,7 @@ namespace CodeRed {
 
 	class GpuGraphicsCommandList;
 	class GpuLogicalDevice;
+	class GpuResource;
 	
 	class GpuCommandAllocator : public Noncopyable {
 	protected:
@@ -19,6 +20,8 @@ namespace CodeRed {
 		virtual void reset() = 0;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
+
+		std::vector<std::shared_ptr<GpuResource>> mCopyCacheResources;
 	};
 	
 }
