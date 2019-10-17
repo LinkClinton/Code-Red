@@ -42,7 +42,8 @@ namespace CodeRed {
 			const std::shared_ptr<GpuBuffer>& buffer) override;
 
 		void setIndexBuffer(
-			const std::shared_ptr<GpuBuffer>& buffer) override;
+			const std::shared_ptr<GpuBuffer>& buffer,
+			const IndexType type = IndexType::UInt32) override;
 
 		void setDescriptorHeap(
 			const std::shared_ptr<GpuDescriptorHeap>& heap) override;

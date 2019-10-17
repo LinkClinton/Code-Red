@@ -50,10 +50,10 @@ The Windows SDK you can install with Visual Studio.
 ./vcpkg.exe install stb:x64-windows
 ```
 
-## Demo
+## Demos
 
-- [TriangleDemo](https://github.com/LinkClinton/Code-Red/tree/master/Demo/TriangleDemo) : Triangle rendering and basic framework.
-- [ParticlesDemo](https://github.com/LinkClinton/Code-Red/tree/master/Demo/ParticlesDemo) : Texture sample, render to texture, blend.
-- [FlowersDemo](https://github.com/LinkClinton/Code-Red/tree/master/Demo/FlowersDemo) : MSAA with shader.
-- [EffectPassDemo](https://github.com/LinkClinton/Code-Red/tree/master/Demo/EffectPassDemo) : Lighting, PBR with effect pass.
-- [DemoApp](https://github.com/LinkClinton/Code-Red/tree/master/Demo/DemoApp) : some help classes and functions.
+- [TriangleDemo](https://github.com/LinkClinton/Code-Red/tree/master/Demos/TriangleDemo) : Triangle rendering and basic framework.
+- [ParticlesDemo](https://github.com/LinkClinton/Code-Red/tree/master/Demos/ParticlesDemo) : Texture sample, render to texture, blend.
+- [FlowersDemo](https://github.com/LinkClinton/Code-Red/tree/master/Demos/FlowersDemo) : MSAA with shader.
+- [EffectPassDemo](https://github.com/LinkClinton/Code-Red/tree/master/Demos/EffectPassDemo) : Lighting, PBR with effect pass.
+- [DemoApp](https://github.com/LinkClinton/Code-Red/tree/master/Demos/DemoApp) : some help classes and functions.

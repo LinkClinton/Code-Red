@@ -12,6 +12,8 @@
 #include "../Shared/Enum/FillMode.hpp"
 #include "../Shared/Enum/FilterOptions.hpp"
 #include "../Shared/Enum/FrontFace.hpp"
+#include "../Shared/Enum/IndexType.hpp"
+#include "../Shared/Enum/APIVersion.hpp"
 #include "../Shared/Enum/MemoryHeap.hpp"
 #include "../Shared/Enum/PrimitiveTopology.hpp"
 #include "../Shared/Enum/ResourceLayout.hpp"

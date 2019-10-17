@@ -36,6 +36,7 @@ namespace CodeRed {
 	enum class ShaderType : UInt32;
 	enum class MemoryHeap : UInt32;
 	enum class FrontFace : UInt32;
+	enum class IndexType : UInt32;
 	enum class Dimension : UInt32;
 	enum class ColorMask : UInt32;
 	enum class FillMode : UInt32;
@@ -85,6 +86,8 @@ namespace CodeRed {
 
 		auto enumConvert(const FrontFace face)->vk::FrontFace;
 
+		auto enumConvert(const IndexType type)->vk::IndexType;
+		
 		auto enumConvert(const ShaderType type)->vk::ShaderStageFlagBits;
 
 		auto enumConvert(const AttachmentLoad load)->vk::AttachmentLoadOp;

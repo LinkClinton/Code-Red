@@ -14,6 +14,8 @@ namespace CodeRed {
 			Real Float;
 		};
 
+		Value32Bit() = default;
+		
 		Value32Bit(const UInt32 uInt32) : UInt(uInt32) {}
 
 		Value32Bit(const Int32 int32) : Int(int32) {}

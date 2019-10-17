@@ -169,12 +169,14 @@ void CodeRed::DirectX12GraphicsCommandList::setVertexBuffer(const std::shared_pt
 	mGraphicsCommandList->IASetVertexBuffers(0, 1, &view);
 }
 
-void CodeRed::DirectX12GraphicsCommandList::setIndexBuffer(const std::shared_ptr<GpuBuffer>& buffer)
+void CodeRed::DirectX12GraphicsCommandList::setIndexBuffer(
+	const std::shared_ptr<GpuBuffer>& buffer,
+	const IndexType type)
 {
 	D3D12_INDEX_BUFFER_VIEW view = {
 		static_cast<DirectX12Buffer*>(buffer.get())->buffer()->GetGPUVirtualAddress(),
 		static_cast<UINT>(buffer->size()),
-		DXGI_FORMAT_R32_UINT
+		enumConvert(type)
 	};
 	
 	mGraphicsCommandList->IASetIndexBuffer(&view);

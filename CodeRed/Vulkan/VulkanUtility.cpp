@@ -19,6 +19,7 @@
 #include "../Shared/Enum/ShaderType.hpp"
 #include "../Shared/Enum/MemoryHeap.hpp"
 #include "../Shared/Enum/FrontFace.hpp"
+#include "../Shared/Enum/IndexType.hpp"
 #include "../Shared/Enum/Dimension.hpp"
 #include "../Shared/Enum/FillMode.hpp"
 #include "../Shared/Enum/CullMode.hpp"
@@ -332,6 +333,17 @@ auto CodeRed::Vulkan::enumConvert(const FrontFace face)
 	switch (face) {
 	case FrontFace::Clockwise: return vk::FrontFace::eClockwise;
 	case FrontFace::CounterClockwise: return vk::FrontFace::eCounterClockwise;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::Vulkan::enumConvert(const IndexType type)
+	-> vk::IndexType
+{
+	switch (type) {
+	case IndexType::UInt32: return vk::IndexType::eUint32;
+	case IndexType::UInt16: return vk::IndexType::eUint16;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

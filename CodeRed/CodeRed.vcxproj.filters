@@ -396,6 +396,9 @@
     <ClInclude Include="Shared\Enum\APIVersion.hpp">
       <Filter>Shared\Enum</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Enum\IndexType.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">

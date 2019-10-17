@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Shared/Enum/ResourceLayout.hpp"
+#include "../Shared/Enum/IndexType.hpp"
 #include "../Shared/Constant32Bits.hpp"
 #include "../Shared/Noncopyable.hpp"
 #include "../Shared/ScissorRect.hpp"
@@ -51,7 +52,8 @@ namespace CodeRed {
 			const std::shared_ptr<GpuBuffer>& buffer) = 0;
 
 		virtual void setIndexBuffer(
-			const std::shared_ptr<GpuBuffer>& buffer) = 0;
+			const std::shared_ptr<GpuBuffer>& buffer,
+			const IndexType type = IndexType::UInt32) = 0;
 
 		virtual void setDescriptorHeap(
 			const std::shared_ptr<GpuDescriptorHeap>& heap) = 0;

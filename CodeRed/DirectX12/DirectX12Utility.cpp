@@ -17,6 +17,7 @@
 #include "../Shared/Enum/BlendFactor.hpp"
 #include "../Shared/Enum/MemoryHeap.hpp"
 #include "../Shared/Enum/FrontFace.hpp"
+#include "../Shared/Enum/IndexType.hpp"
 #include "../Shared/Enum/Dimension.hpp"
 #include "../Shared/Enum/FillMode.hpp"
 #include "../Shared/Enum/CullMode.hpp"
@@ -345,6 +346,16 @@ auto CodeRed::DirectX12::enumConvert(const FrontFace face)
 	-> bool
 {
 	return face == FrontFace::CounterClockwise;
+}
+
+auto CodeRed::DirectX12::enumConvert(const IndexType type) -> DXGI_FORMAT
+{
+	switch (type) {
+	case IndexType::UInt32: return DXGI_FORMAT_R32_UINT;
+	case IndexType::UInt16: return DXGI_FORMAT_R16_UINT;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
 }
 
 auto CodeRed::DirectX12::enumConvert(const PrimitiveTopology topology)

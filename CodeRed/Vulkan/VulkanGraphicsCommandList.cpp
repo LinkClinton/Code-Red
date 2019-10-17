@@ -148,11 +148,12 @@ void CodeRed::VulkanGraphicsCommandList::setVertexBuffer(
 }
 
 void CodeRed::VulkanGraphicsCommandList::setIndexBuffer(
-	const std::shared_ptr<GpuBuffer>& buffer)
+	const std::shared_ptr<GpuBuffer>& buffer,
+	const IndexType type)
 {
 	const auto vkBuffer = std::static_pointer_cast<VulkanBuffer>(buffer);
 
-	mCommandBuffer.bindIndexBuffer(vkBuffer->buffer(), 0, vk::IndexType::eUint32);
+	mCommandBuffer.bindIndexBuffer(vkBuffer->buffer(), 0, enumConvert(type));
 }
 
 void CodeRed::VulkanGraphicsCommandList::setDescriptorHeap(
