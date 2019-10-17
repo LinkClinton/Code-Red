@@ -4,6 +4,10 @@
 #include <Interface/GpuCommandAllocator.hpp>
 #include <Interface/GpuCommandQueue.hpp>
 
+//using Tools/ShaderCompiler compile the shader in shaders to .cso/.spv
+constexpr CodeRed::Byte DxImGuiVertexShaderCode[] = { 68, 88, 66, 67, 131, 20, 245, 238, 75, 139, 17, 56, 36, 104, 184, 132, 17, 55, 210, 211, 1, 0, 0, 0, 40, 4, 0, 0, 5, 0, 0, 0, 52, 0, 0, 0, 132, 1, 0, 0, 244, 1, 0, 0, 104, 2, 0, 0, 140, 3, 0, 0, 82, 68, 69, 70, 72, 1, 0, 0, 1, 0, 0, 0, 112, 0, 0, 0, 1, 0, 0, 0, 60, 0, 0, 0, 1, 5, 254, 255, 0, 5, 0, 0, 32, 1, 0, 0, 19, 19, 68, 37, 60, 0, 0, 0, 24, 0, 0, 0, 40, 0, 0, 0, 40, 0, 0, 0, 36, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 116, 114, 97, 110, 115, 102, 111, 114, 109, 0, 171, 171, 100, 0, 0, 0, 1, 0, 0, 0, 136, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 2, 0, 0, 0, 252, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 73, 110, 100, 101, 120, 0, 80, 114, 111, 106, 101, 99, 116, 105, 111, 110, 0, 102, 108, 111, 97, 116, 52, 120, 52, 0, 171, 171, 3, 0, 3, 0, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 193, 0, 0, 0, 182, 0, 0, 0, 204, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 1, 0, 16, 0, 0, 0, 1, 0, 240, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 176, 0, 0, 0, 77, 105, 99, 114, 111, 115, 111, 102, 116, 32, 40, 82, 41, 32, 72, 76, 83, 76, 32, 83, 104, 97, 100, 101, 114, 32, 67, 111, 109, 112, 105, 108, 101, 114, 32, 49, 48, 46, 49, 0, 73, 83, 71, 78, 104, 0, 0, 0, 3, 0, 0, 0, 8, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 15, 15, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 3, 3, 0, 0, 80, 79, 83, 73, 84, 73, 79, 78, 0, 67, 79, 76, 79, 82, 0, 84, 69, 88, 67, 79, 79, 82, 68, 0, 79, 83, 71, 78, 108, 0, 0, 0, 3, 0, 0, 0, 8, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 15, 0, 0, 0, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 3, 12, 0, 0, 83, 86, 95, 80, 79, 83, 73, 84, 73, 79, 78, 0, 67, 79, 76, 79, 82, 0, 84, 69, 88, 67, 79, 79, 82, 68, 0, 171, 83, 72, 69, 88, 28, 1, 0, 0, 81, 0, 1, 0, 71, 0, 0, 0, 106, 8, 0, 1, 89, 0, 0, 7, 70, 142, 48, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 95, 0, 0, 3, 50, 16, 16, 0, 0, 0, 0, 0, 95, 0, 0, 3, 242, 16, 16, 0, 1, 0, 0, 0, 95, 0, 0, 3, 50, 16, 16, 0, 2, 0, 0, 0, 103, 0, 0, 4, 242, 32, 16, 0, 0, 0, 0, 0, 1, 0, 0, 0, 101, 0, 0, 3, 242, 32, 16, 0, 1, 0, 0, 0, 101, 0, 0, 3, 50, 32, 16, 0, 2, 0, 0, 0, 104, 0, 0, 2, 1, 0, 0, 0, 56, 0, 0, 9, 242, 0, 16, 0, 0, 0, 0, 0, 86, 21, 16, 0, 0, 0, 0, 0, 70, 142, 48, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 50, 0, 0, 11, 242, 0, 16, 0, 0, 0, 0, 0, 70, 142, 48, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 6, 16, 16, 0, 0, 0, 0, 0, 70, 14, 16, 0, 0, 0, 0, 0, 0, 0, 0, 9, 242, 32, 16, 0, 0, 0, 0, 0, 70, 14, 16, 0, 0, 0, 0, 0, 70, 142, 48, 0, 0, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 54, 0, 0, 5, 242, 32, 16, 0, 1, 0, 0, 0, 70, 30, 16, 0, 1, 0, 0, 0, 54, 0, 0, 5, 50, 32, 16, 0, 2, 0, 0, 0, 70, 16, 16, 0, 2, 0, 0, 0, 62, 0, 0, 1, 83, 84, 65, 84, 148, 0, 0, 0, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+constexpr CodeRed::Byte DxImGuiPixelShaderCode[] = { 68, 88, 66, 67, 217, 39, 164, 9, 210, 72, 12, 206, 92, 224, 25, 201, 56, 79, 27, 21, 1, 0, 0, 0, 8, 3, 0, 0, 5, 0, 0, 0, 52, 0, 0, 0, 4, 1, 0, 0, 120, 1, 0, 0, 172, 1, 0, 0, 108, 2, 0, 0, 82, 68, 69, 70, 200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 60, 0, 0, 0, 1, 5, 255, 255, 0, 5, 0, 0, 158, 0, 0, 0, 19, 19, 68, 37, 60, 0, 0, 0, 24, 0, 0, 0, 40, 0, 0, 0, 40, 0, 0, 0, 36, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 140, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 149, 0, 0, 0, 2, 0, 0, 0, 5, 0, 0, 0, 4, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 1, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 115, 97, 109, 112, 108, 101, 114, 48, 0, 116, 101, 120, 116, 117, 114, 101, 48, 0, 77, 105, 99, 114, 111, 115, 111, 102, 116, 32, 40, 82, 41, 32, 72, 76, 83, 76, 32, 83, 104, 97, 100, 101, 114, 32, 67, 111, 109, 112, 105, 108, 101, 114, 32, 49, 48, 46, 49, 0, 171, 171, 73, 83, 71, 78, 108, 0, 0, 0, 3, 0, 0, 0, 8, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 15, 15, 0, 0, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 3, 3, 0, 0, 83, 86, 95, 80, 79, 83, 73, 84, 73, 79, 78, 0, 67, 79, 76, 79, 82, 0, 84, 69, 88, 67, 79, 79, 82, 68, 0, 171, 79, 83, 71, 78, 44, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 83, 86, 95, 84, 65, 82, 71, 69, 84, 0, 171, 171, 83, 72, 69, 88, 184, 0, 0, 0, 81, 0, 0, 0, 46, 0, 0, 0, 106, 8, 0, 1, 90, 0, 0, 6, 70, 110, 48, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 88, 24, 0, 7, 70, 126, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 0, 0, 0, 0, 0, 0, 98, 16, 0, 3, 242, 16, 16, 0, 1, 0, 0, 0, 98, 16, 0, 3, 50, 16, 16, 0, 2, 0, 0, 0, 101, 0, 0, 3, 242, 32, 16, 0, 0, 0, 0, 0, 104, 0, 0, 2, 1, 0, 0, 0, 69, 0, 0, 11, 242, 0, 16, 0, 0, 0, 0, 0, 70, 16, 16, 0, 2, 0, 0, 0, 70, 126, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 96, 32, 0, 0, 0, 0, 0, 1, 0, 0, 0, 56, 0, 0, 7, 242, 32, 16, 0, 0, 0, 0, 0, 70, 14, 16, 0, 0, 0, 0, 0, 70, 30, 16, 0, 1, 0, 0, 0, 62, 0, 0, 1, 83, 84, 65, 84, 148, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
 CodeRed::ImGuiFrameResources::ImGuiFrameResources(
 	const std::shared_ptr<GpuLogicalDevice>& device) :
 	mDevice(device)
@@ -22,7 +26,7 @@ CodeRed::ImGuiFrameResources::ImGuiFrameResources(
 void CodeRed::ImGuiFrameResources::update(ImDrawData* drawData)
 {
 	CODE_RED_TRY_EXECUTE(
-		mVertexBuffer->size() < drawData->TotalVtxCount,
+		mVertexBuffer->count() < drawData->TotalVtxCount,
 		mVertexBuffer = mDevice->createBuffer(
 			ResourceInfo::VertexBuffer(sizeof(ImDrawVert), mVertexBuffer->count() + mVertexBufferIncrease,
 				MemoryHeap::Upload)
@@ -30,7 +34,7 @@ void CodeRed::ImGuiFrameResources::update(ImDrawData* drawData)
 	);
 
 	CODE_RED_TRY_EXECUTE(
-		mIndexBuffer->size() < drawData->TotalIdxCount,
+		mIndexBuffer->count() < drawData->TotalIdxCount,
 		mIndexBuffer = mDevice->createBuffer(
 			ResourceInfo::IndexBuffer(sizeof(ImDrawIdx), mIndexBuffer->count() + mIndexBufferIncrease,
 				MemoryHeap::Upload)
@@ -60,6 +64,11 @@ CodeRed::ImGuiContext::ImGuiContext(
 	const size_t numFrameResources) :
 	mDevice(device), mRenderPass(renderPass)
 {
+	auto& io = ImGui::GetIO();
+
+	io.BackendRendererName = "CodeRed";
+	io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
+	
 	mSampler = mDevice->createSampler(
 		SamplerInfo(FilterOptions::MinLinearMagLinearMipLinear)
 	);
@@ -74,6 +83,16 @@ CodeRed::ImGuiContext::ImGuiContext(
 		Constant32Bits(16, 2)
 	);
 
+	if (mDevice->apiVersion() == APIVersion::DirectX12) {
+		mVertexShaderCode = std::vector<Byte>(sizeof(DxImGuiVertexShaderCode) / sizeof(Byte));
+		mPixelShaderCode = std::vector<Byte>(sizeof(DxImGuiPixelShaderCode) / sizeof(Byte));
+		
+		std::memcpy(mVertexShaderCode.data(), DxImGuiVertexShaderCode, sizeof(DxImGuiVertexShaderCode));
+		std::memcpy(mPixelShaderCode.data(), DxImGuiPixelShaderCode, sizeof(DxImGuiPixelShaderCode));
+	}else {
+		
+	}
+	
 	auto pipelineFactory = mDevice->createPipelineFactory();
 	
 	mPipeline = mDevice->createGraphicsPipeline(
@@ -87,8 +106,8 @@ CodeRed::ImGuiContext::ImGuiContext(
 			},
 			PrimitiveTopology::TriangleList
 		),
-		nullptr, //todo
-		nullptr, //todo
+		pipelineFactory->createShaderState(ShaderType::Vertex, mVertexShaderCode),
+		pipelineFactory->createShaderState(ShaderType::Pixel, mPixelShaderCode),
 		pipelineFactory->createDetphStencilState(false, false),
 		pipelineFactory->createBlendState(BlendProperty(
 			true,
@@ -225,12 +244,14 @@ void CodeRed::ImGuiContext::initializeFontsTexture()
 	const auto commandQueue = mDevice->createCommandQueue();
 	const auto commandList = mDevice->createGraphicsCommandList(commandAllocator);
 
+	commandList->beginRecording();
 	commandList->layoutTransition(mFontsTexture, mFontsTexture->layout(), ResourceLayout::CopyDestination);
 	
 	commandList->copyMemoryToTexture(mFontsTexture, pixels);
 
 	commandList->layoutTransition(mFontsTexture, mFontsTexture->layout(), ResourceLayout::GeneralRead);
-
+	commandList->endRecording();
+	
 	commandQueue->execute({ commandList });
 	commandQueue->waitIdle();
 

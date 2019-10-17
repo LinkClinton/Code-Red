@@ -29,6 +29,9 @@
     <ClInclude Include="Effects\PhysicallyBasedEffectPass.hpp">
       <Filter>Effects</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoApp.cpp" />
@@ -53,6 +56,9 @@
     <ClCompile Include="Effects\PhysicallyBasedEffectPass.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
@@ -75,6 +81,9 @@
     </Filter>
     <Filter Include="Effects\Shaders\PhysicallyBasedEffectPass">
       <UniqueIdentifier>{3b223e89-f572-4cfe-896d-2e7d398c77d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{9f5378cf-9327-4704-87af-379a63a227dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

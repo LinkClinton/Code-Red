@@ -8,4 +8,25 @@
     <ClCompile Include="ImGuiContext.cpp" />
     <ClCompile Include="ImGui.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{8565e2fa-64e1-43d5-bf06-fc4fb7d41cbe}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\DxImGuiPixel.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DxImGuiVertex.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\VkImGuiPixel.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VkImGuiVertex.vert">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
 </Project>

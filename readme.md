@@ -8,7 +8,7 @@
 
 ## Document
 
-See document folder or [click me](https://github.com/LinkClinton/Code-Red/tree/master/Document/readme.md).
+See document folder or [click me](https://github.com/LinkClinton/Code-Red/tree/master/Documents/readme.md).
 
 ## Installation
 

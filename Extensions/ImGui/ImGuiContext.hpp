@@ -68,9 +68,9 @@ namespace CodeRed {
 		std::shared_ptr<GpuGraphicsPipeline> mPipeline;
 		std::shared_ptr<GpuRenderPass> mRenderPass;
 
-		std::shared_ptr<Byte> mVertexShaderCode;
-		std::shared_ptr<Byte> mPixelShaderCode;
-
+		std::vector<Byte> mVertexShaderCode;
+		std::vector<Byte> mPixelShaderCode;
+		
 		std::vector<ImGuiFrameResources> mFrameResouces;
 		
 		size_t mCurrentFrameIndex = 0;

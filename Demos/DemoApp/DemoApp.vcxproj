@@ -72,25 +72,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)CodeRed;$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)CodeRed;$(SolutionDir)ThirdParties;$(IncludePath)</IncludePath>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)CodeRed;$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)CodeRed;$(SolutionDir)ThirdParties;$(IncludePath)</IncludePath>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)CodeRed;$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)CodeRed;$(SolutionDir)ThirdParties;$(IncludePath)</IncludePath>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)CodeRed;$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)CodeRed;$(SolutionDir)ThirdParties;$(IncludePath)</IncludePath>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -207,6 +207,7 @@
     <ClInclude Include="Effects\EffectProperties.hpp" />
     <ClInclude Include="Effects\GeneralEffectPass.hpp" />
     <ClInclude Include="Effects\PhysicallyBasedEffectPass.hpp" />
+    <ClInclude Include="ImGui\imgui_impl_win32.h" />
     <ClInclude Include="Pipelines\PipelineInfo.hpp" />
     <ClInclude Include="Resources\FrameResources.hpp" />
     <ClInclude Include="Resources\ResourceHelper.hpp" />
@@ -223,6 +224,7 @@
     <ClCompile Include="Effects\EffectPass.cpp" />
     <ClCompile Include="Effects\GeneralEffectPass.cpp" />
     <ClCompile Include="Effects\PhysicallyBasedEffectPass.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Pipelines\PipelineInfo.cpp" />
     <ClCompile Include="Resources\FrameResources.cpp" />
     <ClCompile Include="Resources\ResourceHelper.cpp" />

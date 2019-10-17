@@ -1,6 +1,13 @@
 #include "DemoApp.hpp"
 
+#include "ImGui/imgui_impl_win32.h"
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT DefaultWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
+	
 	switch (message)
 	{
 	case WM_DESTROY: {

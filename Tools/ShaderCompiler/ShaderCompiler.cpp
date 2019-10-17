@@ -1,18 +1,17 @@
 #include "ShaderCompiler.hpp"
 
-#ifdef __ENABLE__DIRECTX12__
-#include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
-#endif
 
-#ifdef __ENABLE__VULKAN__
-#include <shaderc/shaderc.hpp>
-#endif
-
+#include <iostream>
 #include <fstream>
+#include <cassert>
 #include <string>
 
-auto CodeRed::ShaderCompiler::readShader(const std::string& fileName)
+#include <wrl/client.h>
+
+using namespace Microsoft;
+
+auto ShaderCompiler::readShader(const std::string& fileName)
 	-> std::string
 {
 	std::ifstream file(fileName, std::ios::binary | std::ios::ate);
@@ -30,12 +29,40 @@ auto CodeRed::ShaderCompiler::readShader(const std::string& fileName)
 	return code;
 }
 
-#ifdef __ENABLE__VULKAN__
+void ShaderCompiler::writeToBinary(
+	const std::string& fileName,
+	const std::vector<Byte>& code)
+{
+	std::ofstream file(fileName, std::ios::binary);
 
-auto CodeRed::ShaderCompiler::compileToSpv(
-	const ShaderType& shaderType, 
-	const std::string& shader)
-	-> std::vector<Byte>
+	file.write(reinterpret_cast<const char*>(code.data()), code.size());
+	file.close();
+}
+
+void ShaderCompiler::writeToCpp(
+	const std::string& fileName,
+	const std::string& arrayName,
+	const std::vector<Byte>& code)
+{
+	std::ofstream file(fileName);
+
+	auto result = "constexpr unsigned char " + arrayName + "[] = {";
+
+	for (size_t index = 0; index < code.size(); index++) {
+		result = result + std::to_string(code[index]);
+
+		if (index != code.size() - 1) result = result + ", ";
+	}
+
+	result = result + "};";
+
+	file << result << std::endl;
+	file.close();
+}
+
+auto ShaderCompiler::compileToSpv(
+	const ShaderType& shaderType,
+	const std::string& shader) -> std::vector<Byte>
 {
 	auto type = shaderc_vertex_shader;
 
@@ -46,7 +73,7 @@ auto CodeRed::ShaderCompiler::compileToSpv(
 	case ShaderType::Pixel:
 		type = shaderc_fragment_shader; break;
 	default:
-		throw NotSupportException(NotSupportType::Enum);
+		return std::vector<Byte>();
 	}
 
 	const shaderc::Compiler compiler;
@@ -54,25 +81,22 @@ auto CodeRed::ShaderCompiler::compileToSpv(
 	const auto res = compiler.CompileGlslToSpv(shader, type, "main");
 
 	if (res.GetNumErrors() != 0) {
-		DebugReport::error(res.GetErrorMessage());
+		std::cout << "Compile Failed." << std::endl;
+		std::cout << "Message: " << res.GetErrorMessage() << std::endl;
 
-		throw FailedException(DebugType::Create, { "compile shader failed." });
+		return std::vector<Byte>();
 	}
 
 	auto code = std::vector<Byte>((res.end() - res.begin()) * sizeof(uint32_t));
-	
+
 	std::memcpy(code.data(), res.begin(), code.size());
 
 	return code;
 }
 
-#endif
-
-#ifdef __ENABLE__DIRECTX12__
-
-auto CodeRed::ShaderCompiler::compileToCso(
-	const ShaderType& type, 
-	const std::string& shader,
+auto ShaderCompiler::compileToCso(
+	const ShaderType& type,
+	const std::string& shader, 
 	const std::string& entry)
 	-> std::vector<Byte>
 {
@@ -80,18 +104,18 @@ auto CodeRed::ShaderCompiler::compileToCso(
 	WRL::ComPtr<ID3DBlob> error;
 
 #ifdef _DEBUG
-	const UINT flag = D3DCOMPILE_DEBUG;
+	const UINT flag = 0;
 #else
 	const UINT flag = 0;
 #endif
 
 	const char* version = nullptr;
-	
+
 	switch (type) {
 	case ShaderType::Pixel:  version = "ps_5_1"; break;
 	case ShaderType::Vertex: version = "vs_5_1"; break;
 	default:
-		throw NotSupportException(NotSupportType::Enum);
+		return std::vector<Byte>();
 	}
 
 	const auto res = D3DCompile(shader.data(), shader.length(),
@@ -99,11 +123,14 @@ auto CodeRed::ShaderCompiler::compileToCso(
 		version, flag, 0, data.GetAddressOf(), error.GetAddressOf());
 
 	if (res != S_OK && error->GetBufferSize() != 0) {
-		DebugReport::error(
-			DirectX12::charArrayToString(
-				error->GetBufferPointer(), error->GetBufferSize()));
+		std::cout << "Compile Failed." << std::endl;
+		std::cout << "Message: ";
+		
+		for (size_t index = 0; index < error->GetBufferSize(); index++)
+			std::cout << static_cast<char*>(error->GetBufferPointer())[index];
+		std::cout << std::endl;
 
-		throw FailedException(DebugType::Create, { "compile shader failed." });
+		return std::vector<Byte>();
 	}
 
 	auto code = std::vector<Byte>(data->GetBufferSize());
@@ -112,5 +139,3 @@ auto CodeRed::ShaderCompiler::compileToCso(
 
 	return code;
 }
-
-#endif
