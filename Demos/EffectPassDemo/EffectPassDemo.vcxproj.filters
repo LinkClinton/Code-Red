@@ -33,11 +33,4 @@
   <ItemGroup>
     <ClInclude Include="EffectPassDemoApp.hpp" />
   </ItemGroup>
-  <ItemGroup>
-    <CopyFileToFolders Include="Resources\wornpaintedcement\albedo.png" />
-    <CopyFileToFolders Include="Resources\wornpaintedcement\ao.png" />
-    <CopyFileToFolders Include="Resources\wornpaintedcement\metalness.png" />
-    <CopyFileToFolders Include="Resources\wornpaintedcement\roughness.png" />
-    <CopyFileToFolders Include="Resources\wornpaintedcement\normal.png" />
-  </ItemGroup>
 </Project>

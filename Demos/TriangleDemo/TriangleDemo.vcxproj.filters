@@ -13,19 +13,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\DirectX12Pixel.hlsl">
+    <CopyFileToFolders Include="Shaders\DirectX12Pixel.hlsl">
       <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\DirectX12Vertex.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\DirectX12Vertex.hlsl">
       <Filter>Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\VulkanFragment.frag">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\VulkanFragment.frag">
       <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\VulkanVertex.vert">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\VulkanVertex.vert">
       <Filter>Shaders</Filter>
-    </None>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

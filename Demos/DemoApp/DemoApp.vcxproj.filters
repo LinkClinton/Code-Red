@@ -78,34 +78,32 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Shaders\ShaderToString.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Effects\Shaders\GeneralEffectPass\DxGeneralEffectPassPixel.hlsl">
+    <CopyFileToFolders Include="Effects\Shaders\GeneralEffectPass\DxGeneralEffectPassPixel.hlsl">
       <Filter>Effects\Shaders\GeneralEffectPass</Filter>
-    </FxCompile>
-    <FxCompile Include="Effects\Shaders\GeneralEffectPass\DxGeneralEffectPassVertex.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\GeneralEffectPass\DxGeneralEffectPassVertex.hlsl">
       <Filter>Effects\Shaders\GeneralEffectPass</Filter>
-    </FxCompile>
-    <FxCompile Include="Effects\Shaders\PhysicallyBasedEffectPass\DxPhysicallyBasedEffectPassPixel.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\PhysicallyBasedEffectPass\DxPhysicallyBasedEffectPassVertex.hlsl">
       <Filter>Effects\Shaders\PhysicallyBasedEffectPass</Filter>
-    </FxCompile>
-    <FxCompile Include="Effects\Shaders\PhysicallyBasedEffectPass\DxPhysicallyBasedEffectPassVertex.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\PhysicallyBasedEffectPass\DxPhysicallyBasedEffectPassPixel.hlsl">
       <Filter>Effects\Shaders\PhysicallyBasedEffectPass</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Effects\Shaders\GeneralEffectPass\VkGeneralEffectPassPixel.frag">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\GeneralEffectPass\VkGeneralEffectPassPixel.frag">
       <Filter>Effects\Shaders\GeneralEffectPass</Filter>
-    </None>
-    <None Include="Effects\Shaders\GeneralEffectPass\VkGeneralEffectPassVertex.vert">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\GeneralEffectPass\VkGeneralEffectPassVertex.vert">
       <Filter>Effects\Shaders\GeneralEffectPass</Filter>
-    </None>
-    <None Include="Effects\Shaders\PhysicallyBasedEffectPass\VkPhysicallyBasedEffectPassPixel.frag">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\PhysicallyBasedEffectPass\VkPhysicallyBasedEffectPassVertex.vert">
       <Filter>Effects\Shaders\PhysicallyBasedEffectPass</Filter>
-    </None>
-    <None Include="Effects\Shaders\PhysicallyBasedEffectPass\VkPhysicallyBasedEffectPassVertex.vert">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Effects\Shaders\PhysicallyBasedEffectPass\VkPhysicallyBasedEffectPassPixel.frag">
       <Filter>Effects\Shaders\PhysicallyBasedEffectPass</Filter>
-    </None>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\ShaderToString.py">
+      <Filter>Shaders</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

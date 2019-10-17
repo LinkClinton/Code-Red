@@ -15,31 +15,29 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\DirectX12Pixel.hlsl">
+    <CopyFileToFolders Include="Shaders\DirectX12Pixel.hlsl">
       <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\DirectX12TexturePixel.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\DirectX12TexturePixel.hlsl">
       <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\DirectX12TextureVertex.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\DirectX12TextureVertex.hlsl">
       <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\DirectX12Vertex.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\DirectX12Vertex.hlsl">
       <Filter>Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\VulkanFragment.frag">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\VulkanFragment.frag">
       <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\VulkanTextureFragment.frag">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\VulkanTextureFragment.frag">
       <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\VulkanTextureVertex.vert">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\VulkanTextureVertex.vert">
       <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\VulkanVertex.vert">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\VulkanVertex.vert">
       <Filter>Shaders</Filter>
-    </None>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

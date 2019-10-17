@@ -21,13 +21,11 @@
     <CopyFileToFolders Include="Shaders\VulkanVertex.vert">
       <Filter>Shaders</Filter>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shaders\DirectX12Pixel.hlsl">
+    <CopyFileToFolders Include="Shaders\DirectX12Pixel.hlsl">
       <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\DirectX12Vertex.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\DirectX12Vertex.hlsl">
       <Filter>Shaders</Filter>
-    </FxCompile>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>
