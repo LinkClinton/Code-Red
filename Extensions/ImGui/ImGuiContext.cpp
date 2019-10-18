@@ -223,6 +223,8 @@ void CodeRed::ImGuiContext::draw(
 		globalIdxOffset = globalIdxOffset + commandList->IdxBuffer.Size;
 		globalVtxOffset = globalVtxOffset + commandList->VtxBuffer.Size;
 	}
+
+	mCurrentFrameIndex = (mCurrentFrameIndex + 1) % mFrameResouces.size();
 }
 
 void CodeRed::ImGuiContext::initializeFontsTexture()
