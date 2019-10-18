@@ -14,19 +14,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\DxImGuiPixel.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\DxImGuiVertex.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\VkImGuiPixel.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\VkImGuiVertex.vert">
-      <Filter>Shaders</Filter>
-    </None>
+    <CopyFileToFolders Include="Shaders\DxImGuiPixel.hlsl" />
+    <CopyFileToFolders Include="Shaders\DxImGuiVertex.hlsl" />
+    <CopyFileToFolders Include="Shaders\VkImGuiPixel.frag" />
+    <CopyFileToFolders Include="Shaders\VkImGuiVertex.vert" />
   </ItemGroup>
 </Project>
