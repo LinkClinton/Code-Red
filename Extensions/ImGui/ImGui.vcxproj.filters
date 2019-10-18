@@ -14,9 +14,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Shaders\DxImGuiPixel.hlsl" />
-    <CopyFileToFolders Include="Shaders\DxImGuiVertex.hlsl" />
-    <CopyFileToFolders Include="Shaders\VkImGuiPixel.frag" />
-    <CopyFileToFolders Include="Shaders\VkImGuiVertex.vert" />
+    <CopyFileToFolders Include="Shaders\DxImGuiPixel.hlsl">
+      <Filter>Shaders</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\DxImGuiVertex.hlsl">
+      <Filter>Shaders</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\VkImGuiPixel.frag">
+      <Filter>Shaders</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\VkImGuiVertex.vert">
+      <Filter>Shaders</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>
