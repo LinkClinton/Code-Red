@@ -6,9 +6,9 @@
 - Do not need to take care of the different between DirectX12 and Vulkan.
 - And it is easier to render or change the Graphics API.
 
-## Document
+## Documents
 
-See document folder or [click me](https://github.com/LinkClinton/Code-Red/tree/master/Documents/readme.md).
+See documents folder or [click me](https://github.com/LinkClinton/Code-Red/tree/master/Documents/readme.md).
 
 ## Installation
 
@@ -32,3 +32,7 @@ The Windows SDK you can install with Visual Studio.
 ## Extensions
 
 - [ImGui](https://github.com/LinkClinton/Code-Red/tree/master/Extensions/ImGui) : An ImGui backend implement using CodeRed.
+
+## Tools
+
+- [ShaderCompiler](https://github.com/LinkClinton/Code-Red/tree/master/Tools/ShaderCompiler) : A tool to compile shader to binary file or cpp array.
