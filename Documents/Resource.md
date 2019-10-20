@@ -140,6 +140,10 @@ For `Texture2D` the depth must be one.
 
 All member functions is used to get informations of texture or mapped memory.
 
+- If you want to update memory to texture, you should use `GpuGraphicsCommandList::copyMemoryToTexture`.
+
+- The size of texture is not always same in different adapters, so we add `GpuTexture::physicalSize` and `GpuTexture::alignment` to indicate the real size of texture and the layout of alignment.
+
 ## GpuSampler
 
 Sampler is used to sample the data from texture. **You can learn more from DirectX or Vulkan.**

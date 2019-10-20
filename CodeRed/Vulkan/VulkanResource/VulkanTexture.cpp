@@ -42,9 +42,14 @@ CodeRed::VulkanTexture::VulkanTexture(
 
 	const auto memoryRequirement = vkDevice->device().getImageMemoryRequirements(mImage);
 
+	//because the size of texture is not always same in different adapters
+	//so we need record the real size and the alignment
+	mPhysicalSize = memoryRequirement.size;
+	mAlignment = memoryRequirement.alignment;
+	
 	memoryInfo
 		.setPNext(nullptr)
-		.setAllocationSize(memoryRequirement.size)
+		.setAllocationSize(mPhysicalSize)
 		.setMemoryTypeIndex(
 			vkDevice->getMemoryTypeIndex(memoryRequirement.memoryTypeBits,
 				enumConvert(mInfo.Heap)));
@@ -124,30 +129,6 @@ CodeRed::VulkanTexture::~VulkanTexture()
 		vkDevice.freeMemory(mMemory);
 		vkDevice.destroyImage(mImage);
 	}
-}
-
-auto CodeRed::VulkanTexture::mapMemory() const -> void* 
-{
-	CODE_RED_THROW_IF(
-		!mMemory,
-		Exception("This texture is not support map memory.")
-	);
-
-	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-
-	return vkDevice.mapMemory(mMemory, 0, VK_WHOLE_SIZE);
-}
-
-void CodeRed::VulkanTexture::unmapMemory() const
-{
-	CODE_RED_THROW_IF(
-		!mMemory,
-		Exception("This texture is not support unmap memory.")
-	);
-
-	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-
-	vkDevice.unmapMemory(mMemory);
 }
 
 #endif

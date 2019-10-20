@@ -19,10 +19,6 @@ namespace CodeRed {
 			const ResourceInfo& info);
 
 		~DirectX12Texture() = default;
-
-		auto mapMemory() const -> void* override;
-
-		void unmapMemory() const override;
 		
 		auto texture() const noexcept -> WRL::ComPtr<ID3D12Resource> { return mTexture; }
 	private:

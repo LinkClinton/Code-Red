@@ -58,29 +58,30 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 			enumHas(mInfo.Usage, ResourceUsage::DepthStencil) ? &clearValue : nullptr,
 			IID_PPV_ARGS(&mTexture)),
 		FailedException(DebugType::Create, { "ID3D12Resource of Texture" }));
+
+	const auto allocateInfo = dxDevice->GetResourceAllocationInfo(0, 1, &desc);
+
+	//because the size of texture is not always same in different adapters
+	//so we need record the real size and the alignment
+	mPhysicalSize = static_cast<size_t>(allocateInfo.SizeInBytes);
+	mAlignment = static_cast<size_t>(allocateInfo.Alignment);
 }
 
 CodeRed::DirectX12Texture::DirectX12Texture(
 	const std::shared_ptr<GpuLogicalDevice>& device,
-	const WRL::ComPtr<ID3D12Resource>& texture, 
+	const WRL::ComPtr<ID3D12Resource>& texture,
 	const ResourceInfo& info) :
 	GpuTexture(device, info),
 	mTexture(texture)
 {
-}
+	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
+	const auto dxDesc = texture->GetDesc();
+	const auto allocateInfo = dxDevice->GetResourceAllocationInfo(0, 1, &dxDesc);
 
-auto CodeRed::DirectX12Texture::mapMemory() const -> void* 
-{
-	void* data = nullptr;
-	
-	mTexture->Map(0, nullptr, &data);
-
-	return data;
-}
-
-void CodeRed::DirectX12Texture::unmapMemory() const
-{
-	mTexture->Unmap(0, nullptr);
+	//because the size of texture is not always same in different adapters
+	//so we need record the real size and the alignment
+	mPhysicalSize = static_cast<size_t>(allocateInfo.SizeInBytes);
+	mAlignment = static_cast<size_t>(allocateInfo.Alignment);
 }
 
 #endif

@@ -25,6 +25,13 @@ namespace CodeRed {
 		auto height() const -> size_t { return std::get<TextureProperty>(mInfo.Property).Height; }
 
 		auto depth() const -> size_t { return std::get<TextureProperty>(mInfo.Property).Depth; }
+
+		auto physicalSize() const -> size_t { return mPhysicalSize; }
+
+		auto alignment() const -> size_t { return mAlignment; }
+	protected:
+		size_t mPhysicalSize;
+		size_t mAlignment;
 	};
 
 }

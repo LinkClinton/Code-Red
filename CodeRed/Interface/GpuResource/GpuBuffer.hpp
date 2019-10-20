@@ -17,6 +17,10 @@ namespace CodeRed {
 		auto stride() const -> size_t { return std::get<BufferProperty>(mInfo.Property).Stride; }
 
 		auto count() const -> size_t { return std::get<BufferProperty>(mInfo.Property).Count; }
+
+		virtual auto mapMemory() const -> void* = 0;
+
+		virtual void unmapMemory() const = 0;
 	};
 	
 }

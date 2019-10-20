@@ -30,10 +30,6 @@ namespace CodeRed {
 		auto heap() const noexcept -> MemoryHeap { return mInfo.Heap; }
 
 		virtual auto size() const -> size_t = 0;
-
-		virtual auto mapMemory() const -> void* = 0;
-
-		virtual void unmapMemory() const = 0;
 	protected:
 		friend class DirectX12GraphicsCommandList;
 		friend class VulkanGraphicsCommandList;

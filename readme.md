@@ -36,3 +36,7 @@ The Windows SDK you can install with Visual Studio.
 ## Tools
 
 - [ShaderCompiler](https://github.com/LinkClinton/Code-Red/tree/master/Tools/ShaderCompiler) : A tool to compile shader to binary file or cpp array.
+
+## Demos
+
+There are some demos in [Code-Red-Demo](https://github.com/LinkClinton/Code-Red-Demo) repository.
