@@ -25,7 +25,7 @@ CodeRed::DirectX12GraphicsCommandList::DirectX12GraphicsCommandList(
 	const std::shared_ptr<GpuCommandAllocator>& allocator) :
 	GpuGraphicsCommandList(device, allocator)
 {
-	//sub module test
+	//sub module test0
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 	const auto dxAllocator = static_cast<DirectX12CommandAllocator*>(mAllocator.get())->allocator();
 
