@@ -1,16 +1,16 @@
 #pragma once
 
-#include <Interface/GpuGraphicsCommandList.hpp>
-#include <Interface/GpuResource/GpuSampler.hpp>
-#include <Interface/GpuResource/GpuTexture.hpp>
-#include "Interface/GpuResource/GpuBuffer.hpp"
-#include <Interface/GpuGraphicsPipeline.hpp>
-#include <Interface/GpuDescriptorHeap.hpp>
-#include <Interface/GpuLogicalDevice.hpp>
+#include <CodeRed/Interface/GpuGraphicsCommandList.hpp>
+#include <CodeRed/Interface/GpuResource/GpuSampler.hpp>
+#include <CodeRed/Interface/GpuResource/GpuTexture.hpp>
+#include "CodeRed/Interface/GpuResource/GpuBuffer.hpp"
+#include <CodeRed/Interface/GpuGraphicsPipeline.hpp>
+#include <CodeRed/Interface/GpuDescriptorHeap.hpp>
+#include <CodeRed/Interface/GpuLogicalDevice.hpp>
 
-#include <Shared/Noncopyable.hpp>
+#include <CodeRed/Shared/Noncopyable.hpp>
 
-#include <ImGui/imgui.h>
+#include <ThirdParties/ImGui/imgui.h>
 
 #include <memory>
 
@@ -45,6 +45,13 @@ namespace CodeRed {
 			const std::shared_ptr<GpuRenderPass>& renderPass,
 			const size_t numFrameResources = 2);
 
+		explicit ImGuiContext(
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuRenderPass>& renderPass,
+			const std::shared_ptr<GpuCommandAllocator>& allocator,
+			const std::shared_ptr<GpuCommandQueue>& queue,
+			const size_t numFrameResources = 2);
+		
 		~ImGuiContext() = default;
 		
 		void setRenderState(
@@ -56,7 +63,9 @@ namespace CodeRed {
 			const std::shared_ptr<GpuGraphicsCommandList>& ctx,
 			ImDrawData* drawData);
 	private:
-		void initializeFontsTexture();
+		void initializeFontsTexture(
+			const std::shared_ptr<GpuCommandAllocator>& allocator,
+			const std::shared_ptr<GpuCommandQueue>& queue);
 	private:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 

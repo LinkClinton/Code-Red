@@ -1,6 +1,6 @@
 #include "ImGuiWindows.hpp"
 
-#include <Shared/DebugReport.hpp>
+#include <CodeRed/Shared/DebugReport.hpp>
 
 CodeRed::ImGuiView::ImGuiView(const ImGuiGenerator& generator) :
 	mImGuiGenerator(generator)
@@ -13,6 +13,16 @@ CodeRed::ImGuiWindows::ImGuiWindows(
 	const std::shared_ptr<GpuRenderPass>& renderPass, 
 	const size_t numFrameResources) :
 	mImGuiContext(std::make_shared<ImGuiContext>(device, renderPass, numFrameResources))
+{
+}
+
+CodeRed::ImGuiWindows::ImGuiWindows(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuRenderPass>& renderPass, 
+	const std::shared_ptr<GpuCommandAllocator>& allocator,
+	const std::shared_ptr<GpuCommandQueue>& queue, 
+	const size_t numFrameResources) :
+	mImGuiContext(std::make_shared<ImGuiContext>(device, renderPass, allocator, queue, numFrameResources))
 {
 }
 
@@ -57,25 +67,27 @@ void CodeRed::ImGuiWindows::remove(
 	if (mWindows[windowName].empty()) mWindows.erase(windowName);
 }
 
-void CodeRed::ImGuiWindows::draw(const std::shared_ptr<GpuGraphicsCommandList>& commandList)
+void CodeRed::ImGuiWindows::update()
 {
+	ImGui::NewFrame();
+
 	std::vector<std::pair<std::string, std::string>> removeList;
-	
+
 	for (auto& window : mWindows) {
 		//drawing the window
 		ImGui::Begin(window.first.c_str());
-		
+
 		for (auto& weakView : window.second) {
-			ImGui::TreeNode(weakView.first.c_str());
 			
 			//if the imgui view is deleted, we will remove the view
 			if (weakView.second.expired()) removeList.push_back({ window.first, weakView.first });
-			else {
-				//drawing
-				weakView.second.lock()->generator()();
-			}
-
-			ImGui::TreePop();
+			else 
+				if (ImGui::TreeNode(weakView.first.c_str())) {
+					//drawing
+					weakView.second.lock()->generator()();
+					
+					ImGui::TreePop();
+				}
 		}
 
 		ImGui::End();
@@ -85,6 +97,9 @@ void CodeRed::ImGuiWindows::draw(const std::shared_ptr<GpuGraphicsCommandList>& 
 	for (auto view : removeList) remove(view.first, view.second);
 
 	ImGui::Render();
+}
 
+void CodeRed::ImGuiWindows::draw(const std::shared_ptr<GpuGraphicsCommandList>& commandList)
+{
 	mImGuiContext->draw(commandList, ImGui::GetDrawData());
 }

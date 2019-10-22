@@ -72,25 +72,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(VULKAN_SDK)\Include;$(ProjectDir)..\..\CodeRed;$(ProjectDir)..\..\ThirdParties;$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(ProjectDir)..\..\;$(IncludePath)</IncludePath>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(VULKAN_SDK)\Include;$(ProjectDir)..\..\CodeRed;$(ProjectDir)..\..\ThirdParties;$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(ProjectDir)..\..\;$(IncludePath)</IncludePath>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(VULKAN_SDK)\Include;$(ProjectDir)..\..\CodeRed;$(ProjectDir)..\..\ThirdParties;$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(ProjectDir)..\..\;$(IncludePath)</IncludePath>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Bin\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <IncludePath>$(VULKAN_SDK)\Include;$(ProjectDir)..\..\CodeRed;$(ProjectDir)..\..\ThirdParties;$(IncludePath)</IncludePath>
+    <IncludePath>$(VULKAN_SDK)\Include;$(ProjectDir)..\..\;$(IncludePath)</IncludePath>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

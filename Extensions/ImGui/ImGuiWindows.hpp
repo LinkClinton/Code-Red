@@ -26,6 +26,13 @@ namespace CodeRed {
 			const std::shared_ptr<GpuRenderPass>& renderPass,
 			const size_t numFrameResources = 2);
 
+		explicit ImGuiWindows(
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuRenderPass>& renderPass,
+			const std::shared_ptr<GpuCommandAllocator>& allocator,
+			const std::shared_ptr<GpuCommandQueue>& queue,
+			const size_t numFrameResources = 2);
+		
 		~ImGuiWindows() = default;
 
 		void reset(
@@ -42,6 +49,8 @@ namespace CodeRed {
 			const std::string& windowName,
 			const std::string& viewName);
 
+		void update();
+		
 		void draw(
 			const std::shared_ptr<GpuGraphicsCommandList>& commandList);
 	private:
