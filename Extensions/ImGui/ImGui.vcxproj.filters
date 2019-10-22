@@ -3,10 +3,12 @@
   <ItemGroup>
     <ClInclude Include="ImGuiContext.hpp" />
     <ClInclude Include="ImGui.hpp" />
+    <ClInclude Include="ImGuiWindows.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImGuiContext.cpp" />
     <ClCompile Include="ImGui.cpp" />
+    <ClCompile Include="ImGuiWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

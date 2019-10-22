@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="ImGui.hpp" />
     <ClInclude Include="ImGuiContext.hpp" />
+    <ClInclude Include="ImGuiWindows.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CodeRed\CodeRed.vcxproj">
@@ -165,6 +166,7 @@
   <ItemGroup>
     <ClCompile Include="ImGui.cpp" />
     <ClCompile Include="ImGuiContext.cpp" />
+    <ClCompile Include="ImGuiWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Shaders\DxImGuiPixel.hlsl">
