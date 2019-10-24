@@ -3,6 +3,7 @@
 #include "../Shared/Noncopyable.hpp"
 
 #include <memory>
+#include <vector>
 
 namespace CodeRed {
 
