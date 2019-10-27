@@ -45,6 +45,8 @@ namespace CodeRed {
 			const std::string& viewName,
 			const std::shared_ptr<ImGuiView>& view);
 
+		void add(const std::shared_ptr<ImGuiView>& view);
+
 		void remove(
 			const std::string& windowName,
 			const std::string& viewName);
@@ -59,6 +61,7 @@ namespace CodeRed {
 		std::shared_ptr<ImGuiContext> mImGuiContext;
 
 		std::unordered_map<std::string, Views> mWindows;
+		std::vector<std::weak_ptr<ImGuiView>> mExtraCalls;
 	};
 	
 }
