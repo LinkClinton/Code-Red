@@ -28,18 +28,24 @@ CodeRed::ImGuiFrameResources::ImGuiFrameResources(
 
 void CodeRed::ImGuiFrameResources::update(ImDrawData* drawData)
 {
+	auto vertexBufferCount = mVertexBuffer->count();
+	auto indexBufferCount = mIndexBuffer->count();
+	
+	while (vertexBufferCount < drawData->TotalVtxCount) vertexBufferCount += mVertexBufferIncrease;
+	while (indexBufferCount < drawData->TotalIdxCount) indexBufferCount += mIndexBufferIncrease;
+	
 	CODE_RED_TRY_EXECUTE(
-		mVertexBuffer->count() < drawData->TotalVtxCount,
+		mVertexBuffer->count() < vertexBufferCount,
 		mVertexBuffer = mDevice->createBuffer(
-			ResourceInfo::VertexBuffer(sizeof(ImDrawVert), mVertexBuffer->count() + mVertexBufferIncrease,
+			ResourceInfo::VertexBuffer(sizeof(ImDrawVert), vertexBufferCount,
 				MemoryHeap::Upload)
 		)
 	);
 
 	CODE_RED_TRY_EXECUTE(
-		mIndexBuffer->count() < drawData->TotalIdxCount,
+		mIndexBuffer->count() < indexBufferCount,
 		mIndexBuffer = mDevice->createBuffer(
-			ResourceInfo::IndexBuffer(sizeof(ImDrawIdx), mIndexBuffer->count() + mIndexBufferIncrease,
+			ResourceInfo::IndexBuffer(sizeof(ImDrawIdx), indexBufferCount,
 				MemoryHeap::Upload)
 		)
 	);
