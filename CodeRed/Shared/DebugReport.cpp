@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <cassert>
-
+#include <sstream>
+#include <iomanip>
+#include <chrono>
 
 void CodeRed::DebugStdListener::receive(const std::string& message)
 {
@@ -12,7 +14,7 @@ void CodeRed::DebugStdListener::receive(const std::string& message)
 
 void CodeRed::DebugReport::warning(const std::string& message)
 {
-	return output("cr-warning : " + message);
+	return output(time() + " [cr-warning] " + message);
 }
 
 void CodeRed::DebugReport::warning(
@@ -28,7 +30,7 @@ void CodeRed::DebugReport::warning(
 	const std::vector<std::string>& debug_message)
 {
 	return warning(push(select(type), messages) + 
-		"\ncr-debug message : " + merge(debug_message));
+		" [cr-debug message :" + merge(debug_message) + "]");
 }
 
 void CodeRed::DebugReport::warning(
@@ -40,7 +42,7 @@ void CodeRed::DebugReport::warning(
 
 void CodeRed::DebugReport::error(const std::string& message)
 {
-	return output("cr-error : " + message);
+	return output(time() + " [cr-error] " + message);
 }
 
 void CodeRed::DebugReport::error(
@@ -56,7 +58,7 @@ void CodeRed::DebugReport::error(
 	const std::vector<std::string>& debug_message)
 {
 	return error(push(select(type), messages) +
-		"\ncr-debug message : " + merge(debug_message));
+		" [cr-debug message : " + merge(debug_message) + "]");
 }
 
 void CodeRed::DebugReport::error(
@@ -69,7 +71,7 @@ void CodeRed::DebugReport::error(
 void CodeRed::DebugReport::message(
 	const std::string& message)
 {
-	return output("cr-message : " + message);
+	return output(time() + " [cr-message] " + message);
 }
 
 void CodeRed::DebugReport::message(
@@ -83,7 +85,7 @@ auto CodeRed::DebugReport::makeError(
 	const std::string& message)
 	-> std::string
 {
-	return "cr-error   : " + message;
+	return time() + " [cr-error] " + message;
 }
 
 auto CodeRed::DebugReport::makeError(
@@ -101,7 +103,7 @@ auto CodeRed::DebugReport::makeError(
 	-> std::string
 {
 	return makeError(push(format, messages) +
-		"\ncr-debug message : " + merge(debug_message));
+		" [cr-debug message : " + merge(debug_message) + "]");
 }
 
 auto CodeRed::DebugReport::makeError(
@@ -136,7 +138,7 @@ auto CodeRed::DebugReport::make(
 	-> std::string
 {
 	return push(select(type), messages) +
-		"\ncr-debug message : " + merge(debug_message);
+		" [cr-debug message : " + merge(debug_message) + "]";
 }
 
 auto CodeRed::DebugReport::listeners() -> std::vector<std::shared_ptr<DebugListener>>& 
@@ -207,4 +209,17 @@ auto CodeRed::DebugReport::push(const std::string& format,
 	}
 
 	return message;
+}
+
+#pragma warning(disable : 4996)
+
+auto CodeRed::DebugReport::time() -> std::string
+{
+	std::stringstream stream;
+
+	auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+	stream << "[" << std::put_time(std::localtime(&now), "%F %T") << "]";
+
+	return stream.str();
 }

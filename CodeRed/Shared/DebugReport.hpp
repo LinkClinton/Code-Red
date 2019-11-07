@@ -121,7 +121,7 @@ namespace CodeRed {
 		static inline std::vector<std::shared_ptr<DebugListener>> mListeners = {
 			std::make_shared<DebugStdListener>()
 		};
-		
+
 		static void output(const std::string& text);
 
 		static auto select(const DebugType type) -> std::string;
@@ -133,6 +133,8 @@ namespace CodeRed {
 			const std::string& format, 
 			const std::vector<std::string>& messages) -> std::string;
 
+		static auto time() -> std::string;
+		
 		friend class Exception;
 	};
 	
