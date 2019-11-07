@@ -5,6 +5,11 @@
 #include <cassert>
 
 
+void CodeRed::DebugStdListener::receive(const std::string& message)
+{
+	std::cout << message << std::endl;
+}
+
 void CodeRed::DebugReport::warning(const std::string& message)
 {
 	return output("cr-warning : " + message);
@@ -134,9 +139,14 @@ auto CodeRed::DebugReport::make(
 		"\ncr-debug message : " + merge(debug_message);
 }
 
+auto CodeRed::DebugReport::listeners() -> std::vector<std::shared_ptr<DebugListener>>& 
+{
+	return mListeners;
+}
+
 void CodeRed::DebugReport::output(const std::string& text)
 {
-	std::cout << text << std::endl;
+	for (const auto listener : mListeners) listener->receive(text);
 }
 
 auto CodeRed::DebugReport::select(const DebugType type) -> std::string

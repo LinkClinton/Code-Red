@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Enum/DebugType.hpp"
+#include "Noncopyable.hpp"
 
 #include <vector>
+#include <memory>
 #include <string>
 
 #undef CODE_RED_DEBUG_LOG
@@ -21,6 +23,18 @@
 #endif
 
 namespace CodeRed {
+
+	class DebugListener : public Noncopyable {
+	protected:
+		virtual void receive(const std::string& message) = 0;
+
+		friend class DebugReport;
+	};
+
+	class DebugStdListener : public DebugListener {
+	protected:
+		void receive(const std::string& message) override;
+	};
 	
 	class DebugReport final {
 	public:
@@ -101,7 +115,13 @@ namespace CodeRed {
 			const std::vector<std::string> messages,
 			const std::vector<std::string> debug_message)
 			-> std::string;
+
+		static auto listeners() -> std::vector<std::shared_ptr<DebugListener>>&;
 	private:
+		static inline std::vector<std::shared_ptr<DebugListener>> mListeners = {
+			std::make_shared<DebugStdListener>()
+		};
+		
 		static void output(const std::string& text);
 
 		static auto select(const DebugType type) -> std::string;
