@@ -9,7 +9,7 @@ namespace CodeRed {
 
 	class GpuLogicalDevice;
 	
-	class GpuResource : public Noncopyable {
+	class GpuResource : public Noncopyable, public std::enable_shared_from_this<GpuResource> {
 	protected:
 		explicit GpuResource(
 			const std::shared_ptr<GpuLogicalDevice>& device,

@@ -12,6 +12,7 @@
 
 #include <ThirdParties/ImGui/imgui.h>
 
+#include <unordered_map>
 #include <memory>
 
 namespace CodeRed {
@@ -69,7 +70,12 @@ namespace CodeRed {
 	private:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 
-		std::shared_ptr<GpuDescriptorHeap> mDescriptorHeap;
+		std::unordered_map<
+			std::shared_ptr<GpuTexture>,
+			std::shared_ptr<GpuDescriptorHeap>> mCurrentDescriptorHeaps;
+
+		std::vector<std::shared_ptr<GpuDescriptorHeap>> mDescriptorHeapPool;
+		
 		std::shared_ptr<GpuResourceLayout> mResourceLayout;
 		std::shared_ptr<GpuTexture> mFontsTexture;
 		std::shared_ptr<GpuSampler> mSampler;
@@ -80,7 +86,7 @@ namespace CodeRed {
 		std::vector<Byte> mVertexShaderCode;
 		std::vector<Byte> mPixelShaderCode;
 		
-		std::vector<ImGuiFrameResources> mFrameResouces;
+		std::vector<ImGuiFrameResources> mFrameResources;
 		
 		size_t mCurrentFrameIndex = 0;
 	};

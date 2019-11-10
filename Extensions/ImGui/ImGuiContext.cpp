@@ -151,10 +151,8 @@ CodeRed::ImGuiContext::ImGuiContext(
 	);
 
 	for (size_t index = 0; index < numFrameResources; index++)
-		mFrameResouces.push_back(ImGuiFrameResources(mDevice));
-
-	mDescriptorHeap = mDevice->createDescriptorHeap(mResourceLayout);
-
+		mFrameResources.push_back(ImGuiFrameResources(mDevice));
+	
 	initializeFontsTexture(allocator, queue);
 }
 
@@ -194,7 +192,6 @@ void CodeRed::ImGuiContext::setRenderState(
 
 	ctx->setGraphicsPipeline(mPipeline);
 	ctx->setResourceLayout(mResourceLayout);
-	ctx->setDescriptorHeap(mDescriptorHeap);
 	ctx->setConstant32Bits(value32Bits);
 }
 
@@ -207,7 +204,7 @@ void CodeRed::ImGuiContext::draw(
 	if (drawData->DisplaySize.x <= 0.0f || drawData->DisplaySize.y <= 0.0f)
 		return;
 
-	auto &frameResources = mFrameResouces[mCurrentFrameIndex];
+	auto &frameResources = mFrameResources[mCurrentFrameIndex];
 
 	frameResources.update(drawData);
 
@@ -218,8 +215,8 @@ void CodeRed::ImGuiContext::draw(
 
 	const auto clipOff = drawData->DisplayPos;
 
-	for (int nCommnadList = 0; nCommnadList < drawData->CmdListsCount; nCommnadList++) {
-		const ImDrawList* commandList = drawData->CmdLists[nCommnadList];
+	for (int nCommandList = 0; nCommandList < drawData->CmdListsCount; nCommandList++) {
+		const ImDrawList* commandList = drawData->CmdLists[nCommandList];
 
 		for (int nCommand = 0; nCommand < commandList->CmdBuffer.Size; nCommand++) {
 			const auto command = &commandList->CmdBuffer[nCommand];
@@ -238,6 +235,22 @@ void CodeRed::ImGuiContext::draw(
 					static_cast<size_t>(command->ClipRect.w - clipOff.y)
 				};
 
+				auto texture = std::static_pointer_cast<GpuTexture>(
+					static_cast<GpuTexture*>(command->TextureId)->shared_from_this());
+
+				//if we do not find the texture in descriptor heaps, we need add it into descriptor heaps
+				if (mCurrentDescriptorHeaps.find(texture) == mCurrentDescriptorHeaps.end()) {
+
+					//if we do not have enough descriptor heaps, we need increase them
+					if (mCurrentDescriptorHeaps.size() == mDescriptorHeapPool.size()) 
+						mDescriptorHeapPool.push_back(mDevice->createDescriptorHeap(mResourceLayout));
+
+					mCurrentDescriptorHeaps.insert({ texture, mDescriptorHeapPool[mCurrentDescriptorHeaps.size()] });
+					
+					mCurrentDescriptorHeaps[texture]->bindTexture(texture, 0);
+				}
+
+				ctx->setDescriptorHeap(mCurrentDescriptorHeaps[texture]);
 				ctx->setScissorRect(rect);
 				ctx->drawIndexed(command->ElemCount, 1,
 					command->IdxOffset + globalIdxOffset,
@@ -249,7 +262,8 @@ void CodeRed::ImGuiContext::draw(
 		globalVtxOffset = globalVtxOffset + commandList->VtxBuffer.Size;
 	}
 
-	mCurrentFrameIndex = (mCurrentFrameIndex + 1) % mFrameResouces.size();
+	mCurrentFrameIndex = (mCurrentFrameIndex + 1) % mFrameResources.size();
+	mCurrentDescriptorHeaps.clear();
 }
 
 void CodeRed::ImGuiContext::initializeFontsTexture(
@@ -282,8 +296,5 @@ void CodeRed::ImGuiContext::initializeFontsTexture(
 	queue->execute({ commandList });
 	queue->waitIdle();
 
-	mDescriptorHeap->bindTexture(mFontsTexture, 0);
-
-	//we set it to nullptr, because we only need one font texture
-	io.Fonts->TexID = nullptr;
+	io.Fonts->TexID = mFontsTexture.get();
 }
