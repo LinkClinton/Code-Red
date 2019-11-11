@@ -199,6 +199,11 @@ void CodeRed::ImGuiContext::draw(
 	const std::shared_ptr<GpuGraphicsCommandList>& ctx, 
 	ImDrawData* drawData)
 {
+	//clear the current heaps, we can not clear this heaps at the end of draw
+	//because we need keep the resources' life until the queue finish the commands
+	//so we only can clear them at the begin of draw
+	mCurrentDescriptorHeaps.clear();
+	
 	//copy from https://github.com/ocornut/imgui/blob/master/examples/imgui_impl_dx12.cpp#L123
 	// Avoid rendering when minimized
 	if (drawData->DisplaySize.x <= 0.0f || drawData->DisplaySize.y <= 0.0f)
@@ -263,7 +268,6 @@ void CodeRed::ImGuiContext::draw(
 	}
 
 	mCurrentFrameIndex = (mCurrentFrameIndex + 1) % mFrameResources.size();
-	mCurrentDescriptorHeaps.clear();
 }
 
 void CodeRed::ImGuiContext::initializeFontsTexture(
