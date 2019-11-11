@@ -83,7 +83,7 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 
 	//release all back buffers
 	//if we use these back buffers to create rtv or any things
-	//we need to destory them before we resize the swap chain
+	//we need to destroy them before we resize the swap chain
 	for (auto& buffer : mBuffers) buffer.reset();
 	
 	CODE_RED_THROW_IF_FAILED(
@@ -116,7 +116,7 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 
 void CodeRed::DirectX12SwapChain::present()
 {
-	mSwapChain->Present(0, 0);
+	mSwapChain->Present(1, 0);
 }
 
 auto CodeRed::DirectX12SwapChain::currentBufferIndex() const
