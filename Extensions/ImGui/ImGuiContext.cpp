@@ -201,7 +201,7 @@ void CodeRed::ImGuiContext::draw(
 {
 	//clear the current heaps, we can not clear this heaps at the end of draw
 	//because we need keep the resources' life until the queue finish the commands
-	//so we only can clear them at the begin of draw
+	//so we can only clear them at the begin of draw
 	mCurrentDescriptorHeaps.clear();
 	
 	//copy from https://github.com/ocornut/imgui/blob/master/examples/imgui_impl_dx12.cpp#L123
