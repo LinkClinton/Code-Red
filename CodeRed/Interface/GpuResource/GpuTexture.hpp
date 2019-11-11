@@ -20,6 +20,8 @@ namespace CodeRed {
 
 		auto dimension() const noexcept -> Dimension { return std::get<TextureProperty>(mInfo.Property).Dimension; }
 
+		auto clearValue() const noexcept -> ClearValue { return std::get<TextureProperty>(mInfo.Property).ClearValue; }
+		
 		auto width() const noexcept -> size_t { return std::get<TextureProperty>(mInfo.Property).Width; }
 
 		auto height() const -> size_t { return std::get<TextureProperty>(mInfo.Property).Height; }

@@ -39,12 +39,12 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	D3D12_CLEAR_VALUE clearValue = {};
 
 	clearValue.Format = desc.Format;
-	clearValue.Color[0] = 0.0f;
-	clearValue.Color[1] = 0.0f;
-	clearValue.Color[2] = 0.0f;
-	clearValue.Color[3] = 0.0f;
-	clearValue.DepthStencil.Depth = 1.0f;
-	clearValue.DepthStencil.Stencil = 0;
+	clearValue.Color[0] = property.ClearValue.Red;
+	clearValue.Color[1] = property.ClearValue.Green;
+	clearValue.Color[2] = property.ClearValue.Blue;
+	clearValue.Color[3] = property.ClearValue.Alpha;
+	clearValue.DepthStencil.Depth = property.ClearValue.Depth;
+	clearValue.DepthStencil.Stencil = property.ClearValue.Stencil;
 
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 

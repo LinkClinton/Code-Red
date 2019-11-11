@@ -33,6 +33,8 @@
 - `type` : resource type, such as buffer, texture and so on.
 - `heap` : default or upload. Deafult means we can not mapped the memory to CPU(but we can copy data from resource to them). Upload means we can mapped memory to CPU and copy data from CPU to them.
 
+**Notice : the heap of texture must be default.**
+
 ### Member Functions
 
 There are some static member functions to help us create resource easier. For example, we can use `ResourceInfo::Texture2D(...)` to create a `ResourceInfo` used to create `GpuTexture`.
@@ -128,6 +130,7 @@ We recommend to use `GpuLogicalDevice` to create texture.
 - `Size` : the size of texture.
 - `PixelFormat` : the format of pixel in texture.
 - `Dimension` : the dimension of texture(1D, 2D, 3D).
+- `ClearValue` : the clear value used in clear rtv/dsv operation.
 
 The size of texture is equal width * height * depth * pixel size. 
 
@@ -135,6 +138,8 @@ For `Texture1D` the height and depth must be one.
 For `Texture2D` the depth must be one.
 
 **Notice : the layout of texture must be `ResourceLayout::Undefined` when we create a texture.**
+
+If you are using rtv\dsv in DirectX12 mode, you can set the `TextureProperty::ClearValue` to optimize the clear operation(**the value you used in clear operation should be same as the value you set**).
 
 ### Member Functions
 

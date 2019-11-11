@@ -14,3 +14,4 @@ Index for documents.
 - [Render Pass](./RenderPass.md) : detail of render pass, frame buffer.
 - [Resource Binding](./ResourceBinding.md): detail of resource binding, descriptor heap.
 - [Resource Layout](./ResourceLayout.md) : detail of `ResourceLayout`.
+- [Debug Report](./DebugReport.md) : detail of `DebugReport`.

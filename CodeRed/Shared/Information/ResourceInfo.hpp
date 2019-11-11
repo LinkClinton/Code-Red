@@ -7,6 +7,7 @@
 #include "../Enum/MemoryHeap.hpp"
 #include "../Enum/Dimension.hpp"
 
+#include "../ClearValue.hpp"
 #include "../PixelFormatSizeOf.hpp"
 
 #include <variant>
@@ -37,6 +38,8 @@ namespace CodeRed {
 		PixelFormat PixelFormat = PixelFormat::Unknown;
 		Dimension Dimension = Dimension::Dimension1D;
 
+		ClearValue ClearValue = CodeRed::ClearValue();
+		
 		TextureProperty() = default;
 
 		TextureProperty(
@@ -44,13 +47,15 @@ namespace CodeRed {
 			const size_t height,
 			const size_t depth,
 			const CodeRed::PixelFormat format,
-			const CodeRed::Dimension dimension) :
+			const CodeRed::Dimension dimension,
+			const CodeRed::ClearValue& clearValue = CodeRed::ClearValue()) :
 			Width(width),
 			Height(height),
 			Depth(depth),
 			Size(width * height * depth * PixelFormatSizeOf::get(format)),
 			PixelFormat(format),
-			Dimension(dimension) {}
+			Dimension(dimension),
+			ClearValue(clearValue) {}
 	};
 
 	using ResourceProperty =  std::variant<BufferProperty, TextureProperty>;
@@ -139,24 +144,26 @@ namespace CodeRed {
 		static auto Texture1D(
 			const size_t width, 
 			const PixelFormat format,
-			const ResourceUsage usage = ResourceUsage::None,
-			const MemoryHeap heap = MemoryHeap::Default)
+			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
 				TextureProperty(width, 1, 1, format, Dimension::Dimension1D),
-				ResourceLayout::Undefined, usage, ResourceType::Texture, heap);
+				ResourceLayout::Undefined, usage, 
+				ResourceType::Texture, 
+				MemoryHeap::Default);
 		}
 
 		static auto Texture2D(
 			const size_t width,
 			const size_t height,
 			const PixelFormat format,
-			const ResourceUsage usage = ResourceUsage::None,
-			const MemoryHeap heap = MemoryHeap::Default)
+			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, 1, format, Dimension::Dimension2D),
-				ResourceLayout::Undefined, usage, ResourceType::Texture, heap);
+				ResourceLayout::Undefined, usage, 
+				ResourceType::Texture, 
+				MemoryHeap::Default);
 		}
 
 		static auto Texture3D(
@@ -164,12 +171,41 @@ namespace CodeRed {
 			const size_t height,
 			const size_t depth,
 			const PixelFormat format,
-			const ResourceUsage usage = ResourceUsage::None,
-			const MemoryHeap heap = MemoryHeap::Default)
+			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, depth, format, Dimension::Dimension3D),
-				ResourceLayout::Undefined, usage, ResourceType::Texture, heap);
+				ResourceLayout::Undefined, usage, 
+				ResourceType::Texture, 
+				MemoryHeap::Default);
+		}
+
+		static auto RenderTarget(
+			const size_t width,
+			const size_t height,
+			const PixelFormat format,
+			const ClearValue& clearValue = ClearValue())
+		{
+			return ResourceInfo(
+				TextureProperty(width, height, 1, format, Dimension::Dimension2D, clearValue),
+				ResourceLayout::Undefined, 
+				ResourceUsage::RenderTarget,
+				ResourceType::Texture,
+				MemoryHeap::Default);
+		}
+
+		static auto DepthStencil(
+			const size_t width,
+			const size_t height,
+			const PixelFormat format,
+			const ClearValue& clearValue = ClearValue())
+		{
+			return ResourceInfo(
+				TextureProperty(width, height, 1, format, Dimension::Dimension2D, clearValue),
+				ResourceLayout::Undefined,
+				ResourceUsage::DepthStencil,
+				ResourceType::Texture,
+				MemoryHeap::Default);
 		}
 	};
 
