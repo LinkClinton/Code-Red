@@ -115,7 +115,7 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 
 void CodeRed::DirectX12SwapChain::present()
 {
-	mSwapChain->Present(1, 0);
+	mSwapChain->Present(0, 0);
 }
 
 auto CodeRed::DirectX12SwapChain::currentBufferIndex() const
