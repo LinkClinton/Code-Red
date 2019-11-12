@@ -51,9 +51,9 @@ void CodeRed::ImGuiWindows::add(
 	mWindows[windowName][viewName] = view;
 }
 
-void CodeRed::ImGuiWindows::add(const std::shared_ptr<ImGuiView>& view)
+void CodeRed::ImGuiWindows::add(const std::string& name, const std::shared_ptr<ImGuiView>& view)
 {
-	mExtraCalls.push_back(view);
+	mExtraCalls.insert({ name, view });
 }
 
 void CodeRed::ImGuiWindows::remove(
@@ -72,22 +72,22 @@ void CodeRed::ImGuiWindows::remove(
 	if (mWindows[windowName].empty()) mWindows.erase(windowName);
 }
 
+void CodeRed::ImGuiWindows::remove(const std::string& name)
+{
+	mExtraCalls.erase(name);
+}
+
 void CodeRed::ImGuiWindows::update()
 {
 	ImGui::NewFrame();
 
 	std::vector<std::pair<std::string, std::string>> removeList;
+	std::vector<std::string> removeExtraCalls;;
 	
-	//record the extra calls that was not deleted
-	std::vector<std::weak_ptr<ImGuiView>> mNewExtraCalls;
-
 	for (auto& extraCall : mExtraCalls) {
-		//if the extra call is deleted, we do not process it
-		if (extraCall.expired()) continue;
-
-		extraCall.lock()->generator()();
-
-		mNewExtraCalls.push_back(extraCall);
+		//if the extra call is deleted, we push it to remove list
+		if (extraCall.second.expired()) removeExtraCalls.push_back(extraCall.first);
+		else extraCall.second.lock()->generator()();
 	}
 
 	for (auto& window : mWindows) {
@@ -112,10 +112,8 @@ void CodeRed::ImGuiWindows::update()
 
 	//remove views that is deleted.
 	for (auto view : removeList) remove(view.first, view.second);
+	for (auto view : removeExtraCalls) remove(view);
 	
-	//update the extra calls
-	mExtraCalls = mNewExtraCalls;
-
 	ImGui::Render();
 }
 
