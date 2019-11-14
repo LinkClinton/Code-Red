@@ -39,13 +39,21 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	D3D12_CLEAR_VALUE clearValue = {};
 
 	clearValue.Format = desc.Format;
-	clearValue.Color[0] = property.ClearValue.Red;
-	clearValue.Color[1] = property.ClearValue.Green;
-	clearValue.Color[2] = property.ClearValue.Blue;
-	clearValue.Color[3] = property.ClearValue.Alpha;
-	clearValue.DepthStencil.Depth = property.ClearValue.Depth;
-	clearValue.DepthStencil.Stencil = property.ClearValue.Stencil;
 
+	//because the D3D12_CLEAR_VALUE::Color and D3D12_CLEAR_VALUE::DepthStencil
+	//is union struct, so we need set them carefully
+	//if the texture is a rtv, we only can set clear value of color
+	//if the texture is a dsv, we only can set clear value of depth
+	if (enumHas(mInfo.Usage, ResourceUsage::RenderTarget)) {
+		clearValue.Color[0] = property.ClearValue.Red;
+		clearValue.Color[1] = property.ClearValue.Green;
+		clearValue.Color[2] = property.ClearValue.Blue;
+		clearValue.Color[3] = property.ClearValue.Alpha;
+	}else {
+		clearValue.DepthStencil.Depth = property.ClearValue.Depth;
+		clearValue.DepthStencil.Stencil = property.ClearValue.Stencil;
+	}
+	
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
 
 	CODE_RED_THROW_IF_FAILED(
