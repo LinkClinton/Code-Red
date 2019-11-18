@@ -1,6 +1,6 @@
 # CodeRed
 
-`CodeRed` is an Graphics Interface supports DirectX12 and Vulkan.
+`CodeRed` is a Graphics Interface supports DirectX12 and Vulkan.
 
 - Render anything instead of using Graphics API directly. 
 - Do not need to take care of the different between DirectX12 and Vulkan.
