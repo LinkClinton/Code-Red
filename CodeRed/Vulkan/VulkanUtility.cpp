@@ -297,6 +297,8 @@ auto CodeRed::Vulkan::enumConvert(const PrimitiveTopology topology)
 	-> vk::PrimitiveTopology
 {
 	switch (topology) {
+	case PrimitiveTopology::LineList: return vk::PrimitiveTopology::eLineList;
+	case PrimitiveTopology::LineStrip: return vk::PrimitiveTopology::eLineStrip;
 	case PrimitiveTopology::TriangleList: return vk::PrimitiveTopology::eTriangleList;
 	case PrimitiveTopology::TriangleStrip: return vk::PrimitiveTopology::eTriangleStrip;
 	default:

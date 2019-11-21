@@ -361,6 +361,8 @@ auto CodeRed::DirectX12::enumConvert(const PrimitiveTopology topology)
 	-> D3D_PRIMITIVE_TOPOLOGY
 {
 	switch (topology) {
+	case PrimitiveTopology::LineList: return D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+	case PrimitiveTopology::LineStrip: return D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
 	case PrimitiveTopology::TriangleList: return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	case PrimitiveTopology::TriangleStrip: return D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 	default:
@@ -375,6 +377,18 @@ auto CodeRed::DirectX12::enumConvert1(const Dimension dimension)
 	case Dimension::Dimension1D: return D3D12_SRV_DIMENSION_TEXTURE1D;
 	case Dimension::Dimension2D: return D3D12_SRV_DIMENSION_TEXTURE2D;
 	case Dimension::Dimension3D: return D3D12_SRV_DIMENSION_TEXTURE3D;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::DirectX12::enumConvert1(const PrimitiveTopology topology) -> D3D12_PRIMITIVE_TOPOLOGY_TYPE
+{
+	switch (topology) {
+	case PrimitiveTopology::LineList: return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	case PrimitiveTopology::LineStrip: return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	case PrimitiveTopology::TriangleList: return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	case PrimitiveTopology::TriangleStrip: return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
