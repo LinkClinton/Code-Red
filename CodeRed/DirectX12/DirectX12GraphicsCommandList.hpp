@@ -41,6 +41,10 @@ namespace CodeRed {
 		void setVertexBuffer(
 			const std::shared_ptr<GpuBuffer>& buffer) override;
 
+		void setVertexBuffers(
+			const std::vector<std::shared_ptr<GpuBuffer>>& buffers,
+			const size_t startSlot = 0) override;
+		
 		void setIndexBuffer(
 			const std::shared_ptr<GpuBuffer>& buffer,
 			const IndexType type = IndexType::UInt32) override;

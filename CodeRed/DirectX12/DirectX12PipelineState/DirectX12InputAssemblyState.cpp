@@ -12,20 +12,20 @@ CodeRed::DirectX12InputAssemblyState::DirectX12InputAssemblyState(
 	const PrimitiveTopology primitive_topology) :
 	GpuInputAssemblyState(device, elements, primitive_topology)
 {
-	UINT offsetInBytes = 0;
+	auto offsetInBytes = std::vector<UINT>(mSlotCount);
 	
 	for (auto &element : mElements) {
 		mInputLayoutElements.push_back({
 			element.Name.c_str(),
 			0,
 			enumConvert(element.Format),
-			0,
-			offsetInBytes,
+			static_cast<UINT>(element.Slot),
+			offsetInBytes[element.Slot],
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
 			0
 			});
 
-		offsetInBytes = offsetInBytes + static_cast<UINT>(PixelFormatSizeOf::get(element.Format));
+		offsetInBytes[element.Slot] = offsetInBytes[element.Slot] + static_cast<UINT>(PixelFormatSizeOf::get(element.Format));
 	}
 
 	mInputLayout.NumElements = static_cast<UINT>(mInputLayoutElements.size());

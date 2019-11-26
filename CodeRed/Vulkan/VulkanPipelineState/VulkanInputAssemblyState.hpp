@@ -21,10 +21,10 @@ namespace CodeRed {
 		auto vertexInput() const noexcept -> vk::PipelineVertexInputStateCreateInfo { return mVertexInput; }
 	private:
 		std::vector<vk::VertexInputAttributeDescription> mVertexAttributes = {};
+		std::vector<vk::VertexInputBindingDescription> mVertexBindings = {};
 		
 		vk::PipelineInputAssemblyStateCreateInfo mInputAssembly = {};
 		vk::PipelineVertexInputStateCreateInfo mVertexInput = {};
-		vk::VertexInputBindingDescription mVertexBinding = {};
 	};
 	
 }

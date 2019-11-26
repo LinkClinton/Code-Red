@@ -147,6 +147,21 @@ void CodeRed::VulkanGraphicsCommandList::setVertexBuffer(
 	mCommandBuffer.bindVertexBuffers(0, vkBuffer->buffer(), { 0 });
 }
 
+void CodeRed::VulkanGraphicsCommandList::setVertexBuffers(
+	const std::vector<std::shared_ptr<GpuBuffer>>& buffers,
+	const size_t startSlot)
+{
+	auto vkBuffers = std::vector<vk::Buffer>(buffers.size());
+	auto offsets = std::vector<vk::DeviceSize>(buffers.size(), 0);
+
+	for (size_t index = 0; index < vkBuffers.size(); index++) 
+		vkBuffers[index] = std::static_pointer_cast<VulkanBuffer>(buffers[index])->buffer();
+	
+	mCommandBuffer.bindVertexBuffers(
+		static_cast<uint32_t>(startSlot),
+		vkBuffers, offsets);
+}
+
 void CodeRed::VulkanGraphicsCommandList::setIndexBuffer(
 	const std::shared_ptr<GpuBuffer>& buffer,
 	const IndexType type)

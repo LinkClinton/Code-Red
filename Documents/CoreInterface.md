@@ -152,6 +152,7 @@ Most member functions are same usage as DirectX12 and Vulkan. And some functions
 - `setGraphicsPipeline()` : set the graphics pipeline.
 - `setResourceLayout()` : set the resource layout.
 - `setVertexBuffer()` : set the vertex buffer.
+- `setVertexBuffers()` : set the vertex buffers.
 - `setIndexBuffer()` : set the index buffer.
 - `setDescriptorHeap()` : set the descriptor heap.
 - `setConstant32Bits()` : set the values of 32Bits.

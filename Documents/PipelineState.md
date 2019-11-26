@@ -44,13 +44,21 @@ We recommend to use `GpuPipelineFactory` to create input assembly state.
 struct InputLayoutElement {
     PixelFormat Format;
     std::string Name;
+    size_t Slot;
 }
 ```
 
 - `Format` : the element's format and size.
 - `Name` : the element's name.
+- `Slot` : indicate which slot the element from.
 
 `InputLayoutElement` is shared with DirectX12 and Vulkan interface. It is used to define the layout of input vertex. The number of element in `elements`(**in constructer state**) is the number of components in vertex. **The n-th element describe the n-th component of vertex.**
+
+`InputLayoutElement::Slot` indicate the data of element or component of vertex from which vertex buffer. We can set more than one vertex buffers in one draw call. In fact, when we set vertex buffers, we will set a start slot, the first vertex buffers will use start slot, the second will use start slot + 1...
+
+For example, if we have two elements, the first is "Position" and its slot is 1 and the second is "Color" and its slot is 2. So we need two vertex buffers, the first should contains the data of "Position" and the second should contains the data of "Color". And the `startSlot` we set should be 1.
+
+**For Slot, you can learn more from DirectX or Vulkan. Slot called Binding in Vulkan.**
 
 Format describe the size in bytes and type of component. Name is a unique identity(Only used in DirectX12 mode, in HLSL).
 

@@ -49,12 +49,14 @@ namespace CodeRed {
 	struct InputLayoutElement {
 		PixelFormat Format = PixelFormat::Unknown;
 		std::string Name = "";
+		size_t Slot = 0;
 
 		InputLayoutElement() = default;
 		
 		explicit InputLayoutElement(
 			const std::string &name,
-			const PixelFormat format
-		) : Format(format), Name(name) {}
+			const PixelFormat format,
+			const size_t slot = 0
+		) : Format(format), Name(name), Slot(slot) {}
 	};
 }

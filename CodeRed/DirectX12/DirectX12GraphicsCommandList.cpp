@@ -169,6 +169,26 @@ void CodeRed::DirectX12GraphicsCommandList::setVertexBuffer(const std::shared_pt
 	mGraphicsCommandList->IASetVertexBuffers(0, 1, &view);
 }
 
+void CodeRed::DirectX12GraphicsCommandList::setVertexBuffers(
+	const std::vector<std::shared_ptr<GpuBuffer>>& buffers,
+	const size_t startSlot)
+{
+	auto views = std::vector<D3D12_VERTEX_BUFFER_VIEW>(buffers.size());
+
+	for (size_t index = 0; index < views.size(); index++) {
+		const auto& buffer = std::static_pointer_cast<DirectX12Buffer>(buffers[index]);
+
+		views[index].BufferLocation = buffer->buffer()->GetGPUVirtualAddress();
+		views[index].StrideInBytes = static_cast<UINT>(buffer->stride());
+		views[index].SizeInBytes = static_cast<UINT>(buffer->size());
+	}
+
+	mGraphicsCommandList->IASetVertexBuffers(
+		static_cast<UINT>(startSlot),
+		static_cast<UINT>(views.size()),
+		views.data());
+}
+
 void CodeRed::DirectX12GraphicsCommandList::setIndexBuffer(
 	const std::shared_ptr<GpuBuffer>& buffer,
 	const IndexType type)
