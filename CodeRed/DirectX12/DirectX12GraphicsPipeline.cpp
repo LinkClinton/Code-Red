@@ -40,7 +40,7 @@ CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
 	
-	desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	desc.PrimitiveTopologyType = enumConvert1(mInputAssemblyState->primitiveTopology());
 	desc.pRootSignature = static_cast<DirectX12ResourceLayout*>(mResourceLayout.get())->rootSignature().Get();
 	desc.InputLayout = static_cast<DirectX12InputAssemblyState*>(mInputAssemblyState.get())->layout();
 	desc.VS = static_cast<DirectX12ShaderState*>(mVertexShaderState.get())->shader();

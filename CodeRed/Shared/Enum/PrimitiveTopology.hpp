@@ -6,8 +6,10 @@ namespace CodeRed {
 
 	enum class PrimitiveTopology : UInt32
 	{
+		LineList,
+		LineStrip,
 		TriangleList,
-		TriangleStrip
+		TriangleStrip,
 	};
 	
 }

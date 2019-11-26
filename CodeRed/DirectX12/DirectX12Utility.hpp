@@ -88,6 +88,8 @@ namespace CodeRed {
 		auto enumConvert(const PrimitiveTopology topology)->D3D_PRIMITIVE_TOPOLOGY;
 
 		auto enumConvert1(const Dimension dimension)->D3D12_SRV_DIMENSION;
+
+		auto enumConvert1(const PrimitiveTopology topology) -> D3D12_PRIMITIVE_TOPOLOGY_TYPE;
 		
 	}
 }
