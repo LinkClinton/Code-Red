@@ -8,7 +8,8 @@ namespace CodeRed {
 	{
 		Buffer,
 		Texture,
-		GroupBuffer
+		GroupBuffer,
+		CubeMap
 	};
 	
 }

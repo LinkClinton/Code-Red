@@ -93,6 +93,10 @@ Texture has three dimension.
 - `Texture2D` : only has width, height properties.
 - `Texture3D` : has width, height, depth properties.
 
+For `Texture1D` and `Texture2D` the depth property is array size.
+
+If the resource type of texture is `CubeMap`, it just create a texture 2d array.
+
 ### Constructer
 
 ```C++
@@ -126,7 +130,7 @@ We recommend to use `GpuLogicalDevice` to create texture.
 
 - `Width` : the width of texture.
 - `Height` : the height of texture.
-- `Depth` : the depth of texture.
+- `Depth` : the depth of texture or array size of texture.
 - `Size` : the size of texture.
 - `PixelFormat` : the format of pixel in texture.
 - `Dimension` : the dimension of texture(1D, 2D, 3D).
@@ -134,8 +138,7 @@ We recommend to use `GpuLogicalDevice` to create texture.
 
 The size of texture is equal width * height * depth * pixel size. 
 
-For `Texture1D` the height and depth must be one.
-For `Texture2D` the depth must be one.
+For `Texture1D` the height must be one.
 
 **Notice : the layout of texture must be `ResourceLayout::Undefined` when we create a texture.**
 

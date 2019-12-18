@@ -32,8 +32,8 @@ namespace CodeRed {
 
 		auto alignment() const -> size_t { return mAlignment; }
 	protected:
-		size_t mPhysicalSize;
-		size_t mAlignment;
+		size_t mPhysicalSize = 0;
+		size_t mAlignment = 0;
 	};
 
 }

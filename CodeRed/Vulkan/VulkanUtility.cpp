@@ -397,6 +397,19 @@ auto CodeRed::Vulkan::enumConvert(const PixelFormat format, const ResourceUsage 
 	return vk::ImageAspectFlagBits::eColor;
 }
 
+auto CodeRed::Vulkan::enumConvert(const Dimension dimension, const ResourceType type, const size_t depth) -> vk::ImageViewType
+{
+	switch (dimension) {
+	case Dimension::Dimension1D: return depth == 1 ? vk::ImageViewType::e1D : vk::ImageViewType::e1DArray;
+	case Dimension::Dimension2D: return
+		type == ResourceType::CubeMap ? vk::ImageViewType::eCube :
+			(depth == 1 ? vk::ImageViewType::e2D : vk::ImageViewType::e2DArray);
+	case Dimension::Dimension3D: return vk::ImageViewType::e3D;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
 auto CodeRed::Vulkan::enumConvert1(const Dimension dimension)
 -> vk::ImageViewType
 {

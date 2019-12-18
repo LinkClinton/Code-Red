@@ -199,7 +199,7 @@ CodeRed::GpuTexture::GpuTexture(
 		mInfo.Type != ResourceType::Texture,
 		InvalidException<ResourceInfo>({ "info.Type" })
 	);
-
+	
 	CODE_RED_DEBUG_WARNING_IF(
 		enumHas(mInfo.Usage, ResourceUsage::ConstantBuffer) ||
 		enumHas(mInfo.Usage, ResourceUsage::IndexBuffer) ||
@@ -207,8 +207,8 @@ CodeRed::GpuTexture::GpuTexture(
 		DebugReport::make(
 			"the usage of texture only support [0] and [1].",
 			{
-				CODE_RED_TO_STRING(ResourceUsage::RenderTarget),
-				CODE_RED_TO_STRING(ResourceUsage::DepthStencil)
+			CODE_RED_TO_STRING(ResourceUsage::RenderTarget),
+			CODE_RED_TO_STRING(ResourceUsage::DepthStencil)
 			}
 		)
 	);

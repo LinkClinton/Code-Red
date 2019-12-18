@@ -26,9 +26,17 @@ CodeRed::VulkanTexture::VulkanTexture(
 		.setExtent(vk::Extent3D(
 			static_cast<uint32_t>(property.Width),
 			static_cast<uint32_t>(property.Height),
-			static_cast<uint32_t>(property.Depth)))
+			/*
+			 * if we use the texture array, the depth must be 1, but we use depth to store the size of array
+			 * so we can not use depth when the texture is not Texture3D
+			 */
+			static_cast<uint32_t>(property.Dimension == Dimension::Dimension3D ? property.Depth : 1)))
 		.setMipLevels(1)
-		.setArrayLayers(1)
+		/*
+		 * https://vulkan.lunarg.com/doc/view/latest/windows/apispec.html#VkImageCreateInfo
+		 * it limits the size of array layers must be 1 when the texture is Texture3D
+		 */
+		.setArrayLayers(static_cast<uint32_t>(property.Dimension == Dimension::Dimension3D ? 1 : property.Depth))
 		.setSamples(vk::SampleCountFlagBits::e1)
 		.setInitialLayout(enumConvert(mInfo.Layout))
 		.setUsage(enumConvert(mInfo.Usage).second)
@@ -70,9 +78,10 @@ CodeRed::VulkanTexture::VulkanTexture(
 			vk::ComponentSwizzle::eA))
 		.setSubresourceRange(vk::ImageSubresourceRange(
 			enumConvert(property.PixelFormat, mInfo.Usage),
-			0, 1, 0, 1))
-		.setViewType(enumConvert1(property.Dimension));
-
+			0, 1, 0, 
+			static_cast<uint32_t>(property.Dimension == Dimension::Dimension3D ? 1 : property.Depth)))
+		.setViewType(enumConvert(property.Dimension, mInfo.Type, property.Depth));
+	
 	mImageView = vkDevice->device().createImageView(viewInfo);
 }
 
