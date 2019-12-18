@@ -115,6 +115,7 @@ auto CodeRed::DirectX12::enumConvert(const ResourceType type)
 	case ResourceType::Buffer: return D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
 	case ResourceType::Texture: return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	case ResourceType::GroupBuffer: return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	case ResourceType::CubeMap: return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
