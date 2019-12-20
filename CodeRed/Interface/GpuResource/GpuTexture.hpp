@@ -28,6 +28,8 @@ namespace CodeRed {
 
 		auto depth() const -> size_t { return std::get<TextureProperty>(mInfo.Property).Depth; }
 
+		auto isArray() const noexcept { return dimension() != Dimension::Dimension3D && depth() != 1; }
+		
 		auto physicalSize() const -> size_t { return mPhysicalSize; }
 
 		auto alignment() const -> size_t { return mAlignment; }

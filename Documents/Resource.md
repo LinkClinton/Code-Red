@@ -152,6 +152,31 @@ All member functions is used to get informations of texture or mapped memory.
 
 - The size of texture is not always same in different adapters, so we add `GpuTexture::physicalSize` and `GpuTexture::alignment` to indicate the real size of texture and the layout of alignment.
 
+### Copy Texture
+
+If the texture is array(1D, 2D), the resource index range of texture is [0, depth). It is not legal to copy a texture array. But you can copy element of texture array(you can copy entire texture array with multi-copy operation).
+
+```C++
+struct TextureCopyInfo {
+    std::shared_ptr<GpuTexture> Texture;
+    size_t ResourceIndex;
+    size_t LocationX;
+    size_t LocationY;
+    size_t LocationZ;
+}
+
+void copyTexture(
+    const TextureCopyInfo& source,
+    const TextureCopyInfo& destination,
+    const size_t width,
+    const size_t height,
+    const size_t depth = 1);
+```
+
+`TextureCopyInfo` is a help structure for copying. The resource index must be 0 if the texture is not array. If the texture is array, resource index should be [0, depth), and it present the index-th element in texture array.
+
+And the `Location` indicate the start position we copy from or to.
+
 ## GpuSampler
 
 Sampler is used to sample the data from texture. **You can learn more from DirectX or Vulkan.**

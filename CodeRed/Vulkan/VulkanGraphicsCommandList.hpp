@@ -86,12 +86,24 @@ namespace CodeRed {
 			const size_t y = 0,
 			const size_t z = 0) override;
 
+		void copyTexture(
+			const TextureCopyInfo& source, 
+			const TextureCopyInfo& destination, 
+			const size_t width, 
+			const size_t height, 
+			const size_t depth) override;
+
 		void copyMemoryToBuffer(
 			const std::shared_ptr<GpuBuffer>& destination, 
 			const void* data) override;
 
 		void copyMemoryToTexture(
 			const std::shared_ptr<GpuTexture>& destination, 
+			const void* data) override;
+
+		void copyMemoryToTexture(
+			const std::shared_ptr<GpuTexture>& destination, 
+			const size_t resourceIndex, 
 			const void* data) override;
 		
 		void draw(

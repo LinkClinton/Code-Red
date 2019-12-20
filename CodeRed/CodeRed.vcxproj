@@ -249,6 +249,7 @@
     <ClInclude Include="Shared\IdentityAllocator.hpp" />
     <ClInclude Include="Shared\Information\ResourceInfo.hpp" />
     <ClInclude Include="Shared\Information\SamplerInfo.hpp" />
+    <ClInclude Include="Shared\Information\TextureCopyInfo.hpp" />
     <ClInclude Include="Shared\Information\WindowInfo.hpp" />
     <ClInclude Include="Shared\PixelFormatSizeOf.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />

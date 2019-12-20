@@ -354,33 +354,47 @@ void CodeRed::DirectX12GraphicsCommandList::copyTexture(
 	const size_t y,
 	const size_t z)
 {
-	const auto dxSource = static_cast<DirectX12Texture*>(source.get())->texture();
-	const auto dxDestination = static_cast<DirectX12Texture*>(destination.get())->texture();
+	copyTexture(
+		TextureCopyInfo(source, region.Left, region.Top, region.Front),
+		TextureCopyInfo(destination, x, y, z),
+		region.Right - region.Left,
+		region.Bottom - region.Top,
+		region.Back - region.Front
+	);
+}
+
+void CodeRed::DirectX12GraphicsCommandList::copyTexture(
+	const TextureCopyInfo& source,
+	const TextureCopyInfo& destination, 
+	const size_t width, const size_t height, const size_t depth)
+{
+	const auto dxSource = std::static_pointer_cast<DirectX12Texture>(source.Texture)->texture();
+	const auto dxDestination = std::static_pointer_cast<DirectX12Texture>(destination.Texture)->texture();
 
 	D3D12_TEXTURE_COPY_LOCATION src;
 	D3D12_TEXTURE_COPY_LOCATION dst;
 
 	src.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
 	src.pResource = dxSource.Get();
-	src.SubresourceIndex = 0;
+	src.SubresourceIndex = static_cast<UINT>(source.ResourceIndex);
 
 	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
 	dst.pResource = dxDestination.Get();
-	dst.SubresourceIndex = 0;
+	dst.SubresourceIndex = static_cast<UINT>(destination.ResourceIndex);
 
 	D3D12_BOX srcRegion = {
-		static_cast<UINT>(region.Left),
-		static_cast<UINT>(region.Top),
-		static_cast<UINT>(region.Front),
-		static_cast<UINT>(region.Right),
-		static_cast<UINT>(region.Bottom),
-		static_cast<UINT>(region.Back)
+		static_cast<UINT>(source.LocationX),
+		static_cast<UINT>(source.LocationY),
+		static_cast<UINT>(source.LocationZ),
+		static_cast<UINT>(source.LocationX + width),
+		static_cast<UINT>(source.LocationY + height),
+		static_cast<UINT>(source.LocationZ + depth)
 	};
-	
+
 	mGraphicsCommandList->CopyTextureRegion(&dst,
-		static_cast<UINT>(x),
-		static_cast<UINT>(y),
-		static_cast<UINT>(z),
+		static_cast<UINT>(destination.LocationX),
+		static_cast<UINT>(destination.LocationY),
+		static_cast<UINT>(destination.LocationZ),
 		&src,
 		&srcRegion);
 }
@@ -404,26 +418,45 @@ void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
 	const std::shared_ptr<GpuTexture>& destination,
 	const void* data)
 {
-	const auto dxAllocator = std::static_pointer_cast<DirectX12CommandAllocator>(mAllocator);
+	//if the texture is array, we need copy all sub resources
+	if (destination->isArray()) {
+		const auto rowPitch = destination->width() * PixelFormatSizeOf::get(destination->format());
+		const auto depthPitch = destination->height() * rowPitch;
 
-	const auto texture = dxAllocator->allocateCopyCacheTexture(
-		std::get<TextureProperty>(destination->info().Property));
+		for (size_t index = 0; index < destination->depth(); index++) 
+			copyMemoryToTexture(destination, index, static_cast<const unsigned char*>(data) + depthPitch * index);
+	}
+	else copyMemoryToTexture(destination, 0, data);
+}
+
+void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
+	const std::shared_ptr<GpuTexture>& destination,
+	const size_t resourceIndex, 
+	const void* data)
+{
+	const auto dxAllocator = std::static_pointer_cast<DirectX12CommandAllocator>(mAllocator);
+	const auto property = std::get<TextureProperty>(destination->info().Property);
+	
+	const auto texture = dxAllocator->allocateCopyCacheTexture(TextureProperty(
+		property.Width, property.Height,
+		destination->isArray() ? 1 : property.Depth,
+		property.PixelFormat, property.Dimension, property.ClearValue
+	));
+	
 	const auto dxTexture = std::static_pointer_cast<DirectX12Texture>(texture);
 
 	const auto rowPitch = PixelFormatSizeOf::get(texture->format()) * texture->width();
 	const auto depthPitch = rowPitch * texture->height();
-	
+
 	dxTexture->texture()->WriteToSubresource(0, nullptr, data,
 		static_cast<UINT>(rowPitch),
 		static_cast<UINT>(depthPitch));
 
-	copyTexture(texture, destination,
-		Extent3D<size_t>(
-			0, 0, 0,
-			texture->width(),
-			texture->height(),
-			texture->depth()
-			), 0, 0, 0);
+	copyTexture(
+		TextureCopyInfo(texture),
+		TextureCopyInfo(texture, resourceIndex, 0, 0, 0),
+		texture->width(), texture->height(), texture->depth()
+	);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::draw(

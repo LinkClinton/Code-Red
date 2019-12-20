@@ -353,36 +353,50 @@ void CodeRed::VulkanGraphicsCommandList::copyTexture(
 	const size_t y,
 	const size_t z)
 {
+	copyTexture(
+		TextureCopyInfo(source, region.Left, region.Top, region.Front),
+		TextureCopyInfo(destination, x, y, z),
+		region.Right - region.Left,
+		region.Bottom - region.Top,
+		region.Back - region.Front
+	);
+}
+
+void CodeRed::VulkanGraphicsCommandList::copyTexture(
+	const TextureCopyInfo& source,
+	const TextureCopyInfo& destination,
+	const size_t width, const size_t height, const size_t depth)
+{
 	vk::ImageCopy copy = {};
 
 	const auto size = vk::Extent3D(
-		static_cast<uint32_t>(region.Right - region.Left),
-		static_cast<uint32_t>(region.Bottom - region.Top),
-		static_cast<uint32_t>(region.Back - region.Front)
+		static_cast<uint32_t>(width),
+		static_cast<uint32_t>(height),
+		static_cast<uint32_t>(depth)
 	);
 
 	copy
 		.setExtent(size)
 		.setSrcOffset(vk::Offset3D(
-			static_cast<int32_t>(region.Left),
-			static_cast<int32_t>(region.Top),
-			static_cast<int32_t>(region.Front)))
+			static_cast<int32_t>(source.LocationX),
+			static_cast<int32_t>(source.LocationY),
+			static_cast<int32_t>(source.LocationZ)))
 		.setSrcSubresource(vk::ImageSubresourceLayers(
-			enumConvert(destination->format(), destination->usage()),
-			0, 0, 1))
+			enumConvert(destination.Texture->format(), destination.Texture->usage()),
+			0, static_cast<uint32_t>(source.ResourceIndex), 1))
 		.setDstOffset(vk::Offset3D(
-			static_cast<int32_t>(x),
-			static_cast<int32_t>(y),
-			static_cast<int32_t>(z)))
+			static_cast<int32_t>(destination.LocationX),
+			static_cast<int32_t>(destination.LocationY),
+			static_cast<int32_t>(destination.LocationZ)))
 		.setDstSubresource(vk::ImageSubresourceLayers(
-			enumConvert(destination->format(), destination->usage()),
-			0, 0, 1));
+			enumConvert(destination.Texture->format(), destination.Texture->usage()),
+			0, static_cast<uint32_t>(destination.ResourceIndex), 1));
 
 	mCommandBuffer.copyImage(
-		std::static_pointer_cast<VulkanTexture>(source)->image(),
-		enumConvert(source->layout()),
-		std::static_pointer_cast<VulkanTexture>(destination)->image(),
-		enumConvert(destination->layout()),
+		std::static_pointer_cast<VulkanTexture>(source.Texture)->image(),
+		enumConvert(source.Texture->layout()),
+		std::static_pointer_cast<VulkanTexture>(destination.Texture)->image(),
+		enumConvert(destination.Texture->layout()),
 		copy
 	);
 }
@@ -405,11 +419,29 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
 	const std::shared_ptr<GpuTexture>& destination,
 	const void* data)
 {
+	//if the texture is array, we need copy all sub resources
+	if (destination->isArray()) {
+		const auto rowPitch = destination->width() * PixelFormatSizeOf::get(destination->format());
+		const auto depthPitch = destination->height() * rowPitch;
+
+		for (size_t index = 0; index < destination->depth(); index++)
+			copyMemoryToTexture(destination, index, static_cast<const unsigned char*>(data) + depthPitch * index);
+	}
+	else copyMemoryToTexture(destination, 0, data);
+}
+
+void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
+	const std::shared_ptr<GpuTexture>& destination,
+	const size_t resourceIndex, 
+	const void* data)
+{
 	const auto vkAllocator = std::static_pointer_cast<VulkanCommandAllocator>(mAllocator);
-	const auto buffer = vkAllocator->allocateCopyCacheBuffer(destination->size());
+	const auto buffer = vkAllocator->allocateCopyCacheBuffer(
+		destination->isArray() ? 
+		destination->width() * destination->height() * PixelFormatSizeOf::get(destination->format()) : destination->size());
 
 	const auto memory = buffer->mapMemory();
-	std::memcpy(memory, data, destination->size());
+	std::memcpy(memory, data, buffer->size());
 	buffer->unmapMemory();
 
 	vk::BufferImageCopy imageCopy = {};
@@ -420,15 +452,15 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
 		.setBufferImageHeight(0)
 		.setImageSubresource(vk::ImageSubresourceLayers(
 			enumConvert(destination->format(), destination->usage()),
-			0, 0, 1))
+			0, static_cast<uint32_t>(resourceIndex), 1))
 		.setImageOffset({ 0,0,0 })
 		.setImageExtent({
 				static_cast<uint32_t>(destination->width()),
 				static_cast<uint32_t>(destination->height()),
-				static_cast<uint32_t>(destination->depth())
+				destination->isArray() ? 1 : static_cast<uint32_t>(destination->depth())
 			});
-		
-	
+
+
 	mCommandBuffer.copyBufferToImage(
 		std::static_pointer_cast<VulkanBuffer>(buffer)->buffer(),
 		std::static_pointer_cast<VulkanTexture>(destination)->image(),

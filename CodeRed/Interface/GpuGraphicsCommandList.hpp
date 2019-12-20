@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Shared/Information/TextureCopyInfo.hpp"
 #include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Enum/IndexType.hpp"
 #include "../Shared/Constant32Bits.hpp"
@@ -104,12 +105,24 @@ namespace CodeRed {
 			const size_t y = 0,
 			const size_t z = 0) = 0;
 
+		virtual void copyTexture(
+			const TextureCopyInfo& source,
+			const TextureCopyInfo& destination,
+			const size_t width,
+			const size_t height,
+			const size_t depth = 1) = 0;
+
 		virtual void copyMemoryToBuffer(
 			const std::shared_ptr<GpuBuffer>& destination,
 			const void* data) = 0;
 		
 		virtual void copyMemoryToTexture(
 			const std::shared_ptr<GpuTexture>& destination,
+			const void* data) = 0;
+
+		virtual void copyMemoryToTexture(
+			const std::shared_ptr<GpuTexture>& destination,
+			const size_t resourceIndex,
 			const void* data) = 0;
 		
 		virtual void draw(
