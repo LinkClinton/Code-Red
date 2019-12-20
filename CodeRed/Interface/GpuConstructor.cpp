@@ -196,10 +196,10 @@ CodeRed::GpuTexture::GpuTexture(
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mInfo.Type != ResourceType::Texture,
+		mInfo.Type != ResourceType::Texture && mInfo.Type != ResourceType::CubeMap,
 		InvalidException<ResourceInfo>({ "info.Type" })
 	);
-	
+
 	CODE_RED_DEBUG_WARNING_IF(
 		enumHas(mInfo.Usage, ResourceUsage::ConstantBuffer) ||
 		enumHas(mInfo.Usage, ResourceUsage::IndexBuffer) ||

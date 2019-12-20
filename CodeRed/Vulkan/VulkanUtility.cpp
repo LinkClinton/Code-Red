@@ -84,6 +84,7 @@ auto CodeRed::Vulkan::enumConvert(const ResourceType type)
 	case ResourceType::Buffer: return vk::DescriptorType::eUniformBuffer;
 	case ResourceType::Texture: return vk::DescriptorType::eSampledImage;
 	case ResourceType::GroupBuffer: return vk::DescriptorType::eStorageBuffer;
+	case ResourceType::CubeMap: return vk::DescriptorType::eSampledImage;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
@@ -434,6 +435,7 @@ auto CodeRed::Vulkan::enumConvert1(
 		case ResourceType::Buffer:
 			return vk::AccessFlagBits::eUniformRead | vk::AccessFlagBits::eIndexRead | vk::AccessFlagBits::eVertexAttributeRead;
 		case ResourceType::Texture:
+		case ResourceType::CubeMap:
 			return vk::AccessFlagBits::eShaderRead;
 		case ResourceType::GroupBuffer:
 			return vk::AccessFlagBits::eUniformRead;
