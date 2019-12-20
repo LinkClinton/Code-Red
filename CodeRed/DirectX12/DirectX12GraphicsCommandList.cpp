@@ -454,7 +454,7 @@ void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
 
 	copyTexture(
 		TextureCopyInfo(texture),
-		TextureCopyInfo(texture, resourceIndex, 0, 0, 0),
+		TextureCopyInfo(destination, resourceIndex, 0, 0, 0),
 		texture->width(), texture->height(), texture->depth()
 	);
 }
