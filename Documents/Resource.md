@@ -123,20 +123,23 @@ We recommend to use `GpuLogicalDevice` to create texture.
         size_t Depth;
         size_t Size;
         
+        size_t MipLevels;
+
         PixelFormat PixelFormat;
         Dimension Dimension;
     };
 ```
 
-- `Width` : the width of texture.
-- `Height` : the height of texture.
+- `Width` : the width of texture(origin).
+- `Height` : the height of texture(origin).
 - `Depth` : the depth of texture or array size of texture.
-- `Size` : the size of texture.
+- `Size` : the size of texture(origin).
+- `MipLevels` : the max number of mip levels.
 - `PixelFormat` : the format of pixel in texture.
 - `Dimension` : the dimension of texture(1D, 2D, 3D).
 - `ClearValue` : the clear value used in clear rtv/dsv operation.
 
-The size of texture is equal width * height * depth * pixel size. 
+The size of texture is the size of origin texture. It is not the size of this objects. Because this objects can be texture array or has mip levels. 
 
 For `Texture1D` the height must be one.
 
@@ -144,9 +147,17 @@ For `Texture1D` the height must be one.
 
 If you are using rtv\dsv in DirectX12 mode, you can set the `TextureProperty::ClearValue` to optimize the clear operation(**the value you used in clear operation should be same as the value you set**).
 
+### Resource Index
+
+A texture can have many textures, for example, we can have a texture that has texture array and with mip levels. So we give this sub-textures a index. It is equal to `mipSlice + arraySlice * mipLevels`. 
+
+If you have a texture array with max mip levels 5 and you want to get the 4-th texture with mip levels 3, so the index is `3 + 4 * 5 = 23`.(The way to encode `mipSlice` and `arraySlice` is same as the way in DirectX12)
+
 ### Member Functions
 
 All member functions is used to get informations of texture or mapped memory.
+
+- If you want to get texture property like width, height, depth and size with mip level, you can set the `mipSlice` with these functions(`width`, `height`, `depth`, `size`). **Notice, the depth of array is always the number of texture array.**
 
 - If you want to update memory to texture, you should use `GpuGraphicsCommandList::copyMemoryToTexture`.
 
@@ -154,7 +165,7 @@ All member functions is used to get informations of texture or mapped memory.
 
 ### Copy Texture
 
-If the texture is array(1D, 2D), the resource index range of texture is [0, depth). It is not legal to copy a texture array. But you can copy element of texture array(you can copy entire texture array with multi-copy operation).
+It is not legal to copy a texture array or all texture with mip levels. But you can copy element of texture(you can copy entire texture with multi-copy operation).
 
 ```C++
 struct TextureCopyInfo {
@@ -173,7 +184,7 @@ void copyTexture(
     const size_t depth = 1);
 ```
 
-`TextureCopyInfo` is a help structure for copying. The resource index must be 0 if the texture is not array. If the texture is array, resource index should be [0, depth), and it present the index-th element in texture array.
+`TextureCopyInfo` is a help structure for copying. The resource index is the sub-texture in texture.
 
 And the `Location` indicate the start position we copy from or to.
 
