@@ -35,6 +35,8 @@ namespace CodeRed {
 		size_t Depth = 0;
 		size_t Size = 0;
 
+		size_t MipLevels = 1;
+
 		PixelFormat PixelFormat = PixelFormat::Unknown;
 		Dimension Dimension = Dimension::Dimension1D;
 
@@ -46,13 +48,15 @@ namespace CodeRed {
 			const size_t width,
 			const size_t height,
 			const size_t depth,
+			const size_t mipLevels,
 			const CodeRed::PixelFormat format,
 			const CodeRed::Dimension dimension,
 			const CodeRed::ClearValue& clearValue = CodeRed::ClearValue()) :
 			Width(width),
 			Height(height),
 			Depth(depth),
-			Size(width * height * depth * PixelFormatSizeOf::get(format)),
+			Size(width * height * (dimension == Dimension::Dimension3D ? depth : 1) * PixelFormatSizeOf::get(format)),
+			MipLevels(mipLevels),
 			PixelFormat(format),
 			Dimension(dimension),
 			ClearValue(clearValue) {}
@@ -144,10 +148,11 @@ namespace CodeRed {
 		static auto Texture1D(
 			const size_t width, 
 			const PixelFormat format,
+			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
-				TextureProperty(width, 1, 1, format, Dimension::Dimension1D),
+				TextureProperty(width, 1, 1, mipLevels, format, Dimension::Dimension1D),
 				ResourceLayout::Undefined, usage, 
 				ResourceType::Texture, 
 				MemoryHeap::Default);
@@ -157,10 +162,11 @@ namespace CodeRed {
 			const size_t width,
 			const size_t size,
 			const PixelFormat format,
-			const ResourceUsage usage)
+			const size_t mipLevels = 1,
+			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
-				TextureProperty(width, 1, size, format, Dimension::Dimension1D),
+				TextureProperty(width, 1, size, mipLevels, format, Dimension::Dimension1D),
 				ResourceLayout::Undefined, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
@@ -170,10 +176,11 @@ namespace CodeRed {
 			const size_t width,
 			const size_t height,
 			const PixelFormat format,
+			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, 1, format, Dimension::Dimension2D),
+				TextureProperty(width, height, 1, mipLevels, format, Dimension::Dimension2D),
 				ResourceLayout::Undefined, usage, 
 				ResourceType::Texture, 
 				MemoryHeap::Default);
@@ -183,10 +190,11 @@ namespace CodeRed {
 			const size_t width,
 			const size_t height,
 			const PixelFormat format,
+			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, 6, format, Dimension::Dimension2D),
+				TextureProperty(width, height, 6, mipLevels, format, Dimension::Dimension2D),
 				ResourceLayout::Undefined, usage,
 				ResourceType::CubeMap,
 				MemoryHeap::Default);
@@ -197,10 +205,11 @@ namespace CodeRed {
 			const size_t height,
 			const size_t size,
 			const PixelFormat format,
+			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, size, format, Dimension::Dimension2D),
+				TextureProperty(width, height, size, mipLevels, format, Dimension::Dimension2D),
 				ResourceLayout::Undefined, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
@@ -211,12 +220,13 @@ namespace CodeRed {
 			const size_t height,
 			const size_t depth,
 			const PixelFormat format,
+			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, depth, format, Dimension::Dimension3D),
-				ResourceLayout::Undefined, usage, 
-				ResourceType::Texture, 
+				TextureProperty(width, height, depth, mipLevels, format, Dimension::Dimension3D),
+				ResourceLayout::Undefined, usage,
+				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
 
@@ -227,7 +237,7 @@ namespace CodeRed {
 			const ClearValue& clearValue = ClearValue())
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, 1, format, Dimension::Dimension2D, clearValue),
+				TextureProperty(width, height, 1, 1, format, Dimension::Dimension2D, clearValue),
 				ResourceLayout::Undefined, 
 				ResourceUsage::RenderTarget,
 				ResourceType::Texture,
@@ -241,7 +251,7 @@ namespace CodeRed {
 			const ClearValue& clearValue = ClearValue())
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, 1, format, Dimension::Dimension2D, clearValue),
+				TextureProperty(width, height, 1, 1, format, Dimension::Dimension2D, clearValue),
 				ResourceLayout::Undefined,
 				ResourceUsage::DepthStencil,
 				ResourceType::Texture,

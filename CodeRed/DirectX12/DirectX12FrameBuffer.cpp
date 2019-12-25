@@ -59,7 +59,7 @@ void CodeRed::DirectX12FrameBuffer::reset(
 	mDepthStencil = depth_stencil;
 	
 	//warning, when we create a frame buffer without rtv and dsv
-	//only output when we enable __EANBLE__CODE__RED__DEBUG__
+	//only output when we enable __ENABLE__CODE__RED__DEBUG__
 	CODE_RED_DEBUG_TRY_EXECUTE(
 		mRenderTargets[0] == nullptr &&
 		mDepthStencil == nullptr,

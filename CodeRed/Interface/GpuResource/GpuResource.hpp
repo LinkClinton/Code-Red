@@ -28,8 +28,6 @@ namespace CodeRed {
 		auto layout() const noexcept -> ResourceLayout { return mInfo.Layout; }
 		
 		auto heap() const noexcept -> MemoryHeap { return mInfo.Heap; }
-
-		virtual auto size() const -> size_t = 0;
 	protected:
 		friend class DirectX12GraphicsCommandList;
 		friend class VulkanGraphicsCommandList;

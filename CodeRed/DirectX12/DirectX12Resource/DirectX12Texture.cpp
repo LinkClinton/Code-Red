@@ -22,7 +22,7 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	desc.Width = property.Width;
 	desc.Height = static_cast<UINT>(property.Height);
 	desc.DepthOrArraySize = static_cast<UINT16>(property.Depth);
-	desc.MipLevels = 1;
+	desc.MipLevels = static_cast<UINT16>(property.MipLevels);
 	desc.Format = enumConvert(property.PixelFormat);
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
@@ -68,7 +68,7 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 		FailedException(DebugType::Create, { "ID3D12Resource of Texture" }));
 
 	const auto allocateInfo = dxDevice->GetResourceAllocationInfo(0, 1, &desc);
-
+	
 	//because the size of texture is not always same in different adapters
 	//so we need record the real size and the alignment
 	mPhysicalSize = static_cast<size_t>(allocateInfo.SizeInBytes);

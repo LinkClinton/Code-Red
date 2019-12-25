@@ -418,15 +418,23 @@ void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
 	const std::shared_ptr<GpuTexture>& destination,
 	const void* data)
 {
-	//if the texture is array, we need copy all sub resources
-	if (destination->isArray()) {
-		const auto rowPitch = destination->width() * PixelFormatSizeOf::get(destination->format());
-		const auto depthPitch = destination->height() * rowPitch;
+	size_t offset = 0;
+	
+	for (size_t mipSlice = 0; mipSlice < destination->mipLevels(); mipSlice++) {
+		if (destination->isArray()) {
+			for (size_t arraySlice = 0; arraySlice < destination->depth(); arraySlice++) {
+				copyMemoryToTexture(destination, destination->index(mipSlice, arraySlice),
+					static_cast<const unsigned char*>(data) + offset);
 
-		for (size_t index = 0; index < destination->depth(); index++) 
-			copyMemoryToTexture(destination, index, static_cast<const unsigned char*>(data) + depthPitch * index);
+				offset = offset + destination->size(mipSlice);
+			}
+		}
+		else {
+			copyMemoryToTexture(destination, mipSlice, static_cast<const unsigned char*>(data) + offset);
+
+			offset = offset + destination->size(mipSlice);
+		}
 	}
-	else copyMemoryToTexture(destination, 0, data);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
@@ -436,18 +444,29 @@ void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
 {
 	const auto dxAllocator = std::static_pointer_cast<DirectX12CommandAllocator>(mAllocator);
 	const auto property = std::get<TextureProperty>(destination->info().Property);
+
+	// get the mip slice of from resource index
+	// texture can have many sub resource, for example, array, mip levels
+	// if we need a sub texture, we need provide a resource index
+	// the way we generate resource index is in GpuTexture::index()
+	const auto targetMipSlice = resourceIndex % property.MipLevels;
+	const auto targetWidth = destination->width(targetMipSlice);
+	const auto targetHeight = destination->height(targetMipSlice);
+	const auto targetDepth = destination->isArray() ? 1 : destination->depth(targetMipSlice);
 	
+	// the size of texture is not equal to destination
+	// if the mip slice of destination we copy to is not 0
+	// so we need compute the width, height and depth with mip slice
 	const auto texture = dxAllocator->allocateCopyCacheTexture(TextureProperty(
-		property.Width, property.Height,
-		destination->isArray() ? 1 : property.Depth,
+		targetWidth, targetHeight, targetDepth , 1,
 		property.PixelFormat, property.Dimension, property.ClearValue
 	));
 	
 	const auto dxTexture = std::static_pointer_cast<DirectX12Texture>(texture);
 
-	const auto rowPitch = PixelFormatSizeOf::get(texture->format()) * texture->width();
-	const auto depthPitch = rowPitch * texture->height();
-
+	const auto rowPitch = PixelFormatSizeOf::get(texture->format()) * targetWidth;
+	const auto depthPitch = rowPitch * targetHeight;
+	
 	dxTexture->texture()->WriteToSubresource(0, nullptr, data,
 		static_cast<UINT>(rowPitch),
 		static_cast<UINT>(depthPitch));
@@ -455,7 +474,7 @@ void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
 	copyTexture(
 		TextureCopyInfo(texture),
 		TextureCopyInfo(destination, resourceIndex, 0, 0, 0),
-		texture->width(), texture->height(), texture->depth()
+		targetWidth, targetHeight, targetDepth
 	);
 }
 

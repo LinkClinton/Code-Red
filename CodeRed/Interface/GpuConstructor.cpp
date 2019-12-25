@@ -378,3 +378,43 @@ void CodeRed::GpuGraphicsCommandList::layoutTransition(
 {
 	layoutTransition(buffer, buffer->layout(), layout);
 }
+
+auto CodeRed::GpuTexture::width(const size_t mipSlice) const noexcept -> size_t
+{
+	auto result = std::get<TextureProperty>(mInfo.Property).Width;
+	
+	for (size_t index = 0; index < mipSlice; index++) 
+		result = std::max(result / 2, static_cast<size_t>(1));
+
+	return result;
+}
+
+auto CodeRed::GpuTexture::height(const size_t mipSlice) const noexcept -> size_t
+{
+	auto result = std::get<TextureProperty>(mInfo.Property).Height;
+
+	for (size_t index = 0; index < mipSlice; index++)
+		result = std::max(result / 2, static_cast<size_t>(1));
+
+	return result;
+}
+
+auto CodeRed::GpuTexture::depth(const size_t mipSlice) const noexcept -> size_t
+{
+	auto result = std::get<TextureProperty>(mInfo.Property).Depth;
+
+	// if the texture is array, the depth is always the number of array
+	if (isArray()) return result;
+	
+	for (size_t index = 0; index < mipSlice; index++)
+		result = std::max(result / 2, static_cast<size_t>(1));
+
+	return result;
+}
+
+auto CodeRed::GpuTexture::size(const size_t mipSlice) const noexcept -> size_t
+{
+	// the size of texture only for one texture with one mip level
+	// so if the texture is array, we do not use depth
+	return width(mipSlice) * height(mipSlice) * (isArray() ? 1 : depth(mipSlice)) * PixelFormatSizeOf::get(format());
+}

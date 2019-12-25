@@ -222,13 +222,13 @@ void CodeRed::VulkanGraphicsCommandList::setConstant32Bits(
 			})
 		);
 
-	const auto constnat32Bits = mResourceLayout->constant32Bits();
+	const auto constant32Bits = mResourceLayout->constant32Bits();
 
 	mCommandBuffer.pushConstants(
 		mResourceLayout->layout(),
-		enumConvert(constnat32Bits->Visibility),
+		enumConvert(constant32Bits->Visibility),
 		0,
-		static_cast<uint32_t>(std::min(values.size(), constnat32Bits->Count) * sizeof(UInt32)),
+		static_cast<uint32_t>(std::min(values.size(), constant32Bits->Count) * sizeof(UInt32)),
 		values.data()
 	);
 }
@@ -375,6 +375,12 @@ void CodeRed::VulkanGraphicsCommandList::copyTexture(
 		static_cast<uint32_t>(depth)
 	);
 
+	const auto srcArraySlice = source.ResourceIndex / source.Texture->mipLevels();
+	const auto srcMipSlice = source.ResourceIndex % source.Texture->mipLevels();
+
+	const auto dstArraySlice = destination.ResourceIndex / source.Texture->mipLevels();
+	const auto dstMipSlice = destination.ResourceIndex % source.Texture->mipLevels();
+	
 	copy
 		.setExtent(size)
 		.setSrcOffset(vk::Offset3D(
@@ -383,14 +389,16 @@ void CodeRed::VulkanGraphicsCommandList::copyTexture(
 			static_cast<int32_t>(source.LocationZ)))
 		.setSrcSubresource(vk::ImageSubresourceLayers(
 			enumConvert(destination.Texture->format(), destination.Texture->usage()),
-			0, static_cast<uint32_t>(source.ResourceIndex), 1))
+			static_cast<uint32_t>(srcMipSlice),
+			static_cast<uint32_t>(srcArraySlice), 1))
 		.setDstOffset(vk::Offset3D(
 			static_cast<int32_t>(destination.LocationX),
 			static_cast<int32_t>(destination.LocationY),
 			static_cast<int32_t>(destination.LocationZ)))
 		.setDstSubresource(vk::ImageSubresourceLayers(
 			enumConvert(destination.Texture->format(), destination.Texture->usage()),
-			0, static_cast<uint32_t>(destination.ResourceIndex), 1));
+			static_cast<uint32_t>(dstMipSlice),
+			static_cast<uint32_t>(dstArraySlice), 1));
 
 	mCommandBuffer.copyImage(
 		std::static_pointer_cast<VulkanTexture>(source.Texture)->image(),
@@ -419,15 +427,23 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
 	const std::shared_ptr<GpuTexture>& destination,
 	const void* data)
 {
-	//if the texture is array, we need copy all sub resources
-	if (destination->isArray()) {
-		const auto rowPitch = destination->width() * PixelFormatSizeOf::get(destination->format());
-		const auto depthPitch = destination->height() * rowPitch;
+	size_t offset = 0;
 
-		for (size_t index = 0; index < destination->depth(); index++)
-			copyMemoryToTexture(destination, index, static_cast<const unsigned char*>(data) + depthPitch * index);
+	for (size_t mipSlice = 0; mipSlice < destination->mipLevels(); mipSlice++) {
+		if (destination->isArray()) {
+			for (size_t arraySlice = 0; arraySlice < destination->depth(); arraySlice++) {
+				copyMemoryToTexture(destination, destination->index(mipSlice, arraySlice),
+					static_cast<const unsigned char*>(data) + offset);
+
+				offset = offset + destination->size(mipSlice);
+			}
+		}
+		else {
+			copyMemoryToTexture(destination, mipSlice, static_cast<const unsigned char*>(data) + offset);
+
+			offset = offset + destination->size(mipSlice);
+		}
 	}
-	else copyMemoryToTexture(destination, 0, data);
 }
 
 void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
@@ -436,9 +452,14 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
 	const void* data)
 {
 	const auto vkAllocator = std::static_pointer_cast<VulkanCommandAllocator>(mAllocator);
-	const auto buffer = vkAllocator->allocateCopyCacheBuffer(
-		destination->isArray() ? 
-		destination->width() * destination->height() * PixelFormatSizeOf::get(destination->format()) : destination->size());
+
+	const auto targetArraySlice = resourceIndex / destination->mipLevels();
+	const auto targetMipSlice = resourceIndex % destination->mipLevels();
+	const auto targetWidth = destination->width(targetMipSlice);
+	const auto targetHeight = destination->height(targetMipSlice);
+	const auto targetDepth = destination->isArray() ? 1 : destination->depth(targetMipSlice);
+	
+	const auto buffer = vkAllocator->allocateCopyCacheBuffer(destination->size(targetMipSlice));
 
 	const auto memory = buffer->mapMemory();
 	std::memcpy(memory, data, buffer->size());
@@ -452,12 +473,13 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
 		.setBufferImageHeight(0)
 		.setImageSubresource(vk::ImageSubresourceLayers(
 			enumConvert(destination->format(), destination->usage()),
-			0, static_cast<uint32_t>(resourceIndex), 1))
+			static_cast<uint32_t>(targetMipSlice),
+			static_cast<uint32_t>(targetArraySlice), 1))
 		.setImageOffset({ 0,0,0 })
 		.setImageExtent({
-				static_cast<uint32_t>(destination->width()),
-				static_cast<uint32_t>(destination->height()),
-				destination->isArray() ? 1 : static_cast<uint32_t>(destination->depth())
+				static_cast<uint32_t>(targetWidth),
+				static_cast<uint32_t>(targetHeight),
+				static_cast<uint32_t>(targetDepth)
 			});
 
 

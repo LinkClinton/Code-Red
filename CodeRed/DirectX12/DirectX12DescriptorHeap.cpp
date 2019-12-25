@@ -69,14 +69,14 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 			if (dxTexture->depth() == 1) {
 				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1D;
 				view.Texture1D.MostDetailedMip = 0;
-				view.Texture1D.MipLevels = 1;
+				view.Texture1D.MipLevels = static_cast<UINT>(texture->mipLevels());
 				view.Texture1D.ResourceMinLODClamp = 0.0f;
 			}else {
 				
 				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1DARRAY;
 				view.Texture1DArray.ArraySize = static_cast<UINT>(dxTexture->depth());
 				view.Texture1DArray.FirstArraySlice = 0;
-				view.Texture1DArray.MipLevels = 1;
+				view.Texture1DArray.MipLevels = static_cast<UINT>(texture->mipLevels());
 				view.Texture1DArray.MostDetailedMip = 0;
 				view.Texture1DArray.ResourceMinLODClamp = 0.0f;
 			}
@@ -89,7 +89,7 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 			if (dxTexture->depth() == 1) {
 				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 				view.Texture2D.MostDetailedMip = 0;
-				view.Texture2D.MipLevels = 1;
+				view.Texture2D.MipLevels = static_cast<UINT>(texture->mipLevels());
 				view.Texture2D.ResourceMinLODClamp = 0.0f;
 				view.Texture2D.PlaneSlice = 0;
 			}
@@ -101,7 +101,7 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 					view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
 					view.Texture2DArray.ArraySize = static_cast<UINT>(dxTexture->depth());
 					view.Texture2DArray.FirstArraySlice = 0;
-					view.Texture2DArray.MipLevels = 1;
+					view.Texture2DArray.MipLevels = static_cast<UINT>(texture->mipLevels());
 					view.Texture2DArray.MostDetailedMip = 0;
 					view.Texture2DArray.PlaneSlice = 0;
 					view.Texture2DArray.ResourceMinLODClamp = 0.0f;
@@ -110,7 +110,7 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 
 					//so the texture is cube map
 					view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-					view.TextureCube.MipLevels = 1;
+					view.TextureCube.MipLevels = static_cast<UINT>(texture->mipLevels());
 					view.TextureCube.MostDetailedMip = 0;
 					view.TextureCube.ResourceMinLODClamp = 0.0f;
 					
@@ -122,7 +122,7 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 		{
 			view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE3D;
 			view.Texture3D.MostDetailedMip = 0;
-			view.Texture3D.MipLevels = 1;
+			view.Texture3D.MipLevels = static_cast<UINT>(texture->mipLevels());
 			view.Texture3D.ResourceMinLODClamp = 0.0f;
 			break;
 		}

@@ -176,6 +176,7 @@ void CodeRed::VulkanSwapChain::initializeSwapChain()
 				mInfo.width,
 				mInfo.height,
 				mPixelFormat,
+				1,
 				ResourceUsage::RenderTarget),
 			swapChainImages[index]);
 	}

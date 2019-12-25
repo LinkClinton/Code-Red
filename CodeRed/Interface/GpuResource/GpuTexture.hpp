@@ -11,24 +11,29 @@ namespace CodeRed {
 		explicit GpuTexture(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const ResourceInfo& info);
-		
+
 		~GpuTexture() = default;
 	public:
-		auto size() const noexcept -> size_t override { return std::get<TextureProperty>(mInfo.Property).Size; }
+		auto width(const size_t mipSlice = 0) const noexcept -> size_t;
+
+		auto height(const size_t mipSlice = 0) const noexcept -> size_t;
+
+		auto depth(const size_t mipSlice = 0) const noexcept -> size_t;
+		
+		auto size(const size_t mipSlice = 0) const noexcept -> size_t;
 
 		auto format() const noexcept -> PixelFormat { return std::get<TextureProperty>(mInfo.Property).PixelFormat; }
 
 		auto dimension() const noexcept -> Dimension { return std::get<TextureProperty>(mInfo.Property).Dimension; }
 
 		auto clearValue() const noexcept -> ClearValue { return std::get<TextureProperty>(mInfo.Property).ClearValue; }
+
+		auto mipLevels() const noexcept -> size_t { return std::get<TextureProperty>(mInfo.Property).MipLevels; }
 		
-		auto width() const noexcept -> size_t { return std::get<TextureProperty>(mInfo.Property).Width; }
+		auto isArray() const noexcept -> bool { return dimension() != Dimension::Dimension3D && depth() != 1; }
 
-		auto height() const -> size_t { return std::get<TextureProperty>(mInfo.Property).Height; }
-
-		auto depth() const -> size_t { return std::get<TextureProperty>(mInfo.Property).Depth; }
-
-		auto isArray() const noexcept { return dimension() != Dimension::Dimension3D && depth() != 1; }
+		auto index(const size_t mipSlice = 0, const size_t arraySlice = 0) const noexcept
+			-> size_t { return arraySlice * mipLevels() + mipSlice; }
 		
 		auto physicalSize() const -> size_t { return mPhysicalSize; }
 

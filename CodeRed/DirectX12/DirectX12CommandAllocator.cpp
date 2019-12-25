@@ -28,7 +28,7 @@ void CodeRed::DirectX12CommandAllocator::reset()
 
 	//clear the cache resources that used for copy memory to buffer or texture
 	//because the command list only record the commands, we need to keep the resource
-	//until the queue finishs the copy commands
+	//until the queue finishes the copy commands
 	//(we need keep the resource even the command list was destroyed)
 	mCopyCacheResources = std::vector<std::shared_ptr<GpuResource>>();
 }

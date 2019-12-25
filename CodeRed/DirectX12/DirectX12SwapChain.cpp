@@ -108,6 +108,7 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 				static_cast<size_t>(mInfo.width),
 				static_cast<size_t>(mInfo.height),
 				mPixelFormat,
+				1,
 				ResourceUsage::RenderTarget
 			));
 	}
