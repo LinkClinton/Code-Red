@@ -2,7 +2,10 @@
 #include "../../Shared/Exception/ZeroException.hpp"
 
 #include "../DirectX12LogicalDevice.hpp"
+#include "../DirectX12TextureRef.hpp"
+
 #include "DirectX12Texture.hpp"
+
 
 #ifdef __ENABLE__DIRECTX12__
 
@@ -90,6 +93,12 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	//so we need record the real size and the alignment
 	mPhysicalSize = static_cast<size_t>(allocateInfo.SizeInBytes);
 	mAlignment = static_cast<size_t>(allocateInfo.Alignment);
+}
+
+auto CodeRed::DirectX12Texture::reference(const TextureRefInfo& info) -> std::shared_ptr<GpuTextureRef>
+{
+	return std::make_shared<DirectX12TextureRef>(
+		std::static_pointer_cast<GpuTexture>(shared_from_this()), info);
 }
 
 #endif

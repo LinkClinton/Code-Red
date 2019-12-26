@@ -1,7 +1,9 @@
 #include "../../Shared/PixelFormatSizeOf.hpp"
-#include "../VulkanLogicalDevice.hpp"
-#include "VulkanTexture.hpp"
 
+#include "../VulkanLogicalDevice.hpp"
+#include "../VulkanTextureRef.hpp"
+
+#include "VulkanTexture.hpp"
 
 #ifdef __ENABLE__VULKAN__
 
@@ -65,26 +67,6 @@ CodeRed::VulkanTexture::VulkanTexture(
 	mMemory = vkDevice->device().allocateMemory(memoryInfo);
 
 	vkDevice->device().bindImageMemory(mImage, mMemory, 0);
-
-	viewInfo
-		.setPNext(nullptr)
-		.setFlags(vk::ImageViewCreateFlags(0))
-		.setImage(mImage)
-		.setFormat(enumConvert(property.PixelFormat))
-		.setComponents(vk::ComponentMapping(
-			vk::ComponentSwizzle::eR,
-			vk::ComponentSwizzle::eG,
-			vk::ComponentSwizzle::eB,
-			vk::ComponentSwizzle::eA))
-		.setSubresourceRange(vk::ImageSubresourceRange(
-			enumConvert(property.PixelFormat, mInfo.Usage),
-			0, 
-			static_cast<uint32_t>(property.MipLevels), 
-			0, 
-			static_cast<uint32_t>(property.Dimension == Dimension::Dimension3D ? 1 : property.Depth)))
-		.setViewType(enumConvert(property.Dimension, mInfo.Type, property.Depth));
-	
-	mImageView = vkDevice->device().createImageView(viewInfo);
 }
 
 CodeRed::VulkanTexture::VulkanTexture(
@@ -99,41 +81,11 @@ CodeRed::VulkanTexture::VulkanTexture(
 	//we use this ctor to create GpuTexture in swap chain.
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice);
 	const auto property = std::get<TextureProperty>(mInfo.Property);
-
-	auto imageAspectFlags = vk::ImageAspectFlags(0);
-
-	if (enumHas(mInfo.Usage, ResourceUsage::DepthStencil))
-		imageAspectFlags = vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil;
-	else imageAspectFlags = vk::ImageAspectFlagBits::eColor;
-
-	vk::ImageViewCreateInfo viewInfo = {};
-	
-	viewInfo
-		.setPNext(nullptr)
-		.setFlags(vk::ImageViewCreateFlags(0))
-		.setImage(mImage)
-		.setFormat(enumConvert(property.PixelFormat))
-		.setComponents(vk::ComponentMapping(
-			vk::ComponentSwizzle::eR,
-			vk::ComponentSwizzle::eG,
-			vk::ComponentSwizzle::eB,
-			vk::ComponentSwizzle::eA))
-		.setSubresourceRange(vk::ImageSubresourceRange(
-			imageAspectFlags,
-			0, 
-			static_cast<uint32_t>(property.MipLevels),
-			0, 
-			static_cast<uint32_t>(property.Dimension == Dimension::Dimension3D ? 1 : property.Depth)))
-		.setViewType(enumConvert(property.Dimension, mInfo.Type, property.Depth));
-
-	mImageView = vkDevice->device().createImageView(viewInfo);
 }
 
 CodeRed::VulkanTexture::~VulkanTexture()
 {
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-
-	vkDevice.destroyImageView(mImageView);
 
 	//vulkan texture for swapchain
 	//so we do not need to destroy memory and image
@@ -142,6 +94,12 @@ CodeRed::VulkanTexture::~VulkanTexture()
 		vkDevice.freeMemory(mMemory);
 		vkDevice.destroyImage(mImage);
 	}
+}
+
+auto CodeRed::VulkanTexture::reference(const TextureRefInfo& info) -> std::shared_ptr<GpuTextureRef>
+{
+	return std::make_shared<VulkanTextureRef>(
+		std::static_pointer_cast<VulkanTexture>(shared_from_this()), info);
 }
 
 #endif

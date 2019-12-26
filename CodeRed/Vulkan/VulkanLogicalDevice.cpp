@@ -198,6 +198,17 @@ auto CodeRed::VulkanLogicalDevice::createFrameBuffer(
 		depth_stencil);
 }
 
+auto CodeRed::VulkanLogicalDevice::createFrameBuffer(
+	const std::shared_ptr<GpuTextureRef>& render_target,
+	const std::shared_ptr<GpuTextureRef>& depth_stencil)
+	-> std::shared_ptr<GpuFrameBuffer>
+{
+	return std::make_shared<VulkanFrameBuffer>(
+		shared_from_this(),
+		render_target,
+		depth_stencil);
+}
+
 auto CodeRed::VulkanLogicalDevice::createGraphicsCommandList(
 	const std::shared_ptr<GpuCommandAllocator>& allocator)
 	-> std::shared_ptr<GpuGraphicsCommandList>

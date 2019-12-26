@@ -16,6 +16,10 @@ namespace CodeRed {
 		~DirectX12DescriptorHeap() = default;
 
 		void bindTexture(
+			const std::shared_ptr<GpuTextureRef>& texture, 
+			const size_t index) override;
+		
+		void bindTexture(
 			const std::shared_ptr<GpuTexture>& texture,
 			const size_t index) override;
 

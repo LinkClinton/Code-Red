@@ -5,6 +5,7 @@
 #include "../Shared/Enum/ShaderVisibility.hpp"
 #include "../Shared/Enum/CompareOperator.hpp"
 #include "../Shared/Enum/StencilOperator.hpp"
+#include "../Shared/Enum/TextureRefUsage.hpp"
 #include "../Shared/Enum/AttachmentStore.hpp"
 #include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Enum/AttachmentLoad.hpp"
@@ -84,7 +85,6 @@ auto CodeRed::Vulkan::enumConvert(const ResourceType type)
 	case ResourceType::Buffer: return vk::DescriptorType::eUniformBuffer;
 	case ResourceType::Texture: return vk::DescriptorType::eSampledImage;
 	case ResourceType::GroupBuffer: return vk::DescriptorType::eStorageBuffer;
-	case ResourceType::CubeMap: return vk::DescriptorType::eSampledImage;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}
@@ -398,12 +398,12 @@ auto CodeRed::Vulkan::enumConvert(const PixelFormat format, const ResourceUsage 
 	return vk::ImageAspectFlagBits::eColor;
 }
 
-auto CodeRed::Vulkan::enumConvert(const Dimension dimension, const ResourceType type, const size_t depth) -> vk::ImageViewType
+auto CodeRed::Vulkan::enumConvert(const Dimension dimension, const TextureRefUsage usage, const size_t depth) -> vk::ImageViewType
 {
 	switch (dimension) {
 	case Dimension::Dimension1D: return depth == 1 ? vk::ImageViewType::e1D : vk::ImageViewType::e1DArray;
 	case Dimension::Dimension2D: return
-		type == ResourceType::CubeMap ? vk::ImageViewType::eCube :
+		usage == TextureRefUsage::CubeMap ? vk::ImageViewType::eCube :
 			(depth == 1 ? vk::ImageViewType::e2D : vk::ImageViewType::e2DArray);
 	case Dimension::Dimension3D: return vk::ImageViewType::e3D;
 	default:
@@ -435,7 +435,6 @@ auto CodeRed::Vulkan::enumConvert1(
 		case ResourceType::Buffer:
 			return vk::AccessFlagBits::eUniformRead | vk::AccessFlagBits::eIndexRead | vk::AccessFlagBits::eVertexAttributeRead;
 		case ResourceType::Texture:
-		case ResourceType::CubeMap:
 			return vk::AccessFlagBits::eShaderRead;
 		case ResourceType::GroupBuffer:
 			return vk::AccessFlagBits::eUniformRead;

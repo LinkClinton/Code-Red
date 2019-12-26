@@ -55,6 +55,7 @@
 #include "../Interface/GpuCommandQueue.hpp"
 #include "../Interface/GpuCommandAllocator.hpp"
 #include "../Interface/GpuRenderPass.hpp"
+#include "../Interface/GpuTextureRef.hpp"
 
 #include "../Interface/GpuResource/GpuSampler.hpp"
 #include "../Interface/GpuResource/GpuTexture.hpp"

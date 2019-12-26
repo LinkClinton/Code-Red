@@ -15,6 +15,7 @@
 - [GpuSwapChain](#GpuSwapChain)
 - [GpuFrameBuffer](#GpuFrameBuffer)
 - [GpuRenderPass](#GpuRenderPass)
+- [GpuTextureRef](#GpuTextureRef)
 - [GpuResourceLayout](#GpuResourceLayout)
 - [GpuDescriptorHeap](#GpuDescriptorHeap)
 - [GpuGraphicsPipeline](#GpuGraphicsPipeline)
@@ -252,8 +253,8 @@ See more in [RenderPass](./RenderPass.md).
 ```C++
 explicit GpuFrameBuffer(
     const std::shared_ptr<GpuLogicalDevice>& device,
-    const std::shared_ptr<GpuTexture>& render_target,
-    const std::shared_ptr<GpuTexture>& depth_stencil = nullptr);
+    const std::shared_ptr<GpuTextureRef>& render_target,
+    const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr);
 ```
 
 - `device` : the device.
@@ -309,6 +310,51 @@ We recommend to use device to create render pass.
 - `getClear()` : get the clear value.
 - `color()` : get color property.
 - `depth()` : get depth-stencil property.
+
+## GpuTextureRef
+
+Texture Ref is a class that reference some textures. A texture resource can have many sub-textures(texture array and mip levels). Sometimes, we do not need all sub-textures. So we can use `GpuTextureRef` to reference some sub-textures that we want to use.
+
+**Notice : we usally use GpuTextureRef instead of GpuTexture to create frame buffer or bind to shader. If you use a GpuTexture to do this, it just create a `GpuTextureRef` reference all sub-textures.**
+
+### Constructer
+
+```C++
+explicit GpuTextureRef(
+    const std::shared_ptr<GpuTexture>& texture,
+    const TextureRefInfo& info);
+```
+
+- `texture` : which texture we want to reference.
+- `info` : how we reference the texture.
+
+```C++
+templpate<typename T>
+struct ValueRange {
+    T Start;
+    T End;
+}
+
+struct TextureRefInfo {
+    ValueRange<size_t> MipLevel;
+    ValueRange<size_t> Array;
+
+    TextureRefUsage Usage;
+```
+
+- `MipLevel` : the mip levels we want to use.
+- `Array` : the arrays we want to use.
+- `Usage` : how do we use this. If you want to use it as CubeMap, the usage should be `TextureRefUsage::CubeMap`.
+
+## Member Functions
+
+- `width` : get the width of first mip slice.
+- `height` : get the height of first mip slice.
+- `info` : get the `TextureRefInfo` property.
+- `mipLevel` : get the mip levels.
+- `array` : get the arrays.
+- `usage` : get the usage.
+- `source` : get the texture we reference from.
 
 ## GpuResourceLayout
 

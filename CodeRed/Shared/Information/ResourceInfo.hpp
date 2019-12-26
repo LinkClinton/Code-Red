@@ -196,7 +196,7 @@ namespace CodeRed {
 			return ResourceInfo(
 				TextureProperty(width, height, 6, mipLevels, format, Dimension::Dimension2D),
 				ResourceLayout::Undefined, usage,
-				ResourceType::CubeMap,
+				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
 		

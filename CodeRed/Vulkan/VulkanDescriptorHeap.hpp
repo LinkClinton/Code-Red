@@ -16,6 +16,10 @@ namespace CodeRed {
 		~VulkanDescriptorHeap();
 
 		void bindTexture(
+			const std::shared_ptr<GpuTextureRef>& texture, 
+			const size_t index) override;
+		
+		void bindTexture(
 			const std::shared_ptr<GpuTexture>& texture,
 			const size_t index) override;
 
@@ -26,6 +30,7 @@ namespace CodeRed {
 		auto descriptorSets() const noexcept -> std::vector<vk::DescriptorSet> { return mDescriptorSets; }
 	private:
 		std::vector<vk::DescriptorSet> mDescriptorSets;
+		std::vector<vk::ImageView> mImageView;
 		
 		vk::DescriptorPool mDescriptorPool;
 	};

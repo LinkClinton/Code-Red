@@ -24,6 +24,7 @@ namespace CodeRed {
 	enum class ShaderVisibility : UInt32;
 	enum class CompareOperator : UInt32;
 	enum class StencilOperator : UInt32;
+	enum class TextureRefUsage : UInt32;
 	enum class ResourceLayout : UInt32;
 	enum class FilterOptions : UInt32;
 	enum class BlendOperator : UInt32;

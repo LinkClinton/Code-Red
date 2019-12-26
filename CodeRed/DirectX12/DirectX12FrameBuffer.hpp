@@ -14,11 +14,16 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& render_target,
 			const std::shared_ptr<GpuTexture>& depth_stencil = nullptr);
 
+		explicit DirectX12FrameBuffer(
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuTextureRef>& render_target,
+			const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr);
+
 		~DirectX12FrameBuffer() = default;
 
 		void reset(
-			const std::shared_ptr<GpuTexture>& render_target, 
-			const std::shared_ptr<GpuTexture>& depth_stencil) override;
+			const std::shared_ptr<GpuTextureRef>& render_target, 
+			const std::shared_ptr<GpuTextureRef>& depth_stencil) override;
 		
 		auto rtvHeap() const noexcept -> WRL::ComPtr<ID3D12DescriptorHeap> { return mRenderTargetHeap; }
 

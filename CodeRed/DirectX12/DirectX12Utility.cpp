@@ -6,6 +6,7 @@
 #include "../Shared/Enum/ShaderVisibility.hpp"
 #include "../Shared/Enum/CompareOperator.hpp"
 #include "../Shared/Enum/StencilOperator.hpp"
+#include "../Shared/Enum/TextureRefUsage.hpp"
 #include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Enum/FilterOptions.hpp"
 #include "../Shared/Enum/ResourceUsage.hpp"
@@ -115,7 +116,6 @@ auto CodeRed::DirectX12::enumConvert(const ResourceType type)
 	case ResourceType::Buffer: return D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
 	case ResourceType::Texture: return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	case ResourceType::GroupBuffer: return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	case ResourceType::CubeMap: return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

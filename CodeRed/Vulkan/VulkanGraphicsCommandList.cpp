@@ -12,6 +12,7 @@
 #include "VulkanLogicalDevice.hpp"
 #include "VulkanFrameBuffer.hpp"
 #include "VulkanRenderPass.hpp"
+#include "VulkanTextureRef.hpp"
 
 #undef min
 
@@ -103,8 +104,8 @@ void CodeRed::VulkanGraphicsCommandList::beginRenderPass(
 			)
 		));
 
-	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), false);
-	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), false);
+	tryLayoutTransition(mFrameBuffer->renderTarget()->source(), mRenderPass->color(), false);
+	tryLayoutTransition(mFrameBuffer->depthStencil()->source(), mRenderPass->depth(), false);
 
 	mCommandBuffer.beginRenderPass(info, vk::SubpassContents::eInline);
 }
@@ -119,8 +120,8 @@ void CodeRed::VulkanGraphicsCommandList::endRenderPass()
 	
 	mCommandBuffer.endRenderPass();
 
-	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), true);
-	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), true);
+	tryLayoutTransition(mFrameBuffer->renderTarget()->source(), mRenderPass->color(), true);
+	tryLayoutTransition(mFrameBuffer->depthStencil()->source(), mRenderPass->depth(), true);
 
 	mFrameBuffer.reset();
 	mRenderPass.reset();

@@ -7,6 +7,7 @@
 #include "DirectX12DescriptorHeap.hpp"
 #include "DirectX12ResourceLayout.hpp"
 #include "DirectX12LogicalDevice.hpp"
+#include "DirectX12TextureRef.hpp"
 
 #ifdef __ENABLE__DIRECTX12__
 
@@ -37,7 +38,7 @@ CodeRed::DirectX12DescriptorHeap::DirectX12DescriptorHeap(
 }
 
 void CodeRed::DirectX12DescriptorHeap::bindTexture(
-	const std::shared_ptr<GpuTexture>& texture,
+	const std::shared_ptr<GpuTextureRef>& texture, 
 	const size_t index)
 {
 	CODE_RED_DEBUG_THROW_IF(
@@ -51,84 +52,22 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 	);
 
 	const auto dxDevice = std::static_pointer_cast<DirectX12LogicalDevice>(mDevice)->device();
-	const auto dxTexture = std::static_pointer_cast<DirectX12Texture>(texture);
-
+	const auto dxTexture = std::static_pointer_cast<DirectX12Texture>(texture->source());
+	const auto view = std::static_pointer_cast<DirectX12TextureRef>(texture)->desc();
+	
 	const D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = {
 		mDescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr +
 			static_cast<SIZE_T>(index)* mDescriptorSize
 	};
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC view = {};
-
-	view.Format = enumConvert(texture->format());
-	view.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-
-	switch (texture->dimension()) {
-	case Dimension::Dimension1D:
-		{
-			if (dxTexture->depth() == 1) {
-				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1D;
-				view.Texture1D.MostDetailedMip = 0;
-				view.Texture1D.MipLevels = static_cast<UINT>(texture->mipLevels());
-				view.Texture1D.ResourceMinLODClamp = 0.0f;
-			}else {
-				
-				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1DARRAY;
-				view.Texture1DArray.ArraySize = static_cast<UINT>(dxTexture->depth());
-				view.Texture1DArray.FirstArraySlice = 0;
-				view.Texture1DArray.MipLevels = static_cast<UINT>(texture->mipLevels());
-				view.Texture1DArray.MostDetailedMip = 0;
-				view.Texture1DArray.ResourceMinLODClamp = 0.0f;
-			}
-
-			break;
-		}
-	case Dimension::Dimension2D:
-		{
-			//if the depth of texture is one, this texture is a simple texture
-			if (dxTexture->depth() == 1) {
-				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-				view.Texture2D.MostDetailedMip = 0;
-				view.Texture2D.MipLevels = static_cast<UINT>(texture->mipLevels());
-				view.Texture2D.ResourceMinLODClamp = 0.0f;
-				view.Texture2D.PlaneSlice = 0;
-			}
-			else {
-				//if the depth of texture is not one, it may be TextureArray or cube map
-				//so we will create the SRV with other ViewDimension
-				if (dxTexture->type() == ResourceType::Texture) {
-
-					view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
-					view.Texture2DArray.ArraySize = static_cast<UINT>(dxTexture->depth());
-					view.Texture2DArray.FirstArraySlice = 0;
-					view.Texture2DArray.MipLevels = static_cast<UINT>(texture->mipLevels());
-					view.Texture2DArray.MostDetailedMip = 0;
-					view.Texture2DArray.PlaneSlice = 0;
-					view.Texture2DArray.ResourceMinLODClamp = 0.0f;
-					
-				}else {
-
-					//so the texture is cube map
-					view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-					view.TextureCube.MipLevels = static_cast<UINT>(texture->mipLevels());
-					view.TextureCube.MostDetailedMip = 0;
-					view.TextureCube.ResourceMinLODClamp = 0.0f;
-					
-				}
-			}
-			break;
-		}
-	case Dimension::Dimension3D:
-		{
-			view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE3D;
-			view.Texture3D.MostDetailedMip = 0;
-			view.Texture3D.MipLevels = static_cast<UINT>(texture->mipLevels());
-			view.Texture3D.ResourceMinLODClamp = 0.0f;
-			break;
-		}
-	}
-
 	dxDevice->CreateShaderResourceView(dxTexture->texture().Get(), &view, cpuHandle);
+}
+
+void CodeRed::DirectX12DescriptorHeap::bindTexture(
+	const std::shared_ptr<GpuTexture>& texture,
+	const size_t index)
+{
+	bindTexture(texture->reference(), index);
 }
 
 void CodeRed::DirectX12DescriptorHeap::bindBuffer(

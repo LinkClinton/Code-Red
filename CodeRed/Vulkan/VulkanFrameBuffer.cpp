@@ -5,6 +5,7 @@
 #include "VulkanLogicalDevice.hpp"
 #include "VulkanFrameBuffer.hpp"
 #include "VulkanRenderPass.hpp"
+#include "VulkanTextureRef.hpp"
 
 #undef max
 #undef min
@@ -17,7 +18,17 @@ CodeRed::VulkanFrameBuffer::VulkanFrameBuffer(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::shared_ptr<GpuTexture>& render_target, 
 	const std::shared_ptr<GpuTexture>& depth_stencil) :
-	GpuFrameBuffer(device, render_target, depth_stencil)
+	VulkanFrameBuffer(device, 
+		render_target->reference(), 
+		depth_stencil->reference())
+{
+}
+
+CodeRed::VulkanFrameBuffer::VulkanFrameBuffer(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuTextureRef>& render_target, 
+	const std::shared_ptr<GpuTextureRef>& depth_stencil) :
+	GpuFrameBuffer(device, render_target, depth_stencil), mRenderTargetView(1)
 {
 	VulkanFrameBuffer::reset(render_target, depth_stencil);
 }
@@ -26,12 +37,17 @@ CodeRed::VulkanFrameBuffer::~VulkanFrameBuffer()
 {
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
 
+	for (auto& renderTargetView : mRenderTargetView)
+		if (renderTargetView) vkDevice.destroyImageView(renderTargetView);
+
+	if (mDepthStencilView) vkDevice.destroyImageView(mDepthStencilView);
+	
 	vkDevice.destroyFramebuffer(mFrameBuffer);
 }
 
 void CodeRed::VulkanFrameBuffer::reset(
-	const std::shared_ptr<GpuTexture>& render_target,
-	const std::shared_ptr<GpuTexture>& depth_stencil)
+	const std::shared_ptr<GpuTextureRef>& render_target,
+	const std::shared_ptr<GpuTextureRef>& depth_stencil)
 {
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
 
@@ -57,8 +73,10 @@ void CodeRed::VulkanFrameBuffer::reset(
 
 	mRenderPass = std::make_shared<VulkanRenderPass>(
 		mDevice,
-		renderTarget != nullptr ? static_cast<OptAttachment>(Attachment::RenderTarget(renderTarget->format())) : std::nullopt,
-		depthStencil != nullptr ? static_cast<OptAttachment>(Attachment::DepthStencil(depthStencil->format())) : std::nullopt);
+		renderTarget != nullptr ? static_cast<OptAttachment>(
+			Attachment::RenderTarget(renderTarget->source()->format())) : std::nullopt,
+		depthStencil != nullptr ? static_cast<OptAttachment>(
+			Attachment::DepthStencil(depthStencil->source()->format())) : std::nullopt);
 
 	//create the frame buffer
 	vk::FramebufferCreateInfo info = {};
@@ -66,36 +84,38 @@ void CodeRed::VulkanFrameBuffer::reset(
 
 	uint32_t attachmentCount = 0;
 
-	CODE_RED_TRY_EXECUTE(
-		renderTarget != nullptr,
-		views[attachmentCount++] = std::static_pointer_cast<VulkanTexture>(renderTarget)->view();
-	);
+	if (renderTarget != nullptr) {
+		mRenderTargetView[0] = vkDevice.createImageView(std::static_pointer_cast<VulkanTextureRef>(renderTarget)->viewInfo());
 
-	CODE_RED_TRY_EXECUTE(
-		depthStencil != nullptr,
-		views[attachmentCount++] = std::static_pointer_cast<VulkanTexture>(depthStencil)->view();
-	);
+		views[attachmentCount++] = mRenderTargetView[0];
+	}
+
+	if (depthStencil != nullptr) {
+		mDepthStencilView = vkDevice.createImageView(std::static_pointer_cast<VulkanTextureRef>(depthStencil)->viewInfo());
+
+		views[attachmentCount++] = mDepthStencilView;
+	}
 
 	auto& width = mFrameBufferWidth = 1;
 	auto& height = mFrameBufferHeight = 1;
 
-	//get the widht and height of frame buffer
+	//get the width and height of frame buffer
 	//if we have render target, the width and height is render target
 	//else if we have depth stencil, the width and height is depth stencil
 	//else width and height is 1
-	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, width = std::max(width, renderTarget->width()));
-	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, height = std::max(height, renderTarget->height()));
+	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, width = std::max(width, renderTarget->source()->width(renderTarget->mipLevel().Start)));
+	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, height = std::max(height, renderTarget->source()->height(renderTarget->mipLevel().Start)));
 
 	CODE_RED_TRY_EXECUTE(
 		renderTarget == nullptr &&
 		depthStencil != nullptr,
-		width = std::max(width, depthStencil->width()));
+		width = std::max(width, depthStencil->source()->width(depthStencil->mipLevel().Start)));
 
 
 	CODE_RED_TRY_EXECUTE(
 		renderTarget == nullptr &&
 		depthStencil != nullptr,
-		height = std::max(width, depthStencil->height()));
+		height = std::max(width, depthStencil->source()->height(depthStencil->mipLevel().Start)));
 
 	
 	info

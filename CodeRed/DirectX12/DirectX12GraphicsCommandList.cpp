@@ -11,6 +11,7 @@
 #include "DirectX12LogicalDevice.hpp"
 #include "DirectX12FrameBuffer.hpp"
 #include "DirectX12RenderPass.hpp"
+#include "DirectX12TextureRef.hpp"
 
 #include "../Shared/DebugReport.hpp"
 
@@ -92,8 +93,8 @@ void CodeRed::DirectX12GraphicsCommandList::beginRenderPass(
 		)
 	);
 
-	tryLayoutTransition(mFrameBuffer->renderTarget(), colorAttachment, false);
-	tryLayoutTransition(mFrameBuffer->depthStencil(), depthAttachment, false);
+	tryLayoutTransition(mFrameBuffer->renderTarget()->source(), colorAttachment, false);
+	tryLayoutTransition(mFrameBuffer->depthStencil()->source(), depthAttachment, false);
 
 	CODE_RED_TRY_EXECUTE(
 		has_rtv && colorAttachment->Load == AttachmentLoad::Clear,
@@ -129,8 +130,8 @@ void CodeRed::DirectX12GraphicsCommandList::endRenderPass()
 	const auto colorAttachment = mRenderPass->color();
 	const auto depthAttachment = mRenderPass->depth();
 
-	tryLayoutTransition(mFrameBuffer->renderTarget(), colorAttachment, true);
-	tryLayoutTransition(mFrameBuffer->depthStencil(), depthAttachment, true);
+	tryLayoutTransition(mFrameBuffer->renderTarget()->source(), colorAttachment, true);
+	tryLayoutTransition(mFrameBuffer->depthStencil()->source(), depthAttachment, true);
 
 	mFrameBuffer.reset();
 	mRenderPass.reset();

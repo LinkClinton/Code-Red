@@ -21,6 +21,11 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& depth_stencil = nullptr)
 			-> std::shared_ptr<GpuFrameBuffer> override;
 
+		auto createFrameBuffer(
+			const std::shared_ptr<GpuTextureRef>& render_target, 
+			const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr)
+			-> std::shared_ptr<GpuFrameBuffer> override;
+		
 		auto createGraphicsCommandList(
 			const std::shared_ptr<GpuCommandAllocator>& allocator)
 			-> std::shared_ptr<GpuGraphicsCommandList> override;

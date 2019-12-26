@@ -13,6 +13,7 @@
 #include "GpuLogicalDevice.hpp"
 #include "GpuCommandQueue.hpp"
 #include "GpuFrameBuffer.hpp"
+#include "GpuTextureRef.hpp"
 #include "GpuRenderPass.hpp"
 #include "GpuSwapChain.hpp"
 #include "GpuFence.hpp"
@@ -113,6 +114,17 @@ CodeRed::GpuFrameBuffer::GpuFrameBuffer(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const std::shared_ptr<GpuTexture>& render_target,
 	const std::shared_ptr<GpuTexture>& depth_stencil) :
+	GpuFrameBuffer(device, 
+		render_target->reference(),
+		depth_stencil->reference())
+{
+	
+}
+
+CodeRed::GpuFrameBuffer::GpuFrameBuffer(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const std::shared_ptr<GpuTextureRef>& render_target, 
+	const std::shared_ptr<GpuTextureRef>& depth_stencil) :
 	mDevice(device),
 	mRenderTargets({ render_target }),
 	mDepthStencil(depth_stencil)
@@ -124,28 +136,28 @@ CodeRed::GpuFrameBuffer::GpuFrameBuffer(
 	//and the usage of render target must have ResourceUsage::RenderTarget
 	//and the usage of depth stencil must have ResourceUsage::DepthStencil
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
-	
+
 	CODE_RED_DEBUG_THROW_IF(
-		mRenderTargets[0] != nullptr && 
-		mRenderTargets[0]->dimension() != Dimension::Dimension2D,
+		mRenderTargets[0] != nullptr &&
+		mRenderTargets[0]->source()->dimension() != Dimension::Dimension2D,
 		InvalidException<GpuTexture>({ "render_target->dimension()" })
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mRenderTargets[0] != nullptr && 
-		!enumHas(mRenderTargets[0]->usage(), ResourceUsage::RenderTarget),
+		mRenderTargets[0] != nullptr &&
+		!enumHas(mRenderTargets[0]->source()->usage(), ResourceUsage::RenderTarget),
 		InvalidException<GpuTexture>({ "render_target->usage()" })
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mDepthStencil != nullptr && 
-		mDepthStencil->dimension() != Dimension::Dimension2D,
+		mDepthStencil != nullptr &&
+		mDepthStencil->source()->dimension() != Dimension::Dimension2D,
 		InvalidException<GpuTexture>({ "depth_stencil->dimension()" })
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mDepthStencil != nullptr && 
-		!enumHas(mDepthStencil->usage(), ResourceUsage::DepthStencil),
+		mDepthStencil != nullptr &&
+		!enumHas(mDepthStencil->source()->usage(), ResourceUsage::DepthStencil),
 		InvalidException<GpuTexture>({ "depth_stencil->usage()" })
 	);
 
@@ -196,7 +208,7 @@ CodeRed::GpuTexture::GpuTexture(
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mInfo.Type != ResourceType::Texture && mInfo.Type != ResourceType::CubeMap,
+		mInfo.Type != ResourceType::Texture,
 		InvalidException<ResourceInfo>({ "info.Type" })
 	);
 
@@ -344,6 +356,30 @@ CodeRed::GpuDescriptorHeap::GpuDescriptorHeap(
 	mCount = mResourceLayout->elements().size();
 }
 
+CodeRed::GpuTextureRef::GpuTextureRef(const std::shared_ptr<GpuTexture>& texture, const TextureRefInfo& info) :
+	mTexture(texture), mInfo(info)
+{
+	CODE_RED_DEBUG_WARNING_IF(
+		(mInfo.MipLevel.Start >= mInfo.MipLevel.End || mInfo.MipLevel.End > mTexture->mipLevels()) && 
+		!(mInfo.MipLevel.Start == 0 && mInfo.MipLevel.End == 0),
+		"The mip level of texture ref is invalid, we will use default range.");
+
+	CODE_RED_DEBUG_WARNING_IF(
+		(mInfo.Array.Start >= mInfo.Array.End || mInfo.Array.End > mTexture->arrays()) &&
+		!(mInfo.Array.Start == 0 && mInfo.Array.End == 0),
+		"The array of texture ref is invalid, we will use default range.");
+
+	CODE_RED_TRY_EXECUTE(
+		mInfo.MipLevel.Start >= mInfo.MipLevel.End || mInfo.MipLevel.End > mTexture->mipLevels(),
+		mInfo.MipLevel = ValueRange<size_t>(0, mTexture->mipLevels())
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		mInfo.Array.Start >= mInfo.Array.End || mInfo.Array.End > mTexture->arrays(),
+		mInfo.Array = ValueRange<size_t>(0, mTexture->arrays())
+	);
+}
+
 void CodeRed::GpuDescriptorHeap::bindResource(
 	const std::shared_ptr<GpuResource>& resource,
 	const size_t index)
@@ -417,4 +453,23 @@ auto CodeRed::GpuTexture::size(const size_t mipSlice) const noexcept -> size_t
 	// the size of texture only for one texture with one mip level
 	// so if the texture is array, we do not use depth
 	return width(mipSlice) * height(mipSlice) * (isArray() ? 1 : depth(mipSlice)) * PixelFormatSizeOf::get(format());
+}
+
+auto CodeRed::GpuFrameBuffer::fullViewPort(const size_t index) const noexcept -> ViewPort
+{
+	return {
+		0.0f, 0.0f,
+		static_cast<Real>(mRenderTargets[index]->source()->width(mRenderTargets[index]->mipLevel().Start)),
+		static_cast<Real>(mRenderTargets[index]->source()->height(mRenderTargets[index]->mipLevel().Start)),
+		0.0f, 1.0f
+	};
+}
+
+auto CodeRed::GpuFrameBuffer::fullScissorRect(const size_t index) const noexcept -> ScissorRect
+{
+	return {
+		0, 0,
+		mRenderTargets[index]->source()->width(mRenderTargets[index]->mipLevel().Start),
+		mRenderTargets[index]->source()->height(mRenderTargets[index]->mipLevel().Start)
+	};
 }

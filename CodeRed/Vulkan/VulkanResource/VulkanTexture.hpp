@@ -19,13 +19,12 @@ namespace CodeRed {
 			const vk::Image image);
 		
 		~VulkanTexture();
+
+		auto reference(const TextureRefInfo& info) -> std::shared_ptr<GpuTextureRef> override;
 		
 		auto image() const noexcept -> vk::Image { return mImage; }
-
-		auto view() const noexcept -> vk::ImageView { return mImageView; }
 	private:
 		vk::DeviceMemory mMemory;
-		vk::ImageView mImageView;
 		vk::Image mImage;
 	};
 	

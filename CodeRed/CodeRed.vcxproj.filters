@@ -402,6 +402,24 @@
     <ClInclude Include="Shared\Information\TextureCopyInfo.hpp">
       <Filter>Shared\Information</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Information\TextureRefInfo.hpp">
+      <Filter>Shared\Information</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\ValueRange.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Enum\TextureRefUsage.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuTextureRef.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12TextureRef.hpp">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanTextureRef.hpp">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -552,6 +570,12 @@
       <Filter>DirectX12</Filter>
     </ClCompile>
     <ClCompile Include="Vulkan\VulkanDescriptorHeap.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12TextureRef.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanTextureRef.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
   </ItemGroup>

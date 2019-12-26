@@ -6,6 +6,7 @@
 #include "VulkanDescriptorHeap.hpp"
 #include "VulkanResourceLayout.hpp"
 #include "VulkanLogicalDevice.hpp"
+#include "VulkanTextureRef.hpp"
 
 #ifdef __ENABLE__VULKAN__
 
@@ -50,6 +51,8 @@ CodeRed::VulkanDescriptorHeap::VulkanDescriptorHeap(
 		vkLayout->mSamplers.empty() == false,
 		poolSize.push_back({ vk::DescriptorType::eSampler, static_cast<uint32_t>(vkLayout->mSamplers.size()) })
 	);
+
+	mImageView = std::vector<vk::ImageView>(vkLayout->mElements.size());
 	
 	vk::DescriptorPoolCreateInfo info = {};
 
@@ -80,11 +83,14 @@ CodeRed::VulkanDescriptorHeap::~VulkanDescriptorHeap()
 	for (auto& descriptorSet : mDescriptorSets)
 		vkDevice.freeDescriptorSets(mDescriptorPool, mDescriptorSets);
 
+	for (auto& imageView : mImageView)
+		vkDevice.destroyImageView(imageView);
+	
 	vkDevice.destroyDescriptorPool(mDescriptorPool);
 }
 
 void CodeRed::VulkanDescriptorHeap::bindTexture(
-	const std::shared_ptr<GpuTexture>& texture,
+	const std::shared_ptr<GpuTextureRef>& texture, 
 	const size_t index)
 {
 	CODE_RED_DEBUG_THROW_IF(
@@ -97,26 +103,37 @@ void CodeRed::VulkanDescriptorHeap::bindTexture(
 		InvalidException<ResourceType>({ "element(index).Type" })
 	);
 
+	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
+
+	if (mImageView[index]) vkDevice.destroyImageView(mImageView[index]);
+	
 	vk::DescriptorImageInfo imageInfo = {};
 	vk::WriteDescriptorSet write = {};
 
-	imageInfo
-		.setImageLayout(enumConvert(texture->layout()))
-		.setImageView(std::static_pointer_cast<VulkanTexture>(texture)->view())
-		.setSampler(nullptr);
+	mImageView[index] = vkDevice.createImageView(std::static_pointer_cast<VulkanTextureRef>(texture)->viewInfo());
 	
+	imageInfo
+		.setImageLayout(enumConvert(texture->source()->layout()))
+		.setImageView(mImageView[index])
+		.setSampler(nullptr);
+
 	write
 		.setPNext(nullptr)
 		.setDescriptorCount(1)
-		.setDescriptorType(enumConvert(texture->type()))
+		.setDescriptorType(enumConvert(texture->source()->type()))
 		.setDstArrayElement(0)
 		.setDstBinding(static_cast<uint32_t>(mResourceLayout->mElements[index].Binding))
 		.setDstSet(mDescriptorSets[mResourceLayout->mElements[index].Space])
 		.setPImageInfo(&imageInfo);
 
-	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-	
-	vkDevice.updateDescriptorSets(write, {});
+	vkDevice.updateDescriptorSets(write, {});	
+}
+
+void CodeRed::VulkanDescriptorHeap::bindTexture(
+	const std::shared_ptr<GpuTexture>& texture,
+	const size_t index)
+{
+	bindTexture(texture->reference(), index);
 }
 
 void CodeRed::VulkanDescriptorHeap::bindBuffer(

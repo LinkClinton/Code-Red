@@ -67,6 +67,18 @@ auto CodeRed::DirectX12LogicalDevice::createFrameBuffer(
 			depth_stencil));
 }
 
+auto CodeRed::DirectX12LogicalDevice::createFrameBuffer(
+	const std::shared_ptr<GpuTextureRef>& render_target,
+	const std::shared_ptr<GpuTextureRef>& depth_stencil)
+	-> std::shared_ptr<GpuFrameBuffer>
+{
+	return std::static_pointer_cast<GpuFrameBuffer>(
+		std::make_shared<DirectX12FrameBuffer>(
+			shared_from_this(),
+			render_target,
+			depth_stencil));
+}
+
 auto CodeRed::DirectX12LogicalDevice::createGraphicsCommandList(
 	const std::shared_ptr<GpuCommandAllocator>& allocator)
 	-> std::shared_ptr<GpuGraphicsCommandList>

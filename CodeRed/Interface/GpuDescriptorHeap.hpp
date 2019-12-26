@@ -6,6 +6,7 @@
 
 namespace CodeRed {
 
+	class GpuTextureRef;
 	class GpuResource;
 	class GpuTexture;
 	class GpuBuffer;
@@ -25,6 +26,10 @@ namespace CodeRed {
 			const std::shared_ptr<GpuResource>& resource,
 			const size_t index);
 
+		virtual void bindTexture(
+			const std::shared_ptr<GpuTextureRef>& texture,
+			const size_t index) = 0;
+		
 		virtual void bindTexture(
 			const std::shared_ptr<GpuTexture>& texture,
 			const size_t index) = 0;

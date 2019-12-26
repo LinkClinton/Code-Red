@@ -185,6 +185,7 @@
     <ClInclude Include="DirectX12\DirectX12Resource\DirectX12Texture.hpp" />
     <ClInclude Include="DirectX12\DirectX12SwapChain.hpp" />
     <ClInclude Include="DirectX12\DirectX12SystemInfo.hpp" />
+    <ClInclude Include="DirectX12\DirectX12TextureRef.hpp" />
     <ClInclude Include="DirectX12\DirectX12Utility.hpp" />
     <ClInclude Include="Interface\GpuCommandAllocator.hpp" />
     <ClInclude Include="Interface\GpuCommandQueue.hpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="Interface\GpuResource\GpuTexture.hpp" />
     <ClInclude Include="Interface\GpuSwapChain.hpp" />
     <ClInclude Include="Interface\GpuSystemInfo.hpp" />
+    <ClInclude Include="Interface\GpuTextureRef.hpp" />
     <ClInclude Include="Shared\Attachment.hpp" />
     <ClInclude Include="Shared\BlendProperty.hpp" />
     <ClInclude Include="Shared\ClearValue.hpp" />
@@ -240,6 +242,7 @@
     <ClInclude Include="Shared\Enum\ShaderType.hpp" />
     <ClInclude Include="Shared\Enum\ShaderVisibility.hpp" />
     <ClInclude Include="Shared\Enum\StencilOperator.hpp" />
+    <ClInclude Include="Shared\Enum\TextureRefUsage.hpp" />
     <ClInclude Include="Shared\Exception\Exception.hpp" />
     <ClInclude Include="Shared\Exception\FailedException.hpp" />
     <ClInclude Include="Shared\Exception\InvalidException.hpp" />
@@ -250,6 +253,7 @@
     <ClInclude Include="Shared\Information\ResourceInfo.hpp" />
     <ClInclude Include="Shared\Information\SamplerInfo.hpp" />
     <ClInclude Include="Shared\Information\TextureCopyInfo.hpp" />
+    <ClInclude Include="Shared\Information\TextureRefInfo.hpp" />
     <ClInclude Include="Shared\Information\WindowInfo.hpp" />
     <ClInclude Include="Shared\PixelFormatSizeOf.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />
@@ -257,6 +261,7 @@
     <ClInclude Include="Shared\ScissorRect.hpp" />
     <ClInclude Include="Shared\StencilOperatorInfo.hpp" />
     <ClInclude Include="Shared\Utility.hpp" />
+    <ClInclude Include="Shared\ValueRange.hpp" />
     <ClInclude Include="Shared\ViewPort.hpp" />
     <ClInclude Include="Vulkan\VulkanCommandAllocator.hpp" />
     <ClInclude Include="Vulkan\VulkanCommandQueue.hpp" />
@@ -280,6 +285,7 @@
     <ClInclude Include="Vulkan\VulkanResource\VulkanTexture.hpp" />
     <ClInclude Include="Vulkan\VulkanSwapChain.hpp" />
     <ClInclude Include="Vulkan\VulkanSystemInfo.hpp" />
+    <ClInclude Include="Vulkan\VulkanTextureRef.hpp" />
     <ClInclude Include="Vulkan\VulkanUtility.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -305,6 +311,7 @@
     <ClCompile Include="DirectX12\DirectX12Resource\DirectX12Texture.cpp" />
     <ClCompile Include="DirectX12\DirectX12SwapChain.cpp" />
     <ClCompile Include="DirectX12\DirectX12SystemInfo.cpp" />
+    <ClCompile Include="DirectX12\DirectX12TextureRef.cpp" />
     <ClCompile Include="DirectX12\DirectX12Utility.cpp" />
     <ClCompile Include="Interface\GpuConstructor.cpp" />
     <ClCompile Include="Shared\DebugReport.cpp" />
@@ -332,6 +339,7 @@
     <ClCompile Include="Vulkan\VulkanResource\VulkanTexture.cpp" />
     <ClCompile Include="Vulkan\VulkanSwapChain.cpp" />
     <ClCompile Include="Vulkan\VulkanSystemInfo.cpp" />
+    <ClCompile Include="Vulkan\VulkanTextureRef.cpp" />
     <ClCompile Include="Vulkan\VulkanUtility.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

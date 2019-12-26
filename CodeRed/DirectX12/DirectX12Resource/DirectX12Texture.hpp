@@ -19,6 +19,8 @@ namespace CodeRed {
 			const ResourceInfo& info);
 
 		~DirectX12Texture() = default;
+
+		auto reference(const TextureRefInfo& info) -> std::shared_ptr<GpuTextureRef> override;
 		
 		auto texture() const noexcept -> WRL::ComPtr<ID3D12Resource> { return mTexture; }
 	private:

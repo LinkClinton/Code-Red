@@ -32,9 +32,10 @@ namespace CodeRed {
 	class GpuDisplayAdapter;
 
 	class GpuFrameBuffer;
+	class GpuTextureRef;
 	class GpuRenderPass;
 	class GpuSwapChain;
-
+	
 	class GpuSampler;
 	class GpuTexture;
 	class GpuBuffer;
@@ -58,6 +59,11 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& depth_stencil = nullptr)
 			-> std::shared_ptr<GpuFrameBuffer> = 0;
 
+		virtual auto createFrameBuffer(
+			const std::shared_ptr<GpuTextureRef>& render_target,
+			const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr)
+			-> std::shared_ptr<GpuFrameBuffer> = 0;
+		
 		virtual auto createGraphicsCommandList(
 			const std::shared_ptr<GpuCommandAllocator> &allocator)
 			-> std::shared_ptr<GpuGraphicsCommandList> = 0;

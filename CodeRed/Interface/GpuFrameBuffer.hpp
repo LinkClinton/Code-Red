@@ -19,37 +19,35 @@ namespace CodeRed {
 			const std::shared_ptr<GpuTexture>& render_target,
 			const std::shared_ptr<GpuTexture>& depth_stencil = nullptr);
 
+		explicit GpuFrameBuffer(
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::shared_ptr<GpuTextureRef>& render_target,
+			const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr);
+
 		~GpuFrameBuffer() = default;
 	public:
 		virtual void reset(
+			const std::shared_ptr<GpuTextureRef>& render_target,
+			const std::shared_ptr<GpuTextureRef>& depth_stencil) = 0;
+
+		void reset(
 			const std::shared_ptr<GpuTexture>& render_target,
-			const std::shared_ptr<GpuTexture>& depth_stencil) = 0;
+			const std::shared_ptr<GpuTexture>& depth_stencil) {
+			reset(render_target->reference(), depth_stencil->reference());
+		}
 		
-		auto renderTarget(const size_t index = 0) const -> std::shared_ptr<GpuTexture> { return mRenderTargets[index]; }
+		auto renderTarget(const size_t index = 0) const -> std::shared_ptr<GpuTextureRef> { return mRenderTargets[index]; }
 
-		auto depthStencil() const -> std::shared_ptr<GpuTexture> { return mDepthStencil; }
+		auto depthStencil() const -> std::shared_ptr<GpuTextureRef> { return mDepthStencil; }
 
-		auto fullViewPort(const size_t index = 0) const noexcept -> ViewPort {
-			return {
-				0,0,
-				static_cast<Real>(mRenderTargets[index]->width()),
-				static_cast<Real>(mRenderTargets[index]->height()),
-				0.0f,1.0f
-			};
-		}
+		auto fullViewPort(const size_t index = 0) const noexcept -> ViewPort;
 
-		auto fullScissorRect(const size_t index = 0) const noexcept -> ScissorRect {
-			return {
-				0, 0,
-				static_cast<UInt32>(mRenderTargets[index]->width()),
-				static_cast<UInt32>(mRenderTargets[index]->height())
-			};
-		}
+		auto fullScissorRect(const size_t index = 0) const noexcept -> ScissorRect;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 
-		std::vector<std::shared_ptr<GpuTexture>> mRenderTargets;
-		std::shared_ptr<GpuTexture> mDepthStencil;
+		std::vector<std::shared_ptr<GpuTextureRef>> mRenderTargets;
+		std::shared_ptr<GpuTextureRef> mDepthStencil;
 	};
 	
 }
