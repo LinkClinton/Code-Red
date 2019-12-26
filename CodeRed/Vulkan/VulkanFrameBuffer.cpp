@@ -54,9 +54,13 @@ void CodeRed::VulkanFrameBuffer::reset(
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		mRenderTargets[0]->arrayRange().size() != 1 || mRenderTargets[0]->mipRange().size() != 1 ||
-		mDepthStencil->arrayRange().size() != 1 || mDepthStencil->mipRange().size() != 1,
-		"The range of array and mip level is not one, we will use the first texture as frame buffer."
+		mRenderTargets[0] != nullptr && (mRenderTargets[0]->arrayRange().size() != 1 || mRenderTargets[0]->mipRange().size() != 1),
+		"The range of array and mip level is not one"
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mDepthStencil != nullptr && (mDepthStencil->arrayRange().size() != 1 || mDepthStencil->mipRange().size() != 1),
+		"The range of array and mip level is not one."
 	);
 	
 	using OptAttachment = std::optional<Attachment>;
