@@ -402,9 +402,6 @@
     <ClInclude Include="Shared\Information\TextureCopyInfo.hpp">
       <Filter>Shared\Information</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\ValueRange.hpp">
-      <Filter>Shared</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">

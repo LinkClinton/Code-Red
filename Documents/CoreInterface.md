@@ -266,10 +266,6 @@ We recommend to use device to create frame buffer.
     auto frameBuffer = device->createFrameBuffer(texture, nullptr);
 ```
 
-### Array Range and Mip Range
-
-The size of render target and depth stencil's array range and mip range should be one. If you create frame buffer with a `Texture` that references more than one textures, we will throw errors.
-
 ### Member Functions
 
 - `reset()` : reset the frame buffer with new texture and depth-stencil buffer.

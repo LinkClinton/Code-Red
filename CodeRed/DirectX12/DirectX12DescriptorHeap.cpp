@@ -66,18 +66,18 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 	switch (texture->dimension()) {
 	case Dimension::Dimension1D:
 		{
-			if (texture->depth() == 1) {
+			if (dxTexture->depth() == 1) {
 				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1D;
-				view.Texture1D.MostDetailedMip = static_cast<UINT>(texture->mipRange().Start);
-				view.Texture1D.MipLevels = static_cast<UINT>(texture->mipRange().size());
+				view.Texture1D.MostDetailedMip = 0;
+				view.Texture1D.MipLevels = static_cast<UINT>(texture->mipLevels());
 				view.Texture1D.ResourceMinLODClamp = 0.0f;
 			}else {
 				
 				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1DARRAY;
-				view.Texture1DArray.ArraySize = static_cast<UINT>(texture->arrayRange().size());
-				view.Texture1DArray.FirstArraySlice = static_cast<UINT>(texture->arrayRange().Start);
-				view.Texture1DArray.MipLevels = static_cast<UINT>(texture->mipRange().size());
-				view.Texture1DArray.MostDetailedMip = static_cast<UINT>(texture->mipRange().Start);
+				view.Texture1DArray.ArraySize = static_cast<UINT>(dxTexture->depth());
+				view.Texture1DArray.FirstArraySlice = 0;
+				view.Texture1DArray.MipLevels = static_cast<UINT>(texture->mipLevels());
+				view.Texture1DArray.MostDetailedMip = 0;
 				view.Texture1DArray.ResourceMinLODClamp = 0.0f;
 			}
 
@@ -88,8 +88,8 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 			//if the depth of texture is one, this texture is a simple texture
 			if (dxTexture->depth() == 1) {
 				view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-				view.Texture2D.MostDetailedMip = static_cast<UINT>(texture->mipRange().Start);
-				view.Texture2D.MipLevels = static_cast<UINT>(texture->mipRange().size());
+				view.Texture2D.MostDetailedMip = 0;
+				view.Texture2D.MipLevels = static_cast<UINT>(texture->mipLevels());
 				view.Texture2D.ResourceMinLODClamp = 0.0f;
 				view.Texture2D.PlaneSlice = 0;
 			}
@@ -99,10 +99,10 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 				if (dxTexture->type() == ResourceType::Texture) {
 
 					view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
-					view.Texture2DArray.ArraySize = static_cast<UINT>(texture->arrayRange().size());
-					view.Texture2DArray.FirstArraySlice = static_cast<UINT>(texture->arrayRange().Start);
-					view.Texture2DArray.MipLevels = static_cast<UINT>(texture->mipRange().size());
-					view.Texture2DArray.MostDetailedMip = static_cast<UINT>(texture->mipRange().Start);
+					view.Texture2DArray.ArraySize = static_cast<UINT>(dxTexture->depth());
+					view.Texture2DArray.FirstArraySlice = 0;
+					view.Texture2DArray.MipLevels = static_cast<UINT>(texture->mipLevels());
+					view.Texture2DArray.MostDetailedMip = 0;
 					view.Texture2DArray.PlaneSlice = 0;
 					view.Texture2DArray.ResourceMinLODClamp = 0.0f;
 					
@@ -110,8 +110,8 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 
 					//so the texture is cube map
 					view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-					view.TextureCube.MipLevels = static_cast<UINT>(texture->mipRange().size());
-					view.TextureCube.MostDetailedMip = static_cast<UINT>(texture->mipRange().Start);
+					view.TextureCube.MipLevels = static_cast<UINT>(texture->mipLevels());
+					view.TextureCube.MostDetailedMip = 0;
 					view.TextureCube.ResourceMinLODClamp = 0.0f;
 					
 				}
@@ -121,8 +121,8 @@ void CodeRed::DirectX12DescriptorHeap::bindTexture(
 	case Dimension::Dimension3D:
 		{
 			view.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE3D;
-			view.Texture3D.MostDetailedMip = static_cast<UINT>(texture->mipRange().Start);
-			view.Texture3D.MipLevels = static_cast<UINT>(texture->mipRange().size());
+			view.Texture3D.MostDetailedMip = 0;
+			view.Texture3D.MipLevels = static_cast<UINT>(texture->mipLevels());
 			view.Texture3D.ResourceMinLODClamp = 0.0f;
 			break;
 		}

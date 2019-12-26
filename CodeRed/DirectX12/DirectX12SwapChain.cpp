@@ -104,8 +104,6 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 		);
 
 		mBuffers[index] = std::make_shared<DirectX12Texture>(mDevice, backBuffer,
-			ValueRange<size_t>(0, 1),
-			ValueRange<size_t>(0, 1),
 			ResourceInfo::Texture2D(
 				static_cast<size_t>(mInfo.width),
 				static_cast<size_t>(mInfo.height),
