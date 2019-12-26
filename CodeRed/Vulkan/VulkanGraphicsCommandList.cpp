@@ -104,8 +104,8 @@ void CodeRed::VulkanGraphicsCommandList::beginRenderPass(
 			)
 		));
 
-	tryLayoutTransition(mFrameBuffer->renderTarget()->source(), mRenderPass->color(), false);
-	tryLayoutTransition(mFrameBuffer->depthStencil()->source(), mRenderPass->depth(), false);
+	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), false);
+	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), false);
 
 	mCommandBuffer.beginRenderPass(info, vk::SubpassContents::eInline);
 }
@@ -120,8 +120,8 @@ void CodeRed::VulkanGraphicsCommandList::endRenderPass()
 	
 	mCommandBuffer.endRenderPass();
 
-	tryLayoutTransition(mFrameBuffer->renderTarget()->source(), mRenderPass->color(), true);
-	tryLayoutTransition(mFrameBuffer->depthStencil()->source(), mRenderPass->depth(), true);
+	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), true);
+	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), true);
 
 	mFrameBuffer.reset();
 	mRenderPass.reset();
@@ -522,13 +522,13 @@ void CodeRed::VulkanGraphicsCommandList::drawIndexed(
 }
 
 void CodeRed::VulkanGraphicsCommandList::tryLayoutTransition(
-	const std::shared_ptr<GpuTexture>& texture,
+	const std::shared_ptr<GpuTextureRef>& texture,
 	const std::optional<Attachment>& attachment, 
 	const bool final)
 {
 	CODE_RED_TRY_EXECUTE(
 		texture != nullptr && attachment.has_value(),
-		layoutTransition(texture, texture->layout(),
+		layoutTransition(texture->source(), texture->source()->layout(),
 			final ? attachment->FinalLayout : attachment->InitialLayout)
 	);
 }

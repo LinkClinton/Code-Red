@@ -13,6 +13,8 @@ namespace CodeRed {
 	class DirectX12ResourceLayout;
 	class DirectX12FrameBuffer;
 	class DirectX12RenderPass;
+
+	class GpuTextureRef;
 	
 	class DirectX12GraphicsCommandList final : public GpuGraphicsCommandList {
 	public:
@@ -127,7 +129,7 @@ namespace CodeRed {
 			const D3D12_RESOURCE_STATES after);
 
 		void tryLayoutTransition(
-			const std::shared_ptr<GpuTexture>& texture,
+			const std::shared_ptr<GpuTextureRef>& texture,
 			const std::optional<Attachment>& attachment,
 			const bool final = false);
 	private:

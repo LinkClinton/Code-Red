@@ -15,8 +15,8 @@ CodeRed::DirectX12FrameBuffer::DirectX12FrameBuffer(
 	const std::shared_ptr<GpuTexture>& render_target, 
 	const std::shared_ptr<GpuTexture>& depth_stencil) :
 	DirectX12FrameBuffer(device, 
-		render_target->reference(), 
-		depth_stencil->reference())
+		render_target == nullptr ? nullptr : render_target->reference(), 
+		depth_stencil == nullptr ? nullptr : depth_stencil->reference())
 {
 	
 }

@@ -24,6 +24,8 @@ namespace CodeRed {
 		
 		auto info() const noexcept -> TextureRefInfo { return mInfo; }
 
+		auto format() const noexcept -> PixelFormat { return mTexture->format(); }
+
 		auto mipLevel() const noexcept -> ValueRange<size_t> { return mInfo.MipLevel; }
 
 		auto array() const noexcept -> ValueRange<size_t> { return mInfo.Array; }
