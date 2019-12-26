@@ -1,4 +1,6 @@
 #include "../../Shared/PixelFormatSizeOf.hpp"
+#include "../../Shared/DebugReport.hpp"
+
 #include "../VulkanLogicalDevice.hpp"
 #include "VulkanTexture.hpp"
 
@@ -78,23 +80,28 @@ CodeRed::VulkanTexture::VulkanTexture(
 			vk::ComponentSwizzle::eA))
 		.setSubresourceRange(vk::ImageSubresourceRange(
 			enumConvert(property.PixelFormat, mInfo.Usage),
-			0, 
-			static_cast<uint32_t>(property.MipLevels), 
-			0, 
-			static_cast<uint32_t>(property.Dimension == Dimension::Dimension3D ? 1 : property.Depth)))
+			static_cast<uint32_t>(mMipRange.Start), 
+			static_cast<uint32_t>(mMipRange.size()), 
+			static_cast<uint32_t>(mArrayRange.Start), 
+			static_cast<uint32_t>(mArrayRange.size())))
 		.setViewType(enumConvert(property.Dimension, mInfo.Type, property.Depth));
 	
 	mImageView = vkDevice->device().createImageView(viewInfo);
 }
 
 CodeRed::VulkanTexture::VulkanTexture(
-	const std::shared_ptr<GpuLogicalDevice>& device, 
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const ValueRange<size_t>& arrayRange,
+	const ValueRange<size_t>& mipRange,
 	const ResourceInfo& info,
 	const vk::Image image) :
 	GpuTexture(device, info),
 	mMemory(nullptr),
 	mImage(image)
 {
+	mArrayRange = arrayRange;
+	mMipRange = mipRange;
+	
 	//this ctor version is used for swapchain
 	//we use this ctor to create GpuTexture in swap chain.
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice);
@@ -120,10 +127,10 @@ CodeRed::VulkanTexture::VulkanTexture(
 			vk::ComponentSwizzle::eA))
 		.setSubresourceRange(vk::ImageSubresourceRange(
 			imageAspectFlags,
-			0, 
-			static_cast<uint32_t>(property.MipLevels),
-			0, 
-			static_cast<uint32_t>(property.Dimension == Dimension::Dimension3D ? 1 : property.Depth)))
+			static_cast<uint32_t>(mMipRange.Start), 
+			static_cast<uint32_t>(mMipRange.size()),
+			static_cast<uint32_t>(mArrayRange.Start), 
+			static_cast<uint32_t>(mArrayRange.size())))
 		.setViewType(enumConvert(property.Dimension, mInfo.Type, property.Depth));
 
 	mImageView = vkDevice->device().createImageView(viewInfo);
@@ -142,6 +149,14 @@ CodeRed::VulkanTexture::~VulkanTexture()
 		vkDevice.freeMemory(mMemory);
 		vkDevice.destroyImage(mImage);
 	}
+}
+
+auto CodeRed::VulkanTexture::reference(
+	const ValueRange<size_t> arrayRange,
+	const ValueRange<size_t> mipRange) const
+	-> std::shared_ptr<GpuTexture>
+{
+	return std::make_shared<VulkanTexture>(mDevice, arrayRange, mipRange, mInfo, mImage);
 }
 
 #endif

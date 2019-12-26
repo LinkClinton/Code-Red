@@ -172,6 +172,8 @@ void CodeRed::VulkanSwapChain::initializeSwapChain()
 	for (size_t index = 0; index < mBuffers.size(); index++) {
 		mBuffers[index] = std::make_shared<VulkanTexture>(
 			mDevice,
+			ValueRange<size_t>(0, 1),
+			ValueRange<size_t>(0, 1),
 			ResourceInfo::Texture2D(
 				mInfo.width,
 				mInfo.height,

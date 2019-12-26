@@ -354,8 +354,12 @@ void CodeRed::VulkanGraphicsCommandList::copyTexture(
 	const size_t z)
 {
 	copyTexture(
-		TextureCopyInfo(source, region.Left, region.Top, region.Front),
-		TextureCopyInfo(destination, x, y, z),
+		TextureCopyInfo(source,
+			source->index(source->mipRange().Start, source->arrayRange().Start),
+			region.Left, region.Top, region.Front),
+		TextureCopyInfo(destination,
+			destination->index(destination->mipRange().Start, destination->arrayRange().Start),
+			x, y, z),
 		region.Right - region.Left,
 		region.Bottom - region.Top,
 		region.Back - region.Front
@@ -429,9 +433,9 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
 {
 	size_t offset = 0;
 
-	for (size_t mipSlice = 0; mipSlice < destination->mipLevels(); mipSlice++) {
+	for (auto mipSlice = destination->mipRange().Start; mipSlice < destination->mipRange().End; mipSlice++) {
 		if (destination->isArray()) {
-			for (size_t arraySlice = 0; arraySlice < destination->depth(); arraySlice++) {
+			for (auto arraySlice = destination->arrayRange().Start; arraySlice < destination->arrayRange().End; arraySlice++) {
 				copyMemoryToTexture(destination, destination->index(mipSlice, arraySlice),
 					static_cast<const unsigned char*>(data) + offset);
 

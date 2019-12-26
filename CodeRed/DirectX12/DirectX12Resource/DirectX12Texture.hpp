@@ -16,11 +16,18 @@ namespace CodeRed {
 		explicit DirectX12Texture(
 			const std::shared_ptr<GpuLogicalDevice>& device,
 			const WRL::ComPtr<ID3D12Resource>& texture,
+			const ValueRange<size_t>& arrayRange,
+			const ValueRange<size_t>& mipRange,
 			const ResourceInfo& info);
 
 		~DirectX12Texture() = default;
 		
 		auto texture() const noexcept -> WRL::ComPtr<ID3D12Resource> { return mTexture; }
+
+		auto reference(
+			const ValueRange<size_t> arrayRange, 
+			const ValueRange<size_t> mipRange) const
+			-> std::shared_ptr<GpuTexture> override;
 	private:
 		WRL::ComPtr<ID3D12Resource> mTexture;
 	};

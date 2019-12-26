@@ -15,6 +15,8 @@ namespace CodeRed {
 
 		explicit VulkanTexture(
 			const std::shared_ptr<GpuLogicalDevice>& device,
+			const ValueRange<size_t>& arrayRange,
+			const ValueRange<size_t>& mipRange,
 			const ResourceInfo& info,
 			const vk::Image image);
 		
@@ -23,6 +25,11 @@ namespace CodeRed {
 		auto image() const noexcept -> vk::Image { return mImage; }
 
 		auto view() const noexcept -> vk::ImageView { return mImageView; }
+
+		auto reference(
+			const ValueRange<size_t> arrayRange, 
+			const ValueRange<size_t> mipRange) const
+			-> std::shared_ptr<GpuTexture> override;
 	private:
 		vk::DeviceMemory mMemory;
 		vk::ImageView mImageView;

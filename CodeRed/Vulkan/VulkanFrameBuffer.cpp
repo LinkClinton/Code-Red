@@ -52,6 +52,12 @@ void CodeRed::VulkanFrameBuffer::reset(
 		depthStencil == nullptr,
 		DebugReport::warning(DebugType::Create, { "FrameBuffer", "there are no rtv and dsv" })
 	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mRenderTargets[0]->arrayRange().size() != 1 || mRenderTargets[0]->mipRange().size() != 1 ||
+		mDepthStencil->arrayRange().size() != 1 || mDepthStencil->mipRange().size() != 1,
+		"The range of array and mip level is not one, we will use the first texture as frame buffer."
+	);
 	
 	using OptAttachment = std::optional<Attachment>;
 
@@ -79,7 +85,7 @@ void CodeRed::VulkanFrameBuffer::reset(
 	auto& width = mFrameBufferWidth = 1;
 	auto& height = mFrameBufferHeight = 1;
 
-	//get the widht and height of frame buffer
+	//get the width and height of frame buffer
 	//if we have render target, the width and height is render target
 	//else if we have depth stencil, the width and height is depth stencil
 	//else width and height is 1

@@ -181,9 +181,43 @@ CodeRed::GpuCommandAllocator::GpuCommandAllocator(
 
 CodeRed::GpuTexture::GpuTexture(
 	const std::shared_ptr<GpuLogicalDevice>& device,
+	const ResourceInfo& info) : GpuTexture(device, 
+		ValueRange<size_t>(0,
+			std::get<TextureProperty>(info.Property).Dimension == Dimension::Dimension3D ? 
+			1 : std::get<TextureProperty>(info.Property).Depth),
+		ValueRange<size_t>(0, 
+			std::get<TextureProperty>(info.Property).MipLevels),
+		info)
+{
+}
+
+CodeRed::GpuTexture::GpuTexture(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const ValueRange<size_t>& arrayRange, 
+	const ValueRange<size_t>& mipRange, 
 	const ResourceInfo& info) :
 	GpuResource(device, info)
 {
+	mMipRange = ValueRange<size_t>(0, mipLevels());
+	mArrayRange = ValueRange<size_t>(0, isArray() ? depth() : 1);
+
+	CODE_RED_DEBUG_WARNING_IF(
+		arrayRange.Start >= arrayRange.End || arrayRange.End > depth(),
+		"The range of array is invalid, we will use default range.");
+
+	CODE_RED_DEBUG_WARNING_IF(
+		mipRange.Start >= mipRange.End || mipRange.End > mipLevels(),
+		"The range of mip levels is invalid, we will use default range.");
+
+	CODE_RED_TRY_EXECUTE(
+		!(arrayRange.Start >= arrayRange.End || arrayRange.End > depth()),
+		mArrayRange = arrayRange
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		!(mipRange.Start >= mipRange.End || mipRange.End > mipLevels()),
+		mMipRange = mipRange);
+	
 	//the device must be a valid device.
 	//and the size of texture must greater zero
 	//and the info.Type must be ResourceType::Texture

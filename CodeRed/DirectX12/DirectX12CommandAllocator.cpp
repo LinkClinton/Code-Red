@@ -88,6 +88,8 @@ auto CodeRed::DirectX12CommandAllocator::allocateCopyCacheTexture(const TextureP
 	//we first copy memory to this texture with special heap
 	//then we copy this texture to the texture with default heap
 	const auto texture = std::make_shared<DirectX12Texture>(mDevice, dxTexture,
+		ValueRange<size_t>(0, 1),
+		ValueRange<size_t>(0, 1),
 		ResourceInfo(property,
 			ResourceLayout::GeneralRead,
 			ResourceUsage::None,

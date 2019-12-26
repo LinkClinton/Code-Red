@@ -257,6 +257,7 @@
     <ClInclude Include="Shared\ScissorRect.hpp" />
     <ClInclude Include="Shared\StencilOperatorInfo.hpp" />
     <ClInclude Include="Shared\Utility.hpp" />
+    <ClInclude Include="Shared\ValueRange.hpp" />
     <ClInclude Include="Shared\ViewPort.hpp" />
     <ClInclude Include="Vulkan\VulkanCommandAllocator.hpp" />
     <ClInclude Include="Vulkan\VulkanCommandQueue.hpp" />

@@ -78,8 +78,10 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 CodeRed::DirectX12Texture::DirectX12Texture(
 	const std::shared_ptr<GpuLogicalDevice>& device,
 	const WRL::ComPtr<ID3D12Resource>& texture,
+	const ValueRange<size_t>& arrayRange,
+	const ValueRange<size_t>& mipRange,
 	const ResourceInfo& info) :
-	GpuTexture(device, info),
+	GpuTexture(device, arrayRange, mipRange, info),
 	mTexture(texture)
 {
 	const auto dxDevice = static_cast<DirectX12LogicalDevice*>(mDevice.get())->device();
@@ -90,6 +92,14 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	//so we need record the real size and the alignment
 	mPhysicalSize = static_cast<size_t>(allocateInfo.SizeInBytes);
 	mAlignment = static_cast<size_t>(allocateInfo.Alignment);
+}
+
+auto CodeRed::DirectX12Texture::reference(
+	const ValueRange<size_t> arrayRange,
+	const ValueRange<size_t> mipRange) const -> std::shared_ptr<GpuTexture>
+{
+	return std::make_shared<DirectX12Texture>(
+		mDevice, mTexture, arrayRange, mipRange, mInfo);
 }
 
 #endif

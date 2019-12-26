@@ -153,6 +153,14 @@ A texture can have many textures, for example, we can have a texture that has te
 
 If you have a texture array with max mip levels 5 and you want to get the 4-th texture with mip levels 3, so the index is `3 + 4 * 5 = 23`.(The way to encode `mipSlice` and `arraySlice` is same as the way in DirectX12)
 
+### Array Range and Mip Range
+
+If you want to use some textures in `Texture`, for exmaple, textures from 1-st to 3-rd texture and mip levels from 2 to 3. You can use `GpuTexture::reference` to create a `Texture` that reference these textures.
+
+By default, the `ArrayRange` and `MipRange` of texture is from `[0, arraySize)` and `[0, mipLevels)`. It references all textures in this `Texture`.
+
+**Notice : if a `Texture` with a index show at same time, we can not treat it as reference of textures.**
+
 ### Member Functions
 
 All member functions is used to get informations of texture or mapped memory.
