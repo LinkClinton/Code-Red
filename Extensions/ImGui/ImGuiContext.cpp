@@ -1,6 +1,7 @@
 #include "ImGuiContext.hpp"
 
 #include <CodeRed/Interface/GpuPipelineState/GpuPipelineFactory.hpp>
+#include <CodeRed/Interface/GpuResource/GpuTextureBuffer.hpp>
 #include <CodeRed/Interface/GpuCommandAllocator.hpp>
 #include <CodeRed/Interface/GpuCommandQueue.hpp>
 
@@ -288,12 +289,19 @@ void CodeRed::ImGuiContext::initializeFontsTexture(
 	);
 
 	const auto commandList = mDevice->createGraphicsCommandList(allocator);
+	const auto buffer = mDevice->createTextureBuffer(mFontsTexture);
 
+	buffer->write(pixels);
+	
 	commandList->beginRecording();
 	commandList->layoutTransition(mFontsTexture, mFontsTexture->layout(), ResourceLayout::CopyDestination);
-	
-	commandList->copyMemoryToTexture(mFontsTexture, pixels);
+	commandList->layoutTransition(buffer, buffer->layout(), ResourceLayout::CopySource);
 
+	commandList->copyBufferToTexture(
+		TextureBufferCopyInfo(buffer),
+		TextureCopyInfo(mFontsTexture),
+		buffer->width(), buffer->height(), buffer->depth());
+	
 	commandList->layoutTransition(mFontsTexture, mFontsTexture->layout(), ResourceLayout::GeneralRead);
 	commandList->endRecording();
 	
