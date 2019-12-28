@@ -160,7 +160,7 @@ All member functions is used to get informations of texture or mapped memory.
 
 - If you want to get texture property like width, height, depth and size with mip level, you can set the `mipSlice` with these functions(`width`, `height`, `depth`, `size`). **Notice, the depth of array is always the number of texture array.**
 
-- If you want to update memory to texture, you should use `GpuGraphicsCommandList::copyMemoryToTexture`.
+- If you want to update memory to texture, you should use `TextureBuffer` and copy it to texture.
 
 - The size of texture is not always same in different adapters, so we add `GpuTexture::physicalSize` and `GpuTexture::alignment` to indicate the real size of texture and the layout of alignment.
 

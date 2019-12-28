@@ -23,12 +23,6 @@ namespace CodeRed {
 		
 		auto allocator() const noexcept -> WRL::ComPtr<ID3D12CommandAllocator> { return mCommandAllocator; }
 	private:
-		friend class DirectX12GraphicsCommandList;
-
-		auto allocateCopyCacheBuffer(const size_t size) -> std::shared_ptr<GpuBuffer>;
-
-		auto allocateCopyCacheTexture(const TextureProperty& property) -> std::shared_ptr<GpuTexture>;
-	private:
 		WRL::ComPtr<ID3D12CommandAllocator> mCommandAllocator;
 	};
 	

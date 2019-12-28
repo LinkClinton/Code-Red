@@ -21,8 +21,6 @@ namespace CodeRed {
 		virtual void reset() = 0;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
-
-		std::vector<std::shared_ptr<GpuResource>> mCopyCacheResources;
 	};
 	
 }

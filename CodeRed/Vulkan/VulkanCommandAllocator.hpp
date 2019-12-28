@@ -20,10 +20,6 @@ namespace CodeRed {
 		
 		auto allocator() const noexcept -> vk::CommandPool {return mCommandPool; }
 	private:
-		friend class VulkanGraphicsCommandList;
-
-		auto allocateCopyCacheBuffer(const size_t size) -> std::shared_ptr<GpuBuffer>;
-	private:
 		vk::CommandPool mCommandPool;
 	};
 	

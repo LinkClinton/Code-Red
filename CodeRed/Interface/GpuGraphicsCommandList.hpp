@@ -138,19 +138,6 @@ namespace CodeRed {
 			const size_t height,
 			const size_t depth = 1) = 0;
 		
-		virtual void copyMemoryToBuffer(
-			const std::shared_ptr<GpuBuffer>& destination,
-			const void* data) = 0;
-		
-		virtual void copyMemoryToTexture(
-			const std::shared_ptr<GpuTexture>& destination,
-			const void* data) = 0;
-
-		virtual void copyMemoryToTexture(
-			const std::shared_ptr<GpuTexture>& destination,
-			const size_t resourceIndex,
-			const void* data) = 0;
-		
 		virtual void draw(
 			const size_t vertex_count,
 			const size_t instance_count = 1,
