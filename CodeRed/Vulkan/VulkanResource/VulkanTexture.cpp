@@ -14,7 +14,6 @@ CodeRed::VulkanTexture::VulkanTexture(
 	const ResourceInfo& info) :
 	GpuTexture(device, info)
 {
-	vk::ImageViewCreateInfo viewInfo = {};
 	vk::MemoryAllocateInfo memoryInfo = {};
 	vk::ImageCreateInfo imageInfo = {};
 
@@ -24,7 +23,7 @@ CodeRed::VulkanTexture::VulkanTexture(
 		.setPNext(nullptr)
 		.setFlags(vk::ImageCreateFlags(0))
 		.setImageType(enumConvert(property.Dimension))
-		.setFormat(enumConvert(property.PixelFormat))
+		.setFormat(enumConvert(property.Format))
 		.setExtent(vk::Extent3D(
 			static_cast<uint32_t>(property.Width),
 			static_cast<uint32_t>(property.Height),

@@ -1,5 +1,6 @@
 #include "../Shared/Exception/ZeroException.hpp"
 
+#include "GpuResource/GpuTextureBuffer.hpp"
 #include "GpuResource/GpuTexture.hpp"
 #include "GpuResource/GpuSampler.hpp"
 #include "GpuResource/GpuBuffer.hpp"
@@ -189,6 +190,18 @@ CodeRed::GpuCommandAllocator::GpuCommandAllocator(
 	mDevice(device)
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
+}
+
+CodeRed::GpuTextureBuffer::GpuTextureBuffer(
+	const std::shared_ptr<GpuLogicalDevice>& device,
+	const TextureBufferInfo& info) : mDevice(device), mInfo(info)
+{
+	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
+
+	CODE_RED_DEBUG_THROW_IF(
+		mInfo.Size == 0,
+		ZeroException<size_t>({ "info.Size" })
+	);
 }
 
 CodeRed::GpuTexture::GpuTexture(
@@ -399,6 +412,13 @@ void CodeRed::GpuRenderPass::setClear(
 {
 	if (color.has_value()) mColor[0] = color.value();
 	if (depth.has_value()) mDepth = depth.value();
+}
+
+void CodeRed::GpuGraphicsCommandList::layoutTransition(
+	const std::shared_ptr<GpuTextureBuffer>& buffer,
+	const ResourceLayout layout)
+{
+	layoutTransition(buffer, buffer->layout(), layout);
 }
 
 void CodeRed::GpuGraphicsCommandList::layoutTransition(

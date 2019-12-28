@@ -13,7 +13,7 @@ namespace CodeRed {
 
 		Extent2D() = default;
 
-		explicit Extent2D(
+		Extent2D(
 			const T left, const T top,
 			const T right, const T bottom) :
 			Left(left), Top(top),
@@ -31,11 +31,17 @@ namespace CodeRed {
 
 		Extent3D() = default;
 
-		explicit Extent3D(
+		Extent3D(
 			const T left, const T top, const T front, 
 			const T right, const T bottom, const T back) :
 			Left(left), Top(top), Front(front),
 			Right(right), Bottom(bottom), Back(back) {}
+
+		auto width() const noexcept { return Right - Left; }
+
+		auto height() const noexcept { return Bottom - Top; }
+
+		auto depth() const noexcept { return Back - Front; }
 	};
 
 	using UExtent2D = Extent2D<size_t>;

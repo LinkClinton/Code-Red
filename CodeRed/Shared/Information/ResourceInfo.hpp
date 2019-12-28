@@ -37,7 +37,7 @@ namespace CodeRed {
 
 		size_t MipLevels = 1;
 
-		PixelFormat PixelFormat = PixelFormat::Unknown;
+		PixelFormat Format = PixelFormat::Unknown;
 		Dimension Dimension = Dimension::Dimension1D;
 
 		ClearValue ClearValue = CodeRed::ClearValue();
@@ -57,7 +57,7 @@ namespace CodeRed {
 			Depth(depth),
 			Size(width * height * (dimension == Dimension::Dimension3D ? depth : 1) * PixelFormatSizeOf::get(format)),
 			MipLevels(mipLevels),
-			PixelFormat(format),
+			Format(format),
 			Dimension(dimension),
 			ClearValue(clearValue) {}
 	};

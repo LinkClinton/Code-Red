@@ -7,7 +7,7 @@
 
 namespace CodeRed {
 
-	class DirectX12TextureRef : public GpuTextureRef {
+	class DirectX12TextureRef final : public GpuTextureRef {
 	public:
 		explicit DirectX12TextureRef(
 			const std::shared_ptr<GpuTexture>& texture,

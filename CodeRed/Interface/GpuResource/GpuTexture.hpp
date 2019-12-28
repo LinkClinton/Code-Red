@@ -29,7 +29,7 @@ namespace CodeRed {
 		
 		auto size(const size_t mipSlice = 0) const noexcept -> size_t;
 
-		auto format() const noexcept -> PixelFormat { return std::get<TextureProperty>(mInfo.Property).PixelFormat; }
+		auto format() const noexcept -> PixelFormat { return std::get<TextureProperty>(mInfo.Property).Format; }
 
 		auto dimension() const noexcept -> Dimension { return std::get<TextureProperty>(mInfo.Property).Dimension; }
 

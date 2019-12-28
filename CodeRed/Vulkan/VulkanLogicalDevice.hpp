@@ -72,6 +72,14 @@ namespace CodeRed {
 			const size_t buffer_count)
 			->std::shared_ptr<GpuSwapChain> override;
 
+		auto createTextureBuffer(const TextureBufferInfo& info)
+			-> std::shared_ptr<GpuTextureBuffer> override;
+
+		auto createTextureBuffer(
+			const std::shared_ptr<GpuTexture>& texture, 
+			const size_t mipSlice)
+			-> std::shared_ptr<GpuTextureBuffer> override;
+		
 		auto createBuffer(const ResourceInfo& info)
 			->std::shared_ptr<GpuBuffer> override;
 
@@ -104,6 +112,7 @@ namespace CodeRed {
 			const vk::MemoryPropertyFlags& flags)
 			const -> uint32_t;
 
+		friend class VulkanTextureBuffer;
 		friend class VulkanCommandQueue;
 		friend class VulkanSwapChain;
 		friend class VulkanTexture;

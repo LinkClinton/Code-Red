@@ -56,7 +56,7 @@ auto CodeRed::DirectX12CommandAllocator::allocateCopyCacheTexture(const TextureP
 	desc.Height = static_cast<UINT>(property.Height);
 	desc.DepthOrArraySize = static_cast<UINT>(property.Depth);
 	desc.MipLevels = 1;
-	desc.Format = enumConvert(property.PixelFormat);
+	desc.Format = enumConvert(property.Format);
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
 	desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;

@@ -162,6 +162,8 @@ Most member functions are same usage as DirectX12 and Vulkan. And some functions
 - `layoutTransition()` : tranlate the layout of resource.
 - `copyBuffer()` : copy buffer from source to destination.
 - `copyTexture()` : copy texture from source to destination.
+- `copyTextureToBuffer()` : copy texture to buffer. 
+- `copyBufferToTexture()` : copy buffer to texture.
 - `copyMemoryToBuffer()` : copy the memory to buffer.
 - `copyMemoryToTexture()` : copy the memory to texture.
 - `draw()` : draw current vertex buffer.
@@ -327,6 +329,14 @@ explicit GpuTextureRef(
 
 - `texture` : which texture we want to reference.
 - `info` : how we reference the texture.
+
+We recommend to use reference to create texture reference.
+
+```C++
+    const auto ref = texture.reference();
+```
+
+### TextureRefInfo
 
 ```C++
 templpate<typename T>

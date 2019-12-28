@@ -21,6 +21,8 @@ namespace CodeRed {
 		auto width() const noexcept -> size_t { return mTexture->width(mInfo.MipLevel.Start); }
 
 		auto height() const noexcept -> size_t { return mTexture->height(mInfo.MipLevel.Start); }
+
+		auto depth() const noexcept -> size_t { return mTexture->depth(mInfo.MipLevel.Start); }
 		
 		auto info() const noexcept -> TextureRefInfo { return mInfo; }
 

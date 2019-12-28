@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Shared/Information/TextureBufferCopyInfo.hpp"
 #include "../Shared/Information/TextureCopyInfo.hpp"
 #include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Enum/IndexType.hpp"
@@ -21,6 +22,8 @@ namespace CodeRed {
 	class GpuLogicalDevice;	
 	class GpuFrameBuffer;
 	class GpuRenderPass;
+
+	class GpuTextureBuffer;
 	class GpuSampler;
 	class GpuTexture;
 	class GpuBuffer;
@@ -73,6 +76,15 @@ namespace CodeRed {
 			const ScissorRect& rect) = 0;
 
 		virtual void layoutTransition(
+			const std::shared_ptr<GpuTextureBuffer>& buffer,
+			const ResourceLayout old_layout,
+			const ResourceLayout new_layout) = 0;
+
+		virtual void layoutTransition(
+			const std::shared_ptr<GpuTextureBuffer>& buffer,
+			const ResourceLayout layout);
+		
+		virtual void layoutTransition(
 			const std::shared_ptr<GpuTexture>& texture,
 			const ResourceLayout old_layout,
 			const ResourceLayout new_layout) = 0;
@@ -112,6 +124,20 @@ namespace CodeRed {
 			const size_t height,
 			const size_t depth = 1) = 0;
 
+		virtual void copyTextureToBuffer(
+			const TextureCopyInfo& source,
+			const TextureBufferCopyInfo& destination,
+			const size_t width,
+			const size_t height,
+			const size_t depth = 1) = 0;
+
+		virtual void copyBufferToTexture(
+			const TextureBufferCopyInfo& source,
+			const TextureCopyInfo& destination,
+			const size_t width,
+			const size_t height,
+			const size_t depth = 1) = 0;
+		
 		virtual void copyMemoryToBuffer(
 			const std::shared_ptr<GpuBuffer>& destination,
 			const void* data) = 0;

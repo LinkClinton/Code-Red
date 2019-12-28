@@ -3,6 +3,7 @@
 #include "../Shared/Exception/FailedException.hpp"
 #include "../Shared/DebugReport.hpp"
 
+#include "DirectX12Resource/DirectX12TextureBuffer.hpp"
 #include "DirectX12Resource/DirectX12Sampler.hpp"
 #include "DirectX12Resource/DirectX12Texture.hpp"
 #include "DirectX12Resource/DirectX12Buffer.hpp"
@@ -186,6 +187,24 @@ auto CodeRed::DirectX12LogicalDevice::createSwapChain(
 			info,
 			format,
 			buffer_count));
+}
+
+auto CodeRed::DirectX12LogicalDevice::createTextureBuffer(
+	const TextureBufferInfo& info) -> std::shared_ptr<GpuTextureBuffer>
+{
+	return std::static_pointer_cast<GpuTextureBuffer>(
+		std::make_shared<DirectX12TextureBuffer>(
+			shared_from_this(), info));
+}
+
+auto CodeRed::DirectX12LogicalDevice::createTextureBuffer(
+	const std::shared_ptr<GpuTexture>& texture,
+	const size_t mipSlice)
+	-> std::shared_ptr<GpuTextureBuffer>
+{
+	return std::static_pointer_cast<GpuTextureBuffer>(
+		std::make_shared<DirectX12TextureBuffer>(
+			shared_from_this(), texture, mipSlice));
 }
 
 auto CodeRed::DirectX12LogicalDevice::createBuffer(const ResourceInfo& info)

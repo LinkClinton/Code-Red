@@ -4,6 +4,7 @@
 
 #include "VulkanPipelineState/VulkanPipelineFactory.hpp"
 
+#include "VulkanResource/VulkanTextureBuffer.hpp"
 #include "VulkanResource/VulkanTexture.hpp"
 #include "VulkanResource/VulkanSampler.hpp"
 #include "VulkanResource/VulkanBuffer.hpp"
@@ -307,6 +308,23 @@ auto CodeRed::VulkanLogicalDevice::createSwapChain(
 		info,
 		format,
 		buffer_count);
+}
+
+auto CodeRed::VulkanLogicalDevice::createTextureBuffer(
+	const TextureBufferInfo& info)
+	-> std::shared_ptr<GpuTextureBuffer>
+{
+	return std::make_shared<VulkanTextureBuffer>(
+		shared_from_this(), info);
+}
+
+auto CodeRed::VulkanLogicalDevice::createTextureBuffer(
+	const std::shared_ptr<GpuTexture>& texture,
+	const size_t mipSlice)
+	-> std::shared_ptr<GpuTextureBuffer>
+{
+	return std::make_shared<VulkanTextureBuffer>(
+		shared_from_this(), texture, mipSlice);
 }
 
 auto CodeRed::VulkanLogicalDevice::createBuffer(const ResourceInfo& info)

@@ -1,6 +1,7 @@
 #include "../Shared/Exception/InvalidException.hpp"
 #include "../Shared/Exception/FailedException.hpp"
 
+#include "VulkanResource/VulkanTextureBuffer.hpp"
 #include "VulkanResource/VulkanTexture.hpp"
 #include "VulkanResource/VulkanBuffer.hpp"
 
@@ -262,6 +263,37 @@ void CodeRed::VulkanGraphicsCommandList::setScissorRect(
 }
 
 void CodeRed::VulkanGraphicsCommandList::layoutTransition(
+	const std::shared_ptr<GpuTextureBuffer>& buffer,
+	const ResourceLayout old_layout, 
+	const ResourceLayout new_layout)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		buffer->layout() != old_layout,
+		InvalidException<ResourceLayout>({ "old_layout" })
+	);
+
+	vk::BufferMemoryBarrier barrier = {};
+
+	barrier
+		.setPNext(nullptr)
+		.setSrcAccessMask(enumConvert1(old_layout, ResourceType::Buffer))
+		.setSrcQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
+		.setDstAccessMask(enumConvert1(new_layout, ResourceType::Buffer))
+		.setDstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
+		.setBuffer(std::static_pointer_cast<VulkanTextureBuffer>(buffer)->buffer())
+		.setOffset(0)
+		.setSize(buffer->size());
+
+	mCommandBuffer.pipelineBarrier(
+		vk::PipelineStageFlagBits::eAllCommands,
+		vk::PipelineStageFlagBits::eAllCommands,
+		vk::DependencyFlags(0),
+		{}, barrier, {});
+
+	buffer->setLayout(new_layout);
+}
+
+void CodeRed::VulkanGraphicsCommandList::layoutTransition(
 	const std::shared_ptr<GpuTexture>& texture,
 	const ResourceLayout old_layout, 
 	const ResourceLayout new_layout)
@@ -407,6 +439,78 @@ void CodeRed::VulkanGraphicsCommandList::copyTexture(
 		std::static_pointer_cast<VulkanTexture>(destination.Texture)->image(),
 		enumConvert(destination.Texture->layout()),
 		copy
+	);
+}
+
+void CodeRed::VulkanGraphicsCommandList::copyTextureToBuffer(
+	const TextureCopyInfo& source,
+	const TextureBufferCopyInfo& destination, 
+	const size_t width, const size_t height, const size_t depth)
+{
+	vk::BufferImageCopy imageCopy = {};
+
+	const auto targetArraySlice = source.ResourceIndex / source.Texture->mipLevels();
+	const auto targetMipSlice = source.ResourceIndex % source.Texture->mipLevels();
+	
+	imageCopy
+		.setBufferOffset(0)
+		.setBufferRowLength(static_cast<uint32_t>(destination.Buffer->width()))
+		.setBufferImageHeight(static_cast<uint32_t>(destination.Buffer->height()))
+		.setImageSubresource(vk::ImageSubresourceLayers(
+			enumConvert(source.Texture->format(), source.Texture->usage()),
+			static_cast<uint32_t>(targetMipSlice),
+			static_cast<uint32_t>(targetArraySlice), 1))
+		.setImageOffset(vk::Offset3D(
+			static_cast<int32_t>(source.LocationX),
+			static_cast<int32_t>(source.LocationY),
+			static_cast<int32_t>(source.LocationZ)))
+		.setImageExtent({
+				static_cast<uint32_t>(width),
+				static_cast<uint32_t>(height),
+				static_cast<uint32_t>(depth)
+			});
+	
+	mCommandBuffer.copyImageToBuffer(
+		std::static_pointer_cast<VulkanTexture>(source.Texture)->image(),
+		vk::ImageLayout::eTransferSrcOptimal,
+		std::static_pointer_cast<VulkanTextureBuffer>(destination.Buffer)->buffer(),
+		imageCopy
+	);
+}
+
+void CodeRed::VulkanGraphicsCommandList::copyBufferToTexture(
+	const TextureBufferCopyInfo& source,
+	const TextureCopyInfo& destination, 
+	const size_t width, const size_t height, const size_t depth)
+{
+	vk::BufferImageCopy imageCopy = {};
+
+	const auto targetArraySlice = destination.ResourceIndex / destination.Texture->mipLevels();
+	const auto targetMipSlice = destination.ResourceIndex % destination.Texture->mipLevels();
+
+	imageCopy
+		.setBufferOffset(0)
+		.setBufferRowLength(static_cast<uint32_t>(source.Buffer->width()))
+		.setBufferImageHeight(static_cast<uint32_t>(source.Buffer->height()))
+		.setImageSubresource(vk::ImageSubresourceLayers(
+			enumConvert(destination.Texture->format(), destination.Texture->usage()),
+			static_cast<uint32_t>(targetMipSlice),
+			static_cast<uint32_t>(targetArraySlice), 1))
+		.setImageOffset(vk::Offset3D(
+			static_cast<int32_t>(destination.LocationX),
+			static_cast<int32_t>(destination.LocationY),
+			static_cast<int32_t>(destination.LocationZ)))
+		.setImageExtent({
+				static_cast<uint32_t>(width),
+				static_cast<uint32_t>(height),
+				static_cast<uint32_t>(depth)
+			});
+
+	mCommandBuffer.copyBufferToImage(
+		std::static_pointer_cast<VulkanTextureBuffer>(source.Buffer)->buffer(),
+		std::static_pointer_cast<VulkanTexture>(destination.Texture)->image(),
+		vk::ImageLayout::eTransferDstOptimal,
+		imageCopy
 	);
 }
 

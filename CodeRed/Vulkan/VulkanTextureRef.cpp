@@ -17,14 +17,14 @@ CodeRed::VulkanTextureRef::VulkanTextureRef(
 		.setPNext(nullptr)
 		.setFlags(vk::ImageViewCreateFlags(0))
 		.setImage(std::static_pointer_cast<VulkanTexture>(texture)->image())
-		.setFormat(enumConvert(property.PixelFormat))
+		.setFormat(enumConvert(property.Format))
 		.setComponents(vk::ComponentMapping(
 			vk::ComponentSwizzle::eR,
 			vk::ComponentSwizzle::eG,
 			vk::ComponentSwizzle::eB,
 			vk::ComponentSwizzle::eA))
 		.setSubresourceRange(vk::ImageSubresourceRange(
-			enumConvert(property.PixelFormat, texture->info().Usage),
+			enumConvert(property.Format, texture->info().Usage),
 			static_cast<uint32_t>(mInfo.MipLevel.Start),
 			static_cast<uint32_t>(mInfo.MipLevel.size()),
 			static_cast<uint32_t>(mInfo.Array.Start),

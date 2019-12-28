@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Shared/Information/TextureBufferInfo.hpp"
 #include "../Shared/Information/ResourceInfo.hpp"
 #include "../Shared/Information/SamplerInfo.hpp"
 #include "../Shared/Information/WindowInfo.hpp"
@@ -35,7 +36,8 @@ namespace CodeRed {
 	class GpuTextureRef;
 	class GpuRenderPass;
 	class GpuSwapChain;
-	
+
+	class GpuTextureBuffer;
 	class GpuSampler;
 	class GpuTexture;
 	class GpuBuffer;
@@ -111,6 +113,15 @@ namespace CodeRed {
 			const size_t buffer_count = 2)
 			-> std::shared_ptr<GpuSwapChain> = 0;
 
+		virtual auto createTextureBuffer(
+			const TextureBufferInfo& info)
+			-> std::shared_ptr<GpuTextureBuffer> = 0;
+
+		virtual auto createTextureBuffer(
+			const std::shared_ptr<GpuTexture>& texture,
+			const size_t mipSlice = 0)
+			-> std::shared_ptr<GpuTextureBuffer> = 0;
+		
 		virtual auto createBuffer(
 			const ResourceInfo& info)
 			-> std::shared_ptr<GpuBuffer> = 0;

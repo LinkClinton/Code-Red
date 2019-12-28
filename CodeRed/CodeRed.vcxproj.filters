@@ -420,6 +420,21 @@
     <ClInclude Include="Vulkan\VulkanTextureRef.hpp">
       <Filter>Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Information\TextureBufferInfo.hpp">
+      <Filter>Shared\Information</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\GpuResource\GpuTextureBuffer.hpp">
+      <Filter>Interface\GpuResource</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12Resource\DirectX12TextureBuffer.hpp">
+      <Filter>DirectX12\DirectX12Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanResource\VulkanTextureBuffer.hpp">
+      <Filter>Vulkan\VulkanResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Information\TextureBufferCopyInfo.hpp">
+      <Filter>Shared\Information</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -577,6 +592,12 @@
     </ClCompile>
     <ClCompile Include="Vulkan\VulkanTextureRef.cpp">
       <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12Resource\DirectX12TextureBuffer.cpp">
+      <Filter>DirectX12\DirectX12Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VulkanResource\VulkanTextureBuffer.cpp">
+      <Filter>Vulkan\VulkanResource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

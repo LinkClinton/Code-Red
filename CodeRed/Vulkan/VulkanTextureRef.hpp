@@ -7,7 +7,7 @@
 
 namespace CodeRed {
 
-	class VulkanTextureRef : public GpuTextureRef {
+	class VulkanTextureRef final : public GpuTextureRef {
 	public:
 		explicit VulkanTextureRef(
 			const std::shared_ptr<GpuTexture>& texture,

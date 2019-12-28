@@ -62,6 +62,11 @@ namespace CodeRed {
 			const ScissorRect& rect) override;
 
 		void layoutTransition(
+			const std::shared_ptr<GpuTextureBuffer>& buffer, 
+			const ResourceLayout old_layout, 
+			const ResourceLayout new_layout) override;
+		
+		void layoutTransition(
 			const std::shared_ptr<GpuTexture>& texture,
 			const ResourceLayout old_layout,
 			const ResourceLayout new_layout) override;
@@ -93,6 +98,20 @@ namespace CodeRed {
 			const size_t height, 
 			const size_t depth) override;
 
+		void copyTextureToBuffer(
+			const TextureCopyInfo& source, 
+			const TextureBufferCopyInfo& destination, 
+			const size_t width, 
+			const size_t height, 
+			const size_t depth) override;
+
+		void copyBufferToTexture(
+			const TextureBufferCopyInfo& source, 
+			const TextureCopyInfo& destination, 
+			const size_t width, 
+			const size_t height, 
+			const size_t depth) override;
+		
 		void copyMemoryToBuffer(
 			const std::shared_ptr<GpuBuffer>& destination, 
 			const void* data) override;

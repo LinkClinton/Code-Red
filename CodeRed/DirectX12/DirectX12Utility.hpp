@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Shared/Utility.hpp"
+#include "../Shared/Extent.hpp"
 
 #ifdef __ENABLE__DIRECTX12__
 
@@ -41,7 +42,7 @@ namespace CodeRed {
 	enum class ColorMask : UInt32;
 	enum class FillMode : UInt32;
 	enum class CullMode : UInt32;
-
+	
 	namespace DirectX12 {
 
 		auto wideStringToMultiString(const std::wstring& wstring)->std::string;
@@ -91,6 +92,18 @@ namespace CodeRed {
 		auto enumConvert1(const Dimension dimension)->D3D12_SRV_DIMENSION;
 
 		auto enumConvert1(const PrimitiveTopology topology) -> D3D12_PRIMITIVE_TOPOLOGY_TYPE;
+
+		template<typename T>
+		auto convert(const Extent3D<T>& extent) -> D3D12_BOX {
+			return {
+				static_cast<UINT>(extent.Left),
+				static_cast<UINT>(extent.Top),
+				static_cast<UINT>(extent.Front),
+				static_cast<UINT>(extent.Right),
+				static_cast<UINT>(extent.Bottom),
+				static_cast<UINT>(extent.Back)
+			};
+		}
 		
 	}
 }

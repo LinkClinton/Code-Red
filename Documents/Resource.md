@@ -11,6 +11,7 @@
 - [GpuBuffer](#GpuBuffer)
 - [GpuTexture](#GpuTexture)
 - [GpuSampler](#GpuSampler)
+- [GpuTextureBuffer](#GpuTextureBuffer)
 
 ## ResourceInfo
 
@@ -125,7 +126,7 @@ We recommend to use `GpuLogicalDevice` to create texture.
         
         size_t MipLevels;
 
-        PixelFormat PixelFormat;
+        PixelFormat lFormat;
         Dimension Dimension;
     };
 ```
@@ -135,7 +136,7 @@ We recommend to use `GpuLogicalDevice` to create texture.
 - `Depth` : the depth of texture or array size of texture.
 - `Size` : the size of texture(origin).
 - `MipLevels` : the max number of mip levels.
-- `PixelFormat` : the format of pixel in texture.
+- `Format` : the format of pixel in texture.
 - `Dimension` : the dimension of texture(1D, 2D, 3D).
 - `ClearValue` : the clear value used in clear rtv/dsv operation.
 
@@ -228,3 +229,88 @@ We recommend to use `GpuLogicalDevice` to create sampler.
 ### Member Functions
 
 All member functions is used to get informations of sampler.
+
+## GpuTextureBuffer
+
+Texture Buffer just a buffer that we can read data from CPU and write data to CPU. We can not read data from CPU or write data to CPU with a `Texture`. But we can copy texture to Texture Buffer, then we can read the texture data. We also can copy the Texture Buffer to texture.
+
+### Constructer
+
+```C++
+explicit GpuTextureBuffer(
+    const std::shared_ptr<GpuLogicalDevice>& device,
+    const TextureBufferInfo& info);
+
+explicit GpuTextureBuffer(
+    const std::shared_ptr<GpuLogicalDevice>& device,
+    const std::shared_ptr<GpuTexture>& texture,
+    const size_t mipSlice);
+```
+
+- `device` : the device.
+- `info` : the texture buffer info.
+
+We also can create it from a texture with mip level. It will fill the `TextureBufferInfo` struct with its width, height, depth, format.
+
+We recommend to use `GpuLogicalDevice` to create texture buffer.
+
+```C++
+    auto texture = device->createTextureBuffer(...);
+```
+
+### TextureBufferInfo 
+
+```C++
+struct TextureBufferInfo {
+    size_t Width;
+    size_t Height;
+    size_t Depth;
+
+    size_t Size;
+
+    PixelFormat Format;
+    Dimension Dimension;
+    ResourceLayout Layout;
+};
+```
+
+- `Width` : the width of texture.
+- `Height` : the height of texture.
+- `Depth` : the depth of texture.
+- `Size` : the size of texture.
+- `Format` : the format of texture.
+- `Dimension` : the dimension of texture.
+- `Layout` : the layout of texture.
+
+Most values are same as the values in `TextureProperty`. But the `TextureBuffer` can not have sub-textures(No Array, No MipLevels).
+
+### Member Functions
+
+Most member functions is used to get informations of sampler.
+
+- `read` : read data from buffer.
+- `write` : write data to buffer.
+
+### Read and Write Texture
+
+We can not read or write texture directly. If you want to read texture, you need copy texture to `TextureBuffer` and read data from `TextureBuffer`. If you want to write texture, you need write data to `TextureBuffer` and copy `TextureBuffer` to texture. 
+
+So we have two copy functions of `TextureBuffer`.
+
+```C++
+virtual void copyTextureToBuffer(
+    const TextureCopyInfo& source,
+    const TextureBufferCopyInfo& destination,
+    const size_t width,
+    const size_t height,
+    const size_t depth = 1) = 0;
+
+virtual void copyBufferToTexture(
+    const TextureBufferCopyInfo& source,
+    const TextureCopyInfo& destination,
+    const size_t width,
+    const size_t height,
+    const size_t depth = 1) = 0;
+```
+
+**Notice : the Location of `TextureBuffer` is 0.**

@@ -1,6 +1,7 @@
 #include "../Shared/Exception/FailedException.hpp"
 #include "../Shared/Exception/ZeroException.hpp"
 
+#include "DirectX12Resource/DirectX12TextureBuffer.hpp"
 #include "DirectX12Resource/DirectX12Texture.hpp"
 #include "DirectX12Resource/DirectX12Buffer.hpp"
 #include "DirectX12GraphicsCommandList.hpp"
@@ -287,6 +288,28 @@ void CodeRed::DirectX12GraphicsCommandList::setScissorRect(const ScissorRect& re
 }
 
 void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
+	const std::shared_ptr<GpuTextureBuffer>& buffer,
+	const ResourceLayout old_layout, 
+	const ResourceLayout new_layout)
+{
+	CODE_RED_DEBUG_THROW_IF(
+		buffer->layout() != old_layout,
+		InvalidException<ResourceLayout>({ "old_layout" })
+	);
+
+	auto barrier = resourceBarrier(
+		static_cast<DirectX12TextureBuffer*>(buffer.get())->texture().Get(),
+		enumConvert(old_layout),
+		enumConvert(new_layout)
+	);
+
+	mGraphicsCommandList->ResourceBarrier(1, &barrier);
+
+	buffer->setLayout(new_layout);
+}
+
+
+void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
 	const std::shared_ptr<GpuTexture>& texture,
 	const ResourceLayout old_layout, 
 	const ResourceLayout new_layout)
@@ -400,6 +423,78 @@ void CodeRed::DirectX12GraphicsCommandList::copyTexture(
 		&srcRegion);
 }
 
+void CodeRed::DirectX12GraphicsCommandList::copyTextureToBuffer(
+	const TextureCopyInfo& source,
+	const TextureBufferCopyInfo& destination, 
+	const size_t width, const size_t height, const size_t depth)
+{
+	const auto dxSource = std::static_pointer_cast<DirectX12Texture>(source.Texture)->texture();
+	const auto dxDestination = std::static_pointer_cast<DirectX12TextureBuffer>(destination.Buffer)->texture();
+
+	D3D12_TEXTURE_COPY_LOCATION src;
+	D3D12_TEXTURE_COPY_LOCATION dst;
+
+	src.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+	src.pResource = dxSource.Get();
+	src.SubresourceIndex = static_cast<UINT>(source.ResourceIndex);
+
+	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+	dst.pResource = dxDestination.Get();
+	dst.SubresourceIndex = 0;
+
+	D3D12_BOX srcRegion = {
+		static_cast<UINT>(source.LocationX),
+		static_cast<UINT>(source.LocationY),
+		static_cast<UINT>(source.LocationZ),
+		static_cast<UINT>(source.LocationX + width),
+		static_cast<UINT>(source.LocationY + height),
+		static_cast<UINT>(source.LocationZ + depth)
+	};
+
+	mGraphicsCommandList->CopyTextureRegion(&dst,
+		static_cast<UINT>(0),
+		static_cast<UINT>(0),
+		static_cast<UINT>(0),
+		&src,
+		&srcRegion);
+}
+
+void CodeRed::DirectX12GraphicsCommandList::copyBufferToTexture(
+	const TextureBufferCopyInfo& source,
+	const TextureCopyInfo& destination, 
+	const size_t width, const size_t height, const size_t depth)
+{
+	const auto dxSource = std::static_pointer_cast<DirectX12TextureBuffer>(source.Buffer)->texture();
+	const auto dxDestination = std::static_pointer_cast<DirectX12Texture>(destination.Texture)->texture();
+
+	D3D12_TEXTURE_COPY_LOCATION src;
+	D3D12_TEXTURE_COPY_LOCATION dst;
+
+	src.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+	src.pResource = dxSource.Get();
+	src.SubresourceIndex = 0;
+
+	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+	dst.pResource = dxDestination.Get();
+	dst.SubresourceIndex = static_cast<UINT>(destination.ResourceIndex);
+
+	D3D12_BOX srcRegion = {
+		static_cast<UINT>(0),
+		static_cast<UINT>(0),
+		static_cast<UINT>(0),
+		static_cast<UINT>(width),
+		static_cast<UINT>(height),
+		static_cast<UINT>(depth)
+	};
+
+	mGraphicsCommandList->CopyTextureRegion(&dst,
+		static_cast<UINT>(destination.LocationX),
+		static_cast<UINT>(destination.LocationY),
+		static_cast<UINT>(destination.LocationZ),
+		&src,
+		&srcRegion);
+}
+
 void CodeRed::DirectX12GraphicsCommandList::copyMemoryToBuffer(
 	const std::shared_ptr<GpuBuffer>& destination,
 	const void* data)
@@ -460,7 +555,7 @@ void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
 	// so we need compute the width, height and depth with mip slice
 	const auto texture = dxAllocator->allocateCopyCacheTexture(TextureProperty(
 		targetWidth, targetHeight, targetDepth , 1,
-		property.PixelFormat, property.Dimension, property.ClearValue
+		property.Format, property.Dimension, property.ClearValue
 	));
 	
 	const auto dxTexture = std::static_pointer_cast<DirectX12Texture>(texture);
