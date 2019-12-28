@@ -14,14 +14,23 @@ namespace CodeRed {
 		size_t LocationZ = 0;
 
 		TextureCopyInfo() = default;
+
+		TextureCopyInfo(
+			const std::shared_ptr<GpuTexture>& texture) :
+			TextureCopyInfo(texture, 0) {}
 		
 		TextureCopyInfo(
 			const std::shared_ptr<GpuTexture>& texture,
-			const size_t locationX = 0,
-			const size_t locationY = 0,
-			const size_t locationZ = 0) :
+			const size_t locationX,
+			const size_t locationY,
+			const size_t locationZ) :
 			TextureCopyInfo(texture, 0, locationX, locationY, locationZ) {}
 
+		TextureCopyInfo(
+			const std::shared_ptr<GpuTexture>& texture,
+			const size_t resourceIndex) :
+			TextureCopyInfo(texture, resourceIndex, 0, 0, 0) {}
+		
 		TextureCopyInfo(
 			const std::shared_ptr<GpuTexture>& texture,
 			const size_t resourceIndex,

@@ -459,8 +459,8 @@ auto CodeRed::GpuTexture::depth(const size_t mipSlice) const noexcept -> size_t
 {
 	auto result = std::get<TextureProperty>(mInfo.Property).Depth;
 
-	// if the texture is array, the depth is always the number of array
-	if (isArray()) return result;
+	// if the texture is array, the depth is always the 1
+	if (isArray()) return 1;
 	
 	for (size_t index = 0; index < mipSlice; index++)
 		result = std::max(result / 2, static_cast<size_t>(1));
@@ -472,7 +472,7 @@ auto CodeRed::GpuTexture::size(const size_t mipSlice) const noexcept -> size_t
 {
 	// the size of texture only for one texture with one mip level
 	// so if the texture is array, we do not use depth
-	return width(mipSlice) * height(mipSlice) * (isArray() ? 1 : depth(mipSlice)) * PixelFormatSizeOf::get(format());
+	return width(mipSlice) * height(mipSlice) * depth(mipSlice) * PixelFormatSizeOf::get(format());
 }
 
 auto CodeRed::GpuFrameBuffer::fullViewPort(const size_t index) const noexcept -> ViewPort

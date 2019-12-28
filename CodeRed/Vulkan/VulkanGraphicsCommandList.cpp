@@ -562,7 +562,7 @@ void CodeRed::VulkanGraphicsCommandList::copyMemoryToTexture(
 	const auto targetMipSlice = resourceIndex % destination->mipLevels();
 	const auto targetWidth = destination->width(targetMipSlice);
 	const auto targetHeight = destination->height(targetMipSlice);
-	const auto targetDepth = destination->isArray() ? 1 : destination->depth(targetMipSlice);
+	const auto targetDepth = destination->depth(targetMipSlice);
 	
 	const auto buffer = vkAllocator->allocateCopyCacheBuffer(destination->size(targetMipSlice));
 

@@ -548,7 +548,7 @@ void CodeRed::DirectX12GraphicsCommandList::copyMemoryToTexture(
 	const auto targetMipSlice = resourceIndex % property.MipLevels;
 	const auto targetWidth = destination->width(targetMipSlice);
 	const auto targetHeight = destination->height(targetMipSlice);
-	const auto targetDepth = destination->isArray() ? 1 : destination->depth(targetMipSlice);
+	const auto targetDepth = destination->depth(targetMipSlice);
 	
 	// the size of texture is not equal to destination
 	// if the mip slice of destination we copy to is not 0

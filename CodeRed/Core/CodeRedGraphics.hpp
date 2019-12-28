@@ -57,6 +57,7 @@
 #include "../Interface/GpuRenderPass.hpp"
 #include "../Interface/GpuTextureRef.hpp"
 
+#include "../Interface/GpuResource/GpuTextureBuffer.hpp"
 #include "../Interface/GpuResource/GpuSampler.hpp"
 #include "../Interface/GpuResource/GpuTexture.hpp"
 #include "../Interface/GpuResource/GpuBuffer.hpp"

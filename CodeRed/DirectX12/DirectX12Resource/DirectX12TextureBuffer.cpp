@@ -62,7 +62,7 @@ CodeRed::DirectX12TextureBuffer::DirectX12TextureBuffer(
 		TextureBufferInfo(
 			texture->width(mipSlice),
 			texture->height(mipSlice),
-			texture->isArray() ? 1 : texture->depth(mipSlice),
+			texture->depth(mipSlice),
 			texture->format(),
 			texture->dimension()))
 {
