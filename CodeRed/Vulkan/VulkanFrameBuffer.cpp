@@ -19,8 +19,8 @@ CodeRed::VulkanFrameBuffer::VulkanFrameBuffer(
 	const std::shared_ptr<GpuTexture>& render_target, 
 	const std::shared_ptr<GpuTexture>& depth_stencil) :
 	VulkanFrameBuffer(device, 
-		render_target->reference(), 
-		depth_stencil->reference())
+		render_target == nullptr ? nullptr : render_target->reference(), 
+		depth_stencil == nullptr ? nullptr : depth_stencil->reference())
 {
 }
 

@@ -13,6 +13,8 @@ namespace CodeRed {
 	class VulkanResourceLayout;
 	class VulkanFrameBuffer;
 	class VulkanRenderPass;
+
+	class GpuTextureRef;
 	
 	class VulkanGraphicsCommandList final : public GpuGraphicsCommandList {
 	public:
@@ -141,7 +143,7 @@ namespace CodeRed {
 		auto commandList() const noexcept -> vk::CommandBuffer { return mCommandBuffer; }
 	private:
 		void tryLayoutTransition(
-			const std::shared_ptr<GpuTexture>& texture,
+			const std::shared_ptr<GpuTextureRef>& texture,
 			const std::optional<Attachment>& attachment,
 			const bool final = false);
 	private:

@@ -37,7 +37,9 @@ namespace CodeRed {
 
 		auto mipLevels() const noexcept -> size_t { return std::get<TextureProperty>(mInfo.Property).MipLevels; }
 
-		auto arrays() const noexcept -> size_t { return dimension() == Dimension::Dimension3D ? 1 : depth(); }
+		auto arrays() const noexcept -> size_t {
+			return dimension() == Dimension::Dimension3D ? 1 : std::get<TextureProperty>(mInfo.Property).Depth;
+		}
 		
 		auto isArray() const noexcept -> bool { return arrays() != 1; }
 

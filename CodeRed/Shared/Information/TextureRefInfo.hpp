@@ -14,6 +14,9 @@ namespace CodeRed {
 
 		TextureRefInfo() = default;
 
+		TextureRefInfo(const TextureRefUsage& usage) :
+			Usage(usage) {}
+		
 		TextureRefInfo(
 			const ValueRange<size_t>& mipLevel,
 			const ValueRange<size_t>& array,
