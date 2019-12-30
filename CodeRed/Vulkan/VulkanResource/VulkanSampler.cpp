@@ -27,7 +27,7 @@ CodeRed::VulkanSampler::VulkanSampler(
 		.setCompareEnable(true)
 		.setCompareOp(vk::CompareOp::eLessOrEqual)
 		.setMinLod(0.0f)
-		.setMaxLod(1.0f)
+		.setMaxLod(10000.0f)
 		.setBorderColor(enumConvert(mInfo.Border))
 		.setUnnormalizedCoordinates(false);
 
