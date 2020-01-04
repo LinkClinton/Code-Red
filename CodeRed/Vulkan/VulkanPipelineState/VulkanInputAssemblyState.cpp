@@ -29,12 +29,15 @@ CodeRed::VulkanInputAssemblyState::VulkanInputAssemblyState(
 			static_cast<uint32_t>(mVertexBindings[slot].stride + PixelFormatSizeOf::get(mElements[index].Format));
 	}
 
+	for (size_t index = 0; index < mVertexBindings.size(); index++) 
+		mVertexBindings[index].binding = static_cast<uint32_t>(index);
+
 	mVertexInput
 		.setPNext(nullptr)
 		.setFlags(vk::PipelineVertexInputStateCreateFlags(0))
 		.setVertexBindingDescriptionCount(static_cast<uint32_t>(mVertexBindings.size()))
 		.setVertexAttributeDescriptionCount(static_cast<uint32_t>(mVertexAttributes.size()))
-		.setPVertexBindingDescriptions(mVertexBindings.data())
+		.setPVertexBindingDescriptions(mVertexBindings.empty() ? nullptr : mVertexBindings.data())
 		.setPVertexAttributeDescriptions(mVertexAttributes.empty() ? nullptr : mVertexAttributes.data());
 
 	mInputAssembly

@@ -21,7 +21,7 @@ CodeRed::VulkanTexture::VulkanTexture(
 	
 	imageInfo
 		.setPNext(nullptr)
-		.setFlags(vk::ImageCreateFlags(0))
+		.setFlags(enumConvert(arrays()))
 		.setImageType(enumConvert(property.Dimension))
 		.setFormat(enumConvert(property.Format))
 		.setExtent(vk::Extent3D(

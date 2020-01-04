@@ -79,12 +79,11 @@ CodeRed::VulkanDescriptorHeap::VulkanDescriptorHeap(
 CodeRed::VulkanDescriptorHeap::~VulkanDescriptorHeap()
 {
 	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-	
-	for (auto& descriptorSet : mDescriptorSets)
-		vkDevice.freeDescriptorSets(mDescriptorPool, mDescriptorSets);
+
+	vkDevice.freeDescriptorSets(mDescriptorPool, mDescriptorSets);
 
 	for (auto& imageView : mImageView)
-		vkDevice.destroyImageView(imageView);
+		if (imageView) vkDevice.destroyImageView(imageView);
 	
 	vkDevice.destroyDescriptorPool(mDescriptorPool);
 }

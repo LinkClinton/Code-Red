@@ -34,6 +34,13 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallBack(
 	const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
 	void* user_data)
 {
+	const static std::vector<const char*> ignoreMessages = {
+		"is being used in draw but has never been updated via vkUpdateDescriptorSets() or a similar call."
+	};
+
+	for (const auto& ignoreMessage : ignoreMessages) 
+		if (std::string(callback_data->pMessage).find(ignoreMessage)) return VK_FALSE;
+	
 	CodeRed::DebugReport::message(std::string("vulkan validation layer : ") + callback_data->pMessage);
 	CodeRed::DebugReport::message("");
 	

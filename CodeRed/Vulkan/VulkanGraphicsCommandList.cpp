@@ -317,7 +317,8 @@ void CodeRed::VulkanGraphicsCommandList::layoutTransition(
 		.setSubresourceRange(
 			vk::ImageSubresourceRange(
 				enumConvert(texture->format(), texture->usage()),
-				0,1,0,1
+				0,static_cast<uint32_t>(texture->mipLevels()),
+				0, static_cast<uint32_t>(texture->arrays())
 			));
 
 	mCommandBuffer.pipelineBarrier(
@@ -509,7 +510,7 @@ void CodeRed::VulkanGraphicsCommandList::copyBufferToTexture(
 	mCommandBuffer.copyBufferToImage(
 		std::static_pointer_cast<VulkanTextureBuffer>(source.Buffer)->buffer(),
 		std::static_pointer_cast<VulkanTexture>(destination.Texture)->image(),
-		vk::ImageLayout::eTransferDstOptimal,
+		enumConvert(destination.Texture->layout()),
 		imageCopy
 	);
 }

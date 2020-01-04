@@ -42,12 +42,16 @@ auto CodeRed::Vulkan::enumConvert(const FilterOptions filter, const size_t index
 		1 //001, mip
 	};
 
+	if (filter == FilterOptions::Anisotropy) return vk::Filter::eLinear;
+	
 	return (static_cast<UInt32>(filter) & mask[index]) != 0 ? vk::Filter::eLinear : vk::Filter::eNearest;
 }
 
 auto CodeRed::Vulkan::enumConvert(const FilterOptions filter)
 	-> vk::SamplerMipmapMode
 {
+	if (filter == FilterOptions::Anisotropy) return vk::SamplerMipmapMode::eLinear;
+	
 	return (static_cast<UInt32>(filter) & 1) != 0 ?
 		vk::SamplerMipmapMode::eLinear :
 		vk::SamplerMipmapMode::eNearest;
@@ -396,6 +400,15 @@ auto CodeRed::Vulkan::enumConvert(const PixelFormat format, const ResourceUsage 
 	}
 
 	return vk::ImageAspectFlagBits::eColor;
+}
+
+auto CodeRed::Vulkan::enumConvert(const size_t arrayLength) -> vk::ImageCreateFlags
+{
+	auto result = vk::ImageCreateFlags(0);
+
+	if (arrayLength > 5) result |= vk::ImageCreateFlagBits::eCubeCompatible;
+
+	return result;
 }
 
 auto CodeRed::Vulkan::enumConvert(const Dimension dimension, const TextureRefUsage usage, const size_t depth) -> vk::ImageViewType

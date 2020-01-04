@@ -33,7 +33,7 @@ CodeRed::VulkanResourceLayout::VulkanResourceLayout(
 	for (const auto element : mElements) {
 		vk::DescriptorSetLayoutBinding binding = {};
 
-		//for buffer and texture, we ignore the shader visibily
+		//for buffer and texture, we ignore the shader visibly
 		binding
 			.setBinding(static_cast<uint32_t>(element.Binding))
 			.setDescriptorType(enumConvert(element.Type))

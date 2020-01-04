@@ -15,3 +15,11 @@
 - Add `GpuTextureBuffer` interface. 
 - Remove `GpuGraphicsCommandList::copyMemoryToXXX`.
 - Update Document.
+
+## 2019.01.04
+
+- Fix Vulkan Input Assembly State bug.
+- Fix Vulkan Texture's flags.
+- Fix Vulkan descriptor heaps(free same sets).
+- Add Ignore message of Vulkan Debug Report.
+- Fix some words.
