@@ -23,3 +23,7 @@
 - Fix Vulkan descriptor heaps(free same sets).
 - Add Ignore message of Vulkan Debug Report.
 - Fix some words.
+
+## 2020.02.17
+
+- Fix Vulkan Sampler Info.
