@@ -32,6 +32,7 @@ The Windows SDK you can install with Visual Studio.
 ## Extensions
 
 - [ImGui](https://github.com/LinkClinton/Code-Red/tree/master/Extensions/ImGui) : An ImGui backend implement using CodeRed.
+- [Compiler](https://github.com/LinkClinton/Code-Red/tree/master/Extensions/Compiler) : A solution for solving HLSL/GLSL to DXIL/SPIRV.
 
 ## Tools
 
