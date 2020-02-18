@@ -62,7 +62,7 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 		.setApplicationVersion(VK_MAKE_VERSION(1, 0, 0))
 		.setPEngineName("CodeRed")
 		.setEngineVersion(VK_MAKE_VERSION(1, 0, 0))
-		.setEngineVersion(VK_API_VERSION_1_0);
+		.setEngineVersion(VK_API_VERSION_1_1);
 
 	instanceInfo
 		.setPNext(nullptr)

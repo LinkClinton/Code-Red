@@ -237,12 +237,19 @@ void CodeRed::VulkanGraphicsCommandList::setConstant32Bits(
 
 void CodeRed::VulkanGraphicsCommandList::setViewPort(const ViewPort& view_port)
 {
+
+	/*
+	 * https://www.saschawillems.de/blog/2019/03/29/flipping-the-vulkan-viewport/
+	 * if you want to flipping the vulkan viewport, only passing negative viewport heights
+	 * this is a extension VK_KHR_Maintenance1 in vulkan 1.0
+	 * but is core in vulkan 1.1
+	 */
 	mCommandBuffer.setViewport(
 		0, vk::Viewport(
 			view_port.X,
-			view_port.Y,
+			view_port.Height - view_port.Y,
 			view_port.Width,
-			view_port.Height,
+			-view_port.Height,
 			view_port.MinDepth,
 			view_port.MaxDepth
 		)

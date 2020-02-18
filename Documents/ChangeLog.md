@@ -27,3 +27,10 @@
 ## 2020.02.17
 
 - Fix Vulkan Sampler Info.
+
+## 2020.02.18
+
+- Using Vulkan 1.1 for flipping the viewport.
+- Add Compiler extension convert HLSL/GLSL to DXIL/SPIRV.
+    - Support HLSL/GLSL to SPIRV.
+- Update ImGui extension vulkan pixel shader (We use viewport to negative y-axis instead of shader).

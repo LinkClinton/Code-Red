@@ -20,5 +20,4 @@ void main()
     outUv = inUv;
 
     gl_Position = index.Projection * vec4(inPosition, 0.0, 1.0);
-    gl_Position.y = -gl_Position.y;
 }
