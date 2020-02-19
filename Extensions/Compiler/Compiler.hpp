@@ -22,7 +22,7 @@ namespace CodeRed {
 		};
 
 		auto compileHLSLToDXIL(const std::string& code, const CompileOption& option) -> CompileResult;
-
+		
 		auto compileHLSLToSPIRV(const std::string& code, const CompileOption& option) -> CompileResult;
 
 		auto compileGLSLToDXIL(const std::string& code, const CompileOption& option) -> CompileResult;

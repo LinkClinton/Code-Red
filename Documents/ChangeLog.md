@@ -35,3 +35,7 @@
     - Support HLSL/GLSL to SPIRV.
 - Update ImGui extension vulkan pixel shader (We use viewport to negative y-axis instead of shader).
 - Update readme.
+
+## 2020.02.19
+
+- Support HLSL to DXIL.
