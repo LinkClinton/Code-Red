@@ -57,7 +57,9 @@ CodeRed::VulkanRenderPass::VulkanRenderPass(
 	colorReference.attachment = 0;
 	colorReference.layout = vk::ImageLayout::eColorAttachmentOptimal;
 
-	depthReference.attachment = 1;
+	//if we do not have the color attachment the reference of depth is 0
+	//we only support one render target in this version
+	depthReference.attachment = color.has_value() ? 1 : 0;
 	depthReference.layout = vk::ImageLayout::eDepthStencilAttachmentOptimal;
 
 	vk::SubpassDescription subPassInfo = {};

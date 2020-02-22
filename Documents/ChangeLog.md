@@ -39,3 +39,7 @@
 ## 2020.02.19
 
 - Support HLSL to DXIL.
+
+## 2020.02.22
+
+- Fix bug with depth-only rendering.

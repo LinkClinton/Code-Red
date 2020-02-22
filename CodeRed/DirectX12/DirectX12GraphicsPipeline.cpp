@@ -52,7 +52,7 @@ CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	desc.DSVFormat = enumConvert(mRenderPass->depth().has_value() ? mRenderPass->depth()->Format : PixelFormat::Unknown);
 	desc.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
 	desc.NodeMask = 0;
-	desc.NumRenderTargets = 1;
+	desc.NumRenderTargets = mRenderPass->color().has_value() ? 1 : 0;
 	desc.RTVFormats[0] = enumConvert(mRenderPass->color().has_value() ? mRenderPass->color()->Format : PixelFormat::Unknown);
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
