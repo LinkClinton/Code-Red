@@ -160,13 +160,13 @@ namespace CodeRed {
 
 		static auto Texture1DArray(
 			const size_t width,
-			const size_t size,
+			const size_t length,
 			const PixelFormat format,
 			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
-				TextureProperty(width, 1, size, mipLevels, format, Dimension::Dimension1D),
+				TextureProperty(width, 1, length, mipLevels, format, Dimension::Dimension1D),
 				ResourceLayout::Undefined, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
@@ -203,13 +203,28 @@ namespace CodeRed {
 		static auto Texture2DArray(
 			const size_t width,
 			const size_t height,
-			const size_t size,
+			const size_t length,
 			const PixelFormat format,
 			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
 			return ResourceInfo(
-				TextureProperty(width, height, size, mipLevels, format, Dimension::Dimension2D),
+				TextureProperty(width, height, length, mipLevels, format, Dimension::Dimension2D),
+				ResourceLayout::Undefined, usage,
+				ResourceType::Texture,
+				MemoryHeap::Default);
+		}
+
+		static auto CubeMapArray(
+			const size_t width,
+			const size_t height,
+			const size_t length,
+			const PixelFormat format,
+			const size_t mipLevels = 1,
+			const ResourceUsage usage = ResourceUsage::None)
+		{
+			return ResourceInfo(
+				TextureProperty(width, height, 6 * length, mipLevels, format, Dimension::Dimension2D),
 				ResourceLayout::Undefined, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);

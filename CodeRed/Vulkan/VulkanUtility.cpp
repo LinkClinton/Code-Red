@@ -411,13 +411,17 @@ auto CodeRed::Vulkan::enumConvert(const size_t arrayLength) -> vk::ImageCreateFl
 	return result;
 }
 
-auto CodeRed::Vulkan::enumConvert(const Dimension dimension, const TextureRefUsage usage, const size_t depth) -> vk::ImageViewType
+auto CodeRed::Vulkan::enumConvert(const Dimension dimension, const TextureRefUsage usage, const size_t length) -> vk::ImageViewType
 {
 	switch (dimension) {
-	case Dimension::Dimension1D: return depth == 1 ? vk::ImageViewType::e1D : vk::ImageViewType::e1DArray;
+	case Dimension::Dimension1D: return length == 1 ? vk::ImageViewType::e1D : vk::ImageViewType::e1DArray;
 	case Dimension::Dimension2D: return
-		usage == TextureRefUsage::CubeMap ? vk::ImageViewType::eCube :
-			(depth == 1 ? vk::ImageViewType::e2D : vk::ImageViewType::e2DArray);
+		/*
+		 * if we use this texture as cube map array, the length should greater than 6
+		 * otherwise, the texture should be cube map (length = 6)
+		 */
+		usage == TextureRefUsage::CubeMap ? (length > 6 ? vk::ImageViewType::eCubeArray : vk::ImageViewType::eCube) :
+			(length == 1 ? vk::ImageViewType::e2D : vk::ImageViewType::e2DArray);
 	case Dimension::Dimension3D: return vk::ImageViewType::e3D;
 	default:
 		throw NotSupportException(NotSupportType::Enum);

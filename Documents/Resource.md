@@ -154,6 +154,8 @@ A texture can have many textures, for example, we can have a texture that has te
 
 If you have a texture array with max mip levels 5 and you want to get the 4-th texture with mip levels 3, so the index is `3 + 4 * 5 = 23`.(The way to encode `mipSlice` and `arraySlice` is same as the way in DirectX12)
 
+If the texture is cube map, it is equal to `(mipSlice + arraySlice * mipLevels) * 6 + face`.
+
 ### Member Functions
 
 All member functions is used to get informations of texture or mapped memory.

@@ -29,7 +29,7 @@ CodeRed::VulkanTextureRef::VulkanTextureRef(
 			static_cast<uint32_t>(mInfo.MipLevel.size()),
 			static_cast<uint32_t>(mInfo.Array.Start),
 			static_cast<uint32_t>(mInfo.Array.size())))
-		.setViewType(enumConvert(property.Dimension, mInfo.Usage, property.Depth));
+		.setViewType(enumConvert(property.Dimension, mInfo.Usage, mInfo.Array.size()));
 }
 
 #endif

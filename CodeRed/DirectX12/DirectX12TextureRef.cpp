@@ -16,7 +16,7 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 	switch (mTexture->dimension()) {
 	case Dimension::Dimension1D:
 		{
-			if (mTexture->isArray()) {
+			if (info.Array.size() != 1) {
 				
 				mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1DARRAY;
 				mDesc.Texture1DArray.FirstArraySlice = static_cast<UINT>(mInfo.Array.Start);
@@ -38,7 +38,7 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 		}
 	case Dimension::Dimension2D:
 		{
-			if (mTexture->isArray()) {
+			if (info.Array.size() != 1) {
 				if (mInfo.Usage == TextureRefUsage::Common) {
 
 					mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
@@ -52,11 +52,24 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 				}
 				else {
 
-					mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-					mDesc.TextureCube.MostDetailedMip = static_cast<UINT>(mInfo.MipLevel.Start);
-					mDesc.TextureCube.MipLevels = static_cast<UINT>(mInfo.MipLevel.size());
-					mDesc.TextureCube.ResourceMinLODClamp = 0;
+					if (info.Array.size() > 6) {
 
+						mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBEARRAY;
+						mDesc.TextureCubeArray.MostDetailedMip = static_cast<UINT>(mInfo.MipLevel.Start);
+						mDesc.TextureCubeArray.MipLevels = static_cast<UINT>(mInfo.MipLevel.size());
+						mDesc.TextureCubeArray.First2DArrayFace = static_cast<UINT>(mInfo.Array.Start);
+						mDesc.TextureCubeArray.NumCubes = static_cast<UINT>(mInfo.Array.size() / 6);
+						mDesc.TextureCubeArray.ResourceMinLODClamp = 0;
+						
+					}
+					else {
+
+						mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+						mDesc.TextureCube.MostDetailedMip = static_cast<UINT>(mInfo.MipLevel.Start);
+						mDesc.TextureCube.MipLevels = static_cast<UINT>(mInfo.MipLevel.size());
+						mDesc.TextureCube.ResourceMinLODClamp = 0;
+
+					}
 				}
 			}else {
 

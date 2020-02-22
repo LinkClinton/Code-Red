@@ -99,7 +99,7 @@ namespace CodeRed {
 
 		auto enumConvert(const size_t arrayLength = 0) -> vk::ImageCreateFlags;
 		
-		auto enumConvert(const Dimension dimension, const TextureRefUsage type, const size_t depth) -> vk::ImageViewType;
+		auto enumConvert(const Dimension dimension, const TextureRefUsage type, const size_t length) -> vk::ImageViewType;
 		
 		auto enumConvert1(const Dimension dimension)->vk::ImageViewType;
 

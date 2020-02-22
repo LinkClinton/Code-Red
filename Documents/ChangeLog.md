@@ -43,3 +43,4 @@
 ## 2020.02.22
 
 - Fix bug with depth-only rendering.
+- Fix texture array. We use the length of texture reference to determine whether the texture is array. 

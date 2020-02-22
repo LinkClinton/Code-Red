@@ -354,6 +354,8 @@ struct TextureRefInfo {
 - `Array` : the arrays we want to use.
 - `Usage` : how do we use this. If you want to use it as CubeMap, the usage should be `TextureRefUsage::CubeMap`.
 
+**Notice : the size of array will influence the type of texture. If the size of array is not 1 for common texture(not cube map), the texture should be texture array. If the size of array greater 6 and the texture is cube map, it will be texture cube map array.**
+
 ## Member Functions
 
 - `width` : get the width of first mip slice.
