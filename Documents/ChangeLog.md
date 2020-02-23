@@ -44,3 +44,8 @@
 
 - Fix bug with depth-only rendering.
 - Fix texture array. We use the length of texture reference to determine whether the texture is array. 
+
+## 2020.02.23
+
+- Change default frontface to `CounterClockwise`.
+- Add PixelFormat to TextureRef. You can change the format when you bind a texture to rtv/dsv/srv.

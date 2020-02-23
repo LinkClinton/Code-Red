@@ -348,11 +348,13 @@ struct TextureRefInfo {
     ValueRange<size_t> Array;
 
     TextureRefUsage Usage;
+    PixelFormat Format;
 ```
 
 - `MipLevel` : the mip levels we want to use.
 - `Array` : the arrays we want to use.
 - `Usage` : how do we use this. If you want to use it as CubeMap, the usage should be `TextureRefUsage::CubeMap`.
+- `Format` : if you want to change the format when you bind a texture to rtv/dsv/srv, you can set the format to you want. Default is `Unknown` means use the format of texture.
 
 **Notice : the size of array will influence the type of texture. If the size of array is not 1 for common texture(not cube map), the texture should be texture array. If the size of array greater 6 and the texture is cube map, it will be texture cube map array.**
 
@@ -361,6 +363,7 @@ struct TextureRefInfo {
 - `width` : get the width of first mip slice.
 - `height` : get the height of first mip slice.
 - `info` : get the `TextureRefInfo` property.
+- `format` : get the format of texture.
 - `mipLevel` : get the mip levels.
 - `array` : get the arrays.
 - `usage` : get the usage.

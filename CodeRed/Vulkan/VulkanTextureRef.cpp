@@ -17,7 +17,7 @@ CodeRed::VulkanTextureRef::VulkanTextureRef(
 		.setPNext(nullptr)
 		.setFlags(vk::ImageViewCreateFlags(0))
 		.setImage(std::static_pointer_cast<VulkanTexture>(texture)->image())
-		.setFormat(enumConvert(property.Format))
+		.setFormat(enumConvert(mInfo.Format == PixelFormat::Unknown ? property.Format : mInfo.Format))
 		.setComponents(vk::ComponentMapping(
 			vk::ComponentSwizzle::eR,
 			vk::ComponentSwizzle::eG,

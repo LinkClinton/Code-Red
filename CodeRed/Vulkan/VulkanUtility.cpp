@@ -203,6 +203,7 @@ auto CodeRed::Vulkan::enumConvert(const PixelFormat format)
 	case PixelFormat::RedGreen32BitFloat: return vk::Format::eR32G32Sfloat;
 	case PixelFormat::Depth32BitFloat: return vk::Format::eD32Sfloat;
 	case PixelFormat::Red8BitUnknown: return vk::Format::eR8Unorm;
+	case PixelFormat::Red32BitFloat: return vk::Format::eR32Sfloat;
 	case PixelFormat::Unknown: return vk::Format::eUndefined;
 	default:
 		throw NotSupportException(NotSupportType::Enum);

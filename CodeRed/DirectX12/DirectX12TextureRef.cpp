@@ -10,7 +10,7 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 	const std::shared_ptr<GpuTexture>& texture,
 	const TextureRefInfo& info) : GpuTextureRef(texture, info)
 {
-	mDesc.Format = enumConvert(mTexture->format());
+	mDesc.Format = enumConvert(mInfo.Format == PixelFormat::Unknown ? mTexture->format() : mInfo.Format);
 	mDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	switch (mTexture->dimension()) {

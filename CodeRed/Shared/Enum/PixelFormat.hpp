@@ -13,7 +13,8 @@ namespace CodeRed {
 		RedGreenBlue32BitFloat,
 		RedGreen32BitFloat,
 		Depth32BitFloat,
-		Red8BitUnknown
+		Red8BitUnknown,
+		Red32BitFloat
 	};
 	
 }

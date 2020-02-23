@@ -224,6 +224,7 @@ auto CodeRed::DirectX12::enumConvert(const PixelFormat format)
 	case PixelFormat::RedGreen32BitFloat: return DXGI_FORMAT_R32G32_FLOAT;
 	case PixelFormat::Depth32BitFloat: return DXGI_FORMAT_D32_FLOAT;
 	case PixelFormat::Red8BitUnknown: return DXGI_FORMAT_R8_UNORM;
+	case PixelFormat::Red32BitFloat: return DXGI_FORMAT_R32_FLOAT;
 	case PixelFormat::Unknown: return DXGI_FORMAT_UNKNOWN;
 	default:
 		throw NotSupportException(NotSupportType::Enum);

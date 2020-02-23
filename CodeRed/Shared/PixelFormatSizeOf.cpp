@@ -17,6 +17,8 @@ auto CodeRed::PixelFormatSizeOf::get(const PixelFormat pixel_format) -> size_t {
 		return 4;
 	case PixelFormat::Red8BitUnknown:
 		return 1;
+	case PixelFormat::Red32BitFloat:
+		return 4;
 	case PixelFormat::Unknown:
 		throw NotSupportException(NotSupportType::Enum);
 	default:
