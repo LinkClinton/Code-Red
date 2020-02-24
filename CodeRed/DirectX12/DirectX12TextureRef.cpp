@@ -16,7 +16,7 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 	switch (mTexture->dimension()) {
 	case Dimension::Dimension1D:
 		{
-			if (info.Array.size() != 1) {
+			if (mInfo.Array.size() != 1) {
 				
 				mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1DARRAY;
 				mDesc.Texture1DArray.FirstArraySlice = static_cast<UINT>(mInfo.Array.Start);
@@ -38,7 +38,7 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 		}
 	case Dimension::Dimension2D:
 		{
-			if (info.Array.size() != 1) {
+			if (mInfo.Array.size() != 1) {
 				if (mInfo.Usage == TextureRefUsage::Common) {
 
 					mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
@@ -52,7 +52,7 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 				}
 				else {
 
-					if (info.Array.size() > 6) {
+					if (mInfo.Array.size() > 6) {
 
 						mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBEARRAY;
 						mDesc.TextureCubeArray.MostDetailedMip = static_cast<UINT>(mInfo.MipLevel.Start);

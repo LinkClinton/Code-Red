@@ -49,3 +49,7 @@
 
 - Change default frontface to `CounterClockwise`.
 - Add PixelFormat to TextureRef. You can change the format when you bind a texture to rtv/dsv/srv.
+
+## 2020.02.24
+
+- Fix bug when we create the TextureRef.
