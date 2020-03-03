@@ -11,9 +11,9 @@ namespace CodeRed {
 	public:
 		explicit DirectX12RenderPass(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const std::optional<Attachment>& color,
+			const std::vector<Attachment>& colors,
 			const std::optional<Attachment>& depth = std::nullopt);
-
+		
 		~DirectX12RenderPass() = default;
 	};
 	

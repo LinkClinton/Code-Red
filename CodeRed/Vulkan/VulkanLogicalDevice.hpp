@@ -17,12 +17,7 @@ namespace CodeRed {
 		auto createFence()->std::shared_ptr<GpuFence> override;
 
 		auto createFrameBuffer(
-			const std::shared_ptr<GpuTexture>& render_target,
-			const std::shared_ptr<GpuTexture>& depth_stencil)
-			->std::shared_ptr<GpuFrameBuffer> override;
-
-		auto createFrameBuffer(
-			const std::shared_ptr<GpuTextureRef>& render_target, 
+			const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets, 
 			const std::shared_ptr<GpuTextureRef>& depth_stencil)
 			-> std::shared_ptr<GpuFrameBuffer> override;
 		
@@ -56,10 +51,10 @@ namespace CodeRed {
 		auto createDescriptorHeap(
 			const std::shared_ptr<GpuResourceLayout>& resource_layout)
 			-> std::shared_ptr<GpuDescriptorHeap> override;
-		
+
 		auto createRenderPass(
-			const std::optional<Attachment>& color, 
-			const std::optional<Attachment>& depth = std::nullopt)
+			const std::vector<Attachment>& colors, 
+			const std::optional<Attachment>& depth)
 			-> std::shared_ptr<GpuRenderPass> override;
 		
 		auto createSampler(const SamplerInfo& info)

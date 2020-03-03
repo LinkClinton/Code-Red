@@ -11,34 +11,44 @@
 namespace CodeRed {
 
 	class GpuLogicalDevice;
+	class GpuFrameBuffer;
 	
 	class GpuRenderPass : public Noncopyable {
 	protected:
 		explicit GpuRenderPass(
-			const std::shared_ptr<GpuLogicalDevice> &device, 
-			const std::optional<Attachment>& color,
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::vector<Attachment>& colors,
 			const std::optional<Attachment>& depth = std::nullopt);
-
+		
 		~GpuRenderPass() = default;
 	public:
 		void setClear(
 			const std::optional<ClearValue>& color,
 			const std::optional<ClearValue>& depth = std::nullopt);
 
-		auto getClear(const size_t index = 0)
-			-> std::pair<ClearValue, ClearValue> { return std::make_pair(mColor[index], mDepth); }
+		void setClear(
+			const std::vector<ClearValue>& colors,
+			const std::optional<ClearValue>& depth = std::nullopt);
+
+		auto compatible(const std::shared_ptr<GpuFrameBuffer>& frameBuffer) const -> bool;
+		
+		auto colorClear() const noexcept -> std::vector<ClearValue> { return mColors; }
+
+		auto depthClear() const noexcept -> std::optional<ClearValue> { return mDepth; }
 		
 		auto color(const size_t index = 0) const -> std::optional<Attachment> { return mColorAttachments[index]; }
 
 		auto depth() const noexcept -> std::optional<Attachment> { return mDepthAttachment; }
+
+		auto size() const noexcept -> size_t { return mColorAttachments.size(); }
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;
 
-		std::vector<std::optional<Attachment>> mColorAttachments = { std::nullopt };
+		std::vector<Attachment> mColorAttachments;
+		std::vector<ClearValue> mColors;
+
 		std::optional<Attachment> mDepthAttachment;
-		
-		std::vector<ClearValue> mColor = { ClearValue() };
-		ClearValue mDepth;
+		std::optional<ClearValue> mDepth;
 	};
 	
 }

@@ -63,61 +63,79 @@ void CodeRed::DirectX12GraphicsCommandList::beginRenderPass(
 		mFrameBuffer != nullptr ||
 		mRenderPass != nullptr,
 		Exception("please end old render pass before you begin a new render pass.")
-	)
-	
+	);
+
 	mFrameBuffer = std::static_pointer_cast<DirectX12FrameBuffer>(frame_buffer);
 	mRenderPass = std::static_pointer_cast<DirectX12RenderPass>(render_pass);
-
-	const auto clearValue = mRenderPass->getClear();
-	const auto colorAttachment = mRenderPass->color();
-	const auto depthAttachment = mRenderPass->depth();
-
-	const Real color[] = {
-		clearValue.first.Red,
-		clearValue.first.Green,
-		clearValue.first.Blue,
-		clearValue.first.Alpha };
 	
-	//we can set a frame buffer without rtv or dsv
-	//but we will send a warning if we do not have rtv and dsv
-	const auto has_rtv = mFrameBuffer->renderTarget() != nullptr && colorAttachment.has_value();
-	const auto has_dsv = mFrameBuffer->depthStencil() != nullptr && depthAttachment.has_value();
+	CODE_RED_DEBUG_THROW_IF(
+		!mRenderPass->compatible(mFrameBuffer),
+		Exception("the render pass can not be compatible with frame buffer.")
+	);
+	
 	const auto rtvAddress = mFrameBuffer->rtvHeap()->GetCPUDescriptorHandleForHeapStart();
 	const auto dsvAddress = mFrameBuffer->dsvHeap()->GetCPUDescriptorHandleForHeapStart();
-		
+
+	const auto hasRTV = mFrameBuffer->size() != 0;
+	const auto hasDSV = mFrameBuffer->depthStencil() != nullptr;
+
+	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> rtvHandle;
+	
 	CODE_RED_DEBUG_WARNING_IF(
-		has_rtv == false && has_dsv == false,
+		!hasRTV && !hasDSV,
 		DebugReport::make(
 			DebugType::Set,
 			{ "FrameBuffer", "Graphics Pipeline" },
 			{ "there are no rtv and dsv." }
 		)
 	);
+	
+	// begin layout transition
+	for (size_t index = 0; index < mFrameBuffer->size(); index++) 
+		tryLayoutTransition(mFrameBuffer->renderTarget(index), mRenderPass->color(index), false);
 
-	tryLayoutTransition(mFrameBuffer->renderTarget(), colorAttachment, false);
-	tryLayoutTransition(mFrameBuffer->depthStencil(), depthAttachment, false);
+	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), false);
+	// end layout transition
 
+	// begin clear the rtv and dsv if need
+	for (size_t index = 0; index < mFrameBuffer->size(); index++) {
+		const float color[] = {
+			mRenderPass->colorClear()[index].Red,
+			mRenderPass->colorClear()[index].Green,
+			mRenderPass->colorClear()[index].Blue,
+			mRenderPass->colorClear()[index].Alpha,
+		};
+
+		rtvHandle.push_back({ rtvAddress.ptr + index * mFrameBuffer->rtvSize() });
+		
+		CODE_RED_TRY_EXECUTE(
+			mRenderPass->color(index)->Load == AttachmentLoad::Clear,
+			mGraphicsCommandList->ClearRenderTargetView(rtvHandle[index],
+				color, 0, nullptr)
+		);
+	}
+
+	const auto depthAttachment = mRenderPass->depth();
+	const auto clearValue = mRenderPass->depthClear();
+	
 	CODE_RED_TRY_EXECUTE(
-		has_rtv && colorAttachment->Load == AttachmentLoad::Clear,
-		mGraphicsCommandList->ClearRenderTargetView(rtvAddress, color, 0, nullptr)
-	);
-
-	CODE_RED_TRY_EXECUTE(
-		has_dsv && (
+		hasDSV && (
 			depthAttachment->Load == AttachmentLoad::Clear ||
 			depthAttachment->StencilLoad == AttachmentLoad::Clear),
 		mGraphicsCommandList->ClearDepthStencilView(dsvAddress,
-			(depthAttachment->Load == AttachmentLoad::Clear ? D3D12_CLEAR_FLAG_DEPTH : D3D12_CLEAR_FLAGS(0)) |
+		(depthAttachment->Load == AttachmentLoad::Clear ? D3D12_CLEAR_FLAG_DEPTH : D3D12_CLEAR_FLAGS(0)) |
 			(depthAttachment->StencilLoad == AttachmentLoad::Clear ? D3D12_CLEAR_FLAG_STENCIL : D3D12_CLEAR_FLAGS(0)),
-			clearValue.second.Depth,
-			clearValue.second.Stencil, 0, nullptr)
+			clearValue->Depth,
+			clearValue->Stencil, 0, nullptr)
 	);
-	
+	// end clear the rtv and dsv
+
 	mGraphicsCommandList->OMSetRenderTargets(
-		has_rtv ? 1 : 0,
-		has_rtv ? &rtvAddress : nullptr,
+		static_cast<UINT>(rtvHandle.size()),
+		rtvHandle.data(),
 		false,
-		has_dsv ? &dsvAddress : nullptr);
+		hasDSV ? &dsvAddress : nullptr
+	);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::endRenderPass()
@@ -126,13 +144,12 @@ void CodeRed::DirectX12GraphicsCommandList::endRenderPass()
 		mFrameBuffer == nullptr ||
 		mRenderPass == nullptr,
 		Exception("please begin a render pass before end a render pass.")
-	)
-	
-	const auto colorAttachment = mRenderPass->color();
-	const auto depthAttachment = mRenderPass->depth();
+	);
 
-	tryLayoutTransition(mFrameBuffer->renderTarget(), colorAttachment, true);
-	tryLayoutTransition(mFrameBuffer->depthStencil(), depthAttachment, true);
+	for (size_t index = 0; index < mFrameBuffer->size(); index++)
+		tryLayoutTransition(mFrameBuffer->renderTarget(index), mRenderPass->color(index), true);
+
+	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), true);
 
 	mFrameBuffer.reset();
 	mRenderPass.reset();

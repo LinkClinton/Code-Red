@@ -11,25 +11,16 @@ namespace CodeRed {
 	public:
 		explicit VulkanFrameBuffer(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const std::shared_ptr<GpuTexture>& render_target,
-			const std::shared_ptr<GpuTexture>& depth_stencil = nullptr);
-
-		explicit VulkanFrameBuffer(
-			const std::shared_ptr<GpuLogicalDevice>& device,
-			const std::shared_ptr<GpuTextureRef>& render_target,
+			const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets,
 			const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr);
 		
 		~VulkanFrameBuffer();
 
-		void reset(
-			const std::shared_ptr<GpuTextureRef>& render_target, 
-			const std::shared_ptr<GpuTextureRef>& depth_stencil) override;
-		
 		auto frameBuffer() const noexcept -> vk::Framebuffer { return mFrameBuffer; }
 
-		auto frameBufferWidth() const noexcept -> size_t { return mFrameBufferWidth; }
+		auto width() const noexcept -> size_t { return mWidth; }
 
-		auto frameBufferHeight() const noexcept -> size_t { return mFrameBufferHeight; }
+		auto height() const noexcept -> size_t { return mHeight; }
 	private:
 		vk::Framebuffer mFrameBuffer;
 		vk::ImageView mDepthStencilView;
@@ -38,8 +29,8 @@ namespace CodeRed {
 		
 		std::shared_ptr<GpuRenderPass> mRenderPass;
 
-		size_t mFrameBufferWidth;
-		size_t mFrameBufferHeight;
+		size_t mWidth = 0;
+		size_t mHeight = 0;
 	};
 	
 }

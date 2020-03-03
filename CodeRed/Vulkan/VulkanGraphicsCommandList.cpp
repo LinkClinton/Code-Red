@@ -72,41 +72,58 @@ void CodeRed::VulkanGraphicsCommandList::beginRenderPass(
 		mFrameBuffer != nullptr ||
 		mRenderPass != nullptr,
 		Exception("please end old render pass before you begin a new render pass.")
-	)
-	
+	);
+
 	mRenderPass = std::static_pointer_cast<VulkanRenderPass>(render_pass);
 	mFrameBuffer = std::static_pointer_cast<VulkanFrameBuffer>(frame_buffer);
+	
+	CODE_RED_DEBUG_THROW_IF(
+		!mRenderPass->compatible(mFrameBuffer),
+		Exception("the render pass can not be compatible with frame buffer.")
+	);
+	
+	// begin layout transition
+	for (size_t index = 0; index < mFrameBuffer->size(); index++)
+		tryLayoutTransition(mFrameBuffer->renderTarget(index), mRenderPass->color(index), false);
 
-	const auto clear = mRenderPass->getClear();
+	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), false);
+	// end layout transition
 
-	vk::ClearValue clearValue[] = {
-		vk::ClearColorValue(std::array<float, 4>({
-			clear.first.Red,
-			clear.first.Green,
-			clear.first.Blue,
-			clear.first.Alpha
-		})),
-		vk::ClearDepthStencilValue(clear.second.Depth, clear.second.Stencil)
-	};
+	std::vector<vk::ClearValue> clearValues;
+
+	for (size_t index = 0; index < mFrameBuffer->size(); index++) {
+		clearValues.push_back(vk::ClearColorValue(
+			std::array<float, 4>({
+				mRenderPass->colorClear()[index].Red,
+				mRenderPass->colorClear()[index].Green,
+				mRenderPass->colorClear()[index].Blue,
+				mRenderPass->colorClear()[index].Alpha,
+			})));
+	}
+
+	CODE_RED_TRY_EXECUTE(
+		mRenderPass->depthClear().has_value(),
+		clearValues.push_back(vk::ClearDepthStencilValue(
+			mRenderPass->depthClear()->Depth,
+			mRenderPass->depthClear()->Stencil
+		))
+	);
 	
 	vk::RenderPassBeginInfo info = {};
 
 	info
 		.setPNext(nullptr)
-		.setClearValueCount(2)
-		.setPClearValues(clearValue)
+		.setClearValueCount(static_cast<uint32_t>(clearValues.size()))
+		.setPClearValues(clearValues.data())
 		.setRenderPass(mRenderPass->renderPass())
 		.setFramebuffer(mFrameBuffer->frameBuffer())
 		.setRenderArea(vk::Rect2D(
 			vk::Offset2D(0, 0),
 			vk::Extent2D(
-				static_cast<uint32_t>(mFrameBuffer->frameBufferWidth()),
-				static_cast<uint32_t>(mFrameBuffer->frameBufferHeight())
+				static_cast<uint32_t>(mFrameBuffer->width()),
+				static_cast<uint32_t>(mFrameBuffer->height())
 			)
 		));
-
-	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), false);
-	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), false);
 
 	mCommandBuffer.beginRenderPass(info, vk::SubpassContents::eInline);
 }
@@ -117,11 +134,13 @@ void CodeRed::VulkanGraphicsCommandList::endRenderPass()
 		mFrameBuffer == nullptr ||
 		mRenderPass == nullptr,
 		Exception("please begin a render pass before end a render pass.")
-	)
+	);
 	
 	mCommandBuffer.endRenderPass();
+	
+	for (size_t index = 0; index < mFrameBuffer->size(); index++)
+		tryLayoutTransition(mFrameBuffer->renderTarget(index), mRenderPass->color(index), true);
 
-	tryLayoutTransition(mFrameBuffer->renderTarget(), mRenderPass->color(), true);
 	tryLayoutTransition(mFrameBuffer->depthStencil(), mRenderPass->depth(), true);
 
 	mFrameBuffer.reset();

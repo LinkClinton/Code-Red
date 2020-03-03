@@ -53,3 +53,8 @@
 ## 2020.02.24
 
 - Fix bug when we create the TextureRef.
+
+## 2020.03.03
+
+- Support Multi-RenderTarget.
+- Change Interface of `GpuFrameBuffer` and `GpuRenderPass`.

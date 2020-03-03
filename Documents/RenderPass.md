@@ -43,16 +43,21 @@ struct Attachment {
 - `StencilLoad` : operator for stencil.
 - `StencilStore` : operator for stencil.
 
-The second parameter of render pass constructer is `color`, a struct of `Attachment`. It describe the property of frame buffer's render target. 
+The second parameter of render pass constructer is `colors`, an array of `Attachment`. It describe the property of frame buffer's render targets. 
 The third parameter of render pass constructer is `depth`, a struct of `Attachment`. It describe the property of frame buffer's depth stencil.
+
+### Attachment Index
+
+The index of attachment is used for multi-render target. If you have two color attachments and one depth attachments. The first two attachments are color attachments and the last is depth attachments.
+
+The first color attachment and color clear value will used for first render target in frame buffer, the second for second. 
 
 ### Begin Render Pass
 
 When we begin a render pass, we need to set a render pass and a frame buffer. The frame buffer's format must be same as format of render pass's attachments. If we do not have depth stencil buffer, the depth stencil attachment can be `std::nullopt`.
 
-After setting a render pass and frame buffer, we will translate the layout of render target or depth stencil to `InitialLayout`. If the `Load` is clear, we will use the `GpuRenderPass::getClear` to get clear value and clear the render target or depth stencil.
+After setting a render pass and frame buffer, we will translate the layout of render target or depth stencil to `InitialLayout`. If the `Load` is clear, we will use the `GpuRenderPass::clearColor()` or `GpuRenderPass::clearDepth()` to get clear value and clear the render target or depth stencil.
 
 ### End Render Pass
 
 When we do not need to render to the frame buffer we set at begin, we need to end a render pass. And we will translate the layout of render target or depth stencil to `FinalLayout`.
-

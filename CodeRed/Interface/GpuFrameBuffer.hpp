@@ -16,25 +16,12 @@ namespace CodeRed {
 	protected:
 		explicit GpuFrameBuffer(
 			const std::shared_ptr<GpuLogicalDevice>& device,
-			const std::shared_ptr<GpuTexture>& render_target,
-			const std::shared_ptr<GpuTexture>& depth_stencil = nullptr);
-
-		explicit GpuFrameBuffer(
-			const std::shared_ptr<GpuLogicalDevice>& device,
-			const std::shared_ptr<GpuTextureRef>& render_target,
+			const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets,
 			const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr);
-
+		
 		~GpuFrameBuffer() = default;
 	public:
-		virtual void reset(
-			const std::shared_ptr<GpuTextureRef>& render_target,
-			const std::shared_ptr<GpuTextureRef>& depth_stencil) = 0;
-
-		void reset(
-			const std::shared_ptr<GpuTexture>& render_target,
-			const std::shared_ptr<GpuTexture>& depth_stencil) {
-			reset(render_target->reference(), depth_stencil->reference());
-		}
+		auto size() const noexcept -> size_t { return mRenderTargets.size(); }
 		
 		auto renderTarget(const size_t index = 0) const -> std::shared_ptr<GpuTextureRef> { return mRenderTargets[index]; }
 

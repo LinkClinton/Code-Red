@@ -253,23 +253,23 @@ See more in [RenderPass](./RenderPass.md).
 ```C++
 explicit GpuFrameBuffer(
     const std::shared_ptr<GpuLogicalDevice>& device,
-    const std::shared_ptr<GpuTextureRef>& render_target,
+    const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets,
     const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr);
 ```
 
 - `device` : the device.
-- `render_target` : the texture we want to redner to.
+- `render_targets` : the texture we want to redner to.
 - `depth_stencil` : the depth-stencil buffer we want to use.
 
 We recommend to use device to create frame buffer.
 
 ```C++
-    auto frameBuffer = device->createFrameBuffer(texture, nullptr);
+    auto frameBuffer = device->createFrameBuffer({ texture }, nullptr);
 ```
 
 ### Member Functions
 
-- `reset()` : reset the frame buffer with new texture and depth-stencil buffer.
+- `size()` : the number of render targets.
 - `renderTarget()` : get the texture we want to render to.
 - `depthStencil()` : get the depth-stencil buffer we use.
 - `fullViewPort()` : default view port(full texture).
@@ -288,28 +288,30 @@ See more in [RenderPass](./RenderPass.md).
 ```C++
 explicit GpuRenderPass(
     const std::shared_ptr<GpuLogicalDevice> &device, 
-    const std::optional<Attachment>& color,
+    const std::vector<Attachment>& colors,
     const std::optional<Attachment>& depth = std::nullopt);
 ```
 
 - `device`: the device.
-- `color` : the property of texture we render to.
+- `colors` : the property of texture we render to.
 - `depth` : the property of depth-stencil we use.
 
 We recommend to use device to create render pass.
 
 ```C++
-    auto renderPass = device->createRenderPass(color, std::nullopt);
+    auto renderPass = device->createRenderPass(colors, std::nullopt);
 ```
 
-**The property of color and dpeth must be suit to the frame buffer we set in a render pass.**
+**The property of colors and dpeth must be suit to the frame buffer we set in a render pass.**
 
 ### Member Functions
 
 - `setClear()` : set the clear value.
-- `getClear()` : get the clear value.
+- `colorClear` : get the clear value of color.
+- `depthClear` : get the clear value of depth.
 - `color()` : get color property.
 - `depth()` : get depth-stencil property.
+- `size()` : the number of color attachments.
 
 ## GpuTextureRef
 

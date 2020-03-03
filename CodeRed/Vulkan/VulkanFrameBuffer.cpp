@@ -16,21 +16,66 @@ using namespace CodeRed::Vulkan;
 
 CodeRed::VulkanFrameBuffer::VulkanFrameBuffer(
 	const std::shared_ptr<GpuLogicalDevice>& device,
-	const std::shared_ptr<GpuTexture>& render_target, 
-	const std::shared_ptr<GpuTexture>& depth_stencil) :
-	VulkanFrameBuffer(device, 
-		render_target == nullptr ? nullptr : render_target->reference(), 
-		depth_stencil == nullptr ? nullptr : depth_stencil->reference())
-{
-}
-
-CodeRed::VulkanFrameBuffer::VulkanFrameBuffer(
-	const std::shared_ptr<GpuLogicalDevice>& device,
-	const std::shared_ptr<GpuTextureRef>& render_target, 
+	const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets,
 	const std::shared_ptr<GpuTextureRef>& depth_stencil) :
-	GpuFrameBuffer(device, render_target, depth_stencil), mRenderTargetView(1)
+	GpuFrameBuffer(device, render_targets, depth_stencil)
 {
-	VulkanFrameBuffer::reset(render_target, depth_stencil);
+	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
+
+	//warning, when we create a frame buffer without rtv and dsv
+	//only output when we enable __ENABLE__CODE__RED__DEBUG__
+	CODE_RED_DEBUG_TRY_EXECUTE(
+		mRenderTargets.empty() &&
+		mDepthStencil == nullptr,
+		DebugReport::warning(DebugType::Create, { "FrameBuffer", "there are no rtv and dsv" })
+	);
+
+	std::vector<Attachment> colorAttachments;
+	std::optional<Attachment> depthAttachment = 
+		mDepthStencil == nullptr ? std::nullopt : std::optional<Attachment>(Attachment::DepthStencil(mDepthStencil->format()));
+
+	for (size_t index = 0; index < mRenderTargets.size(); index++) 
+		colorAttachments.push_back(Attachment::RenderTarget(mRenderTargets[index]->format()));
+
+	mRenderPass = std::make_shared<VulkanRenderPass>(mDevice, colorAttachments, depthAttachment);
+
+	std::vector<vk::ImageView> views = {};
+	vk::FramebufferCreateInfo info = {};
+
+	for (size_t index = 0; index < mRenderTargets.size(); index++) {
+		mRenderTargetView.push_back(vkDevice.createImageView(
+			std::static_pointer_cast<VulkanTextureRef>(mRenderTargets[index])->viewInfo()));
+
+		views.push_back(mRenderTargetView[index]);
+
+		mWidth = std::max(mWidth, mRenderTargets[index]->width());
+		mHeight = std::max(mHeight, mRenderTargets[index]->height());
+	}
+
+	if (mDepthStencil != nullptr) {
+		mDepthStencilView = vkDevice.createImageView(
+			std::static_pointer_cast<VulkanTextureRef>(mDepthStencil)->viewInfo());
+
+		views.push_back(mDepthStencilView);
+
+		mWidth = std::max(mWidth, mDepthStencil->width());
+		mHeight = std::max(mHeight, mDepthStencil->height());
+	}
+
+	mWidth = std::max(mWidth, 1LLU);
+	mHeight = std::max(mHeight, 1LLU);
+
+	info
+		.setPNext(nullptr)
+		.setFlags(vk::FramebufferCreateFlags(0))
+		.setRenderPass(std::static_pointer_cast<VulkanRenderPass>(mRenderPass)->renderPass())
+		.setAttachmentCount(static_cast<uint32_t>(views.size()))
+		.setPAttachments(views.data())
+		.setWidth(static_cast<uint32_t>(mWidth))
+		.setHeight(static_cast<uint32_t>(mHeight))
+		.setLayers(1);
+
+	mFrameBuffer = vkDevice.createFramebuffer(info);
 }
 
 CodeRed::VulkanFrameBuffer::~VulkanFrameBuffer()
@@ -43,92 +88,6 @@ CodeRed::VulkanFrameBuffer::~VulkanFrameBuffer()
 	if (mDepthStencilView) vkDevice.destroyImageView(mDepthStencilView);
 	
 	vkDevice.destroyFramebuffer(mFrameBuffer);
-}
-
-void CodeRed::VulkanFrameBuffer::reset(
-	const std::shared_ptr<GpuTextureRef>& render_target,
-	const std::shared_ptr<GpuTextureRef>& depth_stencil)
-{
-	const auto vkDevice = std::static_pointer_cast<VulkanLogicalDevice>(mDevice)->device();
-
-	if (mFrameBuffer) vkDevice.destroyFramebuffer(mFrameBuffer);
-
-	for (auto& rtv : mRenderTargets) rtv.reset();
-
-	mDepthStencil.reset();
-	mRenderPass.reset();
-
-	auto& renderTarget = mRenderTargets[0] = render_target;
-	auto& depthStencil = mDepthStencil = depth_stencil;
-
-	//warning, when we create a frame buffer without rtv and dsv
-	//only output when we enable __ENABLE__CODE__RED__DEBUG__
-	CODE_RED_DEBUG_TRY_EXECUTE(
-		renderTarget == nullptr &&
-		depthStencil == nullptr,
-		DebugReport::warning(DebugType::Create, { "FrameBuffer", "there are no rtv and dsv" })
-	);
-	
-	using OptAttachment = std::optional<Attachment>;
-
-	mRenderPass = std::make_shared<VulkanRenderPass>(
-		mDevice,
-		renderTarget != nullptr ? static_cast<OptAttachment>(
-			Attachment::RenderTarget(renderTarget->source()->format())) : std::nullopt,
-		depthStencil != nullptr ? static_cast<OptAttachment>(
-			Attachment::DepthStencil(depthStencil->source()->format())) : std::nullopt);
-
-	//create the frame buffer
-	vk::FramebufferCreateInfo info = {};
-	vk::ImageView views[2] = { nullptr, nullptr };
-
-	uint32_t attachmentCount = 0;
-
-	if (renderTarget != nullptr) {
-		mRenderTargetView[0] = vkDevice.createImageView(std::static_pointer_cast<VulkanTextureRef>(renderTarget)->viewInfo());
-
-		views[attachmentCount++] = mRenderTargetView[0];
-	}
-
-	if (depthStencil != nullptr) {
-		mDepthStencilView = vkDevice.createImageView(std::static_pointer_cast<VulkanTextureRef>(depthStencil)->viewInfo());
-
-		views[attachmentCount++] = mDepthStencilView;
-	}
-
-	auto& width = mFrameBufferWidth = 1;
-	auto& height = mFrameBufferHeight = 1;
-
-	//get the width and height of frame buffer
-	//if we have render target, the width and height is render target
-	//else if we have depth stencil, the width and height is depth stencil
-	//else width and height is 1
-	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, width = std::max(width, renderTarget->source()->width(renderTarget->mipLevel().Start)));
-	CODE_RED_TRY_EXECUTE(renderTarget != nullptr, height = std::max(height, renderTarget->source()->height(renderTarget->mipLevel().Start)));
-
-	CODE_RED_TRY_EXECUTE(
-		renderTarget == nullptr &&
-		depthStencil != nullptr,
-		width = std::max(width, depthStencil->source()->width(depthStencil->mipLevel().Start)));
-
-
-	CODE_RED_TRY_EXECUTE(
-		renderTarget == nullptr &&
-		depthStencil != nullptr,
-		height = std::max(width, depthStencil->source()->height(depthStencil->mipLevel().Start)));
-
-	
-	info
-		.setPNext(nullptr)
-		.setFlags(vk::FramebufferCreateFlags(0))
-		.setRenderPass(std::static_pointer_cast<VulkanRenderPass>(mRenderPass)->renderPass())
-		.setAttachmentCount(attachmentCount)
-		.setPAttachments(views)
-		.setWidth(static_cast<uint32_t>(width))
-		.setHeight(static_cast<uint32_t>(height))
-		.setLayers(1);
-
-	mFrameBuffer = vkDevice.createFramebuffer(info);
 }
 
 #endif

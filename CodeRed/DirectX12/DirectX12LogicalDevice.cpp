@@ -57,27 +57,14 @@ auto CodeRed::DirectX12LogicalDevice::createFence()
 }
 
 auto CodeRed::DirectX12LogicalDevice::createFrameBuffer(
-	const std::shared_ptr<GpuTexture>& render_target,
-	const std::shared_ptr<GpuTexture>& depth_stencil)
-	-> std::shared_ptr<GpuFrameBuffer>
-{
-	return std::static_pointer_cast<GpuFrameBuffer>(
-		std::make_shared<DirectX12FrameBuffer>(
-			shared_from_this(),
-			render_target,
-			depth_stencil));
-}
-
-auto CodeRed::DirectX12LogicalDevice::createFrameBuffer(
-	const std::shared_ptr<GpuTextureRef>& render_target,
+	const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets,
 	const std::shared_ptr<GpuTextureRef>& depth_stencil)
 	-> std::shared_ptr<GpuFrameBuffer>
 {
-	return std::static_pointer_cast<GpuFrameBuffer>(
-		std::make_shared<DirectX12FrameBuffer>(
-			shared_from_this(),
-			render_target,
-			depth_stencil));
+	return std::make_shared<DirectX12FrameBuffer>(
+		shared_from_this(),
+		render_targets,
+		depth_stencil);
 }
 
 auto CodeRed::DirectX12LogicalDevice::createGraphicsCommandList(
@@ -154,14 +141,14 @@ auto CodeRed::DirectX12LogicalDevice::createDescriptorHeap(
 }
 
 auto CodeRed::DirectX12LogicalDevice::createRenderPass(
-	const std::optional<Attachment>& color,
+	const std::vector<Attachment>& colors,
 	const std::optional<Attachment>& depth)
 	-> std::shared_ptr<GpuRenderPass>
 {
-	return std::static_pointer_cast<GpuRenderPass>(
-		std::make_shared<DirectX12RenderPass>(
-			shared_from_this(),
-			color, depth));
+	return std::make_shared<DirectX12RenderPass>(
+		shared_from_this(),
+		colors,
+		depth);
 }
 
 auto CodeRed::DirectX12LogicalDevice::createSampler(const SamplerInfo& info)

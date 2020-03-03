@@ -113,21 +113,10 @@ CodeRed::GpuGraphicsCommandList::GpuGraphicsCommandList(
 
 CodeRed::GpuFrameBuffer::GpuFrameBuffer(
 	const std::shared_ptr<GpuLogicalDevice>& device,
-	const std::shared_ptr<GpuTexture>& render_target,
-	const std::shared_ptr<GpuTexture>& depth_stencil) :
-	GpuFrameBuffer(device, 
-		render_target == nullptr ? nullptr : render_target->reference(),
-		depth_stencil == nullptr ? nullptr : depth_stencil->reference())
-{
-	
-}
-
-CodeRed::GpuFrameBuffer::GpuFrameBuffer(
-	const std::shared_ptr<GpuLogicalDevice>& device,
-	const std::shared_ptr<GpuTextureRef>& render_target, 
+	const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets,
 	const std::shared_ptr<GpuTextureRef>& depth_stencil) :
 	mDevice(device),
-	mRenderTargets({ render_target }),
+	mRenderTargets(render_targets),
 	mDepthStencil(depth_stencil)
 {
 	//the device must be valid
@@ -138,17 +127,19 @@ CodeRed::GpuFrameBuffer::GpuFrameBuffer(
 	//and the usage of depth stencil must have ResourceUsage::DepthStencil
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 
-	CODE_RED_DEBUG_THROW_IF(
-		mRenderTargets[0] != nullptr &&
-		mRenderTargets[0]->source()->dimension() != Dimension::Dimension2D,
-		InvalidException<GpuTexture>({ "render_target->dimension()" })
-	);
+	for (size_t index = 0; index < mRenderTargets.size(); index++) {
+		CODE_RED_DEBUG_THROW_IF(
+			mRenderTargets[index] != nullptr &&
+			mRenderTargets[index]->source()->dimension() != Dimension::Dimension2D,
+			InvalidException<GpuTexture>({ "render_target->dimension()" })
+		);
 
-	CODE_RED_DEBUG_THROW_IF(
-		mRenderTargets[0] != nullptr &&
-		!enumHas(mRenderTargets[0]->source()->usage(), ResourceUsage::RenderTarget),
-		InvalidException<GpuTexture>({ "render_target->usage()" })
-	);
+		CODE_RED_DEBUG_THROW_IF(
+			mRenderTargets[index] != nullptr &&
+			!enumHas(mRenderTargets[index]->source()->usage(), ResourceUsage::RenderTarget),
+			InvalidException<GpuTexture>({ "render_target->usage()" })
+		);
+	}
 
 	CODE_RED_DEBUG_THROW_IF(
 		mDepthStencil != nullptr &&
@@ -163,7 +154,7 @@ CodeRed::GpuFrameBuffer::GpuFrameBuffer(
 	);
 
 	CODE_RED_DEBUG_TRY_EXECUTE(
-		mRenderTargets[0] == nullptr &&
+		mRenderTargets.empty() &&
 		mDepthStencil == nullptr,
 		DebugReport::warning(DebugType::Create,
 			{ "FrameBuffer" },
@@ -348,11 +339,13 @@ CodeRed::GpuGraphicsPipeline::GpuGraphicsPipeline(
 
 CodeRed::GpuRenderPass::GpuRenderPass(
 	const std::shared_ptr<GpuLogicalDevice>& device,
-	const std::optional<Attachment>& color,
+	const std::vector<Attachment>& colors, 
 	const std::optional<Attachment>& depth) :
 	mDevice(device),
-	mColorAttachments({ color }),
-	mDepthAttachment(depth)
+	mColorAttachments(colors),
+	mColors(colors.size()),
+	mDepthAttachment(depth),
+	mDepth(ClearValue())
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
 }
@@ -410,8 +403,26 @@ void CodeRed::GpuRenderPass::setClear(
 	const std::optional<ClearValue>& color,
 	const std::optional<ClearValue>& depth)
 {
-	if (color.has_value()) mColor[0] = color.value();
-	if (depth.has_value()) mDepth = depth.value();
+	mColors = color.has_value() ? std::vector<ClearValue>{color.value()} : std::vector<ClearValue>{};
+	mDepth = depth;
+}
+
+void CodeRed::GpuRenderPass::setClear(
+	const std::vector<ClearValue>& colors, 
+	const std::optional<ClearValue>& depth)
+{
+	mColors = colors;
+	mDepth = depth;
+}
+
+auto CodeRed::GpuRenderPass::compatible(const std::shared_ptr<GpuFrameBuffer>& frameBuffer) const -> bool
+{
+	// the number of color attachments should greater than the number of render targets
+	// the depth attachment can not be null when the depth stencil is existed.
+	if (mColorAttachments.size() < frameBuffer->size()) return false;
+	if (!mDepthAttachment.has_value() && frameBuffer->depthStencil() != nullptr) return false;
+
+	return true;
 }
 
 void CodeRed::GpuGraphicsCommandList::layoutTransition(

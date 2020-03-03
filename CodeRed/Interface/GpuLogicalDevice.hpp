@@ -57,12 +57,7 @@ namespace CodeRed {
 		virtual auto createFence() -> std::shared_ptr<GpuFence> = 0;
 
 		virtual auto createFrameBuffer(
-			const std::shared_ptr<GpuTexture>& render_target,
-			const std::shared_ptr<GpuTexture>& depth_stencil = nullptr)
-			-> std::shared_ptr<GpuFrameBuffer> = 0;
-
-		virtual auto createFrameBuffer(
-			const std::shared_ptr<GpuTextureRef>& render_target,
+			const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets,
 			const std::shared_ptr<GpuTextureRef>& depth_stencil = nullptr)
 			-> std::shared_ptr<GpuFrameBuffer> = 0;
 		
@@ -96,9 +91,9 @@ namespace CodeRed {
 		virtual auto createDescriptorHeap(
 			const std::shared_ptr<GpuResourceLayout>& resource_layout)
 			-> std::shared_ptr<GpuDescriptorHeap> = 0;
-		
+
 		virtual auto createRenderPass(
-			const std::optional<Attachment>& color,
+			const std::vector<Attachment>& colors,
 			const std::optional<Attachment>& depth = std::nullopt)
 			-> std::shared_ptr<GpuRenderPass> = 0;
 		

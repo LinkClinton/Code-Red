@@ -14,6 +14,11 @@ namespace CodeRed {
 			const std::optional<Attachment>& color,
 			const std::optional<Attachment>& depth = std::nullopt);
 
+		explicit VulkanRenderPass(
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::vector<Attachment>& colors,
+			const std::optional<Attachment>& depth = std::nullopt);
+		
 		~VulkanRenderPass();
 
 		auto renderPass() const noexcept -> vk::RenderPass { return mRenderPass; }

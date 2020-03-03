@@ -196,24 +196,13 @@ auto CodeRed::VulkanLogicalDevice::createFence()
 }
 
 auto CodeRed::VulkanLogicalDevice::createFrameBuffer(
-	const std::shared_ptr<GpuTexture>& render_target,
-	const std::shared_ptr<GpuTexture>& depth_stencil)
-	-> std::shared_ptr<GpuFrameBuffer>
-{
-	return std::make_shared<VulkanFrameBuffer>(
-		shared_from_this(),
-		render_target,
-		depth_stencil);
-}
-
-auto CodeRed::VulkanLogicalDevice::createFrameBuffer(
-	const std::shared_ptr<GpuTextureRef>& render_target,
+	const std::vector<std::shared_ptr<GpuTextureRef>>& render_targets,
 	const std::shared_ptr<GpuTextureRef>& depth_stencil)
 	-> std::shared_ptr<GpuFrameBuffer>
 {
 	return std::make_shared<VulkanFrameBuffer>(
 		shared_from_this(),
-		render_target,
+		render_targets,
 		depth_stencil);
 }
 
@@ -286,13 +275,14 @@ auto CodeRed::VulkanLogicalDevice::createDescriptorHeap(
 }
 
 auto CodeRed::VulkanLogicalDevice::createRenderPass(
-	const std::optional<Attachment>& color,
+	const std::vector<Attachment>& colors,
 	const std::optional<Attachment>& depth)
 	-> std::shared_ptr<GpuRenderPass>
 {
 	return std::make_shared<VulkanRenderPass>(
 		shared_from_this(),
-		color, depth);
+		colors,
+		depth);
 }
 
 auto CodeRed::VulkanLogicalDevice::createSampler(const SamplerInfo& info)
