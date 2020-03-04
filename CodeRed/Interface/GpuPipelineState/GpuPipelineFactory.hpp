@@ -60,7 +60,10 @@ namespace CodeRed {
 			-> std::shared_ptr<GpuShaderState> = 0;
 
 		virtual auto createBlendState(
-			const BlendProperty& property = BlendProperty())
+			const std::vector<BlendProperty>& properties = { BlendProperty() })
+			-> std::shared_ptr<GpuBlendState> = 0;
+
+		virtual auto createBlendState(const size_t numRenderTargets)
 			-> std::shared_ptr<GpuBlendState> = 0;
 	protected:
 		std::shared_ptr<GpuLogicalDevice> mDevice;

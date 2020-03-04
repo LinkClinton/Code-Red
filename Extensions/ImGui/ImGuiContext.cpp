@@ -135,15 +135,16 @@ CodeRed::ImGuiContext::ImGuiContext(
 		pipelineFactory->createShaderState(ShaderType::Vertex, mVertexShaderCode),
 		pipelineFactory->createShaderState(ShaderType::Pixel, mPixelShaderCode),
 		pipelineFactory->createDetphStencilState(false, false),
-		pipelineFactory->createBlendState(BlendProperty(
+		pipelineFactory->createBlendState({
+			BlendProperty(
 			true,
 			BlendOperator::Add,
 			BlendOperator::Add,
 			BlendFactor::Zero,
 			BlendFactor::InvSrcAlpha,
 			BlendFactor::InvSrcAlpha,
-			BlendFactor::SrcAlpha
-		)),
+			BlendFactor::SrcAlpha)
+			}),
 		pipelineFactory->createRasterizationState(
 			FrontFace::Clockwise,
 			CullMode::None,

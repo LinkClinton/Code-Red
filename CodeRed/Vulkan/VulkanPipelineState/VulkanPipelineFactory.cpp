@@ -76,12 +76,16 @@ auto CodeRed::VulkanPipelineFactory::createShaderState(
 }
 
 auto CodeRed::VulkanPipelineFactory::createBlendState(
-	const BlendProperty& property)
+	const std::vector<BlendProperty>& properties)
 	-> std::shared_ptr<GpuBlendState>
 {
-	return std::make_shared<VulkanBlendState>(
-		mDevice,
-		property);
+	return std::make_shared<VulkanBlendState>(mDevice, properties);
+}
+
+auto CodeRed::VulkanPipelineFactory::createBlendState(const size_t numRenderTargets)
+	-> std::shared_ptr<GpuBlendState>
+{
+	return std::make_shared<VulkanBlendState>(mDevice, std::vector<BlendProperty>(numRenderTargets));
 }
 
 #endif

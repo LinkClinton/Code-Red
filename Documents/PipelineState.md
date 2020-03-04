@@ -163,15 +163,15 @@ Blend state is ued to describe how we blend the pixel we generate in pixel shade
 ```C++
     explicit GpuBlendState(
         const std::shared_ptr<GpuLogicalDevice> &device,
-        const BlendProperty& blend_property); 
+        const std::vector<BlendProperty>& blend_properties); 
 ```
 
-`blend_property` are same as interface in DirectX12 or Vulkan. You can learn more from them.
+`blend_properties` are same as interface in DirectX12 or Vulkan. You can learn more from them.
 
 We recommend to use `GpuPipelineFactory` to create blend state.
 
 ```C++
-    auto blendState = pipelineFactory->createBlendState(property);
+    auto blendState = pipelineFactory->createBlendState({ property });
 ```
 
 ### Member Functions

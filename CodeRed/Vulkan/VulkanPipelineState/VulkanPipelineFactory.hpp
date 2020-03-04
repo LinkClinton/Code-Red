@@ -41,8 +41,11 @@ namespace CodeRed {
 			->std::shared_ptr<GpuShaderState> override;
 
 		auto createBlendState(
-			const BlendProperty& property = BlendProperty())
-			->std::shared_ptr<GpuBlendState> override;
+			const std::vector<BlendProperty>& properties = { BlendProperty() })
+			-> std::shared_ptr<GpuBlendState> override;
+
+		auto createBlendState(const size_t numRenderTargets)
+			-> std::shared_ptr<GpuBlendState> override;
 	};
 	
 }

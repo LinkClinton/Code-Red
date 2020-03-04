@@ -10,10 +10,10 @@ namespace CodeRed {
 	class GpuBlendState : public GpuPipelineState {
 	protected:
 		explicit GpuBlendState(
-			const std::shared_ptr<GpuLogicalDevice> &device,
-			const BlendProperty& blend_property) :
+			const std::shared_ptr<GpuLogicalDevice>& device,
+			const std::vector<BlendProperty>& blend_properties) :
 			GpuPipelineState(device),
-			mBlendProperties({ blend_property }) {}
+			mBlendProperties(blend_properties) {}
 		
 		~GpuBlendState() = default;
 	public:

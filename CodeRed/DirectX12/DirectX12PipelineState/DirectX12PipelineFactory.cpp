@@ -76,11 +76,16 @@ auto CodeRed::DirectX12PipelineFactory::createShaderState(
 }
 
 auto CodeRed::DirectX12PipelineFactory::createBlendState(
-	const BlendProperty& property)
-	-> std::shared_ptr<GpuBlendState>
+	const std::vector<BlendProperty>& properties) ->
+	std::shared_ptr<GpuBlendState>
 {
-	return std::static_pointer_cast<GpuBlendState>(
-		std::make_shared<DirectX12BlendState>(mDevice, property));
+	return std::make_shared<DirectX12BlendState>(mDevice, properties);
+}
+
+auto CodeRed::DirectX12PipelineFactory::createBlendState(
+	const size_t numRenderTargets) -> std::shared_ptr<GpuBlendState>
+{	
+	return std::make_shared<DirectX12BlendState>(mDevice, std::vector<BlendProperty>(numRenderTargets));
 }
 
 #endif

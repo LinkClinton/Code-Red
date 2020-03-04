@@ -56,5 +56,9 @@
 
 ## 2020.03.03
 
-- Support Multi-RenderTarget.
+- Support multi-render target.
 - Change Interface of `GpuFrameBuffer` and `GpuRenderPass`.
+
+## 2020.03.04
+
+- Fix blend state of multi-render target. The number of blend properties should be the number of frame buffers we render to.

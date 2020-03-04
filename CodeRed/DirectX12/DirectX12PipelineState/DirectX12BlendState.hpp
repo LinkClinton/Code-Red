@@ -11,7 +11,7 @@ namespace CodeRed {
 	public:
 		explicit DirectX12BlendState(
 			const std::shared_ptr<GpuLogicalDevice> &device,
-			const BlendProperty& blend_property);
+			const std::vector<BlendProperty>& blend_properties);
 
 		~DirectX12BlendState() = default;
 
