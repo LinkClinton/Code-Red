@@ -62,3 +62,8 @@
 ## 2020.03.04
 
 - Fix blend state of multi-render target. The number of blend properties should be the number of frame buffers we render to.
+
+## 2020.03.23
+
+- Fix Vulkan version and debug report.
+- Remove `ResourceLayout::undefined`, the default layout of texture is `ResourceLayout::GeneralRead`.

@@ -110,7 +110,6 @@ auto CodeRed::Vulkan::enumConvert(const ResourceLayout layout)
 	-> vk::ImageLayout
 {
 	switch (layout) {
-	case ResourceLayout::Undefined: return vk::ImageLayout::eUndefined;
 	case ResourceLayout::GeneralRead: return vk::ImageLayout::eGeneral;
 	case ResourceLayout::RenderTarget: return vk::ImageLayout::eColorAttachmentOptimal;
 	case ResourceLayout::DepthStencil: return vk::ImageLayout::eDepthStencilAttachmentOptimal;
@@ -405,8 +404,8 @@ auto CodeRed::Vulkan::enumConvert(const PixelFormat format, const ResourceUsage 
 
 auto CodeRed::Vulkan::enumConvert(const size_t arrayLength) -> vk::ImageCreateFlags
 {
-	auto result = vk::ImageCreateFlags(0);
-
+	auto result = vk::ImageCreateFlags(vk::ImageCreateFlagBits::eMutableFormat);
+	
 	if (arrayLength > 5) result |= vk::ImageCreateFlagBits::eCubeCompatible;
 
 	return result;
@@ -447,7 +446,6 @@ auto CodeRed::Vulkan::enumConvert1(
 	-> vk::AccessFlags
 {
 	switch (layout) {
-	case ResourceLayout::Undefined: return vk::AccessFlags(0);
 	case ResourceLayout::GeneralRead:
 		switch (type) {
 		case ResourceType::Buffer:

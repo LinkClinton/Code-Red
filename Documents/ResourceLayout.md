@@ -9,7 +9,6 @@ If you want to copy a buffer, you need translate the source of buffer to `Resour
 ```C++
     enum class ResourceLayout : UInt32
     {
-        Undefined,
         GeneralRead,
         RenderTarget,
         DepthStencil,
@@ -19,7 +18,6 @@ If you want to copy a buffer, you need translate the source of buffer to `Resour
     };
 ```
 
-- `Undefined` : undefined.
 - `GeneralRead` : used for GPU read.
 - `RenderTarget` : used for render target.
 - `DepthStencil` : used for depth stencil.

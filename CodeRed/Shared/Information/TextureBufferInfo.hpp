@@ -17,7 +17,7 @@ namespace CodeRed {
 		
 		PixelFormat Format = PixelFormat::Unknown;
 		Dimension Dimension = Dimension::Dimension1D;
-		ResourceLayout Layout = ResourceLayout::Undefined;
+		ResourceLayout Layout = ResourceLayout::GeneralRead;
 
 		TextureBufferInfo() = default;
 

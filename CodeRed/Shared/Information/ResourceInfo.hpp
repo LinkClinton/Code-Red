@@ -153,7 +153,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, 1, 1, mipLevels, format, Dimension::Dimension1D),
-				ResourceLayout::Undefined, usage, 
+				ResourceLayout::GeneralRead, usage, 
 				ResourceType::Texture, 
 				MemoryHeap::Default);
 		}
@@ -167,7 +167,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, 1, length, mipLevels, format, Dimension::Dimension1D),
-				ResourceLayout::Undefined, usage,
+				ResourceLayout::GeneralRead, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
@@ -181,7 +181,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, 1, mipLevels, format, Dimension::Dimension2D),
-				ResourceLayout::Undefined, usage, 
+				ResourceLayout::GeneralRead, usage, 
 				ResourceType::Texture, 
 				MemoryHeap::Default);
 		}
@@ -195,7 +195,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, 6, mipLevels, format, Dimension::Dimension2D),
-				ResourceLayout::Undefined, usage,
+				ResourceLayout::GeneralRead, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
@@ -210,7 +210,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, length, mipLevels, format, Dimension::Dimension2D),
-				ResourceLayout::Undefined, usage,
+				ResourceLayout::GeneralRead, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
@@ -225,7 +225,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, 6 * length, mipLevels, format, Dimension::Dimension2D),
-				ResourceLayout::Undefined, usage,
+				ResourceLayout::GeneralRead, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
@@ -240,7 +240,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, depth, mipLevels, format, Dimension::Dimension3D),
-				ResourceLayout::Undefined, usage,
+				ResourceLayout::GeneralRead, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
@@ -253,7 +253,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, 1, 1, format, Dimension::Dimension2D, clearValue),
-				ResourceLayout::Undefined, 
+				ResourceLayout::GeneralRead, 
 				ResourceUsage::RenderTarget,
 				ResourceType::Texture,
 				MemoryHeap::Default);
@@ -267,7 +267,7 @@ namespace CodeRed {
 		{
 			return ResourceInfo(
 				TextureProperty(width, height, 1, 1, format, Dimension::Dimension2D, clearValue),
-				ResourceLayout::Undefined,
+				ResourceLayout::GeneralRead,
 				ResourceUsage::DepthStencil,
 				ResourceType::Texture,
 				MemoryHeap::Default);

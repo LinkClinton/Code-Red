@@ -170,14 +170,18 @@ void CodeRed::VulkanSwapChain::initializeSwapChain()
 	auto swapChainImages = vkDevice->device().getSwapchainImagesKHR(mSwapChain);
 	
 	for (size_t index = 0; index < mBuffers.size(); index++) {
+		auto info = ResourceInfo::Texture2D(
+			mInfo.width,
+			mInfo.height,
+			mPixelFormat,
+			1,
+			ResourceUsage::RenderTarget);
+
+		info.Layout = ResourceLayout::Present;
+		
 		mBuffers[index] = std::make_shared<VulkanTexture>(
 			mDevice,
-			ResourceInfo::Texture2D(
-				mInfo.width,
-				mInfo.height,
-				mPixelFormat,
-				1,
-				ResourceUsage::RenderTarget),
+			info,
 			swapChainImages[index]);
 	}
 

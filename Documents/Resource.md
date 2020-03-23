@@ -144,7 +144,7 @@ The size of texture is the size of origin texture. It is not the size of this ob
 
 For `Texture1D` the height must be one.
 
-**Notice : the layout of texture must be `ResourceLayout::Undefined` when we create a texture.**
+**Notice : the layout of texture must be `ResourceLayout::GeneralRead` when we create a texture.**
 
 If you are using rtv\dsv in DirectX12 mode, you can set the `TextureProperty::ClearValue` to optimize the clear operation(**the value you used in clear operation should be same as the value you set**).
 

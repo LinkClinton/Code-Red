@@ -137,7 +137,6 @@ auto CodeRed::DirectX12::enumConvert(const ResourceLayout layout)
 	-> D3D12_RESOURCE_STATES
 {
 	switch (layout) {
-	case ResourceLayout::Undefined: return D3D12_RESOURCE_STATE_COMMON;
 	case ResourceLayout::GeneralRead: return D3D12_RESOURCE_STATE_GENERIC_READ;
 	case ResourceLayout::RenderTarget: return D3D12_RESOURCE_STATE_RENDER_TARGET;
 	case ResourceLayout::DepthStencil: return D3D12_RESOURCE_STATE_DEPTH_WRITE;

@@ -103,14 +103,19 @@ void CodeRed::DirectX12SwapChain::resize(const size_t width, const size_t height
 			FailedException(DebugType::Get, { "ID3D12Resource of Back Buffer", "IDXGISwapChain" })
 		);
 
-		mBuffers[index] = std::make_shared<DirectX12Texture>(mDevice, backBuffer,
-			ResourceInfo::Texture2D(
-				static_cast<size_t>(mInfo.width),
-				static_cast<size_t>(mInfo.height),
-				mPixelFormat,
-				1,
-				ResourceUsage::RenderTarget
-			));
+		auto info = ResourceInfo::Texture2D(
+			static_cast<size_t>(mInfo.width),
+			static_cast<size_t>(mInfo.height),
+			mPixelFormat,
+			1,
+			ResourceUsage::RenderTarget
+		);
+
+		// the layout of back buffers should be D3D12_RESOURCE_STATE_COMMON/PRESENT
+		// because D3D12_RESOURCE_STATE_COMMON/PRESENT are same, so we will use present
+		info.Layout = ResourceLayout::Present;
+		
+		mBuffers[index] = std::make_shared<DirectX12Texture>(mDevice, backBuffer, info);
 	}
 }
 
