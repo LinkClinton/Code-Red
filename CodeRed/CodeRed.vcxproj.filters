@@ -4,17 +4,8 @@
     <Filter Include="Interface">
       <UniqueIdentifier>{132f9193-214e-4e88-b462-423d855a4cc7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shared">
-      <UniqueIdentifier>{7cbef60d-c20a-475f-80ac-f08e1643fd0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Interface\GpuResource">
       <UniqueIdentifier>{eb847b49-d5aa-4f9a-801d-88651ce4d884}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shared\Enum">
-      <UniqueIdentifier>{3bf3d8bf-7093-4b0f-8dbf-35b682520d02}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shared\Exception">
-      <UniqueIdentifier>{3d4330dd-cbe5-418a-bf45-0f23f8878aba}</UniqueIdentifier>
     </Filter>
     <Filter Include="Interface\GpuPipelineState">
       <UniqueIdentifier>{cb246ab6-e842-4d88-ad78-a8035862f3f9}</UniqueIdentifier>
@@ -24,9 +15,6 @@
     </Filter>
     <Filter Include="DirectX12">
       <UniqueIdentifier>{bf9d1fca-2732-42db-8a96-7cfc66bbcd90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shared\Information">
-      <UniqueIdentifier>{782c4430-43b5-41a8-a6a0-f10ecea5c7f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="DirectX12\DirectX12PipelineState">
       <UniqueIdentifier>{1a72c95d-d246-409b-8a80-773b79bcad50}</UniqueIdentifier>
@@ -42,6 +30,18 @@
     </Filter>
     <Filter Include="Vulkan\VulkanPipelineState">
       <UniqueIdentifier>{d9dc317a-61e0-4e1c-98b0-c336c8ec55be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{7cbef60d-c20a-475f-80ac-f08e1643fd0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Enum">
+      <UniqueIdentifier>{3bf3d8bf-7093-4b0f-8dbf-35b682520d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Exception">
+      <UniqueIdentifier>{3d4330dd-cbe5-418a-bf45-0f23f8878aba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Information">
+      <UniqueIdentifier>{782c4430-43b5-41a8-a6a0-f10ecea5c7f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

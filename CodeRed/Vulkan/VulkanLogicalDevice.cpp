@@ -22,6 +22,8 @@
 #include "VulkanSwapChain.hpp"
 #include "VulkanFence.hpp"
 
+#include <unordered_set>
+
 #ifdef __ENABLE__VULKAN__
 
 using namespace CodeRed::Vulkan;
@@ -38,11 +40,20 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallBack(
 		"is being used in draw but has never been updated via vkUpdateDescriptorSets() or a similar call."
 	};
 
-	for (const auto& ignoreMessage : ignoreMessages) 
-		if (std::string(callback_data->pMessage).find(ignoreMessage)) return VK_FALSE;
+	// we only show the messages once for better watching
+	static std::unordered_set<std::string> showedMessages;
+
+	const auto message = std::string(callback_data->pMessage);
 	
-	CodeRed::DebugReport::message(std::string("vulkan validation layer : ") + callback_data->pMessage);
+	for (const auto& ignoreMessage : ignoreMessages) 
+		if (std::string(message).find(ignoreMessage) != std::string::npos) return VK_FALSE;
+
+	if (showedMessages.find(message) != showedMessages.end()) return VK_FALSE;
+	
+	CodeRed::DebugReport::message(std::string("vulkan validation layer : ") + message);
 	CodeRed::DebugReport::message("");
+
+	showedMessages.insert(message);
 	
 	return VK_FALSE;
 }
@@ -62,7 +73,7 @@ CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDispl
 		.setApplicationVersion(VK_MAKE_VERSION(1, 0, 0))
 		.setPEngineName("CodeRed")
 		.setEngineVersion(VK_MAKE_VERSION(1, 0, 0))
-		.setEngineVersion(VK_API_VERSION_1_1);
+		.setApiVersion(VK_API_VERSION_1_1);
 
 	instanceInfo
 		.setPNext(nullptr)
