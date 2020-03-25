@@ -67,3 +67,8 @@
 
 - Fix Vulkan version and debug report.
 - Remove `ResourceLayout::undefined`, the default layout of texture is `ResourceLayout::GeneralRead`.
+
+## 2020.03.25
+
+- Add document of Vulkan Validation Layer in Code-Red.
+- Support MSAA Texture.
