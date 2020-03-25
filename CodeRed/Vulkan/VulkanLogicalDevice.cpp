@@ -36,8 +36,10 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallBack(
 	const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
 	void* user_data)
 {
+	// some messages from validation layer are ignored for DirectX12 version.
 	const static std::vector<const char*> ignoreMessages = {
-		"is being used in draw but has never been updated via vkUpdateDescriptorSets() or a similar call."
+		"is being used in draw but has never been updated via vkUpdateDescriptorSets() or a similar call.",
+		"vkCreateImage(): initialLayout is VK_IMAGE_LAYOUT_GENERAL, must be VK_IMAGE_LAYOUT_UNDEFINED or VK_IMAGE_LAYOUT_PREINITIALIZED."
 	};
 
 	// we only show the messages once for better watching
