@@ -216,6 +216,37 @@ CodeRed::GpuTexture::GpuTexture(
 		InvalidException<ResourceInfo>({ "info.Type" })
 	);
 
+	// we only support MSAA Texture with Dimension::Dimension2D
+	CODE_RED_DEBUG_THROW_IF(
+		std::get<TextureProperty>(mInfo.Property).Sample != MultiSample::Count1 &&
+		std::get<TextureProperty>(mInfo.Property).Dimension != Dimension::Dimension2D,
+		InvalidException<ResourceInfo>({ "info.Property.Dimension" },
+			{ "We only support MSAA Texture with Dimension::Dimension2D." })
+	);
+
+	// we only support MSAA Texture with MipLevels 1
+	CODE_RED_DEBUG_THROW_IF(
+		std::get<TextureProperty>(mInfo.Property).Sample != MultiSample::Count1 &&
+		std::get<TextureProperty>(mInfo.Property).MipLevels != 1,
+		InvalidException<ResourceInfo>({ "info.Property.MipLevels" },
+			{ "We only support MSAA Texture with MipLevels 1." })
+	);
+
+	// The MSAA Texture should has ResourceUsage::RenderTarget or ResourceUsage::DepthStencil
+	CODE_RED_DEBUG_THROW_IF(
+		std::get<TextureProperty>(mInfo.Property).Sample != MultiSample::Count1 &&
+		!enumHas(mInfo.Usage, ResourceUsage::RenderTarget) &&
+		!enumHas(mInfo.Usage, ResourceUsage::DepthStencil),
+		InvalidException<ResourceInfo>({ "info.Usage" },
+			{
+				DebugReport::make("The MSAA Texture should has these usage [0] and [1].",
+					{
+						CODE_RED_TO_STRING(ResourceUsage::RenderTarget),
+						CODE_RED_TO_STRING(ResourceUsage::DepthStencil)
+					})
+			})
+	);
+
 	CODE_RED_DEBUG_WARNING_IF(
 		enumHas(mInfo.Usage, ResourceUsage::ConstantBuffer) ||
 		enumHas(mInfo.Usage, ResourceUsage::IndexBuffer) ||
@@ -365,6 +396,15 @@ CodeRed::GpuDescriptorHeap::GpuDescriptorHeap(
 CodeRed::GpuTextureRef::GpuTextureRef(const std::shared_ptr<GpuTexture>& texture, const TextureRefInfo& info) :
 	mTexture(texture), mInfo(info)
 {
+	// the MSAA texture is not support Cube Map
+	CODE_RED_DEBUG_THROW_IF(
+		mTexture->sample() != MultiSample::Count1 && mInfo.Usage == TextureRefUsage::CubeMap,
+		InvalidException<TextureRefInfo>({ "info.Usage" },
+			{ "The MSAA Texture is not support Cube Map." })
+	);
+
+	// check the range of mip levels and arrays
+	// if the range is invalid, we will report warning and set it to default range
 	CODE_RED_DEBUG_WARNING_IF(
 		(mInfo.MipLevel.Start >= mInfo.MipLevel.End || mInfo.MipLevel.End > mTexture->mipLevels()) && 
 		!(mInfo.MipLevel.Start == 0 && mInfo.MipLevel.End == 0),
@@ -374,7 +414,7 @@ CodeRed::GpuTextureRef::GpuTextureRef(const std::shared_ptr<GpuTexture>& texture
 		(mInfo.Array.Start >= mInfo.Array.End || mInfo.Array.End > mTexture->arrays()) &&
 		!(mInfo.Array.Start == 0 && mInfo.Array.End == 0),
 		"The array of texture ref is invalid, we will use default range.");
-
+	
 	CODE_RED_TRY_EXECUTE(
 		mInfo.MipLevel.Start >= mInfo.MipLevel.End || mInfo.MipLevel.End > mTexture->mipLevels(),
 		mInfo.MipLevel = ValueRange<size_t>(0, mTexture->mipLevels())
@@ -384,6 +424,19 @@ CodeRed::GpuTextureRef::GpuTextureRef(const std::shared_ptr<GpuTexture>& texture
 		mInfo.Array.Start >= mInfo.Array.End || mInfo.Array.End > mTexture->arrays(),
 		mInfo.Array = ValueRange<size_t>(0, mTexture->arrays())
 	);
+
+	// check if the texture support the Cube Map
+	// if the array of texture ref is less than 6, it can not be Cube Map.
+	CODE_RED_DEBUG_WARNING_IF(
+		mInfo.Array.size() < 6 && mInfo.Usage == TextureRefUsage::CubeMap,
+		"The array of texture ref is less than 6, so we can not set the usage as Cube Map. We will set it to Common."
+	);
+
+	CODE_RED_TRY_EXECUTE(
+		mInfo.Array.size() < 6 && mInfo.Usage == TextureRefUsage::CubeMap,
+		mInfo.Usage = TextureRefUsage::Common
+	);
+
 }
 
 void CodeRed::GpuDescriptorHeap::bindResource(
@@ -483,7 +536,9 @@ auto CodeRed::GpuTexture::size(const size_t mipSlice) const noexcept -> size_t
 {
 	// the size of texture only for one texture with one mip level
 	// so if the texture is array, we do not use depth
-	return width(mipSlice) * height(mipSlice) * depth(mipSlice) * PixelFormatSizeOf::get(format());
+	// if the texture is MSAA texture, we will calculate the sample count.
+	return width(mipSlice) * height(mipSlice) * depth(mipSlice) *
+		PixelFormatSizeOf::get(format()) * MultiSampleSizeOf::get(sample());
 }
 
 auto CodeRed::GpuFrameBuffer::fullViewPort(const size_t index) const noexcept -> ViewPort

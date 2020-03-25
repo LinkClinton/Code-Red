@@ -31,6 +31,7 @@ namespace CodeRed {
 	enum class ResourceUsage : UInt32;
 	enum class ResourceType : UInt32;
 	enum class PixelFormat : UInt32;
+	enum class MultiSample : UInt32;
 	enum class AddressMode : UInt32;
 	enum class BlendFactor : UInt32;
 	enum class BorderColor : UInt32;
@@ -66,6 +67,8 @@ namespace CodeRed {
 		auto enumConvert(const MemoryHeap heap)->vk::MemoryPropertyFlags;
 
 		auto enumConvert(const PixelFormat format)->vk::Format;
+
+		auto enumConvert(const MultiSample sample)->vk::SampleCountFlagBits;
 
 		auto enumConvert(const Dimension dimension)->vk::ImageType;
 

@@ -27,7 +27,7 @@ CodeRed::DirectX12Texture::DirectX12Texture(
 	desc.DepthOrArraySize = static_cast<UINT16>(property.Depth);
 	desc.MipLevels = static_cast<UINT16>(property.MipLevels);
 	desc.Format = enumConvert(property.Format);
-	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Count = static_cast<UINT>(MultiSampleSizeOf::get(property.Sample));
 	desc.SampleDesc.Quality = 0;
 	desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 	desc.Flags = enumConvert(mInfo.Usage);

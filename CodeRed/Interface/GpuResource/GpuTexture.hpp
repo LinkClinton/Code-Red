@@ -31,6 +31,8 @@ namespace CodeRed {
 
 		auto format() const noexcept -> PixelFormat { return std::get<TextureProperty>(mInfo.Property).Format; }
 
+		auto sample() const noexcept -> MultiSample { return std::get<TextureProperty>(mInfo.Property).Sample; }
+		
 		auto dimension() const noexcept -> Dimension { return std::get<TextureProperty>(mInfo.Property).Dimension; }
 
 		auto clearValue() const noexcept -> ClearValue { return std::get<TextureProperty>(mInfo.Property).ClearValue; }

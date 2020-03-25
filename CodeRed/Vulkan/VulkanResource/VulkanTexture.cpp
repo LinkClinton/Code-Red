@@ -38,7 +38,7 @@ CodeRed::VulkanTexture::VulkanTexture(
 		 * it limits the size of array layers must be 1 when the texture is Texture3D
 		 */
 		.setArrayLayers(static_cast<uint32_t>(property.Dimension == Dimension::Dimension3D ? 1 : property.Depth))
-		.setSamples(vk::SampleCountFlagBits::e1)
+		.setSamples(enumConvert(property.Sample))
 		.setInitialLayout(enumConvert(mInfo.Layout))
 		.setUsage(enumConvert(mInfo.Usage).second)
 		.setQueueFamilyIndexCount(0)

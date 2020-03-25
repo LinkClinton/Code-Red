@@ -4,11 +4,13 @@
 #include "../Enum/ResourceUsage.hpp"
 #include "../Enum/ResourceType.hpp"
 #include "../Enum/PixelFormat.hpp"
+#include "../Enum/MultiSample.hpp"
 #include "../Enum/MemoryHeap.hpp"
 #include "../Enum/Dimension.hpp"
 
 #include "../ClearValue.hpp"
 #include "../PixelFormatSizeOf.hpp"
+#include "../MultiSampleSizeOf.hpp"
 
 #include <variant>
 
@@ -38,8 +40,10 @@ namespace CodeRed {
 		size_t MipLevels = 1;
 
 		PixelFormat Format = PixelFormat::Unknown;
+		MultiSample Sample = MultiSample::Count1;
 		Dimension Dimension = Dimension::Dimension1D;
-
+		
+		
 		ClearValue ClearValue = CodeRed::ClearValue();
 		
 		TextureProperty() = default;
@@ -51,13 +55,15 @@ namespace CodeRed {
 			const size_t mipLevels,
 			const CodeRed::PixelFormat format,
 			const CodeRed::Dimension dimension,
+			const CodeRed::MultiSample sample = MultiSample::Count1,
 			const CodeRed::ClearValue& clearValue = CodeRed::ClearValue()) :
 			Width(width),
 			Height(height),
 			Depth(depth),
-			Size(width * height * (dimension == Dimension::Dimension3D ? depth : 1) * PixelFormatSizeOf::get(format)),
+			Size(width * height * (dimension == Dimension::Dimension3D ? depth : 1) * PixelFormatSizeOf::get(format) * MultiSampleSizeOf::get(sample)),
 			MipLevels(mipLevels),
 			Format(format),
+			Sample(sample),
 			Dimension(dimension),
 			ClearValue(clearValue) {}
 	};
@@ -179,10 +185,22 @@ namespace CodeRed {
 			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
+			return Texture2DMultiSample(width, height, format,
+				MultiSample::Count1, mipLevels, usage);
+		}
+
+		static auto Texture2DMultiSample(
+			const size_t width,
+			const size_t height,
+			const PixelFormat format,
+			const MultiSample sample,
+			const size_t mipLevels = 1,
+			const ResourceUsage usage = ResourceUsage::None) -> ResourceInfo
+		{
 			return ResourceInfo(
-				TextureProperty(width, height, 1, mipLevels, format, Dimension::Dimension2D),
-				ResourceLayout::GeneralRead, usage, 
-				ResourceType::Texture, 
+				TextureProperty(width, height, 1, mipLevels, format, Dimension::Dimension2D, sample),
+				ResourceLayout::GeneralRead, usage,
+				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
 
@@ -208,8 +226,21 @@ namespace CodeRed {
 			const size_t mipLevels = 1,
 			const ResourceUsage usage = ResourceUsage::None)
 		{
+			return Texture2DMultiSampleArray(width, height, length, format,
+				MultiSample::Count1, mipLevels, usage);
+		}
+
+		static auto Texture2DMultiSampleArray(
+			const size_t width,
+			const size_t height,
+			const size_t length,
+			const PixelFormat format,
+			const MultiSample sample,
+			const size_t mipLevels = 1,
+			const ResourceUsage usage = ResourceUsage::None) -> ResourceInfo
+		{
 			return ResourceInfo(
-				TextureProperty(width, height, length, mipLevels, format, Dimension::Dimension2D),
+				TextureProperty(width, height, length, mipLevels, format, Dimension::Dimension2D, sample),
 				ResourceLayout::GeneralRead, usage,
 				ResourceType::Texture,
 				MemoryHeap::Default);
@@ -251,22 +282,46 @@ namespace CodeRed {
 			const PixelFormat format,
 			const ClearValue& clearValue = ClearValue())
 		{
+			return RenderTargetMultiSample(width, height, format,
+				MultiSample::Count1, clearValue
+			);
+		}
+
+		static auto RenderTargetMultiSample(
+			const size_t width,
+			const size_t height,
+			const PixelFormat format,
+			const MultiSample sample,
+			const ClearValue& clearValue = ClearValue()) -> ResourceInfo
+		{
 			return ResourceInfo(
-				TextureProperty(width, height, 1, 1, format, Dimension::Dimension2D, clearValue),
-				ResourceLayout::GeneralRead, 
+				TextureProperty(width, height, 1, 1, format, Dimension::Dimension2D, sample, clearValue),
+				ResourceLayout::GeneralRead,
 				ResourceUsage::RenderTarget,
 				ResourceType::Texture,
 				MemoryHeap::Default);
 		}
-
+		
 		static auto DepthStencil(
 			const size_t width,
 			const size_t height,
 			const PixelFormat format,
 			const ClearValue& clearValue = ClearValue())
 		{
+			return DepthStencilMultiSample(width, height, format,
+				MultiSample::Count1, clearValue
+			);
+		}
+
+		static auto DepthStencilMultiSample(
+			const size_t width,
+			const size_t height,
+			const PixelFormat format,
+			const MultiSample sample,
+			const ClearValue& clearValue = ClearValue()) -> ResourceInfo
+		{
 			return ResourceInfo(
-				TextureProperty(width, height, 1, 1, format, Dimension::Dimension2D, clearValue),
+				TextureProperty(width, height, 1, 1, format, Dimension::Dimension2D, sample, clearValue),
 				ResourceLayout::GeneralRead,
 				ResourceUsage::DepthStencil,
 				ResourceType::Texture,

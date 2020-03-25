@@ -14,6 +14,7 @@
 #include "../Shared/Enum/BlendOperator.hpp"
 #include "../Shared/Enum/ResourceType.hpp"
 #include "../Shared/Enum/PixelFormat.hpp"
+#include "../Shared/Enum/MultiSample.hpp"
 #include "../Shared/Enum/AddressMode.hpp"
 #include "../Shared/Enum/BorderColor.hpp"
 #include "../Shared/Enum/BlendFactor.hpp"
@@ -204,6 +205,20 @@ auto CodeRed::Vulkan::enumConvert(const PixelFormat format)
 	case PixelFormat::Red8BitUnknown: return vk::Format::eR8Unorm;
 	case PixelFormat::Red32BitFloat: return vk::Format::eR32Sfloat;
 	case PixelFormat::Unknown: return vk::Format::eUndefined;
+	default:
+		throw NotSupportException(NotSupportType::Enum);
+	}
+}
+
+auto CodeRed::Vulkan::enumConvert(const MultiSample sample) -> vk::SampleCountFlagBits
+{
+	switch (sample) {
+	case MultiSample::Count1: return vk::SampleCountFlagBits::e1;
+	case MultiSample::Count2: return vk::SampleCountFlagBits::e2;
+	case MultiSample::Count4: return vk::SampleCountFlagBits::e4;
+	case MultiSample::Count8: return vk::SampleCountFlagBits::e8;
+	case MultiSample::Count16: return vk::SampleCountFlagBits::e16;
+	case MultiSample::Count32: return vk::SampleCountFlagBits::e32;
 	default:
 		throw NotSupportException(NotSupportType::Enum);
 	}

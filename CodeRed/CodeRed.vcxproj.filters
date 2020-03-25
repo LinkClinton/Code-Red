@@ -435,6 +435,12 @@
     <ClInclude Include="Shared\Information\TextureBufferCopyInfo.hpp">
       <Filter>Shared\Information</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Enum\MultiSample.hpp">
+      <Filter>Shared\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\MultiSampleSizeOf.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">
@@ -598,6 +604,9 @@
     </ClCompile>
     <ClCompile Include="Vulkan\VulkanResource\VulkanTextureBuffer.cpp">
       <Filter>Vulkan\VulkanResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\MultiSampleSizeOf.cpp">
+      <Filter>Shared</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

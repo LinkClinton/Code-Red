@@ -66,19 +66,35 @@ CodeRed::DirectX12FrameBuffer::DirectX12FrameBuffer(
 
 		if (mRenderTargets[index]->source()->isArray()) {
 
-			view.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
-			view.Texture2DArray.FirstArraySlice = static_cast<UINT>(mRenderTargets[index]->array().Start);
-			view.Texture2DArray.MipSlice = static_cast<UINT>(mRenderTargets[index]->mipLevel().Start);
-			view.Texture2DArray.PlaneSlice = 0;
-			view.Texture2DArray.ArraySize = 1;
+			if (mRenderTargets[index]->source()->sample() == MultiSample::Count1) {
 
+				view.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
+				view.Texture2DArray.FirstArraySlice = static_cast<UINT>(mRenderTargets[index]->array().Start);
+				view.Texture2DArray.MipSlice = static_cast<UINT>(mRenderTargets[index]->mipLevel().Start);
+				view.Texture2DArray.PlaneSlice = 0;
+				view.Texture2DArray.ArraySize = 1;
+
+			}else {
+
+				view.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DMSARRAY;
+				view.Texture2DMSArray.FirstArraySlice = static_cast<UINT>(mRenderTargets[index]->array().Start);
+				view.Texture2DMSArray.ArraySize = 1;
+				
+			}
 		}
 		else {
 
-			view.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-			view.Texture2D.MipSlice = static_cast<UINT>(mRenderTargets[index]->mipLevel().Start);
-			view.Texture2D.PlaneSlice = 0;
+			if (mRenderTargets[index]->source()->sample() == MultiSample::Count1) {
 
+				view.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+				view.Texture2D.MipSlice = static_cast<UINT>(mRenderTargets[index]->mipLevel().Start);
+				view.Texture2D.PlaneSlice = 0;
+
+			}else {
+
+				view.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DMS;
+				
+			}
 		}
 
 		dxDevice->CreateRenderTargetView(
@@ -102,17 +118,33 @@ CodeRed::DirectX12FrameBuffer::DirectX12FrameBuffer(
 
 		if (mDepthStencil->source()->isArray()) {
 
-			view.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2DARRAY;
-			view.Texture2DArray.FirstArraySlice = static_cast<UINT>(mDepthStencil->array().Start);
-			view.Texture2DArray.MipSlice = static_cast<UINT>(mDepthStencil->mipLevel().Start);
-			view.Texture2DArray.ArraySize = 1;
+			if (mDepthStencil->source()->sample() == MultiSample::Count1) {
 
+				view.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2DARRAY;
+				view.Texture2DArray.FirstArraySlice = static_cast<UINT>(mDepthStencil->array().Start);
+				view.Texture2DArray.MipSlice = static_cast<UINT>(mDepthStencil->mipLevel().Start);
+				view.Texture2DArray.ArraySize = 1;
+
+			}else {
+
+				view.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2DMSARRAY;
+				view.Texture2DMSArray.FirstArraySlice = static_cast<UINT>(mDepthStencil->array().Start);
+				view.Texture2DMSArray.ArraySize = 1;
+				
+			}
 		}
 		else {
 
-			view.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-			view.Texture2D.MipSlice = static_cast<UINT>(mDepthStencil->mipLevel().Start);
+			if (mDepthStencil->source()->sample() == MultiSample::Count1) {
 
+				view.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+				view.Texture2D.MipSlice = static_cast<UINT>(mDepthStencil->mipLevel().Start);
+
+			}else {
+
+				view.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2DMS;
+				
+			}
 		}
 
 		dxDevice->CreateDepthStencilView(

@@ -126,7 +126,8 @@ We recommend to use `GpuLogicalDevice` to create texture.
         
         size_t MipLevels;
 
-        PixelFormat lFormat;
+        PixelFormat Format;
+        MultiSample sample;
         Dimension Dimension;
     };
 ```
@@ -137,6 +138,7 @@ We recommend to use `GpuLogicalDevice` to create texture.
 - `Size` : the size of texture(origin).
 - `MipLevels` : the max number of mip levels.
 - `Format` : the format of pixel in texture.
+- `Sample` : the sample count per pixel in texture.
 - `Dimension` : the dimension of texture(1D, 2D, 3D).
 - `ClearValue` : the clear value used in clear rtv/dsv operation.
 
@@ -145,6 +147,8 @@ The size of texture is the size of origin texture. It is not the size of this ob
 For `Texture1D` the height must be one.
 
 **Notice : the layout of texture must be `ResourceLayout::GeneralRead` when we create a texture.**
+
+**Notice : the MSAA texture is the texture with MultiSample::Count2/4/8/16/32. And the miplevels of MSAA texture should be 1, the dimension of MSAA texture should be `Dimension2D`, the usage of MSAA texture should has `ResourceUsage::RenderTarget` or `ResourceUsage::DepthStencil`.**
 
 If you are using rtv\dsv in DirectX12 mode, you can set the `TextureProperty::ClearValue` to optimize the clear operation(**the value you used in clear operation should be same as the value you set**).
 
@@ -190,6 +194,8 @@ void copyTexture(
 `TextureCopyInfo` is a help structure for copying. The resource index is the sub-texture in texture.
 
 And the `Location` indicate the start position we copy from or to.
+
+**Notice : You can not copy a MSAA texture from/to a Texture with MultiSample::Count1.**
 
 ## GpuSampler
 

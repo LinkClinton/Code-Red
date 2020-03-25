@@ -41,14 +41,23 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 			if (mInfo.Array.size() != 1) {
 				if (mInfo.Usage == TextureRefUsage::Common) {
 
-					mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
-					mDesc.Texture2DArray.FirstArraySlice = static_cast<UINT>(mInfo.Array.Start);
-					mDesc.Texture2DArray.MostDetailedMip = static_cast<UINT>(mInfo.MipLevel.Start);
-					mDesc.Texture2DArray.ArraySize = static_cast<UINT>(mInfo.Array.size());
-					mDesc.Texture2DArray.MipLevels = static_cast<UINT>(mInfo.MipLevel.size());
-					mDesc.Texture2DArray.ResourceMinLODClamp = 0;
-					mDesc.Texture2DArray.PlaneSlice = 0;
+					if (mTexture->sample() == MultiSample::Count1) {
 
+						mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+						mDesc.Texture2DArray.FirstArraySlice = static_cast<UINT>(mInfo.Array.Start);
+						mDesc.Texture2DArray.MostDetailedMip = static_cast<UINT>(mInfo.MipLevel.Start);
+						mDesc.Texture2DArray.ArraySize = static_cast<UINT>(mInfo.Array.size());
+						mDesc.Texture2DArray.MipLevels = static_cast<UINT>(mInfo.MipLevel.size());
+						mDesc.Texture2DArray.ResourceMinLODClamp = 0;
+						mDesc.Texture2DArray.PlaneSlice = 0;
+
+					}else {
+
+						mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY;
+						mDesc.Texture2DMSArray.FirstArraySlice = static_cast<UINT>(mInfo.Array.Start);
+						mDesc.Texture2DMSArray.ArraySize = static_cast<UINT>(mInfo.Array.size());
+						
+					}
 				}
 				else {
 
@@ -73,12 +82,19 @@ CodeRed::DirectX12TextureRef::DirectX12TextureRef(
 				}
 			}else {
 
-				mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-				mDesc.Texture2D.MostDetailedMip = static_cast<UINT>(mInfo.MipLevel.Start);
-				mDesc.Texture2D.MipLevels = static_cast<UINT>(mInfo.MipLevel.size());
-				mDesc.Texture2D.ResourceMinLODClamp = 0;
-				mDesc.Texture2D.PlaneSlice = 0;
-				
+				if (mTexture->sample() == MultiSample::Count1) {
+
+					mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+					mDesc.Texture2D.MostDetailedMip = static_cast<UINT>(mInfo.MipLevel.Start);
+					mDesc.Texture2D.MipLevels = static_cast<UINT>(mInfo.MipLevel.size());
+					mDesc.Texture2D.ResourceMinLODClamp = 0;
+					mDesc.Texture2D.PlaneSlice = 0;
+					
+				}else {
+
+					mDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DMS;
+					
+				}
 			}
 
 			break;

@@ -235,6 +235,7 @@
     <ClInclude Include="Shared\Enum\FilterOptions.hpp" />
     <ClInclude Include="Shared\Enum\FrontFace.hpp" />
     <ClInclude Include="Shared\Enum\IndexType.hpp" />
+    <ClInclude Include="Shared\Enum\MultiSample.hpp" />
     <ClInclude Include="Shared\Enum\ResourceLayout.hpp" />
     <ClInclude Include="Shared\Enum\MemoryHeap.hpp" />
     <ClInclude Include="Shared\Enum\PixelFormat.hpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="Shared\Information\TextureCopyInfo.hpp" />
     <ClInclude Include="Shared\Information\TextureRefInfo.hpp" />
     <ClInclude Include="Shared\Information\WindowInfo.hpp" />
+    <ClInclude Include="Shared\MultiSampleSizeOf.hpp" />
     <ClInclude Include="Shared\PixelFormatSizeOf.hpp" />
     <ClInclude Include="Shared\LayoutElement.hpp" />
     <ClInclude Include="Shared\Noncopyable.hpp" />
@@ -322,6 +324,7 @@
     <ClCompile Include="Interface\GpuConstructor.cpp" />
     <ClCompile Include="Shared\DebugReport.cpp" />
     <ClCompile Include="Shared\Exception\Exception.cpp" />
+    <ClCompile Include="Shared\MultiSampleSizeOf.cpp" />
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp" />
     <ClCompile Include="Vulkan\VulkanCommandAllocator.cpp" />
     <ClCompile Include="Vulkan\VulkanCommandQueue.cpp" />
