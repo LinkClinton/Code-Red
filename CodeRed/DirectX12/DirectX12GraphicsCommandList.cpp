@@ -368,6 +368,67 @@ void CodeRed::DirectX12GraphicsCommandList::layoutTransition(
 	buffer->setLayout(new_layout);
 }
 
+void CodeRed::DirectX12GraphicsCommandList::resolveTexture(
+	const TextureResolveInfo& source,
+	const TextureResolveInfo& destination)
+{
+	const auto dxSource = std::static_pointer_cast<DirectX12Texture>(source.Texture);
+	const auto dxDestination = std::static_pointer_cast<DirectX12Texture>(destination.Texture);
+
+	const auto sourceIndex = source.MipSlice + source.ArraySlice * source.Texture->mipLevels();
+	const auto destinationIndex = destination.MipSlice + destination.ArraySlice * destination.Texture->mipLevels();
+	
+	CODE_RED_DEBUG_THROW_IF(
+		source.Texture->sample() == MultiSample::Count1,
+		"The source texture should be MSAA texture."
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		source.ArraySlice >= source.Texture->arrays(),
+		InvalidException<TextureResolveInfo>({ "source" },
+			{ "The source.ArraySlice should not greater than the source.Texture.arrays()." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		source.MipSlice != 0,
+		InvalidException<TextureResolveInfo>({ "source" },
+			{ "The source.MipSlice should be 0." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		destination.ArraySlice >= destination.Texture->arrays(),
+		InvalidException<TextureResolveInfo>({ "destination" },
+			{ "The destination.ArraySlice should not greater than the destination.Texture.arrays()." })
+	);
+	
+	CODE_RED_DEBUG_THROW_IF(
+		destination.MipSlice >= destination.Texture->mipLevels(),
+		InvalidException<TextureResolveInfo>({ "destination" },
+			{ "The destination.MipSlice should not greater than the destination.Texture.mipLevels()." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		dxSource->width(source.MipSlice) == dxDestination->width(destination.MipSlice) &&
+		dxSource->height(source.MipSlice) == dxDestination->height(destination.MipSlice),
+		"The size of source and destination should be same."
+	);
+
+	resourceBarrier(dxSource->texture().Get(), enumConvert(dxSource->layout()), D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
+	resourceBarrier(dxDestination->texture().Get(), enumConvert(dxDestination->layout()), D3D12_RESOURCE_STATE_RESOLVE_DEST);
+
+	// we do not recommend to resolve texture with different format
+	// so the format we set is source.Texture.format().
+	// There are the rules of them.
+	// https://docs.microsoft.com/zh-cn/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-resolvesubresource
+	mGraphicsCommandList->ResolveSubresource(
+		dxDestination->texture().Get(), static_cast<UINT>(destinationIndex),
+		dxSource->texture().Get(), static_cast<UINT>(sourceIndex),
+		enumConvert(dxSource->format()));
+
+	resourceBarrier(dxSource->texture().Get(), D3D12_RESOURCE_STATE_RESOLVE_SOURCE, enumConvert(dxSource->layout()));
+	resourceBarrier(dxDestination->texture().Get(), D3D12_RESOURCE_STATE_RESOLVE_DEST, enumConvert(dxDestination->layout()));
+}
+
 void CodeRed::DirectX12GraphicsCommandList::copyBuffer(
 	const std::shared_ptr<GpuBuffer>& source,
 	const std::shared_ptr<GpuBuffer>& destination, 

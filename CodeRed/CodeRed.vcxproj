@@ -259,6 +259,7 @@
     <ClInclude Include="Shared\Information\TextureBufferInfo.hpp" />
     <ClInclude Include="Shared\Information\TextureCopyInfo.hpp" />
     <ClInclude Include="Shared\Information\TextureRefInfo.hpp" />
+    <ClInclude Include="Shared\Information\TextureResolveInfo.hpp" />
     <ClInclude Include="Shared\Information\WindowInfo.hpp" />
     <ClInclude Include="Shared\MultiSampleSizeOf.hpp" />
     <ClInclude Include="Shared\PixelFormatSizeOf.hpp" />

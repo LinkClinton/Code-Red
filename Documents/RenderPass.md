@@ -23,7 +23,8 @@ You can learn more from DirectX and Vulkan.
 ```C++
 struct Attachment {
     PixelFormat Format;
-    
+    MultiSample Sample;
+
     ResourceLayout InitialLayout;
     ResourceLayout FinalLayout;
 
@@ -36,6 +37,7 @@ struct Attachment {
 ```
 
 - `Format` : format of texture.
+- `Sample` : sample per pixel of texture.
 - `InitialLayout` : the layout of texture when render pass begin.
 - `FinalLayout` : the layout of texture when render pass end.
 - `Load` : the operator how we load texture(clear, load...).

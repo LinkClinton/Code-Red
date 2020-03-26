@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Shared/Information/TextureBufferCopyInfo.hpp"
+#include "../Shared/Information/TextureResolveInfo.hpp"
 #include "../Shared/Information/TextureCopyInfo.hpp"
 #include "../Shared/Enum/ResourceLayout.hpp"
 #include "../Shared/Enum/IndexType.hpp"
@@ -101,6 +102,10 @@ namespace CodeRed {
 		virtual void layoutTransition(
 			const std::shared_ptr<GpuBuffer>& buffer,
 			const ResourceLayout layout);
+
+		virtual void resolveTexture(
+			const TextureResolveInfo& source,
+			const TextureResolveInfo& destination) = 0;
 		
 		virtual void copyBuffer(
 			const std::shared_ptr<GpuBuffer>& source,

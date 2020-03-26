@@ -53,7 +53,7 @@ CodeRed::DirectX12GraphicsPipeline::DirectX12GraphicsPipeline(
 	desc.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
 	desc.NodeMask = 0;
 	desc.NumRenderTargets = static_cast<UINT>(mRenderPass->size());
-	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Count = static_cast<UINT>(mRenderPass->maxSample());
 	desc.SampleDesc.Quality = 0;
 	desc.SampleMask = UINT_MAX;
 

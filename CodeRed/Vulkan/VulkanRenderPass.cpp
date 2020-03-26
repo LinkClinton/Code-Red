@@ -31,7 +31,7 @@ CodeRed::VulkanRenderPass::VulkanRenderPass(
 		attachments[attachmentCount++]
 			.setFlags(vk::AttachmentDescriptionFlags(0))
 			.setFormat(enumConvert(colorAttachment.Format))
-			.setSamples(vk::SampleCountFlagBits::e1)
+			.setSamples(enumConvert(colorAttachment.Sample))
 			.setLoadOp(enumConvert(colorAttachment.Load))
 			.setStoreOp(enumConvert(colorAttachment.Store))
 			.setStencilLoadOp(enumConvert(colorAttachment.StencilLoad))
@@ -45,7 +45,7 @@ CodeRed::VulkanRenderPass::VulkanRenderPass(
 		attachments[attachmentCount++]
 		.setFlags(vk::AttachmentDescriptionFlags(0))
 		.setFormat(enumConvert(mDepthAttachment->Format))
-		.setSamples(vk::SampleCountFlagBits::e1)
+		.setSamples(enumConvert(mDepthAttachment->Sample))
 		.setLoadOp(enumConvert(mDepthAttachment->Load))
 		.setStoreOp(enumConvert(mDepthAttachment->Store))
 		.setStencilLoadOp(enumConvert(mDepthAttachment->StencilLoad))

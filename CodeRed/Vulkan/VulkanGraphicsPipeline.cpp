@@ -57,7 +57,7 @@ CodeRed::VulkanGraphicsPipeline::VulkanGraphicsPipeline(
 		.setPNext(nullptr)
 		.setFlags(vk::PipelineMultisampleStateCreateFlags(0))
 		.setPSampleMask(nullptr)
-		.setRasterizationSamples(vk::SampleCountFlagBits::e1)
+		.setRasterizationSamples(enumConvert(mRenderPass->maxSample()))
 		.setSampleShadingEnable(false)
 		.setAlphaToCoverageEnable(false)
 		.setAlphaToOneEnable(false)

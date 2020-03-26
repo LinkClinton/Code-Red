@@ -379,6 +379,18 @@ CodeRed::GpuRenderPass::GpuRenderPass(
 	mDepth(ClearValue())
 {
 	CODE_RED_DEBUG_DEVICE_VALID(mDevice);
+
+	UInt32 maxSample = 1;
+	
+	for (size_t index = 0; index < mColorAttachments.size(); index++)
+		maxSample = std::max(maxSample, static_cast<UInt32>(mColorAttachments[index].Sample));
+
+	CODE_RED_TRY_EXECUTE(
+		mDepthAttachment.has_value(),
+		maxSample = std::max(maxSample, static_cast<UInt32>(mDepthAttachment.value().Sample))
+	);
+
+	mMaxSample = static_cast<MultiSample>(maxSample);
 }
 
 CodeRed::GpuDescriptorHeap::GpuDescriptorHeap(

@@ -160,6 +160,7 @@ Most member functions are same usage as DirectX12 and Vulkan. And some functions
 - `setViewPort()` : set the view port.
 - `setScissorRect()` : set the scissor rect.
 - `layoutTransition()` : tranlate the layout of resource.
+- `resolveTexture()` : resolve the MSAA texture.
 - `copyBuffer()` : copy buffer from source to destination.
 - `copyTexture()` : copy texture from source to destination.
 - `copyTextureToBuffer()` : copy texture to buffer. 

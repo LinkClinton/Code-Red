@@ -31,6 +31,8 @@ namespace CodeRed {
 			const std::optional<ClearValue>& depth = std::nullopt);
 
 		auto compatible(const std::shared_ptr<GpuFrameBuffer>& frameBuffer) const -> bool;
+
+		auto maxSample() const noexcept -> MultiSample { return mMaxSample; }
 		
 		auto colorClear() const noexcept -> std::vector<ClearValue> { return mColors; }
 
@@ -49,6 +51,8 @@ namespace CodeRed {
 
 		std::optional<Attachment> mDepthAttachment;
 		std::optional<ClearValue> mDepth;
+
+		MultiSample mMaxSample = MultiSample::Count1;
 	};
 	
 }

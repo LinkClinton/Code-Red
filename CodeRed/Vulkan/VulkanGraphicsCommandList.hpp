@@ -77,7 +77,11 @@ namespace CodeRed {
 			const std::shared_ptr<GpuBuffer>& buffer,
 			const ResourceLayout old_layout,
 			const ResourceLayout new_layout) override;
-
+		
+		void resolveTexture(
+			const TextureResolveInfo& source, 
+			const TextureResolveInfo& destination) override;
+		
 		void copyBuffer(
 			const std::shared_ptr<GpuBuffer>& source,
 			const std::shared_ptr<GpuBuffer>& destination,

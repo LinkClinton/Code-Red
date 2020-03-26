@@ -72,3 +72,8 @@
 
 - Add document of Vulkan Validation Layer in Code-Red.
 - Support MSAA Texture.
+
+## 2020.03.26
+
+- Add `GpuGraphicsCommandList::ResolveTexture` to resolve MSAA texture.
+- Add `MultiSample` to `Attachment`.

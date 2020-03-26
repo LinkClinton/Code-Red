@@ -441,6 +441,9 @@
     <ClInclude Include="Shared\MultiSampleSizeOf.hpp">
       <Filter>Shared</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Information\TextureResolveInfo.hpp">
+      <Filter>Shared\Information</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared\PixelFormatSizeOf.cpp">

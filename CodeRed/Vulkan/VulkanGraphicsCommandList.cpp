@@ -388,6 +388,76 @@ void CodeRed::VulkanGraphicsCommandList::layoutTransition(
 	buffer->setLayout(new_layout);
 }
 
+void CodeRed::VulkanGraphicsCommandList::resolveTexture(
+	const TextureResolveInfo& source,
+	const TextureResolveInfo& destination)
+{
+	const auto vkSource = std::static_pointer_cast<VulkanTexture>(source.Texture);
+	const auto vkDestination = std::static_pointer_cast<VulkanTexture>(destination.Texture);
+
+	CODE_RED_DEBUG_THROW_IF(
+		source.Texture->sample() == MultiSample::Count1,
+		"The source texture should be MSAA texture."
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		source.ArraySlice >= source.Texture->arrays(),
+		InvalidException<TextureResolveInfo>({ "source" },
+			{ "The source.ArraySlice should not greater than the source.Texture.arrays()." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		source.MipSlice != 0,
+		InvalidException<TextureResolveInfo>({ "source" },
+			{ "The source.MipSlice should be 0." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		destination.ArraySlice >= destination.Texture->arrays(),
+		InvalidException<TextureResolveInfo>({ "destination" },
+			{ "The destination.ArraySlice should not greater than the destination.Texture.arrays()." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		destination.MipSlice >= destination.Texture->mipLevels(),
+		InvalidException<TextureResolveInfo>({ "destination" },
+			{ "The destination.MipSlice should not greater than the destination.Texture.mipLevels()." })
+	);
+
+	CODE_RED_DEBUG_THROW_IF(
+		vkSource->width(source.MipSlice) == vkDestination->width(destination.MipSlice) &&
+		vkSource->height(source.MipSlice) == vkDestination->height(destination.MipSlice),
+		"The size of source and destination should be same."
+	);
+	
+	vk::ImageResolve resolve = {};
+
+	resolve
+		.setSrcSubresource(vk::ImageSubresourceLayers(
+			enumConvert(vkSource->format(), vkSource->usage()),
+			static_cast<uint32_t>(source.MipSlice),
+			static_cast<uint32_t>(source.ArraySlice),
+			1))
+		.setSrcOffset(vk::Offset3D(0, 0, 0))
+		.setDstSubresource(vk::ImageSubresourceLayers(
+			enumConvert(vkDestination->format(), vkDestination->usage()),
+			static_cast<uint32_t>(destination.MipSlice),
+			static_cast<uint32_t>(destination.ArraySlice),
+			1))
+		.setDstOffset(vk::Offset3D(0, 0, 0))
+		.setExtent(vk::Extent3D(
+			static_cast<uint32_t>(vkSource->width(source.MipSlice)),
+			static_cast<uint32_t>(vkSource->height(source.MipSlice)),
+			1
+		));
+	
+	mCommandBuffer.resolveImage(
+		vkSource->image(), enumConvert(vkSource->layout()),
+		vkDestination->image(), enumConvert(vkDestination->layout()),
+		resolve
+	);
+}
+
 void CodeRed::VulkanGraphicsCommandList::copyBuffer(
 	const std::shared_ptr<GpuBuffer>& source,
 	const std::shared_ptr<GpuBuffer>& destination, 
