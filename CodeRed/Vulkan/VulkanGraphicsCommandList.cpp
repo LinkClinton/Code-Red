@@ -397,7 +397,7 @@ void CodeRed::VulkanGraphicsCommandList::resolveTexture(
 
 	CODE_RED_DEBUG_THROW_IF(
 		source.Texture->sample() == MultiSample::Count1,
-		"The source texture should be MSAA texture."
+		Exception("The source texture should be MSAA texture.")
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
@@ -425,10 +425,16 @@ void CodeRed::VulkanGraphicsCommandList::resolveTexture(
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		vkSource->width(source.MipSlice) == vkDestination->width(destination.MipSlice) &&
-		vkSource->height(source.MipSlice) == vkDestination->height(destination.MipSlice),
-		"The size of source and destination should be same."
+		vkSource->width(source.MipSlice) != vkDestination->width(destination.MipSlice) ||
+		vkSource->height(source.MipSlice) != vkDestination->height(destination.MipSlice),
+		Exception("The size of source and destination should be same.")
 	);
+
+	
+	// Because the layout of image should be vk::ImageLayout::eTransferSrcOptimal and vk::ImageLayout::eTransferDstOptimal
+	// We will transform the textures before we resolve them and transform them back after we resolve them.
+	layoutTransition(source.Texture, source.Texture->layout(), ResourceLayout::CopySource);
+	layoutTransition(destination.Texture, destination.Texture->layout(), ResourceLayout::CopyDestination);
 	
 	vk::ImageResolve resolve = {};
 
@@ -456,6 +462,9 @@ void CodeRed::VulkanGraphicsCommandList::resolveTexture(
 		vkDestination->image(), enumConvert(vkDestination->layout()),
 		resolve
 	);
+
+	layoutTransition(source.Texture, ResourceLayout::CopySource, source.Texture->layout());
+	layoutTransition(destination.Texture, ResourceLayout::CopyDestination, destination.Texture->layout());
 }
 
 void CodeRed::VulkanGraphicsCommandList::copyBuffer(
@@ -638,6 +647,34 @@ void CodeRed::VulkanGraphicsCommandList::drawIndexed(
 		static_cast<uint32_t>(base_vertex_location),
 		static_cast<uint32_t>(start_instance_location)
 	);
+}
+
+auto CodeRed::VulkanGraphicsCommandList::image_memory_barrier(
+	const std::shared_ptr<GpuTexture>& texture,
+	const vk::AccessFlags srcAccessMask, 
+	const vk::AccessFlags dstAccessMask, 
+	const vk::ImageLayout srcLayout,
+	const vk::ImageLayout dstLayout) -> vk::ImageMemoryBarrier
+{
+	vk::ImageMemoryBarrier barrier = {};
+
+	barrier
+		.setPNext(nullptr)
+		.setSrcAccessMask(srcAccessMask)
+		.setSrcQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
+		.setOldLayout(srcLayout)
+		.setDstAccessMask(dstAccessMask)
+		.setDstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
+		.setNewLayout(dstLayout)
+		.setImage(std::static_pointer_cast<VulkanTexture>(texture)->image())
+		.setSubresourceRange(
+			vk::ImageSubresourceRange(
+				enumConvert(texture->format(), texture->usage()),
+				0, static_cast<uint32_t>(texture->mipLevels()),
+				0, static_cast<uint32_t>(texture->arrays())
+			));
+
+	return barrier;
 }
 
 void CodeRed::VulkanGraphicsCommandList::tryLayoutTransition(

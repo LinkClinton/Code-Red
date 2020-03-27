@@ -66,7 +66,7 @@
 ## 2020.03.23
 
 - Fix Vulkan version and debug report.
-- Remove `ResourceLayout::undefined`, the default layout of texture is `ResourceLayout::GeneralRead`.
+- Remove `ResourceLayout::Undefined`, the default layout of texture is `ResourceLayout::GeneralRead`.
 
 ## 2020.03.25
 
@@ -77,3 +77,9 @@
 
 - Add `GpuGraphicsCommandList::ResolveTexture` to resolve MSAA texture.
 - Add `MultiSample` to `Attachment`.
+
+## 2020.03.27
+
+- Fix `GpuGraphicsCommandList::ResolveTexture`.
+- Fix `FrameBuffer` with `MultiSample`.
+- Add test of MSAA(See it in Demos).

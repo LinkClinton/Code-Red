@@ -377,10 +377,10 @@ void CodeRed::DirectX12GraphicsCommandList::resolveTexture(
 
 	const auto sourceIndex = source.MipSlice + source.ArraySlice * source.Texture->mipLevels();
 	const auto destinationIndex = destination.MipSlice + destination.ArraySlice * destination.Texture->mipLevels();
-	
+
 	CODE_RED_DEBUG_THROW_IF(
 		source.Texture->sample() == MultiSample::Count1,
-		"The source texture should be MSAA texture."
+		Exception("The source texture should be MSAA texture.")
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
@@ -400,7 +400,7 @@ void CodeRed::DirectX12GraphicsCommandList::resolveTexture(
 		InvalidException<TextureResolveInfo>({ "destination" },
 			{ "The destination.ArraySlice should not greater than the destination.Texture.arrays()." })
 	);
-	
+
 	CODE_RED_DEBUG_THROW_IF(
 		destination.MipSlice >= destination.Texture->mipLevels(),
 		InvalidException<TextureResolveInfo>({ "destination" },
@@ -408,14 +408,25 @@ void CodeRed::DirectX12GraphicsCommandList::resolveTexture(
 	);
 
 	CODE_RED_DEBUG_THROW_IF(
-		dxSource->width(source.MipSlice) == dxDestination->width(destination.MipSlice) &&
-		dxSource->height(source.MipSlice) == dxDestination->height(destination.MipSlice),
-		"The size of source and destination should be same."
+		dxSource->width(source.MipSlice) != dxDestination->width(destination.MipSlice) ||
+		dxSource->height(source.MipSlice) != dxDestination->height(destination.MipSlice),
+		Exception("The size of source and destination should be same.")
 	);
 
-	resourceBarrier(dxSource->texture().Get(), enumConvert(dxSource->layout()), D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
-	resourceBarrier(dxDestination->texture().Get(), enumConvert(dxDestination->layout()), D3D12_RESOURCE_STATE_RESOLVE_DEST);
+	D3D12_RESOURCE_BARRIER beginBarriers[2] = {
+		resourceBarrier(dxSource->texture().Get(), enumConvert(dxSource->layout()), D3D12_RESOURCE_STATE_RESOLVE_SOURCE),
+		resourceBarrier(dxDestination->texture().Get(), enumConvert(dxDestination->layout()), D3D12_RESOURCE_STATE_RESOLVE_DEST),
+	};
 
+	D3D12_RESOURCE_BARRIER endBarriers[2] = {
+		resourceBarrier(dxSource->texture().Get(), D3D12_RESOURCE_STATE_RESOLVE_SOURCE, enumConvert(dxSource->layout())),
+		resourceBarrier(dxDestination->texture().Get(), D3D12_RESOURCE_STATE_RESOLVE_DEST, enumConvert(dxDestination->layout()))
+	};
+
+	// Because the layout of image should be vk::ImageLayout::eTransferSrcOptimal and vk::ImageLayout::eTransferDstOptimal
+	// We will transform the textures before we resolve them and transform them back after we resolve them.
+	mGraphicsCommandList->ResourceBarrier(2, beginBarriers);
+	
 	// we do not recommend to resolve texture with different format
 	// so the format we set is source.Texture.format().
 	// There are the rules of them.
@@ -425,8 +436,7 @@ void CodeRed::DirectX12GraphicsCommandList::resolveTexture(
 		dxSource->texture().Get(), static_cast<UINT>(sourceIndex),
 		enumConvert(dxSource->format()));
 
-	resourceBarrier(dxSource->texture().Get(), D3D12_RESOURCE_STATE_RESOLVE_SOURCE, enumConvert(dxSource->layout()));
-	resourceBarrier(dxDestination->texture().Get(), D3D12_RESOURCE_STATE_RESOLVE_DEST, enumConvert(dxDestination->layout()));
+	mGraphicsCommandList->ResourceBarrier(2, endBarriers);
 }
 
 void CodeRed::DirectX12GraphicsCommandList::copyBuffer(

@@ -25,7 +25,7 @@ CodeRed::DirectX12RasterizationState::DirectX12RasterizationState(
 	mRasterizationState.DepthBiasClamp = 0.0f;
 	mRasterizationState.SlopeScaledDepthBias = 0.0f;
 	mRasterizationState.DepthClipEnable = mDepthClamp;
-	mRasterizationState.MultisampleEnable = false;
+	mRasterizationState.MultisampleEnable = true;
 	mRasterizationState.AntialiasedLineEnable = false;
 	mRasterizationState.ForcedSampleCount = 0;
 	mRasterizationState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;

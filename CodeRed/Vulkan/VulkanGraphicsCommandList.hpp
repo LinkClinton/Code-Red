@@ -133,6 +133,13 @@ namespace CodeRed {
 
 		auto commandList() const noexcept -> vk::CommandBuffer { return mCommandBuffer; }
 	private:
+		static auto image_memory_barrier(
+			const std::shared_ptr<GpuTexture>& texture,
+			const vk::AccessFlags srcAccessMask,
+			const vk::AccessFlags dstAccessMask,
+			const vk::ImageLayout srcLayout,
+			const vk::ImageLayout dstLayout) -> vk::ImageMemoryBarrier;
+		
 		void tryLayoutTransition(
 			const std::shared_ptr<GpuTextureRef>& texture,
 			const std::optional<Attachment>& attachment,

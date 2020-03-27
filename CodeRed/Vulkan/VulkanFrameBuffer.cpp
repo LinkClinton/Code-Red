@@ -32,11 +32,15 @@ CodeRed::VulkanFrameBuffer::VulkanFrameBuffer(
 
 	std::vector<Attachment> colorAttachments;
 	std::optional<Attachment> depthAttachment = 
-		mDepthStencil == nullptr ? std::nullopt : std::optional<Attachment>(Attachment::DepthStencil(mDepthStencil->format()));
+		mDepthStencil == nullptr ? std::nullopt : std::optional<Attachment>(
+			Attachment::DepthStencilMultiSample(mDepthStencil->format(), mDepthStencil->source()->sample()));
 
-	for (size_t index = 0; index < mRenderTargets.size(); index++) 
-		colorAttachments.push_back(Attachment::RenderTarget(mRenderTargets[index]->format()));
-
+	for (size_t index = 0; index < mRenderTargets.size(); index++) {
+		colorAttachments.push_back(Attachment::RenderTargetMultiSample(
+				mRenderTargets[index]->format(),
+				mRenderTargets[index]->source()->sample()));
+	}
+	
 	mRenderPass = std::make_shared<VulkanRenderPass>(mDevice, colorAttachments, depthAttachment);
 
 	std::vector<vk::ImageView> views = {};
