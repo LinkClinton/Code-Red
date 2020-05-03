@@ -143,7 +143,7 @@ void CodeRed::VulkanSwapChain::initializeSwapChain()
 		.setOldSwapchain(nullptr)
 		.setClipped(false)
 		.setImageColorSpace(vk::ColorSpaceKHR::eSrgbNonlinear)
-		.setImageUsage(vk::ImageUsageFlagBits::eColorAttachment)
+		.setImageUsage(vk::ImageUsageFlagBits::eColorAttachment | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc)
 		.setImageSharingMode(vk::SharingMode::eExclusive)
 		.setQueueFamilyIndexCount(0)
 		.setPQueueFamilyIndices(nullptr);

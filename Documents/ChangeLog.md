@@ -66,7 +66,7 @@
 ## 2020.03.23
 
 - Fix Vulkan version and debug report.
-- Remove `ResourceLayout::undefined`, the default layout of texture is `ResourceLayout::GeneralRead`.
+- Remove `ResourceLayout::Undefined`, the default layout of texture is `ResourceLayout::GeneralRead`.
 
 ## 2020.03.25
 
@@ -77,8 +77,3 @@
 
 - Add `GpuGraphicsCommandList::ResolveTexture` to resolve MSAA texture.
 - Add `MultiSample` to `Attachment`.
-
-## 2020.05.03
-
-- Make `VulkanLogicalDevice::mInstance` to static. There is only one instance in context.
-- Fix `VulkanSystemInfo`.
