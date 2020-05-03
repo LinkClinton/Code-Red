@@ -77,3 +77,8 @@
 
 - Add `GpuGraphicsCommandList::ResolveTexture` to resolve MSAA texture.
 - Add `MultiSample` to `Attachment`.
+
+## 2020.05.03
+
+- Make `VulkanLogicalDevice::mInstance` to static. There is only one instance in context.
+- Fix `VulkanSystemInfo`.

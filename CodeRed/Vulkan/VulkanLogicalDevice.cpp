@@ -63,62 +63,16 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallBack(
 CodeRed::VulkanLogicalDevice::VulkanLogicalDevice(const std::shared_ptr<GpuDisplayAdapter>& adapter)
 	: GpuLogicalDevice(adapter, APIVersion::Vulkan)
 {
-	initializeLayers();
-	initializeExtensions();
+	// initialize the instance if the instance is not initialized
+	// in common, the instance should be initialized at SystemInfo
+	instance();
 	
-	vk::ApplicationInfo appInfo = {};
-	vk::InstanceCreateInfo instanceInfo = {};
-
-	appInfo
-		.setPNext(nullptr)
-		.setPApplicationName("CodeRed")
-		.setApplicationVersion(VK_MAKE_VERSION(1, 0, 0))
-		.setPEngineName("CodeRed")
-		.setEngineVersion(VK_MAKE_VERSION(1, 0, 0))
-		.setApiVersion(VK_API_VERSION_1_1);
-
-	instanceInfo
-		.setPNext(nullptr)
-		.setFlags(vk::InstanceCreateFlags(0))
-		.setPApplicationInfo(&appInfo)
-		.setPpEnabledLayerNames(mInstanceLayers.data())
-		.setPpEnabledExtensionNames(mInstanceExtensions.data())
-		.setEnabledLayerCount(static_cast<uint32_t>(mInstanceLayers.size()))
-		.setEnabledExtensionCount(static_cast<uint32_t>(mInstanceExtensions.size()));
-	
-	mInstance = vk::createInstance(instanceInfo);
-
-	for (const auto extension : mInstanceExtensions) {
-		CODE_RED_DEBUG_LOG("enabled vulkan instance extension : " + std::string(extension));
-	}
-		
 	initializeDynamicLoader();
 	initializeDebugReport();
-	
-	auto physicalDevices = mInstance.enumeratePhysicalDevices();
-	auto foundPhysicalDevice = false;
-	
-	for (auto physicalDevice : physicalDevices) {
-		auto properties = physicalDevice.getProperties();
-
-		if (properties.deviceName == mDisplayAdapter->name() &&
-			properties.deviceID == mDisplayAdapter->deviceId() &&
-			properties.vendorID == mDisplayAdapter->vendorId()) {
-			mPhysicalDevice = physicalDevice;
-
-			foundPhysicalDevice = true;
-			
-			break;
-		}
-	}
-
-	CODE_RED_THROW_IF(
-		foundPhysicalDevice == false,
-		InvalidException<GpuDisplayAdapter>({ "adapter" })
-	);
 
 	CODE_RED_DEBUG_LOG(DebugReport::make("create device with [0]", { mDisplayAdapter->name() }));
-	
+
+	mPhysicalDevice = std::static_pointer_cast<VulkanDisplayAdapter>(mDisplayAdapter)->physicalDevice();
 	mMemoryProperties = mPhysicalDevice.getMemoryProperties();
 
 	auto queueFamilyProperties = mPhysicalDevice.getQueueFamilyProperties();
@@ -376,6 +330,13 @@ void CodeRed::VulkanLogicalDevice::initializeDynamicLoader()
 	}
 }
 
+auto CodeRed::VulkanLogicalDevice::instance() -> vk::Instance
+{
+	if (!mInstance) initializeInstance();
+
+	return mInstance;
+}
+
 void CodeRed::VulkanLogicalDevice::initializeLayers()
 {
 	std::vector<const char*> enableLayers;
@@ -479,6 +440,38 @@ auto CodeRed::VulkanLogicalDevice::getMemoryTypeIndex(
 	}
 
 	throw FailedException(DebugType::Get, { "memory type index", "memory properties" });
+}
+
+void CodeRed::VulkanLogicalDevice::initializeInstance()
+{
+	initializeLayers();
+	initializeExtensions();
+
+	vk::ApplicationInfo appInfo = {};
+	vk::InstanceCreateInfo instanceInfo = {};
+
+	appInfo
+		.setPNext(nullptr)
+		.setPApplicationName("CodeRed")
+		.setApplicationVersion(VK_MAKE_VERSION(1, 0, 0))
+		.setPEngineName("CodeRed")
+		.setEngineVersion(VK_MAKE_VERSION(1, 0, 0))
+		.setApiVersion(VK_API_VERSION_1_1);
+
+	instanceInfo
+		.setPNext(nullptr)
+		.setFlags(vk::InstanceCreateFlags(0))
+		.setPApplicationInfo(&appInfo)
+		.setPpEnabledLayerNames(mInstanceLayers.data())
+		.setPpEnabledExtensionNames(mInstanceExtensions.data())
+		.setEnabledLayerCount(static_cast<uint32_t>(mInstanceLayers.size()))
+		.setEnabledExtensionCount(static_cast<uint32_t>(mInstanceExtensions.size()));
+
+	mInstance = vk::createInstance(instanceInfo);
+
+	for (const auto extension : mInstanceExtensions) {
+		CODE_RED_DEBUG_LOG("enabled vulkan instance extension : " + std::string(extension));
+	}
 }
 
 #endif

@@ -85,13 +85,17 @@ namespace CodeRed {
 			->std::shared_ptr<GpuPipelineFactory> override;
 		
 		auto device() const noexcept -> vk::Device { return mDevice; }
-		
+
 		auto queueFamilyIndex() const noexcept -> size_t { return mQueueFamilyIndex; }
+
+		static auto instance() -> vk::Instance;
 	private:
-		void initializeLayers();
+		static void initializeLayers();
 
-		void initializeExtensions();
+		static void initializeExtensions();
 
+		static void initializeInstance();
+		
 		void initializeDynamicLoader();
 		
 		void initializeDebugReport();
@@ -113,10 +117,14 @@ namespace CodeRed {
 		friend class VulkanTexture;
 		friend class VulkanBuffer;
 	private:
-		std::vector<const char*> mInstanceExtensions;
-		std::vector<const char*> mDeviceExtensions;
-		std::vector<const char*> mInstanceLayers;
+		static inline vk::Instance mInstance = nullptr;
+		
+		static inline std::vector<const char*> mInstanceExtensions;
+		static inline std::vector<const char*> mDeviceExtensions;
+		static inline std::vector<const char*> mInstanceLayers;
 
+		static inline bool mEnableValidationLayer = false;
+		
 		vk::DebugUtilsMessengerEXT mDebugUtilsMessenger;
 		vk::DispatchLoaderDynamic mDynamicLoader;
 		
@@ -124,15 +132,12 @@ namespace CodeRed {
 		vk::PhysicalDeviceFeatures mPhysicalFeatures;
 		vk::PhysicalDevice mPhysicalDevice;
 		
-		vk::Instance mInstance;
 		vk::Device mDevice;
 
 		size_t mQueueFamilyIndex = SIZE_MAX;
 		
 		std::vector<size_t> mFreeQueues;
 
-		bool mEnableValidationLayer = false;
-		
 	};
 	
 }

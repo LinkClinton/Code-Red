@@ -1,4 +1,5 @@
 #include "VulkanDisplayAdapter.hpp"
+#include "VulkanLogicalDevice.hpp"
 #include "VulkanSystemInfo.hpp"
 
 #include "../Shared/DebugReport.hpp"
@@ -10,29 +11,9 @@ using namespace CodeRed::Vulkan;
 auto CodeRed::VulkanSystemInfo::selectDisplayAdapter() const
 	-> std::vector<std::shared_ptr<GpuDisplayAdapter>>
 {
-	vk::ApplicationInfo appInfo = {};
-	vk::InstanceCreateInfo instanceInfo = {};
-
-	appInfo
-		.setPNext(nullptr)
-		.setPApplicationName("CodeRed")
-		.setApplicationVersion(1)
-		.setPEngineName("CodeRed")
-		.setEngineVersion(1)
-		.setEngineVersion(VK_API_VERSION_1_1);
-
-	instanceInfo
-		.setPNext(nullptr)
-		.setFlags(vk::InstanceCreateFlags(0))
-		.setPApplicationInfo(&appInfo)
-		.setPpEnabledLayerNames(nullptr)
-		.setPpEnabledExtensionNames(nullptr)
-		.setEnabledLayerCount(0)
-		.setEnabledExtensionCount(0);
-
 	std::vector<std::shared_ptr<GpuDisplayAdapter>> displayAdapters;
 
-	auto instance = vk::createInstance(instanceInfo);
+	auto instance = VulkanLogicalDevice::instance();
 	auto physicalDevices = instance.enumeratePhysicalDevices();
 
 	CODE_RED_DEBUG_LOG("");
@@ -52,11 +33,9 @@ auto CodeRed::VulkanSystemInfo::selectDisplayAdapter() const
 		
 		displayAdapters.push_back(
 			std::make_shared<VulkanDisplayAdapter>(
-				properties.deviceName, properties.deviceID, properties.vendorID));
+				physicalDevice, properties.deviceName, properties.deviceID, properties.vendorID));
 	}
 
-	instance.destroy();
-	
 	return displayAdapters;
 }
 
